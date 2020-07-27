@@ -1,0 +1,2027 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+    "version": "0.0.1",
+    "title": "tabou2",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "%host%",
+  "basePath": "/tabou2",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/configuration/{id}": {
+      "get": {
+        "summary": "Récupération de la configuration",
+        "description": "Ensemble des propriétés de config",
+        "operationId": "getConfiguration",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "description": "id de la configuration",
+          "required": true,
+          "type":  "integer",
+          "format": "int64"
+        }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ConfigurationApp"
+            }
+          }
+        }
+      }
+    },
+    "/operations": {
+      "get": {
+        "summary": "Récupération des operations",
+        "description": "Ensemble des opérations",
+        "operationId": "getOperations",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Operation"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'une opération",
+        "operationId": "addOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "operation",
+            "description": "Nouvelle opération",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'une opération",
+        "operationId": "editOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "operation",
+            "description": "Opération à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        }
+      }
+    },
+    "/operations/{operationId}": {
+      "get": {
+        "summary": "Récupération du détail d'une opération d'aménagement",
+        "operationId": "getOperationById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        }
+      }
+    },
+    "/programmes": {
+      "post": {
+        "summary": "Ajout d'un programme d'aménagement",
+        "operationId": "addProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "programmem",
+            "description": "Nouveau programme d'aménagement",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Edition d'un programme d'aménagement",
+        "operationId": "editProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "programme",
+            "description": "Nouveau programme d'aménagement",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Recherche d'un programme",
+        "operationId": "getProgrammes",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Programme"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/programmes/{programmeId}": {
+      "get": {
+        "summary": "Récupération du détail d'un programme d'aménagement",
+        "operationId": "getProgrammeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          }
+        }
+      }
+    },
+    "/communes": {
+      "get": {
+        "summary": "Recherche d'une commune",
+        "operationId": "getCommunes",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        {
+          "in": "body",
+          "name": "searchParams",
+          "description": "Paramètres de la recherche",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/SearchParams"
+          }
+        }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/Commune"
+                }
+              }
+          }
+        }
+      }
+    },
+    "/quartiers": {
+      "get": {
+        "summary": "Recherche d'un quartier",
+        "operationId": "getQuartier",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Quartier"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/iris": {
+      "get": {
+        "summary": "Recherche d'un iris",
+        "operationId": "getIris",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Iris"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/plui": {
+      "get": {
+        "summary": "Recherche d'un plui",
+        "operationId": "getPlui",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PluiZonage"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/etapes/operation": {
+      "get": {
+        "summary": "Recherche les étapes d'avancement possibles pour une opération d'aménagement",
+        "operationId": "getEtapesOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajoute une étape d'avancement pour les opérations d'aménagement",
+        "operationId": "addEtapeOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "etape",
+            "description": "Etape à ajouter",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifie une étape d'avancement pour les opérations d'aménagement",
+        "operationId": "editEtapeOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "etape",
+            "description": "Etape à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        }
+      }
+    },
+    "/etapes/operation/{operationId}": {
+      "get": {
+        "summary": "Recherche d'une étape d'avancement pour les opérations d'aménagement",
+        "operationId": "getEtapesByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/etapes/programme": {
+      "get": {
+        "summary": "Recherche les étapes d'avancement possibles pour un programme d'aménagement",
+        "operationId": "getEtapesProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajoute une étape d'avancement pour les programmes d'aménagement",
+        "operationId": "addEtapeProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "etape",
+            "description": "Etape à ajouter",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifie une étape d'avancement pour les programmes d'aménagement",
+        "operationId": "editEtapeProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "etape",
+            "description": "Etape à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        }
+      }
+    },
+    "/etapes/programme/{programmeId}": {
+      "get": {
+        "summary": "Recherche d'une étape d'avancement pour un programme d'aménagement",
+        "operationId": "getEtapesByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "required": true,
+            "description": "Identifiant du programme",
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tiers": {
+      "get": {
+        "summary": "Recherche un tiers",
+        "operationId": "getTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tiers"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un tiers",
+        "operationId": "addTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Nouveau tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un tiers",
+        "operationId": "editTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Tiers à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        }
+      }
+    },
+    "/tiers/programme/{programmeId}": {
+      "get": {
+        "summary": "Liste les tiers d'un programme",
+        "operationId": "getTiersByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant d'un programme",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tiers"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tiers/operation/{operationId}": {
+      "get": {
+        "summary": "Liste les tiers d'une opération",
+        "operationId": "getTiersByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tiers"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tiers/{type}": {
+      "get": {
+        "summary": "Recherche les tiers en fonction d'un type donné",
+        "operationId": "getTiersByType",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "description": "Type de tiers à récupérer",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tiers"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/types-tiers": {
+      "get": {
+        "summary": "Recherche un type de tiers",
+        "operationId": "getTypeTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TypeTiers"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un type de tiers",
+        "operationId": "addTypeTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "typeTiers",
+            "description": "Nouveau type de tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un type de tiers",
+        "operationId": "editTypeTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "typeTiers",
+            "description": "Type de tiers à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          }
+        }
+      }
+    },
+    "/types-tiers/{typeTiersId}/inactivate": {
+      "put": {
+        "summary": "Rends un type de tiers inactif",
+        "operationId": "inactivateTypeTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeTiersId",
+            "description": "Identifiant du type de tiers",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TypeTiers"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/evenements/programme/{programmeId}": {
+      "get": {
+        "summary": "Recherche la liste des évènements d'un programme d'aménagement",
+        "operationId": "getEvenementsByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Evenement"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un évènement à un programme d'aménagement",
+        "operationId": "addEvenementByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Nouvel évènement",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un évènement d'un programme d'aménagement",
+        "operationId": "editEvenementByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Evènement à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          }
+        }
+      }
+    },
+    "/evenements/operation/{operationId}": {
+      "get": {
+        "summary": "Recherche la liste des évènements d'une opération d'aménagement",
+        "operationId": "getEvenementsByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Evenement"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un évènement à une opération d'aménagement",
+        "operationId": "addEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Nouvel évènement",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un évènement d'une opération d'aménagement",
+        "operationId": "editEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Evènement à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          }
+        }
+      }
+    },
+    "/types-evenements": {
+      "get": {
+        "summary": "Recherche les types d'évènements",
+        "operationId": "getTypesEvenements",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TypeEvenement"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un type d'évènements",
+        "operationId": "addTypeEvenements",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "typeEvenement",
+            "description": "Nouveau type d'évènement",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TypeEvenement"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeEvenement"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un type d'évènements",
+        "operationId": "editTypeEvenements",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "typeEvenement",
+            "description": "Type d'évènement à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TypeEvenement"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeEvenement"
+            }
+          }
+        }
+      }
+    },
+    "/types-evenement/{typeEvenementId}/inactivate": {
+      "put": {
+        "summary": "Rends un type d'évènement inactif",
+        "operationId": "inactivateTypeEvenement",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeEvenementId",
+            "description": "Identifiant du type d'évènement",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TypeEvenement"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/types-documents": {
+      "get": {
+        "summary": "Recherche la liste des type de document",
+        "operationId": "getTypeDocument",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TypeDocument"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un type de document",
+        "operationId": "addTypeDocument",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "typeDocument",
+            "description": "Nouveau type de document",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TypeDocument"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeDocument"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un type de document",
+        "operationId": "editTypeDocument",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "typeDocument",
+            "description": "Type de document à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TypeDocument"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeDocument"
+            }
+          }
+        }
+      }
+    },
+    "/types-document/{typeDocumentId}/inactivate": {
+      "put": {
+        "summary": "Rends un type de document inactif",
+        "operationId": "inactivateTypeDocument",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeDocumentId",
+            "description": "Identifiant du type de document",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TypeDocument"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/secteurs-dds": {
+      "get": {
+        "summary": "Recherche la liste des secteurs dds",
+        "operationId": "getSecteursDds",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecteurDds"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/secteurs-sam": {
+      "get": {
+        "summary": "Recherche la liste des secteurs SAM",
+        "operationId": "getSecteursSam",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecteurSam"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/secteurs-foncier": {
+      "get": {
+        "summary": "Recherche la liste des secteurs fonciers",
+        "operationId": "getSecteursFonciers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecteurFoncier"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/secteurs-habitat": {
+      "get": {
+        "summary": "Recherche la liste des secteurs habitat",
+        "operationId": "getSecteursHabitat",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "searchParams",
+            "description": "Paramètres de la recherche",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecteurHabitat"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Generic": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object"
+        }
+      }
+    },
+    "ConfigurationApp": {
+      "type": "object",
+      "properties": {
+        "versionApp": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        }
+      }
+    },
+    "Operation": {
+      "description": "Opération d'amménagement",
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identificateur unique. Clé primaire",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nature": {
+          "description": "Nature de l'opération : ZAC, ZA ou En diffus",
+          "type": "string"
+        },
+        "etape": {
+          "description": "Indique l'étape d'avancement de l'opération ou du secteur",
+          "type": "object",
+          "$ref": "#/definitions/Etape"
+        },
+        "secteur": {
+          "description": "Indique que l'opération est un secteur",
+          "type": "boolean",
+          "default": false
+        },
+        "diffusionRestreinte": {
+          "description": "Indique si l'opération est en diffusion restreinte (en off)",
+          "type": "boolean",
+          "default": false
+        },
+        "code": {
+          "description": "Code de l'opératin",
+          "type": "string"
+        },
+        "nom": {
+          "description": "Nom de l'opération",
+          "type": "string"
+        },
+        "operation": {
+          "description": "Description textuelle du programme de l'opération (nombre de logement, type habitat…)",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)",
+          "type": "string"
+        },
+        "autorisationDate": {
+          "description": "Date d'autorisation (liée à un document d'urbanisme)",
+          "type": "string",
+          "format": "date"
+        },
+        "operationnelDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "clotureDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "nbLogementsPrevu": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "plhLogementsPrevus": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "plhLogementsLivres": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "numPc": {
+          "description": "Numéro du permis de construire",
+          "type": "string"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé l'entité",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout de l'entité",
+          "type": "string",
+          "format": "date"
+        },
+        "modifUser": {
+          "description": "Dernier utilisateur ayant modifié l'entité",
+          "type": "string"
+        },
+        "modifDate": {
+          "description": "Date de dernière modification de l'entité",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "Programme": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identificateur unique. Clé primaire",
+          "type": "integer",
+          "format": "int64"
+        },
+        "etape": {
+          "description": "Indique l'étape d'avancement du programme",
+          "type": "object",
+          "$ref": "#/definitions/Etape"
+        },
+        "diffusionRestreinte": {
+          "description": "Indique si le programme est en diffusion restreinte (en off)e",
+          "type": "boolean"
+        },
+        "code": {
+          "description": "Code du programme (celui du plan guide)",
+          "type": "string"
+        },
+        "nom": {
+          "description": "Nom du programme (celui donné par le promoteur)",
+          "type": "string"
+        },
+        "programme": {
+          "description": "Description du programme (nombre de logement, type habitat…)",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description du programme pour des besoins de la communication (par ex: Panorama des ZAC)",
+          "type": "string"
+        },
+        "attributionFonciereAnnee": {
+          "description": "Année de l'attribution foncière",
+          "type": "string"
+        },
+        "attributionDate": {
+          "description": "Date d'attribution du programme au promoteur",
+          "type": "string"
+        },
+        "commercialisationDate": {
+          "description": "Date de lancement de la commercialisation",
+          "type": "string"
+        },
+        "demarrageDate": {
+          "description": "TODO",
+          "type": "string"
+        },
+        "livraisonDate": {
+          "description": "Date de livraison du programme",
+          "type": "string"
+        },
+        "clotureDate": {
+          "description": "Date de clôture",
+          "type": "string"
+        },
+        "logementsTotal": {
+          "description": "Nombre de logements total (prévu, jusqu'à l'étape de livraison, livré ensuite)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "logementsAccesLibre": {
+          "description": "Nombre de logements en accession libre",
+          "type": "string"
+        },
+        "logementsAccessMaitrise": {
+          "description": "Nombre de logements en accession maitrisée",
+          "type": "string"
+        },
+        "logementsLocatifRegule": {
+          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
+          "type": "string"
+        },
+        "logementsPls": {
+          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
+          "type": "string"
+        },
+        "logementsAccesAide": {
+          "description": "Nombre de logements en accession sociale (PSLA, OFS-BRS)",
+          "type": "string"
+        },
+        "logementsLocatifAide": {
+          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
+          "type": "string"
+        },
+        "numPc": {
+          "description": "Numéro du permis de construire",
+          "type": "string"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le programme",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du programme",
+          "type": "string",
+          "format": "date"
+        },
+        "modifUser": {
+          "description": "Dernier utilisateur ayant modifié le programme",
+          "type": "string"
+        },
+        "modifDate": {
+          "description": "Date de dernière modification du programme",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "Evenement": {
+      "type": "object",
+      "description": "Liste des évènements : système et utilisateur",
+      "properties": {
+        "id" : {
+          "description": "Identifant de l'évènement",
+          "type": "integer",
+          "format": "int64"
+        },
+        "date": {
+          "description": "Date de l'évènement",
+          "type": "string",
+          "format": "date"
+        },
+        "description": {
+          "description": "Description de l'évènement",
+          "type": "string"
+        },
+        "systeme": {
+          "description": "Indique si l'évènement est de type système ou non",
+          "type": "boolean"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé l'évènement",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date création de l'évènement",
+          "type": "string",
+          "format": "date"
+        },
+        "modifUser": {
+          "description": "Dernier utilisateur ayant modifié l'évènement",
+          "type": "string"
+        },
+        "modifDate": {
+          "description": "Date de dernière modification de l'évènement",
+          "type": "string",
+          "format": "date"
+        },
+        "type": {
+          "description": "Type de l'évènement",
+          "type": "string"
+        }
+      }
+    },
+    "TypeEvenement": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identifiant unique du type d'évènement",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Libellé du type de document",
+          "type": "string"
+        },
+        "dateInactivite" : {
+          "description": "Date de mise en inactivité du type de document",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "Commune": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identifant de la commune",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nom": {
+          "description": "Nom de la commune",
+          "type": "string"
+        },
+        "codeInsee": {
+          "description": "Code Insee de la commune",
+          "type": "string"
+        }
+      }
+    },
+    "Iris": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identifiant unique",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nom": {
+          "description": "Nom de l'IRIS",
+          "type": "string"
+        }
+      }
+    },
+    "Quartier": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identifiant unique",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nom": {
+          "description": "Nom du quartier",
+          "type": "string"
+        },
+        "numQuartier": {
+          "description": "",
+          "type": "string"
+        }
+      }
+    },
+    "PluiZonage": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identifiant unique",
+          "type": "integer",
+          "format": "int64"
+        },
+        "zonage": {
+          "description": "Nom du zonage PLUi",
+          "type": "string"
+        }
+      }
+    },
+    "Tiers": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identificateur unique. Clé primaire",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nom": {
+          "description": "Nom du tiers (raison sociale)",
+          "type": "string"
+        },
+        "correspondant": {
+          "type": "string"
+        },
+        "adresseNum": {
+          "description": "Numéro de rue de l'adresse du tiers",
+          "type": "string"
+        },
+        "adresseRue": {
+          "description": "Nom de la rue de l'adresse du tiers",
+          "type": "string"
+        },
+        "adresseCp": {
+          "description": "Code postal de l'adresse du tiers",
+          "type": "string"
+        },
+        "adresseVille": {
+          "description": "Ville du tiers",
+          "type": "string"
+        },
+        "telephone": {
+          "description": "Numéro de téléphone du tiers",
+          "type": "string"
+        },
+        "telecopie": {
+          "description": "Numéro de télécopie du tiers",
+          "type": "string"
+        },
+        "email": {
+          "description": "Adresse email du tiers",
+          "type": "string"
+        },
+        "siteWeb": {
+          "description": "Site Web du tiers",
+          "type": "string"
+        },
+        "contact": {
+          "description": "",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du tiers",
+          "type": "string"
+        },
+        "type": {
+
+        }
+      }
+    },
+    "TypeTiers": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identifiant unique du type de tiers",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Libellé du type de tiers",
+          "type": "string"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type tiers",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du type tiers",
+          "type": "string",
+          "format": "date"
+        },
+        "dateInactivite" : {
+          "description": "Date de mise en inactivité du type de document",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "SecteurDds": {
+      "type": "object",
+      "properties": {
+        "nom": {
+          "description": "Nom du secteur",
+          "type": "string"
+        },
+        "instructeur": {
+          "description": "Nom de l'instructeur",
+          "type": "string"
+        }
+      }
+    },
+    "SecteurSam": {
+      "type": "object",
+      "properties": {
+        "nom": {
+          "description": "Nom du secteur",
+          "type": "string"
+        },
+        "chargeOp": {
+          "description": "Nom du chargé d'opération",
+          "type": "string"
+        }
+      }
+    },
+    "SecteurFoncier": {
+      "type": "object",
+      "properties": {
+        "nom": {
+          "description": "Nom du secteur",
+          "type": "string"
+        },
+        "instructeur": {
+          "description": "Nom de l'instructeur",
+          "type": "string"
+        }
+      }
+    },
+    "SecteurHabitat": {
+      "type": "object",
+      "properties": {
+        "nom": {
+          "description": "Non du secteur",
+          "type": "string"
+        }
+      }
+    },
+    "Etape": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identificateur unique. Clé primaire",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Libellé de l'étape ",
+          "type": "string"
+        },
+        "dateInactivite" : {
+          "description": "Date de mise en inactivité de l'étape",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "TypeDocument": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identifiant unique du type de document",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Libellé du type document",
+          "type": "string"
+        },
+        "dateInactivite" : {
+          "description": "Date de mise en inactivité du type de document",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "Document": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identifiant unique du document",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Description du document",
+          "type": "string"
+        }
+      }
+    },
+    "Nature": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identifiant unique de la nature",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Description de la nature",
+          "type": "string"
+        },
+        "dateInactivite" : {
+          "description": "Date de mise en inactivité de la nature",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "SearchParams": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "description": "Mot clé de la recherche",
+          "type": "string"
+        },
+        "start" : {
+          "description": "",
+          "type": "integer",
+          "format": "int64"
+        },
+        "end" : {
+          "description": "",
+          "type": "integer",
+          "format": "int64"
+        },
+        "onlyActive" : {
+          "description": "Indique si seuls les éléments actifs doivent être remontés",
+          "type": "boolean",
+          "default": true
+        },
+        "resultsNumber" : {
+          "description": "Nombre de résultats à remonter",
+          "type": "integer",
+          "format": "int64"
+        },
+        "orderBy" : {
+          "description": "Nom du champ sur lequel trier les résultats",
+          "type": "string"
+        },
+        "asc" : {
+          "description": "Indique si le tri doit être faire par ordre ascendant",
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  }
+}

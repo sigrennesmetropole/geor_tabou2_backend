@@ -1,0 +1,227 @@
+# Pipeline variables
+variables:
+  MAVEN_CLI_OPTS: "-s $CI_PROJECT_DIR/.m2/settings.xml -Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+
+# Gestion du cache
+cache: &global_cache
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - $CI_PROJECT_DIR/.m2/repository/**/*
+    - $CI_PROJECT_DIR/**/target/**/*
+    - $CI_PROJECT_DIR/**/target/*
+
+# Image docker utilisée par défaut pour les étapes
+default:
+  image: maven:3.6.0-jdk-8
+  tags:
+    - dsi
+
+# Avant de faire les jobs, vérification qu'on a bien la clé privé SSH du compte de service
+before_script:
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - eval $(ssh-agent -s)
+  - echo "$GIT_LAB_RUNNER_DSI_SSH_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+
+# Stages definition
+stages:
+  - build
+  - sonar
+  - test
+  - nexus
+  - deploy-integ
+  - deploy-recette
+  - deploy-prod
+
+# Compilation du code source de l'application
+compile:
+  stage: build
+  cache:
+    <<: *global_cache
+  # On check la compilation que sur des développements, pas pour des déploiements
+  except:
+    - /^release\/.*/
+    - develop
+    - tags
+  script:
+    - mvn $MAVEN_CLI_OPTS clean compile -Pprod
+
+# Build du JAR Executable
+build:
+  stage: build
+  cache:
+    <<: *global_cache
+  only:
+    - develop
+    - /^.*\..*\..*\..*$/ # tags X.X.X.X sur 4 digits
+  script:
+    - mvn $MAVEN_CLI_OPTS clean package -Pprod
+
+
+# Execution des tests unitaires
+test:
+  stage: test
+  # On télécharge le cache mais on ne va pas le mettre à jour à la fin
+  cache:
+    <<: *global_cache
+    policy: pull
+  # On teste que sur des développements, pas pour des déploiements
+  except:
+    - tags
+    - master
+    - /^release\/.*/
+  script:
+    - mvn $MAVEN_CLI_OPTS compile test
+
+
+### build générique ###
+# Analyse sonar du code
+.sonar: &sonar
+  stage: sonar
+  # On télécharge le cache mais on ne va pas le mettre à jour à la fin
+  cache:
+    <<: *global_cache
+    policy: pull
+  script:
+    - >
+      mvn $MAVEN_CLI_OPTS -U sonar:sonar
+      -Dsonar.host.url=$SONAR_URL
+      -Dsonar.login=$SONAR_TOKEN
+      -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA
+      -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
+      -Dsonar.gitlab.project_id=$CI_PROJECT_ID
+      $SONAR_BRANCH
+
+
+# Sonar sur master
+sonar:master:
+  <<: *sonar
+  only:
+    - master
+
+
+# Sonar sur develop
+sonar:develop:
+  <<: *sonar
+  variables:
+    SONAR_BRANCH: "-Dsonar.branch.name=${CI_COMMIT_REF_NAME}"
+  # On sonar que sur des développements, pas pour des déploiements
+  only:
+    - develop
+
+
+# Sonar sur les autres branches
+sonar:
+  <<: *sonar
+  variables:
+    SONAR_BRANCH: "-Dsonar.branch.name=${CI_COMMIT_REF_NAME} -Dsonar.branch.target=develop"
+  # On sonar que sur des développements, pas pour des déploiements
+  except:
+    - master
+    - /^release\/.*/
+    - develop
+    - tags
+
+# Deploiement sur Integration
+deploy-integ:
+  image: maven:3.6.0-jdk-8
+  stage: deploy-integ
+  dependencies:
+    - build
+  # On télécharge le cache mais on ne va pas le mettre à jour à la fin
+  cache:
+    <<: *global_cache
+    policy: pull
+  only:
+    - develop
+  variables:
+    IP_TARGET: devweb1
+    VM_LOGIN: admin
+  script:
+    - eval $(ssh-agent -s)
+    - echo "$GIT_LAB_RUNNER_DSI_SSH_KEY" | tr -d '\r' | ssh-add -
+    # Copie des fichier JAR et properties
+    - scp -o "StrictHostKeyChecking=no" $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar $VM_LOGIN@$IP_TARGET:/opt/tabou2/tabou2.jar
+    - scp -o "StrictHostKeyChecking=no" $CI_PROJECT_DIR/resources/deploy/VM_INTEG/tabou2.properties $VM_LOGIN@$IP_TARGET:/opt/tabou2/properties/tabou2.properties
+    - scp -o "StrictHostKeyChecking=no" $CI_PROJECT_DIR/resources/deploy/VM_INTEG/logBack.xml $VM_LOGIN@$IP_TARGET:/opt/tabou2/properties/logBack.xml
+    # Redemarrage du service tabou2
+    - ssh -o "StrictHostKeyChecking=no" $VM_LOGIN@$IP_TARGET sudo systemctl restart tabou2
+
+# Déploiement des artefacts construit dans le nexus uniquement pour les tags sur 4 digits
+deploy-nexus:
+  stage: nexus
+  dependencies:
+    - build
+  # On télécharge le cache mais on ne va pas le mettre à jour à la fin
+  cache:
+    <<: *global_cache
+    policy: pull
+  only:
+    - /^.*\..*\..*\..*$/ # tags X.X.X.X sur 4 digits
+  except:
+    - branches
+    - triggers
+  script:
+    # Les 2 scripts ci-dessous permettent de détecter si des versions SNAPSHOT sont contenu ddans les pom.xml
+    - export sp_occ=$(grep -ri "SNAPSHOT" --include \pom.xml | wc -l)
+    - echo $sp_occ
+    - if [ $sp_occ -ne 0 ]; then echo "Des versions SNAPSHOT ont été trouvées dans les fichiers pom.xml"; exit 1; fi;
+
+    # Vérification de la coherence entre les versions
+    - export sp_occ=$(grep -ri $CI_COMMIT_TAG --include \pom.xml | wc -l)
+    - echo $sp_occ
+    - if [ $sp_occ -lt 4 ]; then echo "Incoherence entre la version du TAG et la version dans les fichiers pom.xml"; exit 1; fi;
+
+    # Deploiement sur le Nexus
+    - curl -u $NEXUS_ACCOUNT_LOGIN:$NEXUS_ACCOUNT_PSW --upload-file $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar  $NEXUS_RM_PATH/tabou2/$CI_COMMIT_TAG/tabou2-$CI_COMMIT_TAG.jar
+
+
+#### Job générique ###
+# Déploiement manuel sur un des environnements d'un tag $IP_TARGET et $PATH_PROPERTY doivent être défini à l'appel
+.deploy:deploy-jar-target:
+  stage: deploy
+  # Pas besoin du cache comme on passe par le nexus
+  cache: {}
+  script:
+    # Récupération du WAR du nexus avec CURL, renommage en tabou2.jar
+    - mkdir war_to_deploy
+    - cd war_to_deploy
+    - curl -u $NEXUS_ACCOUNT_LOGIN:$NEXUS_ACCOUNT_PSW -X GET $NEXUS_RM_PATH/tabou2/$CI_COMMIT_TAG/tabou2-$CI_COMMIT_TAG.jar > tabou2.jar
+
+    # Si le fichier fait moins de 5Ko, on considère que le telechargement a échoué
+    - if [ $(wc -c ./tabou2.jar | awk '{print $1}') -lt 5000 ]; then echo "Le JAR a déployer n'a pas bien été téléchargé"; exit 1; fi;
+
+    # Upload du war, des properties et du script de MAJ en SCP sur la VM cible
+    - scp -o stricthostkeychecking=no tabou2.jar $VM_LOGIN@$IP_TARGET:/opt/tabou2/tabou2.jar
+    - scp -o stricthostkeychecking=no $CI_PROJECT_DIR/resources/deploy/$PATH_PROPERTY/tabou2.properties $VM_LOGIN@$IP_TARGET:/opt/tabou2/properties/tabou2.properties
+    - scp -o stricthostkeychecking=no $CI_PROJECT_DIR/resources/deploy/$PATH_PROPERTY/logBack.xml $VM_LOGIN@$IP_TARGET:/opt/tabou2/properties/logBack.xml
+    # Redemarrage du service tabou2
+    - ssh -o "StrictHostKeyChecking=no" $VM_LOGIN@$IP_TARGET sudo systemctl restart tabou2
+  only:
+    refs:
+      - tags
+  when: manual
+
+
+# Déploiement manuel sur VM Recette
+deploy-war-recette:
+  stage: deploy-recette
+  extends: .deploy:deploy-jar-target
+  variables:
+    IP_TARGET: testweb2
+    PATH_PROPERTY: VM_RECETTE
+    VM_LOGIN: admin
+  environment:
+    name: qualif/$CI_COMMIT_TAG
+
+# Déploiement manuel sur VM PROD
+deploy-war-prod:
+  stage: deploy-prod
+  extends: .deploy:deploy-jar-target
+  variables:
+    IP_TARGET: sumatra
+    PATH_PROPERTY: VM_PROD
+    VM_LOGIN: admin
+  environment:
+    name: prod/$CI_COMMIT_TAG
