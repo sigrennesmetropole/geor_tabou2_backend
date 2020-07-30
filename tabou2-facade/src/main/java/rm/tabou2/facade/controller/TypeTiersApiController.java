@@ -3,7 +3,6 @@ package rm.tabou2.facade.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.TypesTiersApi;
-import rm.tabou2.service.dto.SearchParams;
 import rm.tabou2.service.dto.TypeTiers;
 
 import javax.validation.Valid;
@@ -24,9 +23,10 @@ public class TypeTiersApiController implements TypesTiersApi {
     }
 
     @Override
-    public ResponseEntity<List<TypeTiers>> getTypeTiers(@Valid SearchParams searchParams) throws Exception {
+    public ResponseEntity<List<TypeTiers>> getTypeTiers(@Valid String keyword, @Valid Long start, @Valid Long end, @Valid Boolean onlyActive, @Valid Long resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
+
 
     @Override
     public ResponseEntity<List<TypeTiers>> inactivateTypeTiers(String typeTiersId) throws Exception {

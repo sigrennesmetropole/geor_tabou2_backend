@@ -3,7 +3,6 @@ package rm.tabou2.facade.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.TiersApi;
-import rm.tabou2.service.dto.SearchParams;
 import rm.tabou2.service.dto.Tiers;
 
 import javax.validation.Valid;
@@ -24,9 +23,10 @@ public class TiersApiController implements TiersApi {
     }
 
     @Override
-    public ResponseEntity<List<Tiers>> getTiers(@Valid SearchParams searchParams) throws Exception {
+    public ResponseEntity<List<Tiers>> getTiers(@Valid String keyword, @Valid Long start, @Valid Long end, @Valid Boolean onlyActive, @Valid Long resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
+
 
     @Override
     public ResponseEntity<List<Tiers>> getTiersByOperationId(String operationId) throws Exception {
@@ -39,7 +39,9 @@ public class TiersApiController implements TiersApi {
     }
 
     @Override
-    public ResponseEntity<List<Tiers>> getTiersByType(@Valid SearchParams searchParams, String type) throws Exception {
+    public ResponseEntity<List<Tiers>> getTiersByType(String type, @Valid String keyword, @Valid Long start, @Valid Long end, @Valid Boolean onlyActive, @Valid Long resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
+
+
 }

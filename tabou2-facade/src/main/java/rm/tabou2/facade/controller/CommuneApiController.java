@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.CommunesApi;
 import rm.tabou2.service.dto.Commune;
-import rm.tabou2.service.dto.SearchParams;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -14,7 +13,7 @@ public class CommuneApiController implements CommunesApi {
 
 
     @Override
-    public ResponseEntity<List<Commune>> getCommunes(@Valid SearchParams searchParams) throws Exception {
+    public ResponseEntity<List<Commune>> getCommunes(@Valid String keyword, @Valid Long start, @Valid Long end, @Valid Boolean onlyActive, @Valid Long resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 }

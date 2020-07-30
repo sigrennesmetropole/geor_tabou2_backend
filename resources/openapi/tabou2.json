@@ -57,14 +57,61 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+            },
+            {
+              "name": "end",
+              "in": "query",
+              "required": false,
+              "description": "Index de fin",
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "onlyActive",
+              "in": "query",
+              "required": false,
+              "description": "Indique si seuls les éléments actifs doivent être remontés",
+              "type": "boolean",
+              "default": true
+            },
+            {
+              "name": "resultsNumber",
+              "in": "query",
+              "required": false,
+              "description": "Nombre de résultats à remonter",
+              "type": "integer",
+              "format": "int64"
+            },
+            {
+              "name": "orderBy",
+              "in": "query",
+              "required": false,
+              "type": "string",
+              "description": "Nom du champ sur lequel trier les résultats",
+              "type": "string"
+            },
+            {
+              "name": "asc",
+              "in": "query",
+              "required": false,
+              "type": "string",
+              "description": "Indique si le tri doit être faire par ordre ascendant",
+              "type": "boolean",
+              "default": true
             }
-          }
         ],
         "responses": {
           "200": {
@@ -219,13 +266,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -266,6 +360,31 @@
             }
           }
         }
+      },
+      "getSurfaces": {
+        "summary": "Récupération des so",
+        "operationId": "getProgrammeById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          }
+        }
       }
     },
     "/communes": {
@@ -276,15 +395,62 @@
           "application/json"
         ],
         "parameters": [
-        {
-          "in": "body",
-          "name": "searchParams",
-          "description": "Paramètres de la recherche",
-          "required": true,
-          "schema": {
-            "$ref": "#/definitions/SearchParams"
+          {
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
-        }
         ],
         "responses": {
           "200": {
@@ -308,13 +474,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -340,19 +553,65 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
-
             "schema": {
               "type": "array",
               "items": {
@@ -372,13 +631,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -613,13 +919,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -754,13 +1107,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           },
           {
             "in": "path",
@@ -792,13 +1192,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -1093,7 +1540,62 @@
           "application/json"
         ],
         "parameters": [
-
+          {
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
         ],
         "responses": {
           "200": {
@@ -1198,13 +1700,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -1310,13 +1859,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -1341,13 +1937,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -1372,13 +2015,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -1403,13 +2093,60 @@
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "searchParams",
-            "description": "Paramètres de la recherche",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchParams"
-            }
+            "in": "query",
+            "name": "keyword",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "required": false,
+            "description": "Index de fin",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "onlyActive",
+            "in": "query",
+            "required": false,
+            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "type": "boolean",
+            "default": true
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
@@ -1424,7 +2161,38 @@
           }
         }
       }
+    },
+    "/permis/{permisId}": {
+      "get": {
+        "summary": "Recherche un permis de construire à partir de son identifiant",
+        "operationId": "getPermisById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "permisId",
+            "description": "Identifiant du permis de construire",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PermisConstruire"
+              }
+            }
+          }
+        }
+      }
     }
+
   },
   "definitions": {
     "Generic": {
@@ -1985,41 +2753,80 @@
         }
       }
     },
-    "SearchParams": {
+    "PermisConstruire": {
       "type": "object",
       "properties": {
-        "keyword": {
-          "description": "Mot clé de la recherche",
+        "id" : {
+          "description": "Identifiant unique du permis",
+          "type": "integer",
+          "format": "int64"
+        },
+        "numPc": {
+          "description": "Numero du permis de constuire",
           "type": "string"
         },
-        "start" : {
-          "description": "",
-          "type": "integer",
-          "format": "int64"
-        },
-        "end" : {
-          "description": "",
-          "type": "integer",
-          "format": "int64"
-        },
-        "onlyActive" : {
-          "description": "Indique si seuls les éléments actifs doivent être remontés",
-          "type": "boolean",
-          "default": true
-        },
-        "resultsNumber" : {
-          "description": "Nombre de résultats à remonter",
-          "type": "integer",
-          "format": "int64"
-        },
-        "orderBy" : {
-          "description": "Nom du champ sur lequel trier les résultats",
+        "depotDossier": {
+          "description": "Date deépot du permis de constuire",
           "type": "string"
         },
-        "asc" : {
-          "description": "Indique si le tri doit être faire par ordre ascendant",
-          "type": "boolean",
-          "default": true
+        "decisionDossier": {
+          "description": "Décision du dossier",
+          "type": "string"
+        },
+        "surfBureaux" : {
+          "description": "M² de surface de plancher dédié à l'activité bureaux",
+          "type": "number",
+          "format": "double"
+        },
+        "surfCommerces" : {
+          "description": "M² de surface de plancher dédié à l'activité commerces",
+          "type": "number",
+          "format": "double"
+        },
+        "surfIndustries" : {
+          "description": "M² de surface de plancher dédié à l'activité industries",
+          "type": "number",
+          "format": "double"
+        },
+        "surfEquipPub" : {
+          "description": "M² de surface de plancher dédié à l'activité équipement public",
+          "type": "number",
+          "format": "double"
+        },
+        "surfAutre" : {
+          "description": "M² de surface de plancher dédié à l'activité 'autres'",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "Surface": {
+      "type": "object",
+      "properties": {
+        "surfBureaux" : {
+          "description": "M² de surface de plancher dédié à l'activité bureaux",
+          "type": "number",
+          "format": "double"
+        },
+        "surfCommerces" : {
+          "description": "M² de surface de plancher dédié à l'activité commerces",
+          "type": "number",
+          "format": "double"
+        },
+        "surfIndustries" : {
+          "description": "M² de surface de plancher dédié à l'activité industries",
+          "type": "number",
+          "format": "double"
+        },
+        "surfEquipPub" : {
+          "description": "M² de surface de plancher dédié à l'activité équipement public",
+          "type": "number",
+          "format": "double"
+        },
+        "surfAutre" : {
+          "description": "M² de surface de plancher dédié à l'activité 'autres'",
+          "type": "number",
+          "format": "double"
         }
       }
     }

@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.IrisApi;
 import rm.tabou2.service.dto.Iris;
-import rm.tabou2.service.dto.SearchParams;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -14,7 +13,7 @@ public class IrisApiController implements IrisApi {
 
 
     @Override
-    public ResponseEntity<List<Iris>> getIris(@Valid SearchParams searchParams) throws Exception {
+    public ResponseEntity<List<Iris>> getIris(@Valid String keyword, @Valid Long start, @Valid Long end, @Valid Boolean onlyActive, @Valid Long resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 }
