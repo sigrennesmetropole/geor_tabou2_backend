@@ -100,14 +100,12 @@
               "in": "query",
               "required": false,
               "type": "string",
-              "description": "Nom du champ sur lequel trier les résultats",
-              "type": "string"
+              "description": "Nom du champ sur lequel trier les résultats"
             },
             {
               "name": "asc",
               "in": "query",
               "required": false,
-              "type": "string",
               "description": "Indique si le tri doit être faire par ordre ascendant",
               "type": "boolean",
               "default": true
@@ -201,6 +199,9 @@
             "schema": {
               "$ref": "#/definitions/Operation"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -215,7 +216,7 @@
         "parameters": [
           {
             "in": "body",
-            "name": "programmem",
+            "name": "programme",
             "description": "Nouveau programme d'aménagement",
             "required": true,
             "schema": {
@@ -255,6 +256,9 @@
             "schema": {
               "$ref": "#/definitions/Programme"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       },
@@ -309,14 +313,12 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
+            "description": "Nom du champ sur lequel trier les résultats"
           },
           {
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -358,12 +360,17 @@
             "schema": {
               "$ref": "#/definitions/Programme"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
-      },
-      "getSurfaces": {
-        "summary": "Récupération des so",
-        "operationId": "getProgrammeById",
+      }
+    },
+    "/programmes/{programmeId}/permis": {
+      "get": {
+        "summary": "Récupération de la liste des permis de construire d'un programme",
+        "operationId": "getPermisByProgrammeId",
         "produces": [
           "application/json"
         ],
@@ -381,7 +388,100 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Programme"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PermisConstruire"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/programmes/{programmeId}/agapeo": {
+      "get": {
+        "summary": "Récupération de la liste des données agapeo d'un programme",
+        "operationId": "getAgapeoByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Agapeo"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/programmes/{programmeId}/getDates": {
+      "get": {
+        "summary": "Récupération des dates avec application de la règle de gestion ",
+        "operationId": "getDates",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Dates"
+            }
+          }
+        }
+      }
+    },
+    "/programmes/{programmeId}/getLogements": {
+      "get": {
+        "summary": "Récupération des logements avec application de la règle de gestion ",
+        "operationId": "getLogements",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Logements"
             }
           }
         }
@@ -439,14 +539,12 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
+            "description": "Nom du champ sur lequel trier les résultats"
           },
           {
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -517,14 +615,12 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
+            "description": "Nom du champ sur lequel trier les résultats"
           },
           {
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -595,7 +691,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -603,7 +698,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -673,7 +767,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -681,7 +774,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -802,6 +894,9 @@
                 "$ref": "#/definitions/Etape"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -876,6 +971,9 @@
             "schema": {
               "$ref": "#/definitions/Etape"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -906,6 +1004,9 @@
                 "$ref": "#/definitions/Etape"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -961,7 +1062,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -969,7 +1069,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -1036,6 +1135,9 @@
             "schema": {
               "$ref": "#/definitions/Tiers"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1065,6 +1167,9 @@
                 "$ref": "#/definitions/Tiers"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1094,6 +1199,9 @@
                 "$ref": "#/definitions/Tiers"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1149,7 +1257,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -1157,7 +1264,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -1179,6 +1285,9 @@
                 "$ref": "#/definitions/Tiers"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1234,7 +1343,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -1242,7 +1350,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -1309,6 +1416,9 @@
             "schema": {
               "$ref": "#/definitions/TypeTiers"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1338,6 +1448,9 @@
                 "$ref": "#/definitions/TypeTiers"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1433,6 +1546,9 @@
             "schema": {
               "$ref": "#/definitions/Evenement"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1528,6 +1644,9 @@
             "schema": {
               "$ref": "#/definitions/Evenement"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1583,7 +1702,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -1591,7 +1709,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -1658,6 +1775,9 @@
             "schema": {
               "$ref": "#/definitions/TypeEvenement"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1687,6 +1807,9 @@
                 "$ref": "#/definitions/TypeEvenement"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1742,7 +1865,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -1750,7 +1872,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -1817,6 +1938,9 @@
             "schema": {
               "$ref": "#/definitions/TypeDocument"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1846,6 +1970,9 @@
                 "$ref": "#/definitions/TypeDocument"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1901,7 +2028,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -1909,7 +2035,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -1979,7 +2104,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -1987,7 +2111,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -2057,7 +2180,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -2065,7 +2187,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -2135,7 +2256,6 @@
             "name": "orderBy",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Nom du champ sur lequel trier les résultats",
             "type": "string"
           },
@@ -2143,7 +2263,6 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "type": "string",
             "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
@@ -2174,9 +2293,9 @@
             "in": "path",
             "name": "permisId",
             "description": "Identifiant du permis de construire",
-            "required": false,
-            "type": "number",
-            "format": "double"
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -2800,33 +2919,106 @@
         }
       }
     },
-    "Surface": {
+    "Agapeo": {
       "type": "object",
       "properties": {
-        "surfBureaux" : {
-          "description": "M² de surface de plancher dédié à l'activité bureaux",
-          "type": "number",
-          "format": "double"
+        "id": {
+          "description": "Identifiant du programme Agapeo",
+          "type": "integer",
+          "format": "int64"
         },
-        "surfCommerces" : {
-          "description": "M² de surface de plancher dédié à l'activité commerces",
-          "type": "number",
-          "format": "double"
+        "libelle": {
+          "description": "Identifiant unique du permis",
+          "type": "string"
         },
-        "surfIndustries" : {
-          "description": "M² de surface de plancher dédié à l'activité industries",
-          "type": "number",
-          "format": "double"
+        "logementsAccesSociale": {
+          "description": "Nombre de logements en accession libre",
+          "type": "integer",
+          "format": "int64"
         },
-        "surfEquipPub" : {
-          "description": "M² de surface de plancher dédié à l'activité équipement public",
-          "type": "number",
-          "format": "double"
+        "logementsAccesMaitrise": {
+          "description": "Nombre de logements en accession maitrisée",
+          "type": "integer",
+          "format": "int64"
         },
-        "surfAutre" : {
-          "description": "M² de surface de plancher dédié à l'activité 'autres'",
-          "type": "number",
-          "format": "double"
+        "logementsLocatifRegule": {
+          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "logementsPls": {
+          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "logementsLocatifSocial": {
+          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "anneeAgrementEtat": {
+          "description": "Année de l'agrément donné par l'état",
+          "type": "integer",
+          "format": "int64"
+        },
+        "PlhLogementsPrevus": {
+          "description": "Nombre de logement (prévu jusqu'à l'étape de livraison, livré ensuite)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "PlhLogementsLivres": {
+          "description": "Nombre de logements livrés au titre du PLH pour l'opération",
+          "type": "integer",
+          "format": "int64"
+        },
+        "numPc": {
+          "description": "Numéro du permis de construire",
+          "type": "string"
+        }
+      }
+    },
+    "Logements": {
+      "type": "object",
+      "properties": {
+        "logementsAccesSociale": {
+          "description": "Nombre de logements en accession libre",
+          "type": "integer",
+          "format": "int64"
+        },
+        "logementsLocatifRegule": {
+          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "logementsPls": {
+          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
+          "type": "integer",
+          "format": "int64"
+        },
+        "logementsLocatifSocial": {
+          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Dates": {
+      "type": "object",
+      "properties": {
+        "dateAutorisation": {
+          "description": "Date autorisation",
+          "type": "string",
+          "format": "date"
+        },
+        "dateOuvertureChantier": {
+          "description": "Date d'ouverture de chantier",
+          "type": "string",
+          "format": "date"
+        },
+        "dateAchevementTravaux": {
+          "description": "Date d'achèvement des travaux",
+          "type": "string",
+          "format": "date"
         }
       }
     }

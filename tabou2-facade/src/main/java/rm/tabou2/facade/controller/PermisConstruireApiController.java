@@ -11,7 +11,7 @@ import java.util.List;
 public class PermisConstruireApiController implements PermisApi {
 
     @Override
-    public ResponseEntity<List<PermisConstruire>> getPermisById(Double permisId) throws Exception {
+    public ResponseEntity<List<PermisConstruire>> getPermisById(Long permisId) throws Exception {
         return null;
     }
 
