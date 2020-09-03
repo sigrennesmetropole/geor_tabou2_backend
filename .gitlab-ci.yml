@@ -19,6 +19,7 @@ default:
 before_script:
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
   - eval $(ssh-agent -s)
+  - echo "$GIT_LAB_RUNNER_DSI_SSH_KEY - $SSH_KEY"
   - echo "$GIT_LAB_RUNNER_DSI_SSH_KEY" | tr -d '\r' | ssh-add -
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
