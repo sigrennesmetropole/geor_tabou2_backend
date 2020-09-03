@@ -8,11 +8,10 @@ cache: &global_cache
   paths:
     - $CI_PROJECT_DIR/.m2/repository/**/*
     - $CI_PROJECT_DIR/**/target/**/*
-    - $CI_PROJECT_DIR/**/target/*
 
 # Image docker utilisée par défaut pour les étapes
 default:
-  image: maven:3.6.0-jdk-8
+  image: maven:3.6.0-jdk-11
   tags:
     - cdp-rennes
 
