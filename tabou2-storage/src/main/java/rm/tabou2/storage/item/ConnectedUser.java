@@ -2,7 +2,7 @@ package rm.tabou2.storage.item;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import rm.tabou2.storage.entity.Authority;
+import rm.tabou2.storage.tabou.entity.Authority;
 
 import java.io.Serializable;
 import java.util.ArrayList;

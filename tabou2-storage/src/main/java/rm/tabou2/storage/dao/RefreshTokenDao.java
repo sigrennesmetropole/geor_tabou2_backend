@@ -1,7 +1,7 @@
 package rm.tabou2.storage.dao;
 
 import org.springframework.data.repository.CrudRepository;
-import rm.tabou2.storage.entity.RefreshToken;
+import rm.tabou2.storage.tabou.entity.RefreshToken;
 
 import java.util.List;
 

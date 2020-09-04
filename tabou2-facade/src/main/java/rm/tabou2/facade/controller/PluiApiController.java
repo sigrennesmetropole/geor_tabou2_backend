@@ -12,7 +12,7 @@ import java.util.List;
 public class PluiApiController implements PluiApi {
 
     @Override
-    public ResponseEntity<List<PluiZonage>> getPlui(@Valid String keyword, @Valid Long start, @Valid Long end, @Valid Boolean onlyActive, @Valid Long resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<List<PluiZonage>> getPlui(@Valid String keyword, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 }

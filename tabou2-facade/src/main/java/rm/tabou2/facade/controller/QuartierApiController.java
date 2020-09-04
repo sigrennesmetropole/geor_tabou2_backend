@@ -12,8 +12,10 @@ import java.util.List;
 public class QuartierApiController implements QuartiersApi {
 
 
+
+
     @Override
-    public ResponseEntity<List<Quartier>> getQuartier(@Valid String keyword, @Valid Long start, @Valid Long end, @Valid Boolean onlyActive, @Valid Long resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<List<Quartier>> getQuartier(@Valid String keyword, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 }

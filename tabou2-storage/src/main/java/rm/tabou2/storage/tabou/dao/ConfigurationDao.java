@@ -1,7 +1,7 @@
-package rm.tabou2.storage.dao;
+package rm.tabou2.storage.tabou.dao;
 
 import org.springframework.data.repository.CrudRepository;
-import rm.tabou2.storage.entity.Configuration;
+import rm.tabou2.storage.tabou.entity.Configuration;
 
 public interface ConfigurationDao extends CrudRepository<Configuration, Long> {
 
@@ -12,4 +12,5 @@ public interface ConfigurationDao extends CrudRepository<Configuration, Long> {
      * @return
      */
     Configuration findConfigurationById(long id);
+
 }

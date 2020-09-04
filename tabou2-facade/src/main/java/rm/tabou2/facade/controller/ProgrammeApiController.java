@@ -1,8 +1,11 @@
 package rm.tabou2.facade.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
+import rm.tabou2.service.ProgrammeService;
 import rm.tabou2.service.dto.*;
 
 import javax.validation.Valid;
@@ -12,14 +15,17 @@ import java.util.List;
 public class ProgrammeApiController implements ProgrammesApi {
 
 
+    @Autowired
+    private ProgrammeService programmeService;
+
     @Override
     public ResponseEntity<Programme> addProgramme(@Valid Programme programme) throws Exception {
-        return null;
+        return new ResponseEntity<>(programmeService.addProgramme(programme), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Programme> editProgramme(@Valid Programme programme) throws Exception {
-        return null;
+        return new ResponseEntity<>(programmeService.addProgramme(programme), HttpStatus.OK);
     }
 
     @Override
@@ -48,7 +54,7 @@ public class ProgrammeApiController implements ProgrammesApi {
     }
 
     @Override
-    public ResponseEntity<List<Programme>> getProgrammes(@Valid String keyword, @Valid Long start, @Valid Long end, @Valid Boolean onlyActive, @Valid Long resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<List<Programme>> getProgrammes(@Valid String keyword, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 }

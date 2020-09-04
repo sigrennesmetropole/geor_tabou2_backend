@@ -3,18 +3,15 @@ package rm.tabou2.facade.spring.config.security.jwt;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import rm.tabou2.storage.dao.RefreshTokenDao;
-import rm.tabou2.storage.entity.RefreshToken;
+import rm.tabou2.storage.tabou.entity.RefreshToken;
 import rm.tabou2.facade.exception.RefreshTokenExpiredException;
 import rm.tabou2.service.items.Tokens;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -29,8 +26,8 @@ public class JwtTokenUtil implements Serializable {
 
     private static final Logger LOG = LoggerFactory.getLogger(JwtTokenUtil.class);
 
-    @Autowired
-    RefreshTokenDao refreshTokenDao;
+/*    @Autowired
+    RefreshTokenDao refreshTokenDao;*/
 
     @Value("${jwt.secret}")
     private String secret;
@@ -79,7 +76,7 @@ public class JwtTokenUtil implements Serializable {
         // Ajout du nouveau token en bdd
         final RefreshToken rToken = new RefreshToken();
         rToken.setToken(token);
-        refreshTokenDao.save(rToken);
+        //refreshTokenDao.save(rToken);
 
         return token;
     }
@@ -177,7 +174,7 @@ public class JwtTokenUtil implements Serializable {
      */
     private boolean checkRefreshToken(final String token) {
 
-        final RefreshToken rToken = refreshTokenDao.findFirstByTokenEquals(token);
+       /* final RefreshToken rToken = refreshTokenDao.findFirstByTokenEquals(token);
         if (rToken != null) {
 
             // Suppression du token dans la bdd car usage unique
@@ -186,7 +183,8 @@ public class JwtTokenUtil implements Serializable {
             return true;
         } else {
             return false;
-        }
+        }*/
+        return false;
     }
 
 
@@ -195,12 +193,12 @@ public class JwtTokenUtil implements Serializable {
      */
     private void purgeRefreshToken() {
 
-        final List<RefreshToken> tokenList = refreshTokenDao.findAll();
+       /* final List<RefreshToken> tokenList = refreshTokenDao.findAll();
         for (final RefreshToken tokenData : tokenList) {
             if (this.isTokenExpired(tokenData.getToken())) {
                 refreshTokenDao.delete(tokenData);
             }
-        }
+        }*/
     }
 
     /**
@@ -256,7 +254,7 @@ public class JwtTokenUtil implements Serializable {
         // Contrôle du préfixe dans la requete
         if (requestToken == null || !requestToken.startsWith(this.HEADER_TOKEN_JWT_PREFIX)) {
             LOG.error("Le token ne commence pas avec la chaine Bearer");
-            token.setHasError(true);
+            //token.setHasError(true);
         } else {
 
             final String tokenJwt = requestToken.substring(this.HEADER_TOKEN_JWT_PREFIX.length());

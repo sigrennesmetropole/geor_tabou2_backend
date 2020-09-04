@@ -1,4 +1,4 @@
-package rm.tabou2.storage.entity;
+package rm.tabou2.storage.tabou.entity;
 
 import javax.persistence.*;
 

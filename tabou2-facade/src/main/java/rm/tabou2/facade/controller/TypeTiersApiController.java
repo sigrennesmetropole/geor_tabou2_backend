@@ -23,7 +23,7 @@ public class TypeTiersApiController implements TypesTiersApi {
     }
 
     @Override
-    public ResponseEntity<List<TypeTiers>> getTypeTiers(@Valid String keyword, @Valid Long start, @Valid Long end, @Valid Boolean onlyActive, @Valid Long resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<List<TypeTiers>> getTypeTiers(@Valid String keyword, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 

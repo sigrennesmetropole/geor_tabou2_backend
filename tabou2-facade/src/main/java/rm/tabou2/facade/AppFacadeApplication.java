@@ -12,9 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 /**
  * Classe de configuration globale de l'application.
  */
-@SpringBootApplication(scanBasePackages = {"rm.tabou2.facade", "rm.tabou2.service", "rm.tabou2.storage"})
-@EntityScan(basePackages = "rm.tabou2.storage.entity")
-@EnableJpaRepositories(basePackages = "rm.tabou2.storage.dao")
+@SpringBootApplication(scanBasePackages = {"rm.tabou2.facade", "rm.tabou2.service", "rm.tabou2.storage.tabou"})
 @PropertySources({@PropertySource(value = {"classpath:tabou2.properties"}), @PropertySource(value = {"file:${tabou2.properties}"}, ignoreResourceNotFound = true)})
 public class AppFacadeApplication extends SpringBootServletInitializer {
 
