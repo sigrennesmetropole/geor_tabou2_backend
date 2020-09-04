@@ -1,0 +1,68 @@
+---
+# create root directory
+- name: Creates directory application
+  file:
+    state: directory
+    mode: 0775
+    path: "{{ item }}"
+  with_items:
+    - "{{tabou2_image_directory}}/"
+    - "{{tabou2_image_directory}}/tabou2"
+    - "{{tabou2_config_directory}}/tabou2"
+
+# copy images 
+- name: Copy tabou2 facade Dockerfile
+  template:
+    src: Dockerfile.facade
+    dest: "{{ tabou2_image_directory }}/Dockerfile"
+    mode: 0770
+    
+- name: Copy tabou2 war
+  copy:
+    src: "{{ tabou2_war_name }}"
+    dest: "{{ tabou2_image_directory }}/tabou2.war"
+    mode: 0770 
+   
+- name: Copy tabou2 facade properties file
+  template:
+    src: tabou2.properties.j2
+    dest: "{{ tabou2_config_directory }}/tabou2/tabou2.properties"
+    mode: 0770
+  
+- name: Build tabou2 facade image
+  shell: 
+    cmd: docker build -t tabou2-image {{tabou2_image_directory}}
+    chdir: "{{tabou2_image_directory}}"  
+
+# update security proxy
+- name: Check whether targets-mapping.properties contains tabou2
+  command: grep -Fxq "tabou2" "{{ tabou2_config_directory }}/security-proxy/targets-mapping.properties"
+  register: checksecuritytabou2
+  check_mode: no
+  ignore_errors: yes
+  changed_when: no
+
+- name: Update targets-mapping.properties if needed
+  when: checksecuritytabou2.rc == 0
+  shell:
+    cmd: echo "tabou2=http://tabou2:{{tabou2_server_port}}/tabou2" >> "{{ tabou2_config_directory }}/security-proxy/targets-mapping.properties"    
+ 
+ # update docker compose file
+- name: Create docker compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{tabou2_docker_directory}}/docker-tabou2.yml"
+    mode: 0664
+    
+- name: Merge docker compose file
+  shell:
+    cmd: yq merge -i "{{tabou2_docker_directory}}/docker-compose.yml" "{{tabou2_docker_directory}}/docker-tabou2.yml"
+#- name: Stop docker compose
+#  shell:
+#    cmd: docker-compose down
+#    chdir: "{{tabou2_docker_directory}}"
+    
+- name: Restart docker compose
+  shell:
+    cmd: docker-compose up -d --build
+    chdir: "{{tabou2_docker_directory}}"    

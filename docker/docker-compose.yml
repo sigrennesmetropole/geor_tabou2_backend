@@ -1,0 +1,19 @@
+proxy:
+  build: proxy
+  ports:
+    - "8080:8080"
+  links:
+    - tabou2
+    - header
+  environment:
+    - XMX=512M
+
+tabou2:
+  build: tabou2
+  environment:
+    - ADD_JAVA_OPTS=-Dgeorchestra.datadir=/etc/georchestra
+
+header:
+  environment:
+    - XMX=512M
+  image: georchestra/header

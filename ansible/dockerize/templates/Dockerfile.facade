@@ -1,0 +1,15 @@
+FROM jetty:9.3-jre11
+USER root
+MAINTAINER fni18300@open-groupe.com
+ENV TZ=Europe/Paris
+EXPOSE {{tabou2_server_port}}
+
+ADD tabou2.war /var/lib/jetty/webapps/tabou2.war
+#ADD jetty-logging.properties /usr/local/jetty/resources/jetty-logging.properties
+
+CMD [ "sh", "-c", "exec java -Djava.io.tmpdir=/tmp/jetty -Dgeorchestra.datadir=/etc/georchestra \
+      ${ADD_JAVA_OPTS}                                   \
+      -Xmx${XMX:-1G} -Xms${XMX:-1G}                      \
+      -jar /usr/local/jetty/start.jar" ]
+
+
