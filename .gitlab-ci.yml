@@ -28,8 +28,6 @@ tabou2:build:
   script:
     - sh ./mvnw $MAVEN_CLI_OPTS -U package
   stage: build
-  cache:
-    <<: *global_cache
   except:
     refs:
       - master
@@ -42,9 +40,7 @@ tabou2:build:
 tabou2:build:master:
   script:
     - sh ./mvnw $MAVEN_CLI_OPTS -U package -DskipTests
-  stage: build
-  cache:
-    <<: *global_cache  
+  stage: build  
   only:
     refs:
       - master
@@ -59,10 +55,6 @@ tabou2:sonar:
   stage: test
   dependencies:
     - tabou2:build
-  # On télécharge le cache mais on ne va pas le mettre à jour à la fin
-  cache:
-    <<: *global_cache
-    policy: pull    
   except:
     refs:
       - master
@@ -83,11 +75,7 @@ tabou2:sonar:
 tabou2:sonar:master:
   stage: test
   dependencies:
-    - tabou2:build
-  # On télécharge le cache mais on ne va pas le mettre à jour à la fin
-  cache:
-    <<: *global_cache
-    policy: pull    
+    - tabou2:build 
   only:
     refs:
       - open/master
@@ -105,11 +93,7 @@ tabou2:deploy:
   stage: deploy
   image: ansible/ansible-runner:1.4.4
   dependencies:
-    - tabou2:build
-  # On télécharge le cache mais on ne va pas le mettre à jour à la fin
-  cache:
-    <<: *global_cache
-    policy: pull    
+    - tabou2:build  
   only:
     refs:
       - open/develop
@@ -126,11 +110,7 @@ tabou2:deploy:master:
    - cdp-rennes  
   image: ansible/ansible-runner:1.4.4  
   dependencies:
-    - tabou2:build:master
-  # On télécharge le cache mais on ne va pas le mettre à jour à la fin
-  cache:
-    <<: *global_cache
-    policy: pull    
+    - tabou2:build:master   
   only:
     refs:
       - open/master
