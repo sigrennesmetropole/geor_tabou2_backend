@@ -13,6 +13,10 @@
     <artifactId>tabou2-facade</artifactId>
     <packaging>jar</packaging>
 
+	<properties>
+		<finalName>tabou2</finalName>
+	</properties>
+
     <build>
 
         <resources>
@@ -75,14 +79,134 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+					<execution>
+						<id>a-jar</id>
+						<phase>package</phase>
+					</execution>
+				</executions>
                 <configuration>
                     <executable>true</executable>
                     <finalName>${project.parent.artifactId}</finalName>
                 </configuration>
             </plugin>
+            
+			<!-- War Spring Boot -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>a-war</id>
+						<phase>package</phase>
+						<goals>
+							<goal>war</goal>
+						</goals>
+						<configuration>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
+							<packagingExcludes>
+								WEB-INF/lib/mapstruct-1.2.0.Final.jar,
+								WEB-INF/lib/jcl-over-slf4j-1.7.29.jar,
+								WEB-INF/lib/spring-boot-devtools-2.1.10.RELEASE.jar,
+								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
+							</packagingExcludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin> 
+			
+			<!-- WAR with final name -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>b-war</id>
+						<phase>package</phase>
+						<goals>
+							<goal>war</goal>
+						</goals>
+						<configuration>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
+							<packagingExcludes>
+								WEB-INF/lib/mapstruct-1.2.0.Final.jar,
+								WEB-INF/lib/jcl-over-slf4j-1.7.29.jar,
+								WEB-INF/lib/spring-boot-devtools-2.1.10.RELEASE.jar,
+								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
+							</packagingExcludes>
+							<warName>${finalName}</warName>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>          
 
         </plugins>
     </build>
+    
+    <profiles>
+    
+    	<profile>
+			<id>docker</id>
+			<properties>
+				<packageDatadirScmVersion>master</packageDatadirScmVersion>
+				<dockerImageName>sigrennesmetropole/geor_tabou2</dockerImageName>
+				<dockerDatadirScmUrl>scm:git:https://github.com/georchestra/datadir.git</dockerDatadirScmUrl>
+				<dockerDatadirScmVersion>docker-${packageDatadirScmVersion}</dockerDatadirScmVersion>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<version>1.2.2</version>
+						<dependencies>
+							<dependency>
+								<groupId>com.google.guava</groupId>
+								<artifactId>guava</artifactId>
+								<version>28.2-jre</version>
+							</dependency>
+						</dependencies>
+						<executions>
+							<execution>
+								<id>build-docker-image</id>
+								<phase>package</phase>
+								<goals>
+									<goal>build</goal>
+									<goal>push</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<imageName>${dockerImageName}</imageName>
+							<imageTags>
+								<imageTag>${project.version}</imageTag>
+								<imageTag>latest</imageTag>
+							</imageTags>
+							<!-- chemin relatif depuis le target du présent projet -->
+							<dockerDirectory>${project.basedir}/../docker/tabou2-backend</dockerDirectory>
+
+							<!-- copy the service's jar file from target into the root directory 
+								of the image -->
+							<resources>
+								<resource>
+									<targetPath>/var/lib/jetty/webapps/</targetPath>
+									<directory>${project.build.directory}</directory>
+									<include>${finalName}.war</include>
+								</resource>
+								<!-- <resource> <targetPath>/etc/georchestra</targetPath> <directory>${project.build.directory}/datadir</directory> 
+									<include>${project.artifactId}/**</include> </resource> -->
+							</resources>
+							<!-- This will require to set up the docker-hub credentials correctly 
+								into your ~/.m2/settings.xml, see: https://github.com/spotify/docker-maven-plugin#authenticating-with-private-registries -->
+							<serverId>docker-hub</serverId>
+							<registryUrl>https://index.docker.io/v1/</registryUrl>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+    
+    </profiles>
     <dependencies>
 
         <dependency>

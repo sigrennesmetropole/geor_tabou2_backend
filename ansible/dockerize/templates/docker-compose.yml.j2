@@ -1,0 +1,22 @@
+---
+version: "3"
+
+volumes:
+  tabou2_data:
+
+services:
+  tabou2:
+    image: tabou2-image
+    depends_on:
+      - database
+      - ldap
+    ports:
+      - "{{tabou2_server_expose_port}}:{{tabou2_server_port}}"      
+    volumes:
+      - ./config:/etc/georchestra
+      - tabou2_data:/opt/tabou2/data
+    environment:
+      - JAVA_OPTIONS=-Dorg.eclipse.jetty.annotations.AnnotationParser.LEVEL=OFF
+      - ADD_JAVA_OPTS=
+      - XMX=1G
+  

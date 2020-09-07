@@ -1,4 +1,4 @@
-package rm.tabou2.storage.entity;
+package rm.tabou2.storage.tabou.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Immutable;
