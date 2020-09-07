@@ -5,16 +5,6 @@
 - hosts: all
   vars_files:
     - ~/tabou2_var.yml
-  pre_tasks :
-    - name: Install a list of packages
-      apt:
-        name: "{{ packages }}"
-      vars:
-        packages:
-        - snapd
-    - name: Install core
-      shell: 
-        cmd: snap install core ; snap install yq
   roles:
     - {
       role: dockerize,
