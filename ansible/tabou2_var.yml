@@ -1,0 +1,28 @@
+db_host: database
+db_name: georchestra
+db_user: tabou2
+db_password: tabou2
+db_port: 5432
+
+db_ddc_host: database
+db_ddc_name: ddc
+db_ddc_user: root
+db_ddc_password: root
+db_ddc_port: 3306
+
+server_expose_port: 8083
+
+smtp_host: 10.50.1.113
+smtp_port: 1025
+smtp_username:
+smtp_password:
+
+ldap_host: ldap
+ldap_port: 389
+ldap_username: cn=admin,dc=georchestra,dc=org
+ldap_password: secret
+
+backend_url: https://portail.sig.rennesmetropole.fr
+
+
+

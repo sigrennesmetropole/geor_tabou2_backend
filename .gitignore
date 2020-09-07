@@ -1,0 +1,9 @@
+/.idea
+/tabou2-storage/target/**
+/tabou2-storage/tabou2-storage.iml
+/tabou2-facade/target/**
+/tabou2-facade/tabou2-facade.iml
+/tabou2-service/target/**
+/tabou2-service/tabou2-service.iml
+/tabou2.iml
+/.project

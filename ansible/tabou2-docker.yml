@@ -1,0 +1,30 @@
+---
+# les documents YAML commencent toujours par "---"
+
+# le nom de l'hôte ou groupe concerné
+- hosts: all
+  vars_files:
+    - ~/tabou2_var.yml
+  roles:
+    - {
+      role: dockerize,
+      tabou2_db_host: '{{db_host}}',
+      tabou2_db_port: '{{db_port}}',
+      tabou2_db_name: '{{db_name}}',
+      tabou2_db_user: '{{db_user}}',
+      tabou2_db_password: '{{db_password}}',
+      ddc_db_host: '{{db_ddc_host}}',
+      ddc_db_port: '{{db_ddc_port}}',
+      ddc_db_name: '{{db_ddc_name}}',
+      ddc_db_user: '{{db_ddc_user}}',
+      ddc_db_password: '{{db_ddc_password}}',
+      tabou2_server_expose_port: '{{server_expose_port}}',
+      tabou2_smtp_host: '{{smtp_host}}',
+      tabou2_smtp_port: '{{smtp_port}}',
+      tabou2_smtp_username: '{{smtp_username}}',
+      tabou2_ldap_host: '{{ldap_host}}',
+      tabou2_ldap_port: '{{ldap_port}}',
+      tabou2_ldap_username: '{{ldap_username}}',
+      tabou2_ldap_password: '{{ldap_password}}',
+      tabou2_backend_url: '{{backend_url}}',
+      }
