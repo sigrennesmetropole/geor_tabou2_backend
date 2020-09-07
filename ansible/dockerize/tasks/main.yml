@@ -48,10 +48,21 @@
     cmd: echo "tabou2=http://tabou2:{{tabou2_server_port}}/tabou2" >> "{{ tabou2_config_directory }}/security-proxy/targets-mapping.properties"    
 
 # install yaml-merge
-- name: Clone and build yaml-merge
+- name: Clone yaml-merge
   shell: 
     chdir: /tmp
-    cmd: git clone https://github.com/OndraZizka/yaml-merge.git ; cd yaml-merge ;  mvn -Drelease package
+    cmd: git clone https://github.com/OndraZizka/yaml-merge.git; 
+    
+- name: Override yaml-merge
+  copy: 
+    src: "YmlMerger.java"
+    dest: "/tmp/yaml-merge/src/main/java/org/cobbzilla/util/yml"
+    mode: 0664    
+    
+- name: Build yaml-merge
+  shell:
+    chdir: /tmp
+    cmd: cd yaml-merge ;  mvn -Drelease package
     
 # update docker compose file
 - name: Copy tabou2 docker compose file
