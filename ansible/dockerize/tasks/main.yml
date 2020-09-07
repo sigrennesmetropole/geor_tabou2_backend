@@ -51,7 +51,7 @@
 - name: Clone yaml-merge
   shell: 
     chdir: /tmp
-    cmd: git clone https://github.com/OndraZizka/yaml-merge.git; 
+    cmd: rm -rf /tmp/yaml-merge; git clone https://github.com/OndraZizka/yaml-merge.git; 
     
 - name: Override yaml-merge
   copy: 
