@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -42,25 +43,28 @@ public class StorageDdcBeanConfiguration {
     private String hibernateHbm2ddlAuto;
 
     @Bean
-    @Primary
     @ConfigurationProperties(prefix = "spring.ddc.datasource")
-    public DataSource tabouDataSource() {
+    public DataSource ddcDataSource() {
         return DataSourceBuilder
                 .create()
                 .build();
     }
 
     @Bean(name = "ddcEntityManagerFactory")
-    @Primary
-    public LocalContainerEntityManagerFactoryBean ddcEntityManagerFactory(EntityManagerFactoryBuilder builder) {
-        return builder.dataSource(tabouDataSource())
+    public LocalContainerEntityManagerFactoryBean ddcEntityManagerFactory(@Qualifier("entityManagerDdcFactoryBuilder") EntityManagerFactoryBuilder builder) {
+        return builder.dataSource(ddcDataSource())
                 .properties(hibernateProperties())
-                .packages("rm.ddc.storage.ddc.entity")
+                .packages("rm.tabou2.storage.ddc.entity")
                 .persistenceUnit("ddcPU")
                 .build();
     }
 
-    @Primary
+
+    @Bean
+    public EntityManagerFactoryBuilder entityManagerDdcFactoryBuilder() {
+        return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
+    }
+
     @Bean(name = "ddcTransactionManager")
     public PlatformTransactionManager ddcTransactionManager(@Qualifier("ddcEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);

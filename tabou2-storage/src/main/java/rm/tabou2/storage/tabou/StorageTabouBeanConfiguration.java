@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -52,7 +53,7 @@ public class StorageTabouBeanConfiguration {
 
     @Bean(name = "tabouEntityManagerFactory")
     @Primary
-    public LocalContainerEntityManagerFactoryBean tabouEntityManagerFactory(EntityManagerFactoryBuilder builder) {
+    public LocalContainerEntityManagerFactoryBean tabouEntityManagerFactory(@Qualifier("entityManagerFactoryBuilder") EntityManagerFactoryBuilder builder) {
         return builder.dataSource(tabouDataSource())
                 .properties(hibernateProperties())
                 .packages("rm.tabou2.storage.tabou.entity")
@@ -64,6 +65,11 @@ public class StorageTabouBeanConfiguration {
     @Bean(name = "tabouTransactionManager")
     public PlatformTransactionManager tabouTransactionManager(@Qualifier("tabouEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
+    }
+
+    @Bean
+    public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
+        return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
     }
 
     private Map hibernateProperties() {
