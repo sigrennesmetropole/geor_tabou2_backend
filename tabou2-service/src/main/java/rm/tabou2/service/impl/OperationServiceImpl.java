@@ -1,7 +1,6 @@
 package rm.tabou2.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.OperationService;
 import rm.tabou2.service.dto.Operation;
@@ -10,7 +9,6 @@ import rm.tabou2.service.util.Utils;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.entity.OperationEntity;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
