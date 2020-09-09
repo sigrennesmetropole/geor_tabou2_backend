@@ -7,11 +7,12 @@ import rm.tabou2.service.ProgrammeService;
 import rm.tabou2.service.dto.Logements;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.mapper.ProgrammeMapper;
-import rm.tabou2.storage.tabou.dao.AgapeoDao;
+import rm.tabou2.service.util.Utils;
 import rm.tabou2.storage.tabou.dao.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProgrammeServiceImpl implements ProgrammeService {
@@ -33,6 +34,29 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         programmeEntity = programmeDao.save(programmeEntity);
 
         return programmeMapper.entityToDto(programmeEntity);
+
+    }
+
+    @Override
+    public Programme getProgrammeById(long programmeId) {
+
+        Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(programmeId);
+
+        if (null == programmeEntityOpt || programmeEntityOpt.isEmpty()) {
+            //TODO : exception
+            //throw new AppServiceNotFoundException("Le programme id=" + programmeId + " n'existe pas");
+        }
+
+        return programmeMapper.entityToDto(programmeEntityOpt.get());
+
+    }
+
+    @Override
+    public List<Programme> searchProgrammes(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+
+        List<ProgrammeEntity> programmes = programmeDao.findByKeyword(keyword, Utils.buildPageable(start, resultsNumber, orderBy, asc));
+
+        return programmeMapper.entitiesToDto(programmes);
 
     }
 
