@@ -343,6 +343,52 @@
         }
       }
     },
+    "/programmes/tiers/{programmeId}/{typeTiersId}/{tiersId}": {
+      "post": {
+        "summary": "Association d'un tiers à un programme",
+        "operationId": "associateTiersToProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "typeTiersId",
+            "description": "Identifiant du type de tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/programmes/{programmeId}/permis": {
       "get": {
         "summary": "Récupération de la liste des permis de construire d'un programme",
@@ -2119,7 +2165,7 @@
     },
     "/permis/{permisId}": {
       "get": {
-        "summary": "Recherche un permis de construire à partir de son identifiant",
+        "summary": "Récupération d'un permis de construire à partir de son identifiant",
         "operationId": "getPermisById",
         "produces": [
           "application/json"
@@ -2138,11 +2184,8 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
                 "$ref": "#/definitions/PermisConstruire"
               }
-            }
           }
         }
       }
@@ -2379,23 +2422,28 @@
         },
         "attributionDate": {
           "description": "Date d'attribution du programme au promoteur",
-          "type": "string"
+          "type": "string",
+          "format": "date"
         },
         "commercialisationDate": {
           "description": "Date de lancement de la commercialisation",
-          "type": "string"
+          "type": "string",
+          "format": "date"
         },
         "demarrageDate": {
           "description": "TODO",
-          "type": "string"
+          "type": "string",
+          "format": "date"
         },
         "livraisonDate": {
           "description": "Date de livraison du programme",
-          "type": "string"
+          "type": "string",
+          "format": "date"
         },
         "clotureDate": {
           "description": "Date de clôture",
-          "type": "string"
+          "type": "string",
+          "format": "date"
         },
         "logementsTotal": {
           "description": "Nombre de logements total (prévu, jusqu'à l'étape de livraison, livré ensuite)",
@@ -2404,27 +2452,33 @@
         },
         "logementsAccesLibre": {
           "description": "Nombre de logements en accession libre",
-          "type": "string"
+          "type": "integer",
+          "format": "int32"
         },
         "logementsAccessMaitrise": {
           "description": "Nombre de logements en accession maitrisée",
-          "type": "string"
+          "type": "integer",
+          "format": "int32"
         },
         "logementsLocatifRegule": {
           "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
-          "type": "string"
+          "type": "integer",
+          "format": "int32"
         },
         "logementsPls": {
           "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
-          "type": "string"
+          "type": "integer",
+          "format": "int32"
         },
         "logementsAccesAide": {
           "description": "Nombre de logements en accession sociale (PSLA, OFS-BRS)",
-          "type": "string"
+          "type": "integer",
+          "format": "int32"
         },
         "logementsLocatifAide": {
           "description": "Nombre de logements en locatif social (PLUS, PLAI)",
-          "type": "string"
+          "type": "integer",
+          "format": "int32"
         },
         "numPc": {
           "description": "Numéro du permis de construire",
@@ -2632,10 +2686,8 @@
         },
         "dateInactif": {
           "description": "Date de mise en inactivité du tiers",
-          "type": "string"
-        },
-        "type": {
-
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -2799,8 +2851,9 @@
           "type": "string"
         },
         "depotDossier": {
-          "description": "Date deépot du permis de constuire",
-          "type": "string"
+          "description": "Date de dépot du permis de constuire",
+          "type": "string",
+          "format": "date"
         },
         "decisionDossier": {
           "description": "Décision du dossier",
