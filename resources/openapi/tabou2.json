@@ -190,6 +190,37 @@
         }
       }
     },
+    "/operations/tiers": {
+      "post": {
+        "summary": "Association d'un tiers à une operation",
+        "operationId": "associateTiersToOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "operationTiers",
+            "description": "les Id d'une association d'un tiers à une operation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OperationTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/programmes": {
       "post": {
         "summary": "Ajout d'un programme d'aménagement",
@@ -343,7 +374,7 @@
         }
       }
     },
-    "/programmes/tiers/{programmeId}/{typeTiersId}/{tiersId}": {
+    "/programmes/tiers": {
       "post": {
         "summary": "Association d'un tiers à un programme",
         "operationId": "associateTiersToProgramme",
@@ -352,28 +383,13 @@
         ],
         "parameters": [
           {
-            "in": "path",
-            "name": "programmeId",
-            "description": "Identifiant du programme",
+            "in": "body",
+            "name": "programmeTiers",
+            "description": "les Id d'une association d'un tiers à un programme",
             "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "path",
-            "name": "tiersId",
-            "description": "Identifiant du tiers",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "path",
-            "name": "typeTiersId",
-            "description": "Identifiant du type de tiers",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
+            "schema": {
+              "$ref": "#/definitions/ProgrammeTiers"
+            }
           }
         ],
         "responses": {
@@ -2383,6 +2399,26 @@
         }
       }
     },
+    "OperationTiers": {
+      "type": "object",
+      "properties": {
+        "operationId" : {
+          "description": "Identifiant du programme",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeTiersId" : {
+          "description": "Identifiant du type de tiers",
+          "type": "integer",
+          "format": "int64"
+        },
+        "tiersId" : {
+          "description": "Identifiant du tiers",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
     "Programme": {
       "type": "object",
       "properties": {
@@ -2501,6 +2537,26 @@
           "description": "Date de dernière modification du programme",
           "type": "string",
           "format": "date"
+        }
+      }
+    },
+    "ProgrammeTiers": {
+      "type": "object",
+      "properties": {
+        "programmeId" : {
+          "description": "Identifiant du programme",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeTiersId" : {
+          "description": "Identifiant du type de tiers",
+          "type": "integer",
+          "format": "int64"
+        },
+        "tiersId" : {
+          "description": "Identifiant du tiers",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },

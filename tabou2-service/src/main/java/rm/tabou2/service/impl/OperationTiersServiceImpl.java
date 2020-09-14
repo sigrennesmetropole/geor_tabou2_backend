@@ -1,15 +1,20 @@
 package rm.tabou2.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.OperationService;
 import rm.tabou2.service.OperationTiersService;
-import rm.tabou2.service.ProgrammeService;
-import rm.tabou2.service.TypeTiersService;
 import rm.tabou2.service.dto.Operation;
-import rm.tabou2.service.dto.Programme;
-import rm.tabou2.storage.tabou.dao.*;
-import rm.tabou2.storage.tabou.entity.*;
+import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.storage.tabou.dao.OperationDao;
+import rm.tabou2.storage.tabou.dao.OperationTiersDao;
+import rm.tabou2.storage.tabou.dao.TiersDao;
+import rm.tabou2.storage.tabou.dao.TypeTiersDao;
+import rm.tabou2.storage.tabou.entity.OperationEntity;
+import rm.tabou2.storage.tabou.entity.OperationTiersEntity;
+import rm.tabou2.storage.tabou.entity.TiersEntity;
+import rm.tabou2.storage.tabou.entity.TypeTiersEntity;
 
 import java.util.Date;
 import java.util.Optional;
@@ -17,11 +22,6 @@ import java.util.Optional;
 @Service
 public class OperationTiersServiceImpl implements OperationTiersService {
 
-    @Autowired
-    private ProgrammeDao programmeDao;
-
-    @Autowired
-    private ProgrammeService programmeService;
 
     @Autowired
     private OperationService operationService;
@@ -38,62 +38,46 @@ public class OperationTiersServiceImpl implements OperationTiersService {
     @Autowired
     private OperationTiersDao operationTiersDao;
 
-    @Override
-    public Programme associateTiersToProgramme(long tiersId, long programmeId, long typeTiersId) {
-
-        associateTiers(tiersId, programmeId, 0, typeTiersId);
-
-        return programmeService.getProgrammeById(programmeId);
-
-    }
 
     @Override
-    public Operation associateTiersToOperation(long tiersId, long operationId, long typeTiersId) {
-
-        associateTiers(tiersId, 0, operationId, typeTiersId);
-
-        return operationService.getOperationById(operationId);
-
-    }
-
-
-    @Override
-    public void associateTiers(long tiersId, long programmeId, long operationId, long typeTiersId) {
-
-        Optional<TypeTiersEntity>  typeTiersEntityOpt = typeTiersDao.findById(typeTiersId);
-        if (null == typeTiersEntityOpt || typeTiersEntityOpt.isEmpty()) {
-            //TODO : exception : illegalArgumentException
-        }
-
-        Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersId);
-        if (null == typeTiersEntityOpt || typeTiersEntityOpt.isEmpty()) {
-            //TODO : exception
-        }
+    public Operation associateTiersToOperation(long operationId, long tiersId, long typeTiersId) throws AppServiceException {
 
         OperationTiersEntity operationTiersEntity = new OperationTiersEntity();
 
-        operationTiersEntity.setCreateDate(new Date());
-        //TODO : association user
-        //operationTiersEntity.setCreateUser();
-
-        if (programmeId > 0 ){
-            Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(programmeId);
-            if (null == programmeEntityOpt || programmeEntityOpt.isEmpty()) {
-                //TODO : exception
-            }
-            operationTiersEntity.setProgramme(programmeEntityOpt.get());
-        } else if (operationId > 0) {
-            Optional<OperationEntity> operationEntityOpt = operationDao.findById(operationId);
-            if (null == operationEntityOpt || operationEntityOpt.isEmpty()) {
-                //TODO : exception
-            }
-            operationTiersEntity.setOperation(operationEntityOpt.get());
+        // récuperer type tiers
+        Optional<TypeTiersEntity> typeTiersEntityOpt = typeTiersDao.findById(typeTiersId);
+        if (typeTiersEntityOpt.isEmpty()) {
+            throw new AppServiceException("Le typeTiersId = " + typeTiersId + " n'existe pas");
         }
-
         operationTiersEntity.setTypeTiers(typeTiersEntityOpt.get());
+
+
+        // récuperer tiers
+        Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersId);
+        if (tiersEntityOpt.isEmpty()) {
+            throw new AppServiceException("Le tiersID = " + tiersId + "n'existe pas");
+        }
         operationTiersEntity.setTiers(tiersEntityOpt.get());
 
-        operationTiersDao.save(operationTiersEntity);
+        // récuperer opération
+        Optional<OperationEntity> operationEntityOpt = operationDao.findById(operationId);
+        if (operationEntityOpt.isEmpty()) {
+            throw new AppServiceException("L' operationId = " + operationId + "n'existe pas");
+        }
+        operationTiersEntity.setOperation(operationEntityOpt.get());
+
+        operationTiersEntity.setCreateDate(new Date());
+        //TODO : association user
+
+
+        try {
+            operationTiersDao.save(operationTiersEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible d'ajouter l'opération tiers", e);
+        }
+
+
+        return operationService.getOperationById(operationId);
 
     }
 
