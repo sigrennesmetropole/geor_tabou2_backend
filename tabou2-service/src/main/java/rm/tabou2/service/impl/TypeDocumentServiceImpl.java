@@ -3,16 +3,15 @@ package rm.tabou2.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.TypeDocumentService;
-import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.mapper.TypeDocumentMapper;
 import rm.tabou2.service.util.Utils;
 import rm.tabou2.storage.tabou.dao.TypeDocumentDao;
-import rm.tabou2.storage.tabou.entity.TiersEntity;
 import rm.tabou2.storage.tabou.entity.TypeDocumentEntity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -36,12 +35,11 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     }
 
     @Override
-    public void inactivateTypeDocument(Long typeDocumentId) {
+    public void inactivateTypeDocument(Long typeDocumentId) throws NoSuchElementException {
 
         Optional<TypeDocumentEntity> typeDocumentOpt = typeDocumentDao.findById(typeDocumentId);
-        if (typeDocumentOpt.isEmpty()) {
-            //TODO : exception
-
+        if (null == typeDocumentOpt || typeDocumentOpt.isEmpty()) {
+            throw new NoSuchElementException("Le type de document id=" + typeDocumentId + " n'existe pas");
         }
 
         TypeDocumentEntity typeDocument = typeDocumentOpt.get();
@@ -49,12 +47,10 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
 
         typeDocumentDao.save(typeDocument);
 
-        //TODO : voir si on doit retourner qqch
-
     }
 
     @Override
-    public List<TypeDocument> searchTiers(String keyword, Integer start, Boolean onlyActive, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+    public List<TypeDocument> searchTypeDocument(String keyword, Integer start, Boolean onlyActive, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         List<TypeDocumentEntity> typesDocuments = null;
 
