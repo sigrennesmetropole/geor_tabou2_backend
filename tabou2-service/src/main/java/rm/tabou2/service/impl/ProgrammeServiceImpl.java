@@ -12,6 +12,7 @@ import rm.tabou2.storage.tabou.dao.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -42,9 +43,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(programmeId);
 
-        if (null == programmeEntityOpt || programmeEntityOpt.isEmpty()) {
-            //TODO : exception
-            //throw new AppServiceNotFoundException("Le programme id=" + programmeId + " n'existe pas");
+        if (programmeEntityOpt.isEmpty()) {
+            throw new NoSuchElementException("Le programme id=" + programmeId + " n'existe pas");
         }
 
         return programmeMapper.entityToDto(programmeEntityOpt.get());
@@ -52,7 +52,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public List<Programme> searchProgrammes(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+    public List<Programme> searchProgrammes(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc)  {
 
         List<ProgrammeEntity> programmes = programmeDao.findByKeyword(keyword, Utils.buildPageable(start, resultsNumber, orderBy, asc));
 
@@ -63,13 +63,6 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     public Logements getLogements() {
 
         //Faire la comparaison entre le nombre de logements issus de la couche agapeo
-
-        //logementsAccesSociale
-        //logementsLocatifRegule
-        //logementsPls
-        //logementsLocatifSocial
-        //if (agapeoService.get)
-
 
         return null;
 

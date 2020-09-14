@@ -69,4 +69,7 @@ public class TiersEntity {
     @OneToMany(mappedBy = "tiers")
     public Set<OperationTiersEntity> operationsTiers;
 
+    @OneToMany(mappedBy = "tiers")
+    public Set<ProgrammeTiersEntity> programmeTiers;
+
 }

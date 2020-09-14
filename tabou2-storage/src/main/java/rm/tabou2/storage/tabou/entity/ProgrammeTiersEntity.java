@@ -1,15 +1,15 @@
 package rm.tabou2.storage.tabou.entity;
 
-
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
 
+
 @Data
 @Entity
-@Table(name = "operation_tiers")
-public class OperationTiersEntity {
+@Table(name = "programme_tiers")
+public class ProgrammeTiersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,8 @@ public class OperationTiersEntity {
     private Date modifDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_operation")
-    public OperationEntity operation;
+    @JoinColumn(name = "id_programme")
+    public ProgrammeEntity programme;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tiers")
@@ -43,5 +43,6 @@ public class OperationTiersEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_type_tiers")
     public TypeTiersEntity typeTiers;
+
 
 }
