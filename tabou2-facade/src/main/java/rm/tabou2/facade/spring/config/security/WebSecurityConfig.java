@@ -7,14 +7,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import rm.tabou2.facade.security.PreAuthenticationFilter;
 import rm.tabou2.facade.spring.config.filter.CustomerDataFilter;
 import rm.tabou2.facade.spring.config.security.jwt.JwtAuthenticationEntryPoint;
 import rm.tabou2.facade.spring.config.security.jwt.JwtRequestFilter;
 
+import javax.servlet.Filter;
 import java.util.Arrays;
 
 @EnableWebSecurity
@@ -48,15 +50,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // ignoring the guest's urls "
                 .antMatchers(PERMIT_ALL_URL).permitAll()
                 // authenticate all remaining URLS
-                .anyRequest().fullyAuthenticated().and()
-                .authorizeRequests()
-                .and()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
-                // configuring the session on the server
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .csrf().disable()
-                .addFilterBefore(customerDataFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
+                 .anyRequest().fullyAuthenticated().and()
+                 .authorizeRequests()
+                 .and()
+                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+                 // configuring the session on the server
+                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().csrf().disable()
+                .addFilterAfter(createPreAuthenticationFilter(), BasicAuthenticationFilter.class).sessionManagement();
+                //.addFilterBefore(jwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
@@ -75,9 +77,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    @Bean
+   /* @Bean
     public JwtRequestFilter jwtRequestFilter() {
         return new JwtRequestFilter(PERMIT_ALL_URL);
+    }*/
+
+    private Filter createPreAuthenticationFilter() {
+        return new PreAuthenticationFilter();
     }
 
     @Bean
