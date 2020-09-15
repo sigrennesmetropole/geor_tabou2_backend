@@ -44,7 +44,7 @@ public class AgapeoEntity {
     private String anneeAgrementEtat;
 
     @Basic
-    @Column(name = "plh_logements_prevys")
+    @Column(name = "plh_logements_prevus")
     private Long plhLogementsPrevus = null;
 
     @Basic
