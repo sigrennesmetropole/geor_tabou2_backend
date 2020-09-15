@@ -20,7 +20,7 @@ public class TypeDocumentApiController implements TypesDocumentsApi {
     @Override
     public ResponseEntity<TypeDocument> addTypeDocument(@Valid TypeDocument typeDocument) throws Exception {
 
-        return new ResponseEntity<>(typeDocumentService.addTypeDocument(typeDocument), HttpStatus.OK);
+        return new ResponseEntity<>(typeDocumentService.editTypeDocument(typeDocument), HttpStatus.OK);
 
     }
 
@@ -31,15 +31,12 @@ public class TypeDocumentApiController implements TypesDocumentsApi {
 
     @Override
     public ResponseEntity<List<TypeDocument>> getTypeDocument(@Valid String keyword, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
-        return null;
+        return new ResponseEntity<>(typeDocumentService.searchTypeDocument(keyword, start, onlyActive, resultsNumber, orderBy, asc), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<List<TypeDocument>> inactivateTypeDocument(Long typeDocumentId) throws Exception {
-
-        typeDocumentService.inactivateTypeDocument(typeDocumentId);
-
-        return null;
+    public ResponseEntity<TypeDocument> inactivateTypeDocument(Long typeDocumentId) throws Exception {
+        return new ResponseEntity<>( typeDocumentService.inactivateTypeDocument(typeDocumentId), HttpStatus.OK);
     }
 
 

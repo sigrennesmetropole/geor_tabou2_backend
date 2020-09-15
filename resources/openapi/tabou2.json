@@ -1879,10 +1879,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TypeDocument"
-              }
+              "$ref": "#/definitions/TypeDocument"
             }
           },
           "404": {
