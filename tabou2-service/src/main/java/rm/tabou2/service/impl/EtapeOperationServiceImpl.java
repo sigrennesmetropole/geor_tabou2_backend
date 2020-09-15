@@ -10,6 +10,7 @@ import rm.tabou2.storage.tabou.dao.EtapeOperationDao;
 import rm.tabou2.storage.tabou.entity.EtapeOperationEntity;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -46,9 +47,8 @@ public class EtapeOperationServiceImpl implements EtapeOperationService {
 
         Optional<EtapeOperationEntity> etapeOperationEntity = etapeOperationDao.findById(etapeOperationId);
 
-        if (null == etapeOperationEntity || etapeOperationEntity.isEmpty()) {
-            //TODO : exception
-            return null;
+        if (etapeOperationEntity.isEmpty()) {
+            throw new NoSuchElementException("L'étape d'opération demandée n'existe pas, id=" + etapeOperationId);
         }
 
         return etapeOperationMapper.entityToDto(etapeOperationEntity.get());
@@ -58,11 +58,6 @@ public class EtapeOperationServiceImpl implements EtapeOperationService {
     public List<Etape> getEtapesForOperation() {
 
         List<EtapeOperationEntity> etapesOperationEntity = etapeOperationDao.findAll();
-
-        if (null == etapesOperationEntity || etapesOperationEntity.isEmpty()) {
-            //TODO : exception
-            return null;
-        }
 
         return etapeOperationMapper.entitiesToDto(etapesOperationEntity);
     }

@@ -14,8 +14,7 @@ import java.util.List;
 @Service
 public class TiersServiceImpl implements TiersService {
 
-
-    public static String DEFAULT_ORDER_BY = "nom";
+    public static final String DEFAULT_ORDER_BY = "nom";
 
     @Autowired
     private TiersDao tiersDao;
@@ -45,7 +44,7 @@ public class TiersServiceImpl implements TiersService {
         orderBy = (orderBy == null) ? DEFAULT_ORDER_BY : orderBy;
         keyword = (keyword == null) ? "%" : "%" + keyword + "%";
 
-        if (onlyActive) {
+        if (Boolean.TRUE.equals(onlyActive)) {
             tiers = tiersDao.findOnlyActiveByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
         } else {
             tiers = tiersDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));

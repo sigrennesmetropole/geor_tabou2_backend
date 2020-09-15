@@ -10,6 +10,7 @@ import rm.tabou2.storage.tabou.dao.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.entity.EtapeProgrammeEntity;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -33,10 +34,6 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
     @Override
     public Etape addEtapeProgramme(Etape etape) {
 
-        if (null == etape) {
-            //TODO exception
-        }
-
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeMapper.dtoToEntity(etape);
 
         etapeProgrammeEntity = etapeProgrammeDao.save(etapeProgrammeEntity);
@@ -50,9 +47,8 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
 
         Optional<EtapeProgrammeEntity> etapeProgrammeEntity = etapeProgrammeDao.findById(etapeProgrammeId);
 
-        if (null == etapeProgrammeEntity || etapeProgrammeEntity.isEmpty()) {
-            //TODO : exception
-            return null;
+        if (etapeProgrammeEntity.isEmpty()) {
+            throw new NoSuchElementException("L'étape de programme demandée n'existe pas, id=" + etapeProgrammeId);
         }
 
         return etapeProgrammeMapper.entityToDto(etapeProgrammeEntity.get());
@@ -62,11 +58,6 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
     public List<Etape> getEtapesForProgrammes() {
 
         List<EtapeProgrammeEntity> etapesProgrammeEntity = etapeProgrammeDao.findAll();
-
-        if (null == etapesProgrammeEntity || etapesProgrammeEntity.isEmpty()) {
-            //TODO : exception
-            return null;
-        }
 
         return etapeProgrammeMapper.entitiesToDto(etapesProgrammeEntity);
     }
