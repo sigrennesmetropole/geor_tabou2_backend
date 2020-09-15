@@ -5,8 +5,6 @@ import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.PermisApi;
 import rm.tabou2.service.dto.PermisConstruire;
 
-import java.util.List;
-
 @Controller
 public class PermisConstruireApiController implements PermisApi {
 

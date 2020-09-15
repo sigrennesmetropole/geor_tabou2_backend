@@ -1412,7 +1412,8 @@
             "name": "programmeId",
             "description": "Identifiant du programme",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -1448,7 +1449,8 @@
             "name": "programmeId",
             "description": "Identifiant du programme",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -1481,7 +1483,8 @@
             "name": "programmeId",
             "description": "Identifiant du programme",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -1547,8 +1550,8 @@
             "name": "operationId",
             "description": "Identifiant du programme",
             "required": true,
-            "type": "string"
-          }
+            "type": "integer",
+            "format": "int64"          }
         ],
         "responses": {
           "200": {
@@ -1561,7 +1564,7 @@
       },
       "put": {
         "summary": "Modification d'un évènement d'une opération d'aménagement",
-        "operationId": "editEvenementByOperationId",
+        "operationId": "editEvenement",
         "produces": [
           "application/json"
         ],
@@ -1578,9 +1581,11 @@
           {
             "in": "path",
             "name": "operationId",
+            "name": "operationId",
             "description": "Identifiant de l'opération",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -2564,12 +2569,12 @@
       "type": "object",
       "description": "Liste des évènements : système et utilisateur",
       "properties": {
-        "id" : {
+        "idEvent" : {
           "description": "Identifant de l'évènement",
           "type": "integer",
           "format": "int64"
         },
-        "date": {
+        "eventDate": {
           "description": "Date de l'évènement",
           "type": "string",
           "format": "date"
@@ -2600,9 +2605,10 @@
           "type": "string",
           "format": "date"
         },
-        "type": {
+        "idType": {
           "description": "Type de l'évènement",
-          "type": "string"
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
