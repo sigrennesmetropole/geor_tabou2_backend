@@ -7,8 +7,8 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "evenement")
-public class EvenementEntity {
+@Table(name = "evenement_programme")
+public class EvenementProgrammeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,8 +44,8 @@ public class EvenementEntity {
     private Date modifDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_operation")
-    public OperationEntity operation;
+    @JoinColumn(name = "id_programme")
+    public ProgrammeEntity programme;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_type_evenement")

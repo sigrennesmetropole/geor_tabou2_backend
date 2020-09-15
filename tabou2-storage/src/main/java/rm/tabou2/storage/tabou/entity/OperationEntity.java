@@ -87,7 +87,7 @@ public class OperationEntity {
     public Set<EtapeOperationEntity> etapes;
 
     @OneToMany(mappedBy = "operation")
-    public Set<EvenementEntity> evenements;
+    public Set<EvenementOperationEntity> evenements;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_nature")
