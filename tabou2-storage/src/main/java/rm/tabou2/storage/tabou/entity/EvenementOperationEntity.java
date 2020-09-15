@@ -1,6 +1,5 @@
 package rm.tabou2.storage.tabou.entity;
 
-
 import lombok.Data;
 
 import javax.persistence.*;
@@ -8,13 +7,25 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "operation_tiers")
-public class OperationTiersEntity {
+@Table(name = "evenement_operation")
+public class EvenementOperationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
+
+    @Basic
+    @Column(name = "event_date")
+    private Date eventDate;
+
+    @Basic
+    @Column(name = "description")
+    private String description;
+
+    @Basic
+    @Column(name = "systeme")
+    private Boolean systeme;
 
     @Basic
     @Column(name = "create_user")
@@ -37,11 +48,9 @@ public class OperationTiersEntity {
     public OperationEntity operation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tiers")
-    public TiersEntity tiers;
+    @JoinColumn(name = "id_type_evenement")
+    public TypeEvenementEntity typeEvenement;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_type_tiers")
-    public TypeTiersEntity typeTiers;
+
 
 }

@@ -35,4 +35,7 @@ public class TypeTiersEntity {
     @OneToMany(mappedBy = "typeTiers")
     public Set<OperationTiersEntity> operationsTiers;
 
+    @OneToMany(mappedBy = "typeTiers")
+    public Set<ProgrammeTiersEntity> programmeTiers;
+
 }

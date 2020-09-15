@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
-import rm.tabou2.service.OperationTiersService;
 import rm.tabou2.service.ProgrammeService;
+import rm.tabou2.service.ProgrammeTiersService;
 import rm.tabou2.service.dto.*;
 
 import javax.validation.Valid;
@@ -20,7 +20,7 @@ public class ProgrammeApiController implements ProgrammesApi {
     private ProgrammeService programmeService;
 
     @Autowired
-    private OperationTiersService operationTiersService;
+    private ProgrammeTiersService programmeTiersService;
 
     @Override
     public ResponseEntity<Programme> addProgramme(@Valid Programme programme) throws Exception {
@@ -64,9 +64,8 @@ public class ProgrammeApiController implements ProgrammesApi {
     }
 
     @Override
-    public ResponseEntity<Programme> associateTiersToProgramme(Long programmeId, Long tiersId, Long typeTiersId) throws Exception {
-        return new ResponseEntity<>(operationTiersService.associateTiersToProgramme(programmeId, tiersId, typeTiersId), HttpStatus.OK);
+    public ResponseEntity<Programme> associateTiersToProgramme(@Valid ProgrammeTiers programmeTiers) throws Exception {
+        return new ResponseEntity<>(programmeTiersService.associateTiersToProgramme(programmeTiers.getProgrammeId(), programmeTiers.getTiersId(), programmeTiers.getTypeTiersId()), HttpStatus.OK);
     }
-
 
 }

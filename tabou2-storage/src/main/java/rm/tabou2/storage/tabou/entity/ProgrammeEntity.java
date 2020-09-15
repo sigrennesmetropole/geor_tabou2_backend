@@ -105,7 +105,7 @@ public class ProgrammeEntity {
     private Date modifDate;
 
     @OneToMany(mappedBy = "programme")
-    public Set<OperationTiersEntity> operationsTiers;
+    public Set<ProgrammeTiersEntity> programmeTiers;
 
     @OneToMany(mappedBy = "programme")
     public Set<EtapeProgrammeEntity> etapes;
