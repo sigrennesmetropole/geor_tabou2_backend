@@ -11,6 +11,7 @@ import rm.tabou2.service.util.Utils;
 import rm.tabou2.storage.tabou.dao.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -31,6 +32,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     public Programme addProgramme(Programme programme) {
 
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
+
+        //Ajout des dates et infos sur l'utilisateur connecté
+        programmeEntity.setCreateDate(new Date());
+        programmeEntity.setModifDate(new Date());
+        programmeEntity.setCreateUser(Utils.getConnectedUsername());
+        programmeEntity.setModifUser(Utils.getConnectedUsername());
 
         programmeEntity = programmeDao.save(programmeEntity);
 

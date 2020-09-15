@@ -9,7 +9,9 @@ import rm.tabou2.service.util.Utils;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.entity.OperationEntity;
 
+import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -26,11 +28,12 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public Operation addOperation(Operation operation) {
 
-        if (null == operation) {
-            //TODO
-        }
-
         OperationEntity operationEntity = operationMapper.dtoToEntity(operation);
+
+        operationEntity.setCreateDate(new Date());
+        operationEntity.setModifDate(new Date());
+        operationEntity.setCreateUser(Utils.getConnectedUsername());
+        operationEntity.setModifUser(Utils.getConnectedUsername());
 
         operationDao.save(operationEntity);
 
@@ -56,8 +59,8 @@ public class OperationServiceImpl implements OperationService {
 
         Optional<OperationEntity> operationOpt = operationDao.findById(operationId);
 
-        if (null == operationOpt || operationOpt.isEmpty()) {
-            //TODO : exception
+        if (operationOpt.isEmpty()) {
+            throw new NoSuchElementException("L'operation demandée n'existe pas, id=" + operationId);
         }
 
         return (operationMapper.entityToDto(operationOpt.get()));
