@@ -9,6 +9,7 @@ import rm.tabou2.service.EvenementOperationService;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.mapper.EvenementOperationMapper;
+import rm.tabou2.service.util.Utils;
 import rm.tabou2.storage.tabou.dao.EvenementOperationDao;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.dao.TypeEvenementDao;
@@ -56,7 +57,9 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
         evenementOperationEntity.setCreateDate(new Date());
         evenementOperationEntity.setModifDate(new Date());
 
-        //TODO : association user pour create et modif
+        //Utilisateur
+        evenementOperationEntity.setCreateUser(Utils.getConnectedUsername());
+        evenementOperationEntity.setModifUser(Utils.getConnectedUsername());
 
         // Operation
         Optional<OperationEntity> operationEntityOpt = operationDao.findById(operationId);
@@ -97,16 +100,19 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
     @Override
     public Evenement editEvenement(Evenement evenement, Long operationId) throws AppServiceException {
 
-        EvenementOperationEntity evenementOperationEntity;
-
         Optional<EvenementOperationEntity> evenementOperationEntityOpt = evenementOperationDao.findById(evenement.getIdEvent());
         if (evenementOperationEntityOpt.isEmpty()) {
             throw new NoSuchElementException("L'évènement id= " + evenement.getIdEvent() + " n'existe pas");
-        } else {
-            evenementOperationEntity = evenementOperationEntityOpt.get();
+        }
+        EvenementOperationEntity evenementOperationEntity = evenementOperationEntityOpt.get();
+
+
+        if (Boolean.TRUE.equals(evenementOperationEntity.getSysteme())) {
+            throw new AppServiceException("Il n'est pas permis de modifier l'évènement id=" + evenement.getIdEvent());
         }
 
-        //TODO : user
+        //Utilisateur
+        evenementOperationEntity.setModifUser(Utils.getConnectedUsername());
 
         // Date
         evenementOperationEntity.setModifDate(new Date());

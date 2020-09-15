@@ -9,6 +9,7 @@ import rm.tabou2.service.EvenementProgrammeService;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.mapper.EvenementProgrammeMapper;
+import rm.tabou2.service.util.Utils;
 import rm.tabou2.storage.tabou.dao.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.TypeEvenementDao;
@@ -58,12 +59,14 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
         evenementProgrammeEntity.setCreateDate(new Date());
         evenementProgrammeEntity.setModifDate(new Date());
 
-        //TODO : association user : create et modif
+        //Utilisateur
+        evenementProgrammeEntity.setModifUser(Utils.getConnectedUsername());
+        evenementProgrammeEntity.setCreateUser(Utils.getConnectedUsername());
 
         // Operation
         Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(programmeId);
         if (programmeEntityOpt.isEmpty()) {
-            throw new AppServiceException("Le programme n'exister pas id=" + programmeId);
+            throw new AppServiceException("Le programme n'existe pas id=" + programmeId);
         } else {
             evenementProgrammeEntity.setProgramme(programmeEntityOpt.get());
         }
@@ -112,7 +115,7 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
         evenementProgrammeEntity.setModifDate(new Date());
 
         // User
-        //TODO
+        evenementProgrammeEntity.setModifUser(Utils.getConnectedUsername());
 
         // Event Date
         evenementProgrammeEntity.setEventDate(evenement.getEventDate());

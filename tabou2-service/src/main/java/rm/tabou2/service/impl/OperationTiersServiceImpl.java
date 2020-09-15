@@ -7,6 +7,7 @@ import rm.tabou2.service.OperationService;
 import rm.tabou2.service.OperationTiersService;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.util.Utils;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.dao.OperationTiersDao;
 import rm.tabou2.storage.tabou.dao.TiersDao;
@@ -67,7 +68,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         operationTiersEntity.setOperation(operationEntityOpt.get());
 
         operationTiersEntity.setCreateDate(new Date());
-        //TODO : association user
+        operationTiersEntity.setCreateUser(Utils.getConnectedUsername());
 
 
         try {
