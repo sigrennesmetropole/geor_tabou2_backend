@@ -2232,61 +2232,6 @@
             }
           }
         }
-      },
-      "post": {
-        "summary": "Ajout d'une nature",
-        "operationId": "addNature",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "nature",
-            "description": "Nouvelle nature",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Nature"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Nature"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modification d'une nature",
-        "operationId": "editNature",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "nature",
-            "description": "Nature à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Nature"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Nature"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
       }
     }
   },
