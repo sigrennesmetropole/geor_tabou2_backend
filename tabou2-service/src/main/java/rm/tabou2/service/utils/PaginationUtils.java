@@ -1,11 +1,10 @@
-package rm.tabou2.service.util;
+package rm.tabou2.service.utils;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-public class Utils {
+public class PaginationUtils {
 
     private static final Integer DEFAULT_START = 0;
     private static final Integer DEFAULT_RESULTS_NUMBER = 10;
@@ -13,7 +12,7 @@ public class Utils {
     /**
      * Constructeur de la classe utilitaire
      */
-    private Utils() {
+    private PaginationUtils() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -33,16 +32,6 @@ public class Utils {
 
         return PageRequest.of(start, resultsNumber, Sort.by(direction, orderBy));
 
-    }
-
-
-    /**
-     * Retourne le nom de l'utilisateur connecté.
-     *
-     * @return username
-     */
-    public static String getConnectedUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
 

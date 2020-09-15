@@ -5,7 +5,8 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.OperationService;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.mapper.OperationMapper;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.utils.AuthentificationUtils;
+import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.entity.OperationEntity;
 
@@ -25,6 +26,9 @@ public class OperationServiceImpl implements OperationService {
     @Autowired
     private OperationDao operationDao;
 
+    @Autowired
+    private AuthentificationUtils authentificationUtils;
+
     @Override
     public Operation addOperation(Operation operation) {
 
@@ -32,8 +36,8 @@ public class OperationServiceImpl implements OperationService {
 
         operationEntity.setCreateDate(new Date());
         operationEntity.setModifDate(new Date());
-        operationEntity.setCreateUser(Utils.getConnectedUsername());
-        operationEntity.setModifUser(Utils.getConnectedUsername());
+        operationEntity.setCreateUser(authentificationUtils.getConnectedUsername());
+        operationEntity.setModifUser(authentificationUtils.getConnectedUsername());
 
         operationDao.save(operationEntity);
 
@@ -48,7 +52,7 @@ public class OperationServiceImpl implements OperationService {
         orderBy = (orderBy == null) ? DEFAULT_ORDER_BY : orderBy;
         keyword = (keyword == null) ? "%" : "%" + keyword + "%";
 
-        List<OperationEntity> entites = operationDao.findByKeyword(keyword, Utils.buildPageable(start, resultsNumber, orderBy, asc));
+        List<OperationEntity> entites = operationDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
 
         return operationMapper.entitiesToDto(entites);
 

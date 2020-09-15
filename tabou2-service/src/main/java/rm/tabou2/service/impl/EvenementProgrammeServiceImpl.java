@@ -9,7 +9,7 @@ import rm.tabou2.service.EvenementProgrammeService;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.mapper.EvenementProgrammeMapper;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.utils.AuthentificationUtils;
 import rm.tabou2.storage.tabou.dao.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.TypeEvenementDao;
@@ -36,6 +36,9 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
     @Autowired
     private TypeEvenementDao typeEvenementDao;
 
+    @Autowired
+    private AuthentificationUtils authentificationUtils;
+
     @Override
     public List<Evenement> getByProgrammeId(Long programmeId) throws Exception {
 
@@ -60,8 +63,8 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
         evenementProgrammeEntity.setModifDate(new Date());
 
         //Utilisateur
-        evenementProgrammeEntity.setModifUser(Utils.getConnectedUsername());
-        evenementProgrammeEntity.setCreateUser(Utils.getConnectedUsername());
+        evenementProgrammeEntity.setModifUser(authentificationUtils.getConnectedUsername());
+        evenementProgrammeEntity.setCreateUser(authentificationUtils.getConnectedUsername());
 
         // Operation
         Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(programmeId);
@@ -115,7 +118,7 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
         evenementProgrammeEntity.setModifDate(new Date());
 
         // User
-        evenementProgrammeEntity.setModifUser(Utils.getConnectedUsername());
+        evenementProgrammeEntity.setModifUser(authentificationUtils.getConnectedUsername());
 
         // Event Date
         evenementProgrammeEntity.setEventDate(evenement.getEventDate());

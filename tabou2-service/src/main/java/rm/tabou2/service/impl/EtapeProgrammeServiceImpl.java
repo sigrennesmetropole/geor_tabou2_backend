@@ -5,9 +5,8 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.EtapeProgrammeService;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.mapper.EtapeProgrammeMapper;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.EtapeProgrammeDao;
-import rm.tabou2.storage.tabou.entity.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.entity.EtapeProgrammeEntity;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
     @Override
     public List<Etape> searchEtapesProgramme(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
-        List<EtapeProgrammeEntity> etapes = etapeProgrammeDao.findByKeyword(keyword, Utils.buildPageable(start, resultsNumber, orderBy, asc));
+        List<EtapeProgrammeEntity> etapes = etapeProgrammeDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
 
         return etapeProgrammeMapper.entitiesToDto(etapes);
 

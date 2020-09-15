@@ -7,7 +7,7 @@ import rm.tabou2.service.OperationService;
 import rm.tabou2.service.OperationTiersService;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.utils.AuthentificationUtils;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.dao.OperationTiersDao;
 import rm.tabou2.storage.tabou.dao.TiersDao;
@@ -39,6 +39,9 @@ public class OperationTiersServiceImpl implements OperationTiersService {
     @Autowired
     private OperationTiersDao operationTiersDao;
 
+    @Autowired
+    private AuthentificationUtils authentificationUtils;
+
 
     @Override
     public Operation associateTiersToOperation(long operationId, long tiersId, long typeTiersId) throws AppServiceException {
@@ -68,7 +71,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         operationTiersEntity.setOperation(operationEntityOpt.get());
 
         operationTiersEntity.setCreateDate(new Date());
-        operationTiersEntity.setCreateUser(Utils.getConnectedUsername());
+        operationTiersEntity.setCreateUser(authentificationUtils.getConnectedUsername());
 
 
         try {

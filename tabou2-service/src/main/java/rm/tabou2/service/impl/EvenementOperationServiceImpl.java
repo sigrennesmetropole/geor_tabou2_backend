@@ -9,7 +9,7 @@ import rm.tabou2.service.EvenementOperationService;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.mapper.EvenementOperationMapper;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.utils.AuthentificationUtils;
 import rm.tabou2.storage.tabou.dao.EvenementOperationDao;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.dao.TypeEvenementDao;
@@ -37,6 +37,9 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
     @Autowired
     private TypeEvenementDao typeEvenementDao;
 
+    @Autowired
+    private AuthentificationUtils authentificationUtils;
+
     @Override
     public List<Evenement> getByOperationId(Long operationId){
 
@@ -58,8 +61,8 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
         evenementOperationEntity.setModifDate(new Date());
 
         //Utilisateur
-        evenementOperationEntity.setCreateUser(Utils.getConnectedUsername());
-        evenementOperationEntity.setModifUser(Utils.getConnectedUsername());
+        evenementOperationEntity.setCreateUser(authentificationUtils.getConnectedUsername());
+        evenementOperationEntity.setModifUser(authentificationUtils.getConnectedUsername());
 
         // Operation
         Optional<OperationEntity> operationEntityOpt = operationDao.findById(operationId);
@@ -112,7 +115,7 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
         }
 
         //Utilisateur
-        evenementOperationEntity.setModifUser(Utils.getConnectedUsername());
+        evenementOperationEntity.setModifUser(authentificationUtils.getConnectedUsername());
 
         // Date
         evenementOperationEntity.setModifDate(new Date());

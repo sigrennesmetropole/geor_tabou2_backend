@@ -7,7 +7,7 @@ import rm.tabou2.service.ProgrammeService;
 import rm.tabou2.service.ProgrammeTiersService;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.exception.AppServiceException;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.utils.AuthentificationUtils;
 import rm.tabou2.storage.tabou.dao.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.ProgrammeTiersDao;
 import rm.tabou2.storage.tabou.dao.TiersDao;
@@ -37,6 +37,9 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
 
     @Autowired
     private ProgrammeTiersDao programmeTiersDao;
+
+    @Autowired
+    private AuthentificationUtils authentificationUtils;
 
     @Override
     public Programme associateTiersToProgramme(long programmeId, long tiersId, long typeTiersId) throws AppServiceException {
@@ -68,7 +71,7 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
         programmeTiersEntity.setCreateDate(new Date());
 
         //Utilisateur
-        programmeTiersEntity.setCreateUser(Utils.getConnectedUsername());
+        programmeTiersEntity.setCreateUser(authentificationUtils.getConnectedUsername());
 
         try {
             programmeTiersDao.save(programmeTiersEntity);

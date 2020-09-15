@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.TiersService;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.mapper.TiersMapper;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.TiersDao;
 import rm.tabou2.storage.tabou.entity.TiersEntity;
 
@@ -46,9 +46,9 @@ public class TiersServiceImpl implements TiersService {
         keyword = (keyword == null) ? "%" : "%" + keyword + "%";
 
         if (onlyActive) {
-            tiers = tiersDao.findOnlyActiveByKeyword(keyword, Utils.buildPageable(start, resultsNumber, orderBy, asc));
+            tiers = tiersDao.findOnlyActiveByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
         } else {
-            tiers = tiersDao.findByKeyword(keyword, Utils.buildPageable(start, resultsNumber, orderBy, asc));
+            tiers = tiersDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
         }
 
         return tiersMapper.entitiesToDto(tiers);
