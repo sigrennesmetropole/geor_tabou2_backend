@@ -5,11 +5,14 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.OperationService;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.mapper.OperationMapper;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.entity.OperationEntity;
 
+import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,14 +26,18 @@ public class OperationServiceImpl implements OperationService {
     @Autowired
     private OperationDao operationDao;
 
+    @Autowired
+    private AuthentificationHelper authentificationHelper;
+
     @Override
     public Operation addOperation(Operation operation) {
 
-        if (null == operation) {
-            //TODO
-        }
-
         OperationEntity operationEntity = operationMapper.dtoToEntity(operation);
+
+        operationEntity.setCreateDate(new Date());
+        operationEntity.setModifDate(new Date());
+        operationEntity.setCreateUser(authentificationHelper.getConnectedUsername());
+        operationEntity.setModifUser(authentificationHelper.getConnectedUsername());
 
         operationDao.save(operationEntity);
 
@@ -45,7 +52,7 @@ public class OperationServiceImpl implements OperationService {
         orderBy = (orderBy == null) ? DEFAULT_ORDER_BY : orderBy;
         keyword = (keyword == null) ? "%" : "%" + keyword + "%";
 
-        List<OperationEntity> entites = operationDao.findByKeyword(keyword, Utils.buildPageable(start, resultsNumber, orderBy, asc));
+        List<OperationEntity> entites = operationDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
 
         return operationMapper.entitiesToDto(entites);
 
@@ -56,8 +63,8 @@ public class OperationServiceImpl implements OperationService {
 
         Optional<OperationEntity> operationOpt = operationDao.findById(operationId);
 
-        if (null == operationOpt || operationOpt.isEmpty()) {
-            //TODO : exception
+        if (operationOpt.isEmpty()) {
+            throw new NoSuchElementException("L'operation demandée n'existe pas, id=" + operationId);
         }
 
         return (operationMapper.entityToDto(operationOpt.get()));

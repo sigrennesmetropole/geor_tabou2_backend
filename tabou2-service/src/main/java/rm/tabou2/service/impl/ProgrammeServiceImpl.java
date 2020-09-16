@@ -7,10 +7,12 @@ import rm.tabou2.service.ProgrammeService;
 import rm.tabou2.service.dto.Logements;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.mapper.ProgrammeMapper;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -27,10 +29,19 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Autowired
     private ProgrammeMapper programmeMapper;
 
+    @Autowired
+    private AuthentificationHelper authentificationHelper;
+
     @Override
     public Programme addProgramme(Programme programme) {
 
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
+
+        //Ajout des dates et infos sur l'utilisateur connecté
+        programmeEntity.setCreateDate(new Date());
+        programmeEntity.setModifDate(new Date());
+        programmeEntity.setCreateUser(authentificationHelper.getConnectedUsername());
+        programmeEntity.setModifUser(authentificationHelper.getConnectedUsername());
 
         programmeEntity = programmeDao.save(programmeEntity);
 
@@ -54,7 +65,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Override
     public List<Programme> searchProgrammes(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc)  {
 
-        List<ProgrammeEntity> programmes = programmeDao.findByKeyword(keyword, Utils.buildPageable(start, resultsNumber, orderBy, asc));
+        List<ProgrammeEntity> programmes = programmeDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
 
         return programmeMapper.entitiesToDto(programmes);
 

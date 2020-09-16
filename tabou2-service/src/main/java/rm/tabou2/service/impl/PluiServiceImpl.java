@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.PluiService;
 import rm.tabou2.service.dto.PluiZonage;
 import rm.tabou2.service.mapper.PluiMapper;
-import rm.tabou2.service.util.Utils;
+import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.PluiDao;
 import rm.tabou2.storage.tabou.entity.administratif.PluiEntity;
 
@@ -23,7 +23,7 @@ public class PluiServiceImpl implements PluiService {
     @Override
     public List<PluiZonage> searchPlui(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
-        List<PluiEntity> pluis = pluiDao.findByKeyword(keyword, Utils.buildPageable(start, resultsNumber, orderBy, asc));
+        List<PluiEntity> pluis = pluiDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
 
         return pluiMapper.entitiesToDto(pluis);
 

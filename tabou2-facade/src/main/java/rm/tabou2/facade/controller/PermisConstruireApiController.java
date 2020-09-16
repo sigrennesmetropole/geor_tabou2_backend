@@ -8,6 +8,7 @@ import rm.tabou2.service.dto.PermisConstruire;
 @Controller
 public class PermisConstruireApiController implements PermisApi {
 
+
     @Override
     public ResponseEntity<PermisConstruire> getPermisById(Long permisId) throws Exception {
         return null;
