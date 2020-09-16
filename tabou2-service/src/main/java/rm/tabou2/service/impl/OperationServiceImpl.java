@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.OperationService;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.mapper.OperationMapper;
-import rm.tabou2.service.utils.AuthentificationUtils;
+import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.entity.OperationEntity;
@@ -27,7 +27,7 @@ public class OperationServiceImpl implements OperationService {
     private OperationDao operationDao;
 
     @Autowired
-    private AuthentificationUtils authentificationUtils;
+    private AuthentificationHelper authentificationHelper;
 
     @Override
     public Operation addOperation(Operation operation) {
@@ -36,8 +36,8 @@ public class OperationServiceImpl implements OperationService {
 
         operationEntity.setCreateDate(new Date());
         operationEntity.setModifDate(new Date());
-        operationEntity.setCreateUser(authentificationUtils.getConnectedUsername());
-        operationEntity.setModifUser(authentificationUtils.getConnectedUsername());
+        operationEntity.setCreateUser(authentificationHelper.getConnectedUsername());
+        operationEntity.setModifUser(authentificationHelper.getConnectedUsername());
 
         operationDao.save(operationEntity);
 

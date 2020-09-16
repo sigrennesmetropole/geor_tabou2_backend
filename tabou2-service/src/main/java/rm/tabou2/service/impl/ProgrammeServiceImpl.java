@@ -7,7 +7,7 @@ import rm.tabou2.service.ProgrammeService;
 import rm.tabou2.service.dto.Logements;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.mapper.ProgrammeMapper;
-import rm.tabou2.service.utils.AuthentificationUtils;
+import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
@@ -30,7 +30,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeMapper programmeMapper;
 
     @Autowired
-    private AuthentificationUtils authentificationUtils;
+    private AuthentificationHelper authentificationHelper;
 
     @Override
     public Programme addProgramme(Programme programme) {
@@ -40,8 +40,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         //Ajout des dates et infos sur l'utilisateur connecté
         programmeEntity.setCreateDate(new Date());
         programmeEntity.setModifDate(new Date());
-        programmeEntity.setCreateUser(authentificationUtils.getConnectedUsername());
-        programmeEntity.setModifUser(authentificationUtils.getConnectedUsername());
+        programmeEntity.setCreateUser(authentificationHelper.getConnectedUsername());
+        programmeEntity.setModifUser(authentificationHelper.getConnectedUsername());
 
         programmeEntity = programmeDao.save(programmeEntity);
 

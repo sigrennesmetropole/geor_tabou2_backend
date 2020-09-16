@@ -1,11 +1,11 @@
-package rm.tabou2.service.utils;
+package rm.tabou2.service.helper;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthentificationUtils {
+public class AuthentificationHelper {
 
     public static final String ROLE_CONSULTATION = "a_determiner";
     public static final String ROLE_CONTRIBUTEUR = "a_determiner";
