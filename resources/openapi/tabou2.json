@@ -1380,17 +1380,15 @@
             "name": "typeTiersId",
             "description": "Identifiant du type de tiers",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TypeTiers"
-              }
+              "$ref": "#/definitions/TypeTiers"
             }
           },
           "404": {
