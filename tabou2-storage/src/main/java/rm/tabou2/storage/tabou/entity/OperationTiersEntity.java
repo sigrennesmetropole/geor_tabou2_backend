@@ -8,12 +8,12 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "operation_tiers")
+@Table(name = "tabou_operation_tiers")
 public class OperationTiersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_operation_tiers")
     private long id;
 
     @Basic

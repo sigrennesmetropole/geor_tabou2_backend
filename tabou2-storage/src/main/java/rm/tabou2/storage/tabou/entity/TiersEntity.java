@@ -8,12 +8,12 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "tiers")
+@Table(name = "tabou_tiers")
 public class TiersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_tiers")
     private long id;
 
     @Basic
@@ -21,8 +21,8 @@ public class TiersEntity {
     private String nom;
 
     @Basic
-    @Column(name = "correspondant")
-    private String correspondant;
+    @Column(name = "est_prive")
+    private Boolean estPrive;
 
     @Basic
     @Column(name = "adresse_num")

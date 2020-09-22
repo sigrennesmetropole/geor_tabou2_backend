@@ -7,12 +7,12 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "agapeo")
+@Table(name = "tabou_agapeo")
 public class AgapeoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_agapeo")
     private long id;
 
     @Basic

@@ -3,28 +3,24 @@ package rm.tabou2.storage.tabou.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "etape_programme")
+@Table(name = "tabou_etape_programme")
 public class EtapeProgrammeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_etape_programme")
     private long id;
 
     @Basic
     @Column(name = "libelle")
     private String libelle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_type_tiers")
-    public TypeTiersEntity typeTiers;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_programme")
-    public ProgrammeEntity programme;
+    @OneToMany(mappedBy = "etapeProgramme")
+    public Set<ProgrammeEntity> programmes;
 
 
 }
