@@ -66,6 +66,22 @@ public class TiersEntity {
     @Column(name = "date_inactif")
     private Date dateInactif;
 
+    @Basic
+    @Column(name = "create_user")
+    private String createUser;
+
+    @Basic
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @Basic
+    @Column(name = "modif_user")
+    private String modifUser;
+
+    @Basic
+    @Column(name = "modif_date")
+    private Date modifDate;
+
     @OneToMany(mappedBy = "tiers")
     public Set<OperationTiersEntity> operationsTiers;
 
