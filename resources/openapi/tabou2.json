@@ -58,10 +58,93 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
+            "name": "nom",
             "description": "Mot clé de la recherche",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "nature",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "etape",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "diffusionRestreinte",
+            "description": "Indique si les opérations à diffusion restreinte doivent être affichés si les droits le permettent",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "code",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "numAds",
+            "description": "Mot clé de la recherche",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "autorisationDateDebut",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "autorisationDateFin",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "operationnelDateDebut",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "operationnelDateFin",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateDebut",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateFin",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "date"
           },
           {
             "name": "start",

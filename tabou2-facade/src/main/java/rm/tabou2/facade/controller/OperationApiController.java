@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.threeten.bp.LocalDate;
 import rm.tabou2.facade.api.OperationsApi;
 import rm.tabou2.service.OperationService;
 import rm.tabou2.service.OperationTiersService;
@@ -46,11 +47,20 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
+    public ResponseEntity<List<Operation>> getOperations(@Valid String nom, @Valid String nature, @Valid String etape, @Valid Boolean diffusionRestreinte, @Valid String code, @Valid String numAds, @Valid LocalDate autorisationDateDebut, @Valid LocalDate autorisationDateFin, @Valid LocalDate operationnelDateDebut, @Valid LocalDate operationnelDateFin, @Valid LocalDate clotureDateDebut, @Valid LocalDate clotureDateFin, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        return new ResponseEntity<>(operationService.searchOperation(nom, nature, etape, diffusionRestreinte, code, numAds, autorisationDateDebut,
+                autorisationDateFin, operationnelDateDebut, operationnelDateFin, clotureDateDebut, clotureDateFin, start, resultsNumber, orderBy, asc), HttpStatus.OK);
+    }
+
+
+
+    /*@Override
     public ResponseEntity<List<Operation>> getOperations(@Valid String keyword, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         return new ResponseEntity<>(operationService.getAllOperations(keyword, start, resultsNumber, orderBy, asc), HttpStatus.OK);
 
-    }
+    }*/
 
     @Override
     public ResponseEntity<Operation> associateTiersToOperation(@Valid OperationTiers operationTiers) throws Exception {
