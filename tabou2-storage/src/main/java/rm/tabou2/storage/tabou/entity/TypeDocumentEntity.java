@@ -7,12 +7,12 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "type_document")
+@Table(name = "tabou_type_document")
 public class TypeDocumentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_type_doc")
     private long id;
 
     @Basic
@@ -22,6 +22,14 @@ public class TypeDocumentEntity {
     @Basic
     @Column(name = "date_inactif")
     private Date dateInactif;
+
+    @Basic
+    @Column(name = "create_user")
+    private String createUser;
+
+    @Basic
+    @Column(name = "create_date")
+    private Date createDate;
 
 
 }

@@ -8,12 +8,12 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "tiers")
+@Table(name = "tabou_tiers")
 public class TiersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_tiers")
     private long id;
 
     @Basic
@@ -21,8 +21,8 @@ public class TiersEntity {
     private String nom;
 
     @Basic
-    @Column(name = "correspondant")
-    private String correspondant;
+    @Column(name = "est_prive")
+    private Boolean estPrive;
 
     @Basic
     @Column(name = "adresse_num")
@@ -65,6 +65,22 @@ public class TiersEntity {
     @Basic
     @Column(name = "date_inactif")
     private Date dateInactif;
+
+    @Basic
+    @Column(name = "create_user")
+    private String createUser;
+
+    @Basic
+    @Column(name = "create_date")
+    private Date createDate;
+
+    @Basic
+    @Column(name = "modif_user")
+    private String modifUser;
+
+    @Basic
+    @Column(name = "modif_date")
+    private Date modifDate;
 
     @OneToMany(mappedBy = "tiers")
     public Set<OperationTiersEntity> operationsTiers;
