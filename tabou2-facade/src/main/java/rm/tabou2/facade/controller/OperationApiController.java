@@ -53,14 +53,13 @@ public class OperationApiController implements OperationsApi {
         OperationsCriteria operationsCriteria = new OperationsCriteria();
 
         operationsCriteria.setNom(nom);
-        operationsCriteria.setNom(nature);
-        operationsCriteria.setNom(etape);
+        operationsCriteria.setNature(nature);
+        operationsCriteria.setEtape(etape);
         operationsCriteria.setCode(code);
         operationsCriteria.setNumAds(numAds);
 
         operationsCriteria.setDiffusionRestreinte(diffusionRestreinte);
         operationsCriteria.setEstSecteur(estSecteur);
-
 
         operationsCriteria.setTiers(tiers);
 
@@ -73,31 +72,13 @@ public class OperationApiController implements OperationsApi {
         operationsCriteria.setClotureDateDebut(clotureDateDebut);
         operationsCriteria.setClotureDateFin(clotureDateFin);
 
-        if(start == null){
-            start = 0;
-        }
-
-        if(resultsNumber == null){
-            resultsNumber = 100;
-        }
-
-        if(orderBy == null){
-            orderBy = "nom";
-        }
-
-        if(asc == null){
-            asc = true;
-        }
-
-        Pageable pageable =  PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc);
 
         Page<Operation> page = operationService.searchOperations(operationsCriteria, pageable);
 
-       return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
     }
-
-
 
 
     @Override

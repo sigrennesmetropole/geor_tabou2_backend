@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import rm.tabou2.storage.dao.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.OperationCustomDao;
 import rm.tabou2.storage.tabou.entity.*;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
@@ -22,15 +23,29 @@ import java.util.List;
 
 
 @Repository
-public class OperationCustomDaoImpl implements OperationCustomDao {
+public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements OperationCustomDao {
 
+    public static final String FIELD_NOM = "nom";
+    public static final String FIELD_NATURE = "nature";
+    public static final String FIELD_LIBELLE = "libelle";
+    public static final String FIELD_ETAPE_OPERATION = "etapeOperation";
+    public static final String FIELD_CODE = "code";
+    public static final String FIELD_NUM_ADS = "numAds";
+    public static final String FIELD_DIFFUSION_RETREINTE = "diffusionRetreinte";
+    public static final String FIELD_SECTEUR = "secteur";
+    public static final String FIELD_AUTORISATION_DATE = "autorisationDate";
+    public static final String FIELD_OPERATIONNEL_DATE = "operationnelDate";
+    public static final String FIELD_CLOTURE_DATE = "clotureDate";
+    public static final String FIELD_OPERATION = "operation";
+    public static final String FIELD_TYPE_TIERS = "typeTiers";
+    public static final String FIELD_TIERS = "tiers";
     @Qualifier("tabouEntityManager")
     @Autowired
     private EntityManager entityManager;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<OperationEntity> searchOperations(OperationsCriteria operationsCriteria,  Pageable pageable) {
+    public Page<OperationEntity> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable) {
 
         List<OperationEntity> result;
 
@@ -62,63 +77,63 @@ public class OperationCustomDaoImpl implements OperationCustomDao {
             List<Predicate> predicates = new ArrayList<>();
 
             //nom
-            predicateStringCriteria(operationsCriteria.getNom(), "nom", predicates , builder, root);
+            predicateStringCriteria(operationsCriteria.getNom(), FIELD_NOM, predicates, builder, root);
 
 
             //nature
-            Join<OperationEntity, NatureEntity> natureJoin= root.join("nature");
-            predicateStringCriteriaForJoin(operationsCriteria.getNature(), "libelle", predicates , builder, natureJoin);
+            Join<OperationEntity, NatureEntity> natureJoin = root.join(FIELD_NATURE);
+            predicateStringCriteriaForJoin(operationsCriteria.getNature(), FIELD_LIBELLE, predicates, builder, natureJoin);
 
 
             //etape
-            Join<OperationEntity, EtapeOperationEntity> etapeJoin= root.join("etapeOperation");
-            predicateStringCriteriaForJoin(operationsCriteria.getEtape(), "libelle", predicates , builder, etapeJoin);
+            Join<OperationEntity, EtapeOperationEntity> etapeJoin = root.join(FIELD_ETAPE_OPERATION);
+            predicateStringCriteriaForJoin(operationsCriteria.getEtape(), FIELD_LIBELLE, predicates, builder, etapeJoin);
 
 
             //code
-            predicateStringCriteria(operationsCriteria.getCode(), "code", predicates , builder, root);
+            predicateStringCriteria(operationsCriteria.getCode(), FIELD_CODE, predicates, builder, root);
 
 
             //numAds
-            predicateStringCriteria(operationsCriteria.getNumAds(), "numAds", predicates , builder, root);
+            predicateStringCriteria(operationsCriteria.getNumAds(), FIELD_NUM_ADS, predicates, builder, root);
 
 
             //diffusionRestreinte
             if (operationsCriteria.getDiffusionRestreinte() != null) {
 
-                predicateBooleanCriteria(operationsCriteria.getDiffusionRestreinte(),"diffusionRetreinte", predicates, builder, root);
+                predicateBooleanCriteria(operationsCriteria.getDiffusionRestreinte(), FIELD_DIFFUSION_RETREINTE, predicates, builder, root);
 
-            }else{
-                predicates.add(builder.isFalse(root.get("diffusionRetreinte")));
+            } else {
+                predicates.add(builder.isFalse(root.get(FIELD_DIFFUSION_RETREINTE)));
             }
 
             //EstSecteur
             if (operationsCriteria.getEstSecteur() != null) {
 
-                predicateBooleanCriteria(operationsCriteria.getEstSecteur(),"secteur", predicates, builder, root);
+                predicateBooleanCriteria(operationsCriteria.getEstSecteur(), FIELD_SECTEUR, predicates, builder, root);
 
             }
 
             //autorisationDate
-            predicateDateCriteria(operationsCriteria.getAutorisationDateDebut(), operationsCriteria.getAutorisationDateFin(), "autorisationDate", predicates, builder, root);
+            predicateDateCriteria(operationsCriteria.getAutorisationDateDebut(), operationsCriteria.getAutorisationDateFin(), FIELD_AUTORISATION_DATE, predicates, builder, root);
 
             //operationnelDate
-            predicateDateCriteria(operationsCriteria.getOperationnelDateDebut(), operationsCriteria.getOperationnelDateFin(), "operationnelDate", predicates, builder, root);
+            predicateDateCriteria(operationsCriteria.getOperationnelDateDebut(), operationsCriteria.getOperationnelDateFin(), FIELD_OPERATIONNEL_DATE, predicates, builder, root);
 
 
             //clotureDate
-            predicateDateCriteria(operationsCriteria.getClotureDateDebut(), operationsCriteria.getClotureDateFin(), "clotureDate", predicates, builder, root);
+            predicateDateCriteria(operationsCriteria.getClotureDateDebut(), operationsCriteria.getClotureDateFin(), FIELD_CLOTURE_DATE, predicates, builder, root);
 
 
-            if(operationsCriteria.getTiers() != null){
+            if (operationsCriteria.getTiers() != null) {
 
-                Join<OperationEntity, OperationTiersEntity> operationTiersJoin= root.join("operation");
-                Join<OperationTiersEntity,TypeTiersEntity>  typeTiersyJoin= operationTiersJoin.join("typeTiers");
-                Join<OperationTiersEntity, TiersEntity> tiersJoin= operationTiersJoin.join("tiers");
+                Join<OperationEntity, OperationTiersEntity> operationTiersJoin = root.join(FIELD_OPERATION);
+                Join<OperationTiersEntity, TypeTiersEntity> typeTiersyJoin = operationTiersJoin.join(FIELD_TYPE_TIERS);
+                Join<OperationTiersEntity, TiersEntity> tiersJoin = operationTiersJoin.join(FIELD_TIERS);
 
-                predicateStringCriteriaForJoin(operationsCriteria.getTiers(), "libelle", predicates , builder, tiersJoin);
+                predicateStringCriteriaForJoin(operationsCriteria.getTiers(), FIELD_LIBELLE, predicates, builder, tiersJoin);
 
-                predicates.add(builder.equal(typeTiersyJoin.get("libelle"), operationsCriteria.getTiers()));
+                predicates.add(builder.equal(typeTiersyJoin.get(FIELD_LIBELLE), operationsCriteria.getTiers()));
 
             }
 
@@ -129,50 +144,6 @@ public class OperationCustomDaoImpl implements OperationCustomDao {
     }
 
 
-    public void predicateStringCriteria(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder ,Root<OperationEntity> root){
-        if (criteria != null) {
-            if(criteria.indexOf("*") == -1){
-                predicates.add(builder.equal(root.get(type), criteria));
-            }else{
-                predicates.add(builder.like(root.get(type), criteria.replace("*", "%")));
-            }
-        }
-    }
 
-    public void predicateStringCriteriaForJoin(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder ,Join<?,?> join){
-        if (criteria != null) {
-            if(criteria.indexOf("*") == -1){
-                predicates.add(builder.equal(join.get(type), criteria));
-            }else{
-                predicates.add(builder.like(join.get(type), criteria.replace("*", "%")));
-            }
-        }
-    }
-
-    public void predicateDateCriteria(Date dateDebut , Date dateFin, String type, List<Predicate> predicates, CriteriaBuilder builder , Root<OperationEntity> root){
-        if (dateDebut != null && dateFin != null) {
-
-            predicates.add(builder.between(root.get(type), dateDebut, dateFin));
-
-        }else if(dateDebut != null && dateFin == null){
-
-            predicates.add(builder.greaterThanOrEqualTo(root.get(type), dateDebut));
-
-        }else if(dateDebut == null && dateFin != null){
-
-            predicates.add(builder.lessThanOrEqualTo(root.get(type), dateFin));
-
-        }
-    }
-
-    public void predicateBooleanCriteria(Boolean criteria, String type, List<Predicate> predicates, CriteriaBuilder builder , Root<OperationEntity> root) {
-
-            if (criteria) {
-                predicates.add(builder.isTrue(root.get(type)));
-            } else {
-                predicates.add(builder.isFalse(root.get(type)));
-            }
-
-    }
 
 }

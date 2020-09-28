@@ -7,6 +7,7 @@ import java.util.Date;
 
 @Data
 public class OperationsCriteria {
+
     private String nom;
 
     private String nature;
@@ -34,13 +35,5 @@ public class OperationsCriteria {
     private Date clotureDateFin;
 
     private String tiers;
-
-    private Integer start;
-
-    private Integer resultsNumber;
-
-    private String orderBy;
-
-    private Boolean asc;
 
 }

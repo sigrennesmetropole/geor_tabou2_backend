@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PaginationUtils {
 
     private static final Integer DEFAULT_START = 0;
-    private static final Integer DEFAULT_RESULTS_NUMBER = 10;
+    private static final Integer DEFAULT_RESULTS_NUMBER = 100;
 
     /**
      * Constructeur de la classe utilitaire
