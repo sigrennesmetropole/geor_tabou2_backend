@@ -1,8 +1,12 @@
 package rm.tabou2.service.utils;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import rm.tabou2.service.dto.PageResult;
+
+import java.util.ArrayList;
 
 public class PaginationUtils {
 
@@ -31,6 +35,18 @@ public class PaginationUtils {
         }
 
         return PageRequest.of(start, resultsNumber, Sort.by(direction, orderBy));
+
+    }
+
+    public static PageResult buildPageResult(Page<?> page){
+
+        PageResult result = new PageResult();
+
+        result.setTotalElements(page.getTotalElements());
+        result.setElements(new ArrayList<>());
+        result.getElements().addAll(page.getContent());
+
+        return result;
 
     }
 
