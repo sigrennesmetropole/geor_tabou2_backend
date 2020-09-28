@@ -1,9 +1,11 @@
 package rm.tabou2.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.TypeDocumentService;
 import rm.tabou2.service.dto.TypeDocument;
+import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.mapper.TypeDocumentMapper;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.TypeDocumentDao;
@@ -24,35 +26,75 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     private TypeDocumentMapper typeDocumentMapper;
 
     @Override
-    public TypeDocument addTypeDocument(TypeDocument typeDocument) {
+    public TypeDocument addTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
         TypeDocumentEntity typeDocumentEntity = typeDocumentMapper.dtoToEntity(typeDocument);
 
-        typeDocumentEntity = typeDocumentDao.save(typeDocumentEntity);
+        try {
+            typeDocumentEntity = typeDocumentDao.save(typeDocumentEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible d'ajouter un type document ", e);
+        }
 
         return typeDocumentMapper.entityToDto(typeDocumentEntity);
 
     }
 
     @Override
-    public void inactivateTypeDocument(Long typeDocumentId) throws NoSuchElementException {
+    public TypeDocument editTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
-        Optional<TypeDocumentEntity> typeDocumentOpt = typeDocumentDao.findById(typeDocumentId);
-        if (null == typeDocumentOpt || typeDocumentOpt.isEmpty()) {
-            throw new NoSuchElementException("Le type de document id=" + typeDocumentId + " n'existe pas");
+        TypeDocumentEntity typeDocumentEntity;
+
+        Optional<TypeDocumentEntity> typeDocumentEntityOpt = typeDocumentDao.findById(typeDocument.getId());
+
+        if (typeDocumentEntityOpt.isEmpty()) {
+            throw new NoSuchElementException("Le type de document id = " + typeDocument.getId() + " n'existe pas");
+        }else{
+            typeDocumentEntity = typeDocumentEntityOpt.get();
         }
 
-        TypeDocumentEntity typeDocument = typeDocumentOpt.get();
-        typeDocument.setDateInactif(new Date());
+        typeDocumentEntity.setDateInactif(typeDocument.getDateInactivite());
 
-        typeDocumentDao.save(typeDocument);
+        typeDocumentEntity.setLibelle(typeDocument.getLibelle());
 
+        // Enregistrement en BDD
+        try {
+            typeDocumentEntity = typeDocumentDao.save(typeDocumentEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible d'ajouter un type document ", e);
+        }
+
+        return typeDocumentMapper.entityToDto(typeDocumentEntity);
     }
 
     @Override
-    public List<TypeDocument> searchTypeDocument(String keyword, Integer start, Boolean onlyActive, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+    public TypeDocument inactivateTypeDocument(Long typeDocumentId) throws NoSuchElementException, AppServiceException {
 
-        List<TypeDocumentEntity> typesDocuments = null;
+        TypeDocumentEntity typeDocument;
+
+        Optional<TypeDocumentEntity> typeDocumentOpt = typeDocumentDao.findById(typeDocumentId);
+        if (typeDocumentOpt.isEmpty()) {
+            throw new NoSuchElementException("Le type de document id=" + typeDocumentId + " n'existe pas");
+        }else{
+            typeDocument = typeDocumentOpt.get();
+        }
+
+        typeDocument.setDateInactif(new Date());
+
+        // Enregistrement en BDD
+        try {
+            typeDocument = typeDocumentDao.save(typeDocument);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible d'ajouter un type document ", e);
+        }
+
+        return typeDocumentMapper.entityToDto(typeDocument);
+    }
+
+    @Override
+    public List<TypeDocument> searchTypeDocument(String keyword, Integer start, Boolean onlyActive, Integer resultsNumber, String orderBy, Boolean asc)  {
+
+        List<TypeDocumentEntity> typesDocuments;
 
         if (Boolean.TRUE.equals(onlyActive)) {
             typesDocuments = typeDocumentDao.findOnlyActiveByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
