@@ -54,7 +54,7 @@ public class OperationEntity {
 
     @Basic
     @Column(name = "surface_totale")
-    private Date surfaceTotale;
+    private Integer surfaceTotale;
 
     @Basic
     @Column(name = "nb_logement_prevu")

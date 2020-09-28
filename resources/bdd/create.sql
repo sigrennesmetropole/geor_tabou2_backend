@@ -91,7 +91,7 @@ create table tabou_operation (
                            operationnel_date timestamp,
                            cloture_date timestamp,
                            num_ads varchar(255),
-                           surface_totale timestamp,
+                           surface_totale integer,
                            nb_logement_prevu integer,
                            plhlogement_prevu integer,
                            plhlogement_livre integer,
