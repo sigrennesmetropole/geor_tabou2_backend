@@ -51,6 +51,7 @@
                         <!-- Activier le 'interfaceOnly' à true pour la compile, sinon conflit,
                             et à false pour la génération -->
                         <interfaceOnly>true</interfaceOnly>
+                        <dateLibrary>legacy</dateLibrary>
                         <!--<skipOverwrite>true</skipOverwrite> -->
                     </configOptions>
                     <templateDirectory>${project.basedir}/src/conf/generation/</templateDirectory>

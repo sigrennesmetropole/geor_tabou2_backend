@@ -8,12 +8,12 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "programme")
+@Table(name = "tabou_programme")
 public class ProgrammeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_programme")
     private long id;
 
     @Basic
@@ -33,60 +33,64 @@ public class ProgrammeEntity {
     private String description;
 
     @Basic
-    @Column(name = "attribution_fonciere_aAnnee")
-    private String attributionFonciereAnnee;
+    @Column(name = "attribution_fonciere_annee")
+    private int attributionFonciereAnnee;
 
     @Basic
     @Column(name = "attribution_date")
     private Date attributionDate;
 
     @Basic
-    @Column(name = "autorisation_date")
-    private String autorisationDate;
-
-    @Basic
     @Column(name = "commercialisation_date")
     private Date commercialisationDate;
 
     @Basic
-    @Column(name = "demarrage_date")
-    private Date demarrageDate;
+    @Column(name = "num_ads")
+    private String numAds;
 
     @Basic
-    @Column(name = "livraison_date")
-    private Date livraisonDate;
+    @Column(name = "ADS_date_prevu")
+    private Date adsDatePrevu;
+
+    @Basic
+    @Column(name = "DOC_date_prevu")
+    private Date docDatePrevu;
+
+    @Basic
+    @Column(name = "DAT_date_prevu")
+    private Date datDatePrevu;
 
     @Basic
     @Column(name = "cloture_date")
     private Date clotureDate;
 
     @Basic
-    @Column(name = "logements_total")
-    private int logementsTotal;
+    @Column(name = "nb_logements")
+    private int nbLogements;
 
     @Basic
-    @Column(name = "logements_access_libre")
-    private int logementsAccessLibre;
+    @Column(name = "logements_locat_aide_prevu")
+    private int logementsLocatAidePrevu;
 
     @Basic
-    @Column(name = "logements_access_maitrise")
-    private int logementsAccessMaitrise;
+    @Column(name = "logements_access_aide_prevu")
+    private int logementsAccessAidePrevu;
 
     @Basic
-    @Column(name = "logements_locat_regul")
-    private int logementsLocatRegul;
+    @Column(name = "logements_locat_regule_prive_prevu")
+    private int logementsLocatRegulePrivePrevu;
 
     @Basic
-    @Column(name = "logements_pls")
-    private int logementsPls;
+    @Column(name = "logements_locatif_regule_hlm_prevu")
+    private int logementsLocatifReguleHlmPrevu;
 
     @Basic
-    @Column(name = "logements_access_aide")
-    private int logementsAccessAide;
+    @Column(name = "logements_access_maitrise_prevu")
+    private int logementsAccessMaitrisePrevu;
 
     @Basic
-    @Column(name = "logements_locat_aide")
-    private int logementsLocatAide;
+    @Column(name = "logements_access_libre_prevu")
+    private int logementsAccessLibrePrevu;
 
     @Basic
     @Column(name = "create_user")
@@ -105,9 +109,10 @@ public class ProgrammeEntity {
     private Date modifDate;
 
     @OneToMany(mappedBy = "programme")
-    public Set<OperationTiersEntity> operationsTiers;
+    public Set<ProgrammeTiersEntity> programmeTiers;
 
-    @OneToMany(mappedBy = "programme")
-    public Set<EtapeProgrammeEntity> etapes;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_etape_programme")
+    public EtapeProgrammeEntity etapeProgramme;
 
 }

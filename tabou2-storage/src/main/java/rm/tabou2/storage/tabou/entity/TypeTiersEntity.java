@@ -8,12 +8,12 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "type_tiers")
+@Table(name = "tabou_type_tiers")
 public class TypeTiersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_type_tiers")
     private long id;
 
     @Basic
@@ -34,5 +34,8 @@ public class TypeTiersEntity {
 
     @OneToMany(mappedBy = "typeTiers")
     public Set<OperationTiersEntity> operationsTiers;
+
+    @OneToMany(mappedBy = "typeTiers")
+    public Set<ProgrammeTiersEntity> programmeTiers;
 
 }

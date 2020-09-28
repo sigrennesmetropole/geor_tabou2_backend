@@ -8,12 +8,12 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "operation_tiers")
+@Table(name = "tabou_operation_tiers")
 public class OperationTiersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_operation_tiers")
     private long id;
 
     @Basic
@@ -35,10 +35,6 @@ public class OperationTiersEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_operation")
     public OperationEntity operation;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_programme")
-    public ProgrammeEntity programme;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tiers")

@@ -14,7 +14,5 @@ public interface EtapeProgrammeDao extends CrudRepository<EtapeProgrammeEntity, 
     @Query("SELECT e FROM EtapeProgrammeEntity e WHERE UPPER(e.libelle) like UPPER(:keyword)")
     List<EtapeProgrammeEntity> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    @Query("SELECT e FROM EtapeProgrammeEntity e WHERE e.programme.id = :programmeId")
-    List<EtapeProgrammeEntity> findByProgrammeId(@Param("programmeId") long programmeId);
 
 }
