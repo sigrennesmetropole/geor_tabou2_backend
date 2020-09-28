@@ -1,16 +1,17 @@
 package rm.tabou2.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.TypeTiersService;
 import rm.tabou2.service.dto.TypeTiers;
 import rm.tabou2.service.mapper.TypeTiersMapper;
-import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.dao.TypeTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.TypeTiersDao;
 import rm.tabou2.storage.tabou.entity.TypeTiersEntity;
 
 import java.util.Date;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -19,6 +20,9 @@ public class TypeTiersServiceImpl implements TypeTiersService {
 
     @Autowired
     private TypeTiersDao typeTiersDao;
+
+    @Autowired
+    private TypeTiersCustomDao typeTiersCustomDao;
 
     @Autowired
     private TypeTiersMapper typeTiersMapper;
@@ -81,17 +85,9 @@ public class TypeTiersServiceImpl implements TypeTiersService {
     }
 
     @Override
-    public List<TypeTiers> searchTypeTiers(String keyword, Integer start, Boolean onlyActive, Integer resultsNumber, String orderBy, Boolean asc) {
+    public Page<TypeTiers> searchTypeTiers(String libelle, Date dateInactivite, Pageable pageable) {
 
-        List<TypeTiersEntity> typesTiers = null;
-
-        if (Boolean.TRUE.equals(onlyActive)) {
-            typesTiers = typeTiersDao.findOnlyActiveByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
-        } else {
-            typesTiers = typeTiersDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
-        }
-
-        return typeTiersMapper.entitiesToDto(typesTiers);
+        return typeTiersMapper.entitiesToDto(typeTiersCustomDao.searchTypeTiers(libelle, dateInactivite, pageable), pageable);
 
     }
 

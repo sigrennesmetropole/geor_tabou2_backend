@@ -1,8 +1,10 @@
 package rm.tabou2.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.TypeTiers;
 
-import java.util.List;
+import java.util.Date;
 
 public interface TypeTiersService {
 
@@ -40,12 +42,10 @@ public interface TypeTiersService {
     /**
      * Recherche de type tiers.
      *
-     * @param keyword       mot clé à rechercher
-     * @param start         index du début
-     * @param resultsNumber nombre de résultats à retourner
-     * @param orderBy       nom du champ sur lequel trier
-     * @param asc           true si tri ascendant, faux sinon
+     * @param libelle        libelle du type tiers à rechercher
+     * @param dateInactivite date de mise en inactivité à rechercher
+     * @param pageable       pagination           true si tri ascendant, faux sinon
      * @return
      */
-    List<TypeTiers> searchTypeTiers(String keyword, Integer start, Boolean onlyActive, Integer resultsNumber, String orderBy, Boolean asc);
+    Page<TypeTiers> searchTypeTiers(String libelle, Date dateInactivite, Pageable pageable);
 }
