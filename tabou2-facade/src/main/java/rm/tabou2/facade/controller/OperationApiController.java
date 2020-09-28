@@ -72,6 +72,10 @@ public class OperationApiController implements OperationsApi {
         operationsCriteria.setClotureDateDebut(clotureDateDebut);
         operationsCriteria.setClotureDateFin(clotureDateFin);
 
+        if( null == orderBy){
+            orderBy = "nom";
+        }
+
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc);
 
         Page<Operation> page = operationService.searchOperations(operationsCriteria, pageable);

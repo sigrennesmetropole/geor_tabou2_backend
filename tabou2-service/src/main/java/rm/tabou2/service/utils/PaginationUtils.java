@@ -30,7 +30,7 @@ public class PaginationUtils {
         }
 
         Sort.Direction direction = Sort.Direction.ASC;
-        if (Boolean.FALSE.equals(asc)) {
+        if (Boolean.FALSE.equals(asc) || null == asc) {
             direction = Sort.Direction.DESC;
         }
 

@@ -2405,6 +2405,14 @@
           "type": "string",
           "format": "date"
         },
+        "numAds": {
+          "description": " numéro d'autorisation des droits des sols",
+          "type": "string"
+        },
+        "surfaceTotale": {
+          "type": "number",
+          "format": "int64"
+        },
         "nbLogementsPrevu": {
           "type": "integer",
           "format": "int64"
@@ -2417,9 +2425,25 @@
           "type": "integer",
           "format": "int64"
         },
-        "numPc": {
-          "description": "Numéro du permis de construire",
+        "ql1": {
+          "description": "Renouvellement ou en extension",
           "type": "string"
+        },
+        "ql2": {
+          "description": "Compatible ou non avec le SCOT",
+          "type": "boolean"
+        },
+        "ql3": {
+          "description": "ZA productive = Structurante, pole tertiaire, proximité",
+          "type": "string"
+        },
+        "nbEntreprise": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "nbSalarie": {
+          "type": "integer",
+          "format": "int64"
         },
         "createUser": {
           "description": "Utilisateur qui a créé l'entité",
@@ -2877,11 +2901,6 @@
         "libelle": {
           "description": "Libellé de l'étape ",
           "type": "string"
-        },
-        "dateInactivite": {
-          "description": "Date de mise en inactivité de l'étape",
-          "type": "string",
-          "format": "date"
         }
       }
     },

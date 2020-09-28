@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -36,9 +36,11 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
     public static final String FIELD_AUTORISATION_DATE = "autorisationDate";
     public static final String FIELD_OPERATIONNEL_DATE = "operationnelDate";
     public static final String FIELD_CLOTURE_DATE = "clotureDate";
-    public static final String FIELD_OPERATION = "operation";
+    public static final String FIELD_OPERATION_TIERS = "operationsTiers";
     public static final String FIELD_TYPE_TIERS = "typeTiers";
     public static final String FIELD_TIERS = "tiers";
+
+    
     @Qualifier("tabouEntityManager")
     @Autowired
     private EntityManager entityManager;
@@ -56,15 +58,17 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
 
         buildQuery(operationsCriteria, builder, searchQuery, searchRoot);
 
+        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
+
         TypedQuery<OperationEntity> typedQuery = entityManager.createQuery(searchQuery);
 
         int totalRows = typedQuery.getResultList().size();
 
         result = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
 
-        Page<OperationEntity> resultPage = new PageImpl<>(result, pageable, totalRows);
+        return new PageImpl<>(result, pageable, totalRows);
 
-        return resultPage;
+
 
     }
 
@@ -127,11 +131,11 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
 
             if (operationsCriteria.getTiers() != null) {
 
-                Join<OperationEntity, OperationTiersEntity> operationTiersJoin = root.join(FIELD_OPERATION);
+                Join<OperationEntity, OperationTiersEntity> operationTiersJoin = root.join(FIELD_OPERATION_TIERS);
                 Join<OperationTiersEntity, TypeTiersEntity> typeTiersyJoin = operationTiersJoin.join(FIELD_TYPE_TIERS);
                 Join<OperationTiersEntity, TiersEntity> tiersJoin = operationTiersJoin.join(FIELD_TIERS);
 
-                predicateStringCriteriaForJoin(operationsCriteria.getTiers(), FIELD_LIBELLE, predicates, builder, tiersJoin);
+                predicateStringCriteriaForJoin(operationsCriteria.getTiers(), FIELD_NOM, predicates, builder, tiersJoin);
 
                 predicates.add(builder.equal(typeTiersyJoin.get(FIELD_LIBELLE), operationsCriteria.getTiers()));
 
@@ -140,6 +144,8 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
             if (CollectionUtils.isNotEmpty(predicates)) {
                 criteriaQuery.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
             }
+
+
         }
     }
 
