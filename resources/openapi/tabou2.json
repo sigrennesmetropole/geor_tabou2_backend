@@ -49,7 +49,7 @@
     },
     "/operations": {
       "get": {
-        "summary": "Récupération des operations",
+        "summary": "Recherche des operations",
         "description": "Ensemble des opérations",
         "operationId": "getOperations",
         "produces": [
@@ -59,21 +59,21 @@
           {
             "in": "query",
             "name": "nom",
-            "description": "Mot clé de la recherche",
+            "description": "Recherche par nom",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "nature",
-            "description": "Mot clé de la recherche",
+            "description": "Recherche par nature",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "etape",
-            "description": "Mot clé de la recherche",
+            "description": "Recherche par étape",
             "required": false,
             "type": "string"
           },
@@ -87,28 +87,28 @@
           {
             "in": "query",
             "name": "estSecteur",
-            "description": "estSecteur",
+            "description": "True si recherche sur les secteur, false si recherche par opération",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "code",
-            "description": "Mot clé de la recherche",
+            "description": "Recherche par code",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "numAds",
-            "description": "Mot clé de la recherche",
+            "description": "Recherche par numéro ADS",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "autorisationDateDebut",
-            "description": "",
+            "description": "Borne inférieure de recherche par date d'autorisation",
             "required": false,
             "type": "string",
             "format": "date"
@@ -116,7 +116,7 @@
           {
             "in": "query",
             "name": "autorisationDateFin",
-            "description": "",
+            "description": "Borne supérieure de recherche par date d'autorisation",
             "required": false,
             "type": "string",
             "format": "date"
@@ -124,7 +124,7 @@
           {
             "in": "query",
             "name": "operationnelDateDebut",
-            "description": "",
+            "description": "Borne inférieure de recherche par date opérationnelle",
             "required": false,
             "type": "string",
             "format": "date"
@@ -132,7 +132,7 @@
           {
             "in": "query",
             "name": "operationnelDateFin",
-            "description": "",
+            "description": "Borne supérieure de recherche par date opérationnelle",
             "required": false,
             "type": "string",
             "format": "date"
@@ -140,7 +140,7 @@
           {
             "in": "query",
             "name": "clotureDateDebut",
-            "description": "",
+            "description": "Borne inférieure de recherche par date de cloture",
             "required": false,
             "type": "string",
             "format": "date"
@@ -148,7 +148,7 @@
           {
             "in": "query",
             "name": "clotureDateFin",
-            "description": "",
+            "description": "Borne supérieure de recherche par date de cloture",
             "required": false,
             "type": "string",
             "format": "date"
@@ -158,7 +158,7 @@
             "in": "query",
             "required": false,
             "type": "string",
-            "description": "tiers"
+            "description": "Recherche par tiers"
           },
           {
             "name": "start",
