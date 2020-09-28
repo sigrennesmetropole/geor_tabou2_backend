@@ -22,7 +22,7 @@ public abstract class AbstractCustomDaoImpl {
      * @param builder
      * @param root
      */
-    protected void predicateStringCriteria(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<OperationEntity> root) {
+    protected void predicateStringCriteria(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
         if (criteria != null) {
             if (criteria.indexOf('*') == -1) {
                 predicates.add(builder.equal(root.get(type), criteria));
@@ -42,7 +42,7 @@ public abstract class AbstractCustomDaoImpl {
         }
     }
 
-    protected void predicateDateCriteria(Date dateDebut, Date dateFin, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<OperationEntity> root) {
+    protected void predicateDateCriteria(Date dateDebut, Date dateFin, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
         if (dateDebut != null && dateFin != null) {
 
