@@ -7,12 +7,12 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "type_evenement")
+@Table(name = "tabou_type_evenement")
 public class TypeEvenementEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_type_evt")
     private long id;
 
     @Basic
@@ -22,6 +22,14 @@ public class TypeEvenementEntity {
     @Basic
     @Column(name = "date_inactif")
     private Date dateInactif;
+
+    @Basic
+    @Column(name = "create_user")
+    private String createUser;
+
+    @Basic
+    @Column(name = "create_date")
+    private Date createDate;
 
 
 }

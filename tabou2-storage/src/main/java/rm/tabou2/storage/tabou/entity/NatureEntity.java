@@ -8,12 +8,12 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "nature")
+@Table(name = "tabou_nature")
 public class NatureEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_nature")
     private long id;
 
     @Basic
