@@ -28,14 +28,14 @@
           "application/json"
         ],
         "parameters": [
-        {
-          "in": "path",
-          "name": "id",
-          "description": "id de la configuration",
-          "required": true,
-          "type":  "integer",
-          "format": "int64"
-        }
+          {
+            "in": "path",
+            "name": "id",
+            "description": "id de la configuration",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
         ],
         "responses": {
           "200": {
@@ -49,7 +49,7 @@
     },
     "/operations": {
       "get": {
-        "summary": "Récupération des operations",
+        "summary": "Recherche des operations",
         "description": "Ensemble des opérations",
         "operationId": "getOperations",
         "produces": [
@@ -58,10 +58,107 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "nom",
+            "description": "Recherche par nom",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "nature",
+            "description": "Recherche par nature",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "etape",
+            "description": "Recherche par étape",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "diffusionRestreinte",
+            "description": "Indique si les opérations à diffusion restreinte doivent être affichés si les droits le permettent",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "estSecteur",
+            "description": "True si recherche sur les secteur, false si recherche par opération",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "code",
+            "description": "Recherche par code",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "numAds",
+            "description": "Recherche par numéro ADS",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "autorisationDateDebut",
+            "description": "Borne inférieure de recherche par date d'autorisation",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "autorisationDateFin",
+            "description": "Borne supérieure de recherche par date d'autorisation",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "operationnelDateDebut",
+            "description": "Borne inférieure de recherche par date opérationnelle",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "operationnelDateFin",
+            "description": "Borne supérieure de recherche par date opérationnelle",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateDebut",
+            "description": "Borne inférieure de recherche par date de cloture",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateFin",
+            "description": "Borne supérieure de recherche par date de cloture",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "tiers",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Recherche par tiers"
           },
           {
             "name": "start",
@@ -70,39 +167,36 @@
             "description": "Index de début",
             "type": "integer",
             "format": "int32"
-            },
-            {
-              "name": "resultsNumber",
-              "in": "query",
-              "required": false,
-              "description": "Nombre de résultats à remonter",
-              "type": "integer",
-              "format": "int32"
-            },
-            {
-              "name": "orderBy",
-              "in": "query",
-              "required": false,
-              "type": "string",
-              "description": "Nom du champ sur lequel trier les résultats"
-            },
-            {
-              "name": "asc",
-              "in": "query",
-              "required": false,
-              "description": "Indique si le tri doit être faire par ordre ascendant",
-              "type": "boolean",
-              "default": true
-            }
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Operation"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -1579,7 +1673,6 @@
           {
             "in": "path",
             "name": "operationId",
-            "name": "operationId",
             "description": "Identifiant de l'opération",
             "required": true,
             "type": "integer",
@@ -2203,8 +2296,8 @@
           "200": {
             "description": "OK",
             "schema": {
-                "$ref": "#/definitions/PermisConstruire"
-              }
+              "$ref": "#/definitions/PermisConstruire"
+            }
           }
         }
       }
@@ -2217,7 +2310,6 @@
           "application/json"
         ],
         "parameters": [
-
         ],
         "responses": {
           "200": {
@@ -2257,7 +2349,7 @@
       "description": "Opération d'amménagement",
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identificateur unique. Clé primaire",
           "type": "integer",
           "format": "int64"
@@ -2311,6 +2403,14 @@
           "type": "string",
           "format": "date"
         },
+        "numAds": {
+          "description": " numéro d'autorisation des droits des sols",
+          "type": "string"
+        },
+        "surfaceTotale": {
+          "type": "number",
+          "format": "int64"
+        },
         "nbLogementsPrevu": {
           "type": "integer",
           "format": "int64"
@@ -2323,9 +2423,25 @@
           "type": "integer",
           "format": "int64"
         },
-        "numPc": {
-          "description": "Numéro du permis de construire",
+        "ql1": {
+          "description": "Renouvellement ou en extension",
           "type": "string"
+        },
+        "ql2": {
+          "description": "Compatible ou non avec le SCOT",
+          "type": "boolean"
+        },
+        "ql3": {
+          "description": "ZA productive = Structurante, pole tertiaire, proximité",
+          "type": "string"
+        },
+        "nbEntreprise": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "nbSalarie": {
+          "type": "integer",
+          "format": "int64"
         },
         "createUser": {
           "description": "Utilisateur qui a créé l'entité",
@@ -2350,17 +2466,17 @@
     "OperationTiers": {
       "type": "object",
       "properties": {
-        "operationId" : {
+        "operationId": {
           "description": "Identifiant du programme",
           "type": "integer",
           "format": "int64"
         },
-        "typeTiersId" : {
+        "typeTiersId": {
           "description": "Identifiant du type de tiers",
           "type": "integer",
           "format": "int64"
         },
-        "tiersId" : {
+        "tiersId": {
           "description": "Identifiant du tiers",
           "type": "integer",
           "format": "int64"
@@ -2370,7 +2486,7 @@
     "Programme": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identificateur unique. Clé primaire",
           "type": "integer",
           "format": "int64"
@@ -2491,17 +2607,17 @@
     "ProgrammeTiers": {
       "type": "object",
       "properties": {
-        "programmeId" : {
+        "programmeId": {
           "description": "Identifiant du programme",
           "type": "integer",
           "format": "int64"
         },
-        "typeTiersId" : {
+        "typeTiersId": {
           "description": "Identifiant du type de tiers",
           "type": "integer",
           "format": "int64"
         },
-        "tiersId" : {
+        "tiersId": {
           "description": "Identifiant du tiers",
           "type": "integer",
           "format": "int64"
@@ -2512,7 +2628,7 @@
       "type": "object",
       "description": "Liste des évènements : système et utilisateur",
       "properties": {
-        "idEvent" : {
+        "idEvent": {
           "description": "Identifant de l'évènement",
           "type": "integer",
           "format": "int64"
@@ -2558,7 +2674,7 @@
     "TypeEvenement": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifiant unique du type d'évènement",
           "type": "integer",
           "format": "int64"
@@ -2567,7 +2683,7 @@
           "description": "Libellé du type de document",
           "type": "string"
         },
-        "dateInactivite" : {
+        "dateInactivite": {
           "description": "Date de mise en inactivité du type de document",
           "type": "string",
           "format": "date"
@@ -2577,7 +2693,7 @@
     "Commune": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifant de la commune",
           "type": "integer",
           "format": "int64"
@@ -2595,7 +2711,7 @@
     "Iris": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifiant unique",
           "type": "integer",
           "format": "int64"
@@ -2609,7 +2725,7 @@
     "Quartier": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifiant unique",
           "type": "integer",
           "format": "int64"
@@ -2627,7 +2743,7 @@
     "PluiZonage": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifiant unique",
           "type": "integer",
           "format": "int64"
@@ -2699,7 +2815,7 @@
     "TypeTiers": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifiant unique du type de tiers",
           "type": "integer",
           "format": "int64"
@@ -2717,7 +2833,7 @@
           "type": "string",
           "format": "date"
         },
-        "dateInactivite" : {
+        "dateInactivite": {
           "description": "Date de mise en inactivité du type de document",
           "type": "string",
           "format": "date"
@@ -2775,7 +2891,7 @@
     "Etape": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identificateur unique. Clé primaire",
           "type": "integer",
           "format": "int64"
@@ -2783,18 +2899,13 @@
         "libelle": {
           "description": "Libellé de l'étape ",
           "type": "string"
-        },
-        "dateInactivite" : {
-          "description": "Date de mise en inactivité de l'étape",
-          "type": "string",
-          "format": "date"
         }
       }
     },
     "TypeDocument": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifiant unique du type de document",
           "type": "integer",
           "format": "int64"
@@ -2803,7 +2914,7 @@
           "description": "Libellé du type document",
           "type": "string"
         },
-        "dateInactivite" : {
+        "dateInactivite": {
           "description": "Date de mise en inactivité du type de document",
           "type": "string",
           "format": "date"
@@ -2813,7 +2924,7 @@
     "Document": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifiant unique du document",
           "type": "integer",
           "format": "int64"
@@ -2827,7 +2938,7 @@
     "Nature": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifiant unique de la nature",
           "type": "integer",
           "format": "int64"
@@ -2836,7 +2947,7 @@
           "description": "Description de la nature",
           "type": "string"
         },
-        "dateInactivite" : {
+        "dateInactivite": {
           "description": "Date de mise en inactivité de la nature",
           "type": "string",
           "format": "date"
@@ -2846,7 +2957,7 @@
     "PermisConstruire": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identifiant unique du permis",
           "type": "integer",
           "format": "int64"
@@ -2864,27 +2975,27 @@
           "description": "Décision du dossier",
           "type": "string"
         },
-        "surfBureaux" : {
+        "surfBureaux": {
           "description": "M² de surface de plancher dédié à l'activité bureaux",
           "type": "number",
           "format": "double"
         },
-        "surfCommerces" : {
+        "surfCommerces": {
           "description": "M² de surface de plancher dédié à l'activité commerces",
           "type": "number",
           "format": "double"
         },
-        "surfIndustries" : {
+        "surfIndustries": {
           "description": "M² de surface de plancher dédié à l'activité industries",
           "type": "number",
           "format": "double"
         },
-        "surfEquipPub" : {
+        "surfEquipPub": {
           "description": "M² de surface de plancher dédié à l'activité équipement public",
           "type": "number",
           "format": "double"
         },
-        "surfAutre" : {
+        "surfAutre": {
           "description": "M² de surface de plancher dédié à l'activité 'autres'",
           "type": "number",
           "format": "double"
@@ -2969,6 +3080,19 @@
         },
         "logementsLocatifSocial": {
           "description": "Nombre de logements en locatif social (PLUS, PLAI)",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "PageResult": {
+      "type": "object",
+      "properties": {
+        "elements": {
+          "type": "array",
+          "items": "object"
+        },
+        "totalElements": {
           "type": "integer",
           "format": "int64"
         }

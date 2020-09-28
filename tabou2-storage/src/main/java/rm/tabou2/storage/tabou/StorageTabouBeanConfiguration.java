@@ -17,6 +17,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -33,13 +34,13 @@ import java.util.Map;
 @Configuration
 public class StorageTabouBeanConfiguration {
 
-    @Value("${spring.ddc.datasource.hibernate.show_sql}")
+    @Value("${spring.tabou2.datasource.hibernate.show_sql}")
     private String hibernateShowSql;
 
-    @Value("${spring.ddc.datasource.hibernate.format_sql}")
+    @Value("${spring.tabou2.datasource.hibernate.format_sql}")
     private String hibernateFormatSql;
 
-    @Value("${spring.ddc.datasource.hibernate.hbm2ddl.auto}")
+    @Value("${spring.tabou2.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
     @Bean
@@ -70,6 +71,11 @@ public class StorageTabouBeanConfiguration {
     @Bean
     public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
         return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
+    }
+
+    @Bean(name = "tabouEntityManager")
+    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+        return entityManagerFactory.createEntityManager();
     }
 
     private Map hibernateProperties() {

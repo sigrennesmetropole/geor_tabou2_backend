@@ -1,14 +1,17 @@
 package rm.tabou2.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.OperationService;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.mapper.OperationMapper;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.dao.OperationCustomDao;
 import rm.tabou2.storage.tabou.dao.OperationDao;
 import rm.tabou2.storage.tabou.entity.OperationEntity;
+import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.util.Date;
 import java.util.List;
@@ -25,6 +28,9 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private OperationDao operationDao;
+
+    @Autowired
+    private OperationCustomDao operationCustomDao;
 
     @Autowired
     private AuthentificationHelper authentificationHelper;
@@ -46,17 +52,10 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public List<Operation> getAllOperations(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
-
-        //Initialisation des variables
-        orderBy = (orderBy == null) ? DEFAULT_ORDER_BY : orderBy;
-        keyword = (keyword == null) ? "%" : "%" + keyword + "%";
-
-        List<OperationEntity> entites = operationDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
-
-        return operationMapper.entitiesToDto(entites);
-
+    public Page<Operation> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable) {
+        return operationMapper.entitiesToDto(operationCustomDao.searchOperations(operationsCriteria, pageable),pageable);
     }
+
 
     @Override
     public Operation getOperationById(long operationId) {

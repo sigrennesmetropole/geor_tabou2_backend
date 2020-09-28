@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "pc_ddc")
+@Table(name = "pc_ddc", schema = "ddc")
 public class PermisConstruireEntity {
 
     @Id
