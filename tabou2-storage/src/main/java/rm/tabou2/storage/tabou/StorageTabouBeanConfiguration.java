@@ -33,13 +33,13 @@ import java.util.Map;
 @Configuration
 public class StorageTabouBeanConfiguration {
 
-    @Value("${spring.ddc.datasource.hibernate.show_sql}")
+    @Value("${spring.tabou2.datasource.hibernate.show_sql}")
     private String hibernateShowSql;
 
-    @Value("${spring.ddc.datasource.hibernate.format_sql}")
+    @Value("${spring.tabou2.datasource.hibernate.format_sql}")
     private String hibernateFormatSql;
 
-    @Value("${spring.ddc.datasource.hibernate.hbm2ddl.auto}")
+    @Value("${spring.tabou2.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
     @Bean
