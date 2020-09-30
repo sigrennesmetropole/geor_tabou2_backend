@@ -1,8 +1,10 @@
 package rm.tabou2.service.impl;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.AgapeoService;
 import rm.tabou2.service.ProgrammeService;
@@ -69,6 +71,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     public Page<Programme> searchProgrammes(ProgrammeCriteria programmeCriteria, Pageable pageable) {
+        if (BooleanUtils.isTrue(programmeCriteria.getDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
+            throw new AccessDeniedException("Accès non autorisé à des programmes d'accès restreint");
+        }
         return programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
     }
 
