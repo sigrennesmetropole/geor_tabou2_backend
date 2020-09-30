@@ -49,6 +49,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         programmeEntity.setModifDate(new Date());
         programmeEntity.setCreateUser(authentificationHelper.getConnectedUsername());
         programmeEntity.setModifUser(authentificationHelper.getConnectedUsername());
+        programmeEntity.setNumAds(programme.getNumPc());
 
         programmeEntity = programmeDao.save(programmeEntity);
 
