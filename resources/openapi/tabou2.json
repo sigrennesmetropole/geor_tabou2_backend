@@ -372,7 +372,7 @@
         }
       },
       "get": {
-        "summary": "Recherche d'un programme",
+        "summary": "Recherche des programmes",
         "operationId": "getProgrammes",
         "produces": [
           "application/json"
@@ -380,10 +380,162 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "nom",
+            "description": "Recherche par nom",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "etape",
+            "description": "Recherche par étape",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "diffusionRestreinte",
+            "description": "Indique si les opérations à diffusion restreinte doivent être affichés si les droits le permettent",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "code",
+            "description": "Recherche par code",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "numAds",
+            "description": "Recherche par numéro ADS",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateDebut",
+            "description": "Borne inférieure de recherche par date de cloture",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateFin",
+            "description": "Borne supérieure de recherche par date de cloture",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "tiers",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Recherche par tiers"
+          },
+          {
+            "in": "query",
+            "name": "attributionFonciereAnneeDebut",
+            "description": "Borne inférieure de recherche par année d'attribution foncière",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "attributionFonciereAnneeFin",
+            "description": "Borne supérieure de recherche par année d'attribution foncière",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "attributionDateDebut",
+            "description": "Borne inférieure de recherche par date d'attribution",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "attributionDateFin",
+            "description": "Borne supérieure de recherche par date d'attribution",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "commercialisationDateDebut",
+            "description": "Borne inférieure de recherche par date de commercialisation",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "commercialisationDateFin",
+            "description": "Borne supérieure de recherche par date de commercialisation",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "adsDateDebut",
+            "description": "Borne inférieure de recherche par date ADS",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "adsDateFin",
+            "description": "Borne supérieure de recherche par date ADS",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "docDateDebut",
+            "description": "Borne inférieure de recherche par date DOC",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "docDateFin",
+            "description": "Borne supérieure de recherche par date DOC",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "datDateDebut",
+            "description": "Borne inférieure de recherche par date DAT",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "datDateFin",
+            "description": "Borne supérieure de recherche par date DAT",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "logementsAides",
+            "description": "True si recherche sur les logements pour lesquels l'état apporte de l'aide",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "start",
@@ -429,10 +581,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Programme"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }

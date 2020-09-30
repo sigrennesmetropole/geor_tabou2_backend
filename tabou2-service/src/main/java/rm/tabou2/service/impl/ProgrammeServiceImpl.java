@@ -1,19 +1,21 @@
 package rm.tabou2.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.AgapeoService;
 import rm.tabou2.service.ProgrammeService;
 import rm.tabou2.service.dto.Logements;
 import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.mapper.ProgrammeMapper;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.service.mapper.ProgrammeMapper;
+import rm.tabou2.storage.tabou.dao.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
+import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import java.util.Date;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -22,6 +24,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private ProgrammeDao programmeDao;
+
+    @Autowired
+    private ProgrammeCustomDao programmeCustomDao;
 
     @Autowired
     private AgapeoService agapeoService;
@@ -63,12 +68,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public List<Programme> searchProgrammes(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc)  {
-
-        List<ProgrammeEntity> programmes = programmeDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
-
-        return programmeMapper.entitiesToDto(programmes);
-
+    public Page<Programme> searchProgrammes(ProgrammeCriteria programmeCriteria, Pageable pageable) {
+        return programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
     }
 
     public Logements getLogements() {

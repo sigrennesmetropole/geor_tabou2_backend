@@ -1,7 +1,10 @@
 package rm.tabou2.service;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -26,14 +29,11 @@ public interface ProgrammeService {
     Programme getProgrammeById(long programmeId) ;
 
     /**
-     * Recherche de programme à partir d'un mot clé.
+     * Recherche de programme à partir des paramètres.
      *
-     * @param keyword mot clé à rechercher
-     * @param start index du début
-     * @param resultsNumber nombre de résultats à retourner
-     * @param orderBy nom du champ sur lequel trier
-     * @param asc true si tri ascendant, faux sinon
+     * @param programmeCriteria paramètres des programmes
+     * @param pageable paramètre lié à la pagination
      * @return Liste des programme correspondant à la recherche
      */
-    List<Programme> searchProgrammes(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc);
+    Page<Programme> searchProgrammes(ProgrammeCriteria programmeCriteria, Pageable pageable);
 }

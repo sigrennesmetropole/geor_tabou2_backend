@@ -21,25 +21,24 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_AUTORISATION_DATE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CLOTURE_DATE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CODE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DIFFUSION_RETREINTE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_OPERATION;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NATURE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NUM_ADS;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_OPERATIONNEL_DATE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_OPERATION_TIERS;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_SECTEUR;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TIERS;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_TIERS;
+
 
 @Repository
 public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements OperationCustomDao {
-
-    public static final String FIELD_NOM = "nom";
-    public static final String FIELD_NATURE = "nature";
-    public static final String FIELD_LIBELLE = "libelle";
-    public static final String FIELD_ETAPE_OPERATION = "etapeOperation";
-    public static final String FIELD_CODE = "code";
-    public static final String FIELD_NUM_ADS = "numAds";
-    public static final String FIELD_DIFFUSION_RETREINTE = "diffusionRetreinte";
-    public static final String FIELD_SECTEUR = "secteur";
-    public static final String FIELD_AUTORISATION_DATE = "autorisationDate";
-    public static final String FIELD_OPERATIONNEL_DATE = "operationnelDate";
-    public static final String FIELD_CLOTURE_DATE = "clotureDate";
-    public static final String FIELD_OPERATION_TIERS = "operationsTiers";
-    public static final String FIELD_TYPE_TIERS = "typeTiers";
-    public static final String FIELD_TIERS = "tiers";
-
     
     @Qualifier("tabouEntityManager")
     @Autowired
@@ -142,7 +141,7 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
             }
 
             if (CollectionUtils.isNotEmpty(predicates)) {
-                criteriaQuery.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
+                criteriaQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
             }
 
 
