@@ -61,6 +61,12 @@
             <artifactId>google-maps-services</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+
 
         <!-- Swagger UI dependency -->
         <dependency>
