@@ -2,12 +2,15 @@ package rm.tabou2.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.TypeDocumentService;
 import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.mapper.TypeDocumentMapper;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.dao.TypeDocumentCustomDao;
 import rm.tabou2.storage.tabou.dao.TypeDocumentDao;
 import rm.tabou2.storage.tabou.entity.TypeDocumentEntity;
 
@@ -21,6 +24,9 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
 
     @Autowired
     private TypeDocumentDao typeDocumentDao;
+
+    @Autowired
+    private TypeDocumentCustomDao typeDocumentCustomDao;
 
     @Autowired
     private TypeDocumentMapper typeDocumentMapper;
@@ -92,17 +98,11 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     }
 
     @Override
-    public List<TypeDocument> searchTypeDocument(String keyword, Integer start, Boolean onlyActive, Integer resultsNumber, String orderBy, Boolean asc)  {
+    public Page<TypeDocument> searchTypeDocument(Long id, String libelle, Date dateInactif, Pageable pageable)  {
 
-        List<TypeDocumentEntity> typesDocuments;
+        Page<TypeDocumentEntity> typesDocuments = typeDocumentCustomDao.searchTypeDocument(id, libelle, dateInactif, pageable);
 
-        if (Boolean.TRUE.equals(onlyActive)) {
-            typesDocuments = typeDocumentDao.findOnlyActiveByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
-        } else {
-            typesDocuments = typeDocumentDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
-        }
-
-        return typeDocumentMapper.entitiesToDto(typesDocuments);
+        return typeDocumentMapper.entitiesToDto(typesDocuments,pageable);
 
     }
 

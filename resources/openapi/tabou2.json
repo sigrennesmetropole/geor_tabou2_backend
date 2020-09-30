@@ -1859,10 +1859,26 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "typeDocumentId",
+            "description": "Identifiant du type de document",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "libelle du type de document",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "dateInactif",
+            "in": "query",
+            "required": false,
+            "description": "Date d'inactivite",
+            "type": "string",
+            "format": "date"
           },
           {
             "name": "start",
@@ -1871,14 +1887,6 @@
             "description": "Index de début",
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
           },
           {
             "name": "resultsNumber",
@@ -1908,10 +1916,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TypeDocument"
-              }
+                "$ref": "#/definitions/PageResult"
             }
           }
         }

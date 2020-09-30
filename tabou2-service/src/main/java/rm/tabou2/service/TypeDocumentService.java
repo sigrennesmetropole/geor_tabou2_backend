@@ -1,8 +1,11 @@
 package rm.tabou2.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.exception.AppServiceException;
 
+import java.util.Date;
 import java.util.List;
 
 public interface TypeDocumentService {
@@ -33,12 +36,6 @@ public interface TypeDocumentService {
     /**
      * Récuperer la liste des types de document.
      *
-     * @param keyword
-     * @param start
-     * @param onlyActive
-     * @param resultsNumber
-     * @param orderBy
-     * @param asc
      */
-    List<TypeDocument> searchTypeDocument(String keyword, Integer start, Boolean onlyActive, Integer resultsNumber, String orderBy, Boolean asc) throws Exception;
+    Page<TypeDocument> searchTypeDocument(Long id, String libelle, Date dateInactivite, Pageable pageable);
 }
