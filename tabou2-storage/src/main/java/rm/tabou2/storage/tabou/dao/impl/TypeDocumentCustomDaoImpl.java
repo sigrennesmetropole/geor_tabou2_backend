@@ -27,7 +27,11 @@ import java.util.List;
 @Repository
 public class TypeDocumentCustomDaoImpl extends AbstractCustomDaoImpl implements TypeDocumentCustomDao {
 
-    
+    public static final String FIELD_ID= "id";
+    public static final String FIELD_LIBELLE = "libelle";
+    public static final String FIELD_DATE_INACTIF = "dateInactif";
+
+
     @Qualifier("tabouEntityManager")
     @Autowired
     private EntityManager entityManager;
@@ -75,17 +79,17 @@ public class TypeDocumentCustomDaoImpl extends AbstractCustomDaoImpl implements 
 
         if( typeDocumentCriteria.getId() != null) {
 
-            predicates.add(builder.equal(searchRoot.get("id"), typeDocumentCriteria.getId()));
+            predicates.add(builder.equal(searchRoot.get(FIELD_ID), typeDocumentCriteria.getId()));
 
         }else{
 
             if(typeDocumentCriteria.getLibelle() != null){
 
-                predicateStringCriteria(typeDocumentCriteria.getLibelle(), "libelle", predicates, builder, searchRoot);
+                predicateStringCriteria(typeDocumentCriteria.getLibelle(), FIELD_LIBELLE, predicates, builder, searchRoot);
 
             }
             if(typeDocumentCriteria.getDateInactif() != null){
-                predicates.add(builder.equal(searchRoot.get("dateInactif"), typeDocumentCriteria.getDateInactif()));
+                predicates.add(builder.equal(searchRoot.get(FIELD_DATE_INACTIF), typeDocumentCriteria.getDateInactif()));
             }
         }
 
