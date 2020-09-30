@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import rm.tabou2.storage.dao.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.TypeDocumentCustomDao;
 import rm.tabou2.storage.tabou.entity.*;
+import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -20,7 +21,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -33,47 +33,59 @@ public class TypeDocumentCustomDaoImpl extends AbstractCustomDaoImpl implements 
     private EntityManager entityManager;
 
     @Override
-    public Page<TypeDocumentEntity> searchTypeDocument(Long id, String libelle, Date dateInactif, Pageable pageable) {
+    public Page<TypeDocumentEntity> searchTypeDocument(TypeDocumentCriteria typeDocumentCriteria, Pageable pageable) {
 
 
         List<TypeDocumentEntity> result;
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
+        //Requête pour compter le nombre de résultats total
+        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+        Root<TypeDocumentEntity> countRoot = countQuery.from(TypeDocumentEntity.class);
+        buildQuery(typeDocumentCriteria, builder, countQuery, countRoot);
+        countQuery.select(builder.countDistinct(countRoot));
+        Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
+
+        //Si aucun résultat
+        if (totalCount == 0) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        //Requête de recherche
+
+
         CriteriaQuery<TypeDocumentEntity> searchQuery = builder.createQuery(TypeDocumentEntity.class);
         Root<TypeDocumentEntity> searchRoot = searchQuery.from(TypeDocumentEntity.class);
 
-        buildQuery(id, libelle, dateInactif, builder, searchQuery, searchRoot);
+        buildQuery(typeDocumentCriteria, builder, searchQuery, searchRoot);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
 
         TypedQuery<TypeDocumentEntity> typedQuery = entityManager.createQuery(searchQuery);
 
-        int totalRows = typedQuery.getResultList().size();
-
-        result = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
-
-        return new PageImpl<>(result, pageable, totalRows);
+        List<TypeDocumentEntity> typeDocumentEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
+        return new PageImpl<>(typeDocumentEntities, pageable, totalCount.intValue());
     }
 
-    private void buildQuery(Long id, String libelle, Date dateInactif, CriteriaBuilder builder,
-                            CriteriaQuery<TypeDocumentEntity> criteriaQuery, Root<TypeDocumentEntity> searchRoot) {
+    private void buildQuery(TypeDocumentCriteria typeDocumentCriteria, CriteriaBuilder builder,
+                            CriteriaQuery<?> criteriaQuery, Root<TypeDocumentEntity> searchRoot) {
 
         List<Predicate> predicates = new ArrayList<>();
 
-        if( id != null) {
+        if( typeDocumentCriteria.getId() != null) {
 
-            predicates.add(builder.equal(searchRoot.get("id"), id));
+            predicates.add(builder.equal(searchRoot.get("id"), typeDocumentCriteria.getId()));
 
         }else{
 
-            if(libelle != null){
+            if(typeDocumentCriteria.getLibelle() != null){
 
-                predicateStringCriteria(libelle, "libelle", predicates, builder, searchRoot);
+                predicateStringCriteria(typeDocumentCriteria.getLibelle(), "libelle", predicates, builder, searchRoot);
 
             }
-            if(dateInactif != null){
-                predicates.add(builder.equal(searchRoot.get("dateInactif"), dateInactif));
+            if(typeDocumentCriteria.getDateInactif() != null){
+                predicates.add(builder.equal(searchRoot.get("dateInactif"), typeDocumentCriteria.getDateInactif()));
             }
         }
 

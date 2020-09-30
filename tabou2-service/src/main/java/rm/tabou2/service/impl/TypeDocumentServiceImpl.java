@@ -13,6 +13,7 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.TypeDocumentCustomDao;
 import rm.tabou2.storage.tabou.dao.TypeDocumentDao;
 import rm.tabou2.storage.tabou.entity.TypeDocumentEntity;
+import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 
 import java.util.Date;
 import java.util.List;
@@ -59,7 +60,7 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
             typeDocumentEntity = typeDocumentEntityOpt.get();
         }
 
-        typeDocumentEntity.setDateInactif(typeDocument.getDateInactivite());
+        typeDocumentEntity.setDateInactif(typeDocument.ge());
 
         typeDocumentEntity.setLibelle(typeDocument.getLibelle());
 
@@ -98,9 +99,9 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     }
 
     @Override
-    public Page<TypeDocument> searchTypeDocument(Long id, String libelle, Date dateInactif, Pageable pageable)  {
+    public Page<TypeDocument> searchTypeDocument(TypeDocumentCriteria typeDocumentCriteria, Pageable pageable)  {
 
-        Page<TypeDocumentEntity> typesDocuments = typeDocumentCustomDao.searchTypeDocument(id, libelle, dateInactif, pageable);
+        Page<TypeDocumentEntity> typesDocuments = typeDocumentCustomDao.searchTypeDocument(typeDocumentCriteria, pageable);
 
         return typeDocumentMapper.entitiesToDto(typesDocuments,pageable);
 

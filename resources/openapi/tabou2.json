@@ -2918,7 +2918,7 @@
           "description": "Libellé du type document",
           "type": "string"
         },
-        "dateInactivite": {
+        "dateInactif": {
           "description": "Date de mise en inactivité du type de document",
           "type": "string",
           "format": "date"
