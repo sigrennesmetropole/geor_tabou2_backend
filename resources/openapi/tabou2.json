@@ -2750,7 +2750,10 @@
           "type": "string",
           "format": "date"
         }
-      }
+      },
+      "required": [
+        "etape", "code", "nom", "diffusionrestreinte"
+      ]
     },
     "ProgrammeTiers": {
       "type": "object",
