@@ -60,7 +60,7 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
             typeDocumentEntity = typeDocumentEntityOpt.get();
         }
 
-        typeDocumentEntity.setDateInactif(typeDocument.ge());
+        typeDocumentEntity.setDateInactif(typeDocument.getDateInactif());
 
         typeDocumentEntity.setLibelle(typeDocument.getLibelle());
 
