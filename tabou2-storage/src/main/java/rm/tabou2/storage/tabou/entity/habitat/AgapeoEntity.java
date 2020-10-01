@@ -63,8 +63,6 @@ public class AgapeoEntity {
     @Column(name = "logements_locat_regul_hlm")
     private int logementsLocatRegulHlm;
 
-
-
     @Basic
     @Column(name = "logements_access_maitrise")
     private int logementsAccessMaitrise;

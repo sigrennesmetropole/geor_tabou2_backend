@@ -2696,7 +2696,7 @@
         "logementsTotal": {
           "description": "Nombre de logements total (prévu, jusqu'à l'étape de livraison, livré ensuite)",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
         "logementsAccesLibre": {
           "description": "Nombre de logements en accession libre",
@@ -3161,53 +3161,63 @@
           "type": "integer",
           "format": "int64"
         },
-        "libelle": {
-          "description": "Identifiant unique du permis",
-          "type": "string"
-        },
-        "logementsAccesSociale": {
-          "description": "Nombre de logements en accession libre",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsAccesMaitrise": {
-          "description": "Nombre de logements en accession maitrisée",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsLocatifRegule": {
-          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsPls": {
-          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsLocatifSocial": {
-          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "anneeAgrementEtat": {
+        "anneeProg": {
           "description": "Année de l'agrément donné par l'état",
           "type": "integer",
           "format": "int64"
         },
-        "PlhLogementsPrevus": {
-          "description": "Nombre de logement (prévu jusqu'à l'étape de livraison, livré ensuite)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "PlhLogementsLivres": {
-          "description": "Nombre de logements livrés au titre du PLH pour l'opération",
-          "type": "integer",
-          "format": "int64"
-        },
-        "numPc": {
-          "description": "Numéro du permis de construire",
+        "nomOperation": {
+          "description": "Identifiant unique du permis",
           "type": "string"
+        },
+        "numDossier": {
+          "description": "",
+          "type": "integer"
+        },
+        "etat": {
+          "description": "",
+          "type": "string"
+        },
+        "maitreOuvrage": {
+          "description": "",
+          "type": "string"
+        },
+        "commune": {
+          "description": "",
+          "type": "string"
+        },
+        "numADS": {
+          "description": "",
+          "type": "string"
+        },
+        "conventionApplicationPlh": {
+          "description": "",
+          "type": "string"
+        },
+        "logementsLocatifAide": {
+          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsAccessAide": {
+          "description": "Nombre de logements en accession libre",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsLocatifRegulePrive": {
+          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsLocatifReguleHlm": {
+          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsAccessMaitrise": {
+          "description": "Nombre de logements en accession maitrisée",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
