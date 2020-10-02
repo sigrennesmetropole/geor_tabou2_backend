@@ -48,32 +48,38 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page<OperationEntity> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable) {
 
-        List<OperationEntity> result;
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
+        //Requête pour compter le nombre de résultats total
+        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+        Root<OperationEntity> countRoot = countQuery.from(OperationEntity.class);
+        buildQuery(operationsCriteria, builder, countQuery, countRoot);
+        countQuery.select(builder.countDistinct(countRoot));
+        Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
+
+        //Si aucun résultat
+        if (totalCount == 0) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        //Requête de recherche
         CriteriaQuery<OperationEntity> searchQuery = builder.createQuery(OperationEntity.class);
         Root<OperationEntity> searchRoot = searchQuery.from(OperationEntity.class);
-
         buildQuery(operationsCriteria, builder, searchQuery, searchRoot);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
 
         TypedQuery<OperationEntity> typedQuery = entityManager.createQuery(searchQuery);
-
-        int totalRows = typedQuery.getResultList().size();
-
-        result = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
-
-        return new PageImpl<>(result, pageable, totalRows);
-
+        List<OperationEntity> operationEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
+        return new PageImpl<>(operationEntities, pageable, totalCount.intValue());
 
 
     }
 
 
     private void buildQuery(OperationsCriteria operationsCriteria, CriteriaBuilder builder,
-                            CriteriaQuery<OperationEntity> criteriaQuery, Root<OperationEntity> root
+                            CriteriaQuery<?> criteriaQuery, Root<OperationEntity> root
     ) {
 
         if (operationsCriteria != null) {

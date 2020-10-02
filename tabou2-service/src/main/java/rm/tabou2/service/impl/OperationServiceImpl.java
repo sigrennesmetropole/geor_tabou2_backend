@@ -14,7 +14,6 @@ import rm.tabou2.storage.tabou.entity.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.util.Date;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
