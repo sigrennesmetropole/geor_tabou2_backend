@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface IrisDao extends CrudRepository<IrisEntity, Long>, JpaRepository<IrisEntity, Long> {
 
-    @Query("SELECT i FROM IrisEntity i WHERE UPPER(i.nom) like UPPER(:keyword)")
+    @Query("SELECT i FROM IrisEntity i WHERE UPPER(i.ccom) like UPPER(:keyword)")
     List<IrisEntity> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PluiDao extends CrudRepository<PluiEntity, Long>, JpaRepository<PluiEntity, Long> {
 
-    @Query("SELECT p FROM PluiEntity p WHERE UPPER(p.nom) like UPPER(:keyword)")
+    @Query("SELECT p FROM PluiEntity p WHERE UPPER(p.libelle) like UPPER(:keyword)")
     List<PluiEntity> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
 }

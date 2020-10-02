@@ -7,15 +7,24 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "iris", schema = "limite_admin")
+@Table(name = "iris", schema = "demographie")
 public class IrisEntity {
 
     @Id
-    @Column(name = "id")
-    private long id;
+    @Column(name = "objectid")
+    private Integer id;
 
     @Basic
-    @Column(name = "nom")
-    private String nom;
+    @Column(name = "ccom")
+    private String ccom;
+
+    @Basic
+    @Column(name = "code_iris")
+    private String codeIris;
+
+    @Basic
+    @Column(name = "nmiris")
+    private String nmiris;
+
 
 }

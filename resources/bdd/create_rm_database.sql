@@ -2,6 +2,9 @@
 -- Création du schéma DDC -- temporaire
 CREATE SCHEMA ddc;
 CREATE SCHEMA limite_admin;
+CREATE SCHEMA urba_foncier;
+CREATE SCHEMA demographie;
+
 
 -- Création de la table des permis de construire : nécessaire seulement pour environnement de dev et intégration continue
 
@@ -20,33 +23,90 @@ create table ddc.pc_ddc (
 );
 
 -- Scripts temporaire. A revoir pour intégrer les scripts fournis par denis
-create table limite_admin.commune (
-                                              id bigint not null,
-                                              code_insee varchar(255),
-                                              nom varchar(255),
-                                              primary key (id)
-);
+CREATE TABLE limite_admin.commune_emprise
+(
+    objectid integer NOT NULL,
+    code_insee numeric(15,0) NOT NULL,
+    nom character varying(50),
+    commune_agglo smallint,
+    x_centrbrg numeric(38,8),
+    y_centrbrg numeric(38,8),
+    shape geometry,
+    code_postal character varying(30),
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'POLYGON'::text OR shape IS NULL),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948)
+)
+    WITH (
+        OIDS=FALSE
+    );
 
 
-create table limite_admin.iris (
-                                   id bigint not null,
-                                   nom varchar(255),
-                                   primary key (id)
-);
+CREATE TABLE demographie.iris
+(
+    objectid integer NOT NULL,
+    nom_groupe character varying(41),
+    ccom character varying(6),
+    code_iris character varying(10),
+    axe_eo integer,
+    val integer,
+    nusectmorp character varying(5),
+    nmsectmorp character varying(60),
+    nmiris character varying(50),
+    niris character varying(50),
+    st_area_shape_ numeric(38,8) NOT NULL,
+    st_length_shape_ numeric(38,8) NOT NULL,
+    st_area_shape1 numeric(38,8) NOT NULL,
+    st_length_shape1 numeric(38,8) NOT NULL,
+    shape geometry,
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'POLYGON'::text),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948)
+)
+    WITH (
+        OIDS=FALSE
+    );
 
 
-create table limite_admin.plui (
-                                   id bigint not null,
-                                   nomQuartier varchar(255),
-                                   nuQuartier varchar(255),
-                                   primary key (id)
-);
+CREATE TABLE urba_foncier.plui_zone_urba
+(
+    objectid integer,
+    anc_objectid integer,
+    id_rm integer,
+    id_docurba character varying(17),
+    code_insee character varying(5),
+    semio character varying(255),
+    commentaire character varying(255),
+    libelle character varying(254),
+    libelong character varying(254),
+    typezone character varying(3),
+    destdomi character varying(2),
+    nomfic character varying(80),
+    urlfic character varying(254),
+    date_proc_creat character varying(8),
+    date_proc_modif character varying(8),
+    date_creat timestamp without time zone,
+    date_modif timestamp without time zone,
+    shape geometry(MultiPolygon,3948)
+)
+    WITH (
+        OIDS=FALSE
+    );
 
 
-create table limite_admin.quartier (
-                                       id bigint not null,
-                                       nomQuartier varchar(255),
-                                       nuQuartier varchar(255),
-                                       primary key (id)
+CREATE TABLE limite_admin.quartier
+(
+    objectid integer NOT NULL,
+    matricule character varying(15),
+    nuquart smallint,
+    nmquart character varying(60),
+    numnom character varying(60),
+    nom character varying(50),
+    st_area_shape_ numeric(38,8) NOT NULL,
+    st_length_shape_ numeric(38,8) NOT NULL,
+    shape geometry,
+    code_insee integer,
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'POLYGON'::text),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948)
+) WITH (
+    OIDS=FALSE
 );
 

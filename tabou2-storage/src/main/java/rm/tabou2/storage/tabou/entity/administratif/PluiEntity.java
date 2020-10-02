@@ -6,19 +6,16 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "plui", schema = "limite_admin")
+@Table(name = "plui_zone_urba", schema = "urba_foncier")
 public class PluiEntity {
 
     @Id
-    @Column(name = "id")
-    private long id;
+    @Column(name = "objectid")
+    private Integer id;
 
     @Basic
-    @Column(name = "nomQuartier")
-    private String nom;
+    @Column(name = "libelle")
+    private String libelle;
 
-    @Basic
-    @Column(name = "nuQuartier")
-    private String nuQuartier;
 
 }

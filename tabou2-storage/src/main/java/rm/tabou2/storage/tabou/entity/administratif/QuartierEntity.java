@@ -10,15 +10,15 @@ import javax.persistence.*;
 public class QuartierEntity {
 
     @Id
-    @Column(name = "id")
-    private long id;
+    @Column(name = "objectid")
+    private Integer id;
 
     @Basic
-    @Column(name = "nomQuartier")
+    @Column(name = "nom")
     private String nom;
 
     @Basic
-    @Column(name = "nuQuartier")
-    private String nuQuartier;
+    @Column(name = "nuquart")
+    private Short nuQuart;
 
 }
