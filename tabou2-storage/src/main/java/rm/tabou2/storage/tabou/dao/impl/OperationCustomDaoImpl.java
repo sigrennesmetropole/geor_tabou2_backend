@@ -90,13 +90,18 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
 
 
             //nature
-            Join<OperationEntity, NatureEntity> natureJoin = root.join(FIELD_NATURE);
-            predicateStringCriteriaForJoin(operationsCriteria.getNature(), FIELD_LIBELLE, predicates, builder, natureJoin);
+            if(operationsCriteria.getNature() != null){
+                Join<OperationEntity, NatureEntity> natureJoin = root.join(FIELD_NATURE);
+                predicateStringCriteriaForJoin(operationsCriteria.getNature(), FIELD_LIBELLE, predicates, builder, natureJoin);
+            }
+
 
 
             //etape
-            Join<OperationEntity, EtapeOperationEntity> etapeJoin = root.join(FIELD_ETAPE_OPERATION);
-            predicateStringCriteriaForJoin(operationsCriteria.getEtape(), FIELD_LIBELLE, predicates, builder, etapeJoin);
+            if(operationsCriteria.getEtape() != null) {
+                Join<OperationEntity, EtapeOperationEntity> etapeJoin = root.join(FIELD_ETAPE_OPERATION);
+                predicateStringCriteriaForJoin(operationsCriteria.getEtape(), FIELD_LIBELLE, predicates, builder, etapeJoin);
+            }
 
 
             //code

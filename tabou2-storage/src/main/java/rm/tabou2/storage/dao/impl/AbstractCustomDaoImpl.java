@@ -14,6 +14,7 @@ public abstract class AbstractCustomDaoImpl {
 
     /**
      * Ajout d'un prédicat sur la requ
+     *
      * @param criteria
      * @param type
      * @param predicates
@@ -31,12 +32,11 @@ public abstract class AbstractCustomDaoImpl {
     }
 
     protected void predicateStringCriteriaForJoin(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Join<?, ?> join) {
-        if (criteria != null) {
-            if (criteria.indexOf('*') == -1) {
-                predicates.add(builder.equal(join.get(type), criteria));
-            } else {
-                predicates.add(builder.like(join.get(type), criteria.replace("*", "%")));
-            }
+
+        if (criteria.indexOf('*') == -1) {
+            predicates.add(builder.equal(join.get(type), criteria));
+        } else {
+            predicates.add(builder.like(join.get(type), criteria.replace("*", "%")));
         }
     }
 
