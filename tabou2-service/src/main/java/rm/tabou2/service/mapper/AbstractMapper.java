@@ -1,9 +1,9 @@
 package rm.tabou2.service.mapper;
 
+import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -18,6 +18,8 @@ public interface AbstractMapper<E, D> {
      * @return entity
      */
     E dtoToEntity(D dto);
+
+    void dtoToEntity(D dto, @MappingTarget E entity);
 
     List<E> dtoToEntities(List<D> dtos);
 

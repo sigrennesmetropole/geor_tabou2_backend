@@ -12,8 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.dao.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.ProgrammeCustomDao;
-import rm.tabou2.storage.tabou.entity.EtapeOperationEntity;
-import rm.tabou2.storage.tabou.entity.OperationEntity;
+import rm.tabou2.storage.tabou.entity.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.entity.TiersEntity;
@@ -39,7 +38,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_COMMER
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DAT_DATE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DIFFUSION_RETREINTE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DOC_DATE_PREVU;
-import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_OPERATION;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_PROGRAMME;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_ACCESS_AIDE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_LOCAT_AIDE_PREVU;
@@ -60,27 +59,35 @@ public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements Pro
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page<ProgrammeEntity> searchProgrammes(ProgrammeCriteria programmeCriteria, Pageable pageable) {
 
-        List<ProgrammeEntity> result;
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+
+        //Requête pour compter le nombre de résultats total
+        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+        Root<ProgrammeEntity> countRoot = countQuery.from(ProgrammeEntity.class);
+        buildQuery(programmeCriteria, builder, countQuery, countRoot);
+        countQuery.select(builder.countDistinct(countRoot));
+        Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
+
+        //Si aucun résultat
+        if (totalCount == 0) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        //Requête de recherche
         CriteriaQuery<ProgrammeEntity> searchQuery = builder.createQuery(ProgrammeEntity.class);
         Root<ProgrammeEntity> searchRoot = searchQuery.from(ProgrammeEntity.class);
-
         buildQuery(programmeCriteria, builder, searchQuery, searchRoot);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
 
         TypedQuery<ProgrammeEntity> typedQuery = entityManager.createQuery(searchQuery);
-
-        int totalRows = typedQuery.getResultList().size();
-
-        result = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
-
-        return new PageImpl<>(result, pageable, totalRows);
+        List<ProgrammeEntity> programmeEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
+        return new PageImpl<>(programmeEntities, pageable, totalCount.intValue());
     }
 
     private void buildQuery(ProgrammeCriteria programmeCriteria, CriteriaBuilder builder,
-                            CriteriaQuery<ProgrammeEntity> criteriaQuery, Root<ProgrammeEntity> root) {
+                            CriteriaQuery<?> criteriaQuery, Root<ProgrammeEntity> root) {
 
         if (programmeCriteria != null) {
             List<Predicate> predicates = new ArrayList<>();
@@ -89,7 +96,7 @@ public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements Pro
             predicateStringCriteria(programmeCriteria.getNom(), FIELD_NOM, predicates, builder, root);
 
             //etape
-            Join<OperationEntity, EtapeOperationEntity> etapeJoin = root.join(FIELD_ETAPE_OPERATION);
+            Join<ProgrammeEntity, EtapeProgrammeEntity> etapeJoin = root.join(FIELD_ETAPE_PROGRAMME);
             predicateStringCriteriaForJoin(programmeCriteria.getEtape(), FIELD_LIBELLE, predicates, builder, etapeJoin);
 
             //diffusionRestreinte

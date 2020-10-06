@@ -19,9 +19,25 @@ public class EtapeProgrammeEntity {
     @Column(name = "libelle")
     private String libelle;
 
-    @OneToMany(mappedBy = "etapeProgramme")
-    public Set<ProgrammeEntity> programmes;
+    @Basic
+    @Column(name = "code")
+    private String code;
 
+    @Basic
+    @Column(name = "mode")
+    private String mode;
+
+    @Basic
+    @Column(name = "type")
+    private String type;
+
+    @OneToMany
+    @JoinTable(
+            name = "tabou_etape_programme_workflow",
+            joinColumns = @JoinColumn(name = "id_etape_programme", referencedColumnName = "id_etape_programme"),
+            inverseJoinColumns = @JoinColumn(name = "id_etape_programme_next", referencedColumnName = "id_etape_programme")
+    )
+    private Set<EtapeProgrammeEntity> nextEtapes;
 
 }
 

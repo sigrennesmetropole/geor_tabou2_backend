@@ -14,4 +14,5 @@ public interface ProgrammeDao extends CrudRepository<ProgrammeEntity, Long>, Jpa
     @Query("SELECT p FROM ProgrammeEntity p WHERE UPPER(p.nom) like UPPER(:keyword)")
     List<ProgrammeEntity> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
+    ProgrammeEntity getById(Long idProgramme);
 }

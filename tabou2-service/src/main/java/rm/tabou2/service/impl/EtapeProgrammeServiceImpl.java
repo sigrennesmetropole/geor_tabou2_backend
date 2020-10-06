@@ -4,14 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.EtapeProgrammeService;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.helper.EtapeProgrammeWorkflowHelper;
 import rm.tabou2.service.mapper.EtapeProgrammeMapper;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.entity.EtapeProgrammeEntity;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
@@ -21,6 +20,9 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
 
     @Autowired
     private EtapeProgrammeMapper etapeProgrammeMapper;
+
+    @Autowired
+    private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
 
     @Override
     public List<Etape> searchEtapesProgramme(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
@@ -43,15 +45,8 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
     }
 
     @Override
-    public Etape getEtapeProgrammeById(long etapeProgrammeId) {
-
-        Optional<EtapeProgrammeEntity> etapeProgrammeEntity = etapeProgrammeDao.findById(etapeProgrammeId);
-
-        if (etapeProgrammeEntity.isEmpty()) {
-            throw new NoSuchElementException("L'étape de programme demandée n'existe pas, id=" + etapeProgrammeId);
-        }
-
-        return etapeProgrammeMapper.entityToDto(etapeProgrammeEntity.get());
+    public List<Etape> getEtapesForProgrammeById(long programmeId) {
+        return etapeProgrammeWorkflowHelper.getPossibleEtapesForProgramme(programmeId);
     }
 
     @Override

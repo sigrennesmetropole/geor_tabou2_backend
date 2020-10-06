@@ -40,7 +40,7 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
     private AuthentificationHelper authentificationHelper;
 
     @Override
-    public List<Evenement> getByProgrammeId(Long programmeId) throws Exception {
+    public List<Evenement> getByProgrammeId(Long programmeId) throws AppServiceException {
 
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -54,7 +54,7 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
     }
 
     @Override
-    public Evenement addByProgrammeId(Evenement evenement, Long programmeId) throws Exception {
+    public Evenement addByProgrammeId(Evenement evenement, Long programmeId) throws AppServiceException {
 
         EvenementProgrammeEntity evenementProgrammeEntity = new EvenementProgrammeEntity();
 
@@ -103,7 +103,7 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
     }
 
     @Override
-    public Evenement editByProgrammeId(Evenement evenement, Long programmeId) throws Exception {
+    public Evenement editByProgrammeId(Evenement evenement, Long programmeId) throws AppServiceException {
 
         EvenementProgrammeEntity evenementProgrammeEntity;
 

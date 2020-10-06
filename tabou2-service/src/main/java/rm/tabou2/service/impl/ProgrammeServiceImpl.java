@@ -6,14 +6,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import rm.tabou2.service.AgapeoService;
 import rm.tabou2.service.ProgrammeService;
+import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Logements;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.mapper.ProgrammeMapper;
+import rm.tabou2.service.validator.ValidProgrammeCreation;
+import rm.tabou2.service.validator.ValidProgrammeUpdate;
+import rm.tabou2.storage.tabou.dao.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
@@ -22,6 +29,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Validated
 public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
@@ -34,27 +42,55 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private AgapeoService agapeoService;
 
     @Autowired
+    private EtapeProgrammeDao etapeProgrammeDao;
+
+    @Autowired
     private ProgrammeMapper programmeMapper;
 
     @Autowired
     private AuthentificationHelper authentificationHelper;
 
     @Override
-    public Programme addProgramme(Programme programme) {
+    public Programme addProgramme(@ValidProgrammeCreation Programme programme) {
 
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
+
+        // Ajout de l'état initial
+        EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findByType(Etape.TypeEnum.START.toString());
+        if (etapeProgrammeEntity == null) {
+            throw new NoSuchElementException("Aucune étape initiale de type " + Etape.TypeEnum.START.toString() + "n'a été défini pour les programmes");
+        }
+        programmeEntity.setEtapeProgramme(etapeProgrammeEntity);
 
         //Ajout des dates et infos sur l'utilisateur connecté
         programmeEntity.setCreateDate(new Date());
         programmeEntity.setModifDate(new Date());
         programmeEntity.setCreateUser(authentificationHelper.getConnectedUsername());
         programmeEntity.setModifUser(authentificationHelper.getConnectedUsername());
-        programmeEntity.setNumAds(programme.getNumPc());
 
         programmeEntity = programmeDao.save(programmeEntity);
 
         return programmeMapper.entityToDto(programmeEntity);
 
+    }
+
+    @Override
+    public Programme editProgramme(@ValidProgrammeUpdate Programme programme) throws AppServiceException {
+
+        ProgrammeEntity programmeEntity = programmeDao.getById(programme.getId());
+        if (programmeEntity == null) {
+            throw new NoSuchElementException("Le programme id=" + programme.getId() + " n'existe pas");
+        }
+        programmeMapper.dtoToEntity(programme, programmeEntity);
+
+        programmeEntity.setModifDate(new Date());
+        programmeEntity.setModifUser(authentificationHelper.getConnectedUsername());
+
+        programmeEntity = programmeDao.save(programmeEntity);
+
+        //TODO: sauvegarge de l'évènement
+
+        return programmeMapper.entityToDto(programmeEntity);
     }
 
     @Override

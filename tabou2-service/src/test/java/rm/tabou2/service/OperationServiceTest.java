@@ -34,7 +34,7 @@ public class OperationServiceTest{
         // enregistrer une operation dans la base temporaire H2
         OperationEntity operationEntity = new OperationEntity();
         operationEntity.setNom("test");
-        operationEntity.setDiffusionRetreinte(false);
+        operationEntity.setDiffusionRestreinte(false);
         operationDao.save(operationEntity);
 
 

@@ -19,7 +19,7 @@ public interface OperationDao extends CrudRepository<OperationEntity, Long>, Jpa
      * @param pageable informations de pagination
      * @return liste des operations
      */
-    @Query("SELECT o FROM OperationEntity o WHERE UPPER(o.nom) like UPPER(:keyword) and o.diffusionRetreinte = false")
+    @Query("SELECT o FROM OperationEntity o WHERE UPPER(o.nom) like UPPER(:keyword) and o.diffusionRestreinte = false")
     List<OperationEntity> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
 
@@ -34,7 +34,7 @@ public interface OperationDao extends CrudRepository<OperationEntity, Long>, Jpa
     List<OperationEntity> findByKeywordWithRestreints(@Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT o FROM OperationEntity o WHERE UPPER(o.nom) like UPPER(:nom) " +
-            "and o.diffusionRetreinte = false " +
+            "and o.diffusionRestreinte = false " +
     "and UPPER(o.nature.libelle) like UPPER(:nature) "+
     "and UPPER(o.etapeOperation.libelle) like UPPER(:etape) "+
     "and UPPER(o.code) like UPPER(:code) " + "and UPPER(o.numAds) like UPPER(:numAds) " +

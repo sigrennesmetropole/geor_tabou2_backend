@@ -4,10 +4,10 @@ package rm.tabou2.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.validator.ValidProgrammeCreation;
+import rm.tabou2.service.validator.ValidProgrammeUpdate;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 public interface ProgrammeService {
 
@@ -18,7 +18,15 @@ public interface ProgrammeService {
      * @param programme programme à ajouter
      * @return programme ajouté
      */
-    Programme addProgramme(Programme programme);
+    Programme addProgramme(@ValidProgrammeCreation Programme programme);
+
+    /**
+     * modification d'un programme
+     *
+     * @param programme programme à modifier
+     * @return programme modifié
+     */
+    Programme editProgramme(@ValidProgrammeUpdate Programme programme) throws AppServiceException;
 
     /**
      * Récupération d'un programme par son identifiant.

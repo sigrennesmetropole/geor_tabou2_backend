@@ -51,8 +51,8 @@ public class EtapeApiController implements EtapesApi {
     }
 
     @Override
-    public ResponseEntity<Etape> getEtapeByProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(etapeProgrammeService.getEtapeProgrammeById(programmeId), HttpStatus.OK);
+    public ResponseEntity<List<Etape>> getEtapeByProgrammeId(Long programmeId) throws Exception {
+        return new ResponseEntity<>(etapeProgrammeService.getEtapesForProgrammeById(programmeId), HttpStatus.OK);
     }
 
     @Override

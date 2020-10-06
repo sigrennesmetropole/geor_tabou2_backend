@@ -65,6 +65,10 @@ public class ProgrammeEntity {
     private Date clotureDate;
 
     @Basic
+    @Column(name = "diffusion_restreinte")
+    private boolean diffusionRestreinte;
+
+    @Basic
     @Column(name = "nb_logements")
     private int nbLogements;
 

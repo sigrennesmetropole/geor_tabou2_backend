@@ -430,8 +430,8 @@
             "format": "date"
           },
           {
-            "name": "tiers",
             "in": "query",
+            "name": "tiers",
             "required": false,
             "type": "string",
             "description": "Recherche par tiers"
@@ -1194,7 +1194,7 @@
     },
     "/etapes/programme/{programmeId}": {
       "get": {
-        "summary": "Récupération de l'étape d'avancement pour un programme d'aménagement",
+        "summary": "Récupération de la liste des étapes d'avancement possible pour un programme d'aménagement",
         "operationId": "getEtapeByProgrammeId",
         "produces": [
           "application/json"
@@ -1213,7 +1213,10 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Etape"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
             }
           },
           "404": {
@@ -2733,7 +2736,7 @@
           "type": "integer",
           "format": "int32"
         },
-        "numPc": {
+        "numAds": {
           "description": "Numéro du permis de construire",
           "type": "string"
         },
@@ -2755,10 +2758,7 @@
           "type": "string",
           "format": "date"
         }
-      },
-      "required": [
-        "etape", "code", "nom", "diffusionrestreinte"
-      ]
+      }
     },
     "ProgrammeTiers": {
       "type": "object",
@@ -3055,6 +3055,24 @@
         "libelle": {
           "description": "Libellé de l'étape ",
           "type": "string"
+        },
+        "code": {
+          "description": "Identifiant unique pour l'étape",
+          "type": "string"
+        },
+        "type": {
+          "description": "Indicateur permettant de savoir s'il s'agit de l'étape initiale, finale ou intermédiaire",
+          "type": "string",
+          "enum": [
+            "START", "NORMAL", "END"
+          ]
+        },
+        "mode": {
+          "description": "Indicateur permettant de savoir si l'étape est visible en mode off ou publique",
+          "type": "string",
+          "enum": [
+            "OFF", "PUBLIC", "NONE"
+          ]
         }
       }
     },

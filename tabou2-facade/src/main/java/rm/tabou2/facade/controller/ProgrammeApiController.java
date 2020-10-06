@@ -34,7 +34,7 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Override
     public ResponseEntity<Programme> editProgramme(@Valid Programme programme) throws Exception {
-        return new ResponseEntity<>(programmeService.addProgramme(programme), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.editProgramme(programme), HttpStatus.OK);
     }
 
     @Override
