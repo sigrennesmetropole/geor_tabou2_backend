@@ -7,8 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-//@Table(name = "iris", schema = "limite_admin")
-@Table(name = "iris")
+@Table(name = "iris", schema = "limite_admin")
 public class IrisEntity {
 
     @Id
