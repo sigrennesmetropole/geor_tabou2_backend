@@ -6,8 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-//@Table(name = "commune", schema = "limite_admin")
-@Table(name = "commune")
+@Table(name = "commune", schema = "limite_admin")
 public class CommuneEntity {
 
     @Id

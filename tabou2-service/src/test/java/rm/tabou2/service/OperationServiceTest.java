@@ -39,7 +39,7 @@ public class OperationServiceTest{
 
 
         OperationsCriteria operationsCriteria = new OperationsCriteria();
-        operationsCriteria.setNom("test");
+        operationsCriteria.setNom("tes*");
         operationsCriteria.setDiffusionRestreinte(false);
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nom"));
