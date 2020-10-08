@@ -2700,7 +2700,7 @@
         "id": {
           "description": "Identifant de la commune",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
         "nom": {
           "description": "Nom de la commune",
@@ -2708,6 +2708,10 @@
         },
         "codeInsee": {
           "description": "Code Insee de la commune",
+          "type": "integer"
+        },
+        "codePostal": {
+          "description": "Code postal de la commune",
           "type": "string"
         }
       }
@@ -2718,10 +2722,18 @@
         "id": {
           "description": "Identifiant unique",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
-        "nom": {
-          "description": "Nom de l'IRIS",
+        "ccom": {
+          "description": "",
+          "type": "string"
+        },
+        "codeIris": {
+          "description": "Code l'IRIS",
+          "type": "string"
+        },
+        "nmiris": {
+          "description": "",
           "type": "string"
         }
       }
@@ -2732,15 +2744,15 @@
         "id": {
           "description": "Identifiant unique",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
         "nom": {
           "description": "Nom du quartier",
           "type": "string"
         },
-        "numQuartier": {
+        "nuQuart": {
           "description": "",
-          "type": "string"
+          "type": "number"
         }
       }
     },
@@ -2750,9 +2762,9 @@
         "id": {
           "description": "Identifiant unique",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
-        "zonage": {
+        "libelle": {
           "description": "Nom du zonage PLUi",
           "type": "string"
         }
