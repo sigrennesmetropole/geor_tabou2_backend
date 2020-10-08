@@ -8,8 +8,8 @@ import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.storage.tabou.dao.OperationCustomDao;
-import rm.tabou2.storage.tabou.dao.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationCustomDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 

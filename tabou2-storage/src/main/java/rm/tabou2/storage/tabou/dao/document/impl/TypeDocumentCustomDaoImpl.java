@@ -1,4 +1,4 @@
-package rm.tabou2.storage.tabou.dao.impl;
+package rm.tabou2.storage.tabou.dao.document.impl;
 
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
-import rm.tabou2.storage.tabou.dao.TypeDocumentCustomDao;
+import rm.tabou2.storage.tabou.dao.document.TypeDocumentCustomDao;
 import rm.tabou2.storage.tabou.entity.document.TypeDocumentEntity;
 import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 

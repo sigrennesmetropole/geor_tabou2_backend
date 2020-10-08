@@ -6,7 +6,7 @@ import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.utils.PaginationUtils;
-import rm.tabou2.storage.tabou.dao.EtapeOperationDao;
+import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 
 import java.util.List;

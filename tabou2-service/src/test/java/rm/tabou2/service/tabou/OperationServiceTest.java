@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.tabou.operation.OperationService;
-import rm.tabou2.storage.tabou.dao.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 

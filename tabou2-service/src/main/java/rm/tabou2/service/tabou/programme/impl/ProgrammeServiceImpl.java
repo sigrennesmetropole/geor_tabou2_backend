@@ -9,7 +9,7 @@ import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.utils.PaginationUtils;
-import rm.tabou2.storage.tabou.dao.ProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 import java.util.Date;

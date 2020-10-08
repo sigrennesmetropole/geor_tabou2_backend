@@ -9,8 +9,8 @@ import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.mapper.tabou.document.TypeDocumentMapper;
 import rm.tabou2.service.tabou.document.TypeDocumentService;
-import rm.tabou2.storage.tabou.dao.TypeDocumentCustomDao;
-import rm.tabou2.storage.tabou.dao.TypeDocumentDao;
+import rm.tabou2.storage.tabou.dao.document.TypeDocumentCustomDao;
+import rm.tabou2.storage.tabou.dao.document.TypeDocumentDao;
 import rm.tabou2.storage.tabou.entity.document.TypeDocumentEntity;
 import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 

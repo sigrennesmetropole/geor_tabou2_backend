@@ -1,4 +1,4 @@
-package rm.tabou2.storage.tabou.dao.impl;
+package rm.tabou2.storage.tabou.dao.operation.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
-import rm.tabou2.storage.tabou.dao.OperationCustomDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationCustomDao;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;

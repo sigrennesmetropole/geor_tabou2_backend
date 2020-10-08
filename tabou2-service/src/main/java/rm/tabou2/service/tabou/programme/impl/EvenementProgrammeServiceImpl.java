@@ -10,9 +10,9 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.storage.tabou.dao.EvenementProgrammeDao;
-import rm.tabou2.storage.tabou.dao.ProgrammeDao;
-import rm.tabou2.storage.tabou.dao.TypeEvenementDao;
+import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
@@ -40,7 +40,7 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
     private AuthentificationHelper authentificationHelper;
 
     @Override
-    public List<Evenement> getByProgrammeId(Long programmeId) {
+    public List<Evenement> getByProgrammeId(Long programmeId) throws AppServiceException {
 
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -54,7 +54,7 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
     }
 
     @Override
-    public Evenement addByProgrammeId(Evenement evenement, Long programmeId) {
+    public Evenement addByProgrammeId(Evenement evenement, Long programmeId) throws AppServiceException {
 
         EvenementProgrammeEntity evenementProgrammeEntity = new EvenementProgrammeEntity();
 
@@ -103,7 +103,7 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
     }
 
     @Override
-    public Evenement editByProgrammeId(Evenement evenement, Long programmeId) {
+    public Evenement editByProgrammeId(Evenement evenement, Long programmeId) throws AppServiceException {
 
         EvenementProgrammeEntity evenementProgrammeEntity;
 

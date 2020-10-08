@@ -6,7 +6,7 @@ import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
 import rm.tabou2.service.utils.PaginationUtils;
-import rm.tabou2.storage.tabou.dao.TiersDao;
+import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 
 import java.util.List;

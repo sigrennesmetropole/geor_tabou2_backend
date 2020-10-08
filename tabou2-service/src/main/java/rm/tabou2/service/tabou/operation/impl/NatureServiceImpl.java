@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.tabou.operation.NatureService;
 import rm.tabou2.service.dto.Nature;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
-import rm.tabou2.storage.tabou.dao.NatureDao;
+import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 
 import java.util.List;

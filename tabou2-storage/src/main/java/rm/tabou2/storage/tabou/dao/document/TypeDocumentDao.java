@@ -1,4 +1,4 @@
-package rm.tabou2.storage.tabou.dao;
+package rm.tabou2.storage.tabou.dao.document;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
