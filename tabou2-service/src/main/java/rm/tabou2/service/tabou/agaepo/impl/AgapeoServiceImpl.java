@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.dto.Agapeo;
-import rm.tabou2.service.mapper.AgapeoMapper;
-import rm.tabou2.storage.tabou.dao.AgapeoDao;
+import rm.tabou2.service.mapper.tabou.agapeo.AgapeoMapper;
+import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 
 import java.util.List;
 

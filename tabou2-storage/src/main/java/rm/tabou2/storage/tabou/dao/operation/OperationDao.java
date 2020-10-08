@@ -18,7 +18,7 @@ public interface OperationDao extends CrudRepository<OperationEntity, Long>, Jpa
      * @param pageable informations de pagination
      * @return liste des operations
      */
-    @Query("SELECT o FROM OperationEntity o WHERE UPPER(o.nom) like UPPER(:keyword) and o.diffusionRetreinte = false")
+    @Query("SELECT o FROM OperationEntity o WHERE UPPER(o.nom) like UPPER(:keyword) and o.diffusionRestreinte = false")
     List<OperationEntity> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
 

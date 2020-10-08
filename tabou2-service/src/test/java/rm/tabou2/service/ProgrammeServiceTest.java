@@ -3,7 +3,7 @@ package rm.tabou2.service;
 import org.junit.Test;
 import org.mockito.Mock;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
-import rm.tabou2.storage.tabou.dao.ProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 
 public class ProgrammeServiceTest {
 

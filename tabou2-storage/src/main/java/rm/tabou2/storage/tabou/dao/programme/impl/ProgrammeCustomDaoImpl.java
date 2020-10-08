@@ -1,4 +1,4 @@
-package rm.tabou2.storage.tabou.dao.impl;
+package rm.tabou2.storage.tabou.dao.programme.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +10,13 @@ import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import rm.tabou2.storage.dao.impl.AbstractCustomDaoImpl;
-import rm.tabou2.storage.tabou.dao.ProgrammeCustomDao;
-import rm.tabou2.storage.tabou.entity.EtapeProgrammeEntity;
-import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
-import rm.tabou2.storage.tabou.entity.ProgrammeTiersEntity;
-import rm.tabou2.storage.tabou.entity.TiersEntity;
-import rm.tabou2.storage.tabou.entity.TypeTiersEntity;
+import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
+import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
+import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
+import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.persistence.EntityManager;

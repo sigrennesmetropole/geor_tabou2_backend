@@ -3,10 +3,10 @@ package rm.tabou2.service.helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Etape;
-import rm.tabou2.service.mapper.EtapeProgrammeMapper;
-import rm.tabou2.storage.tabou.dao.ProgrammeDao;
-import rm.tabou2.storage.tabou.entity.EtapeProgrammeEntity;
-import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
+import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 import java.util.List;
 

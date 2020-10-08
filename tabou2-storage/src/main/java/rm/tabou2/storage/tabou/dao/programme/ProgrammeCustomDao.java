@@ -1,8 +1,8 @@
-package rm.tabou2.storage.tabou.dao;
+package rm.tabou2.storage.tabou.dao.programme;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import rm.tabou2.storage.tabou.entity.ProgrammeEntity;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 public interface ProgrammeCustomDao {
