@@ -15,6 +15,7 @@ public class EtapeProgrammeEntity {
     @Column(name = "id_etape_programme")
     private long id;
 
+    @OrderBy
     @Basic
     @Column(name = "libelle")
     private String libelle;

@@ -18,6 +18,7 @@ public class TypeTiersEntity {
     @Column(name = "id_type_tiers")
     private long id;
 
+    @OrderBy
     @Basic
     @Column(name = "libelle")
     private String libelle;

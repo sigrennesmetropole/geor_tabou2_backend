@@ -11,6 +11,7 @@ import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.dto.*;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import javax.validation.Valid;
@@ -19,8 +20,6 @@ import java.util.Date;
 
 @Controller
 public class OperationApiController implements OperationsApi {
-
-    private static final String DEFAULT_ORDER_BY = "createDate";
 
     @Autowired
     private OperationService operationService;
@@ -74,11 +73,7 @@ public class OperationApiController implements OperationsApi {
         operationsCriteria.setClotureDateDebut(clotureDateDebut);
         operationsCriteria.setClotureDateFin(clotureDateFin);
 
-        if( null == orderBy){
-            orderBy = DEFAULT_ORDER_BY;
-        }
-
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationEntity.class);
 
         Page<Operation> page = operationService.searchOperations(operationsCriteria, pageable);
 

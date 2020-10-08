@@ -16,6 +16,7 @@ public class NatureEntity {
     @Column(name = "id_nature")
     private long id;
 
+    @OrderBy
     @Basic
     @Column(name = "libelle")
     private String libelle;

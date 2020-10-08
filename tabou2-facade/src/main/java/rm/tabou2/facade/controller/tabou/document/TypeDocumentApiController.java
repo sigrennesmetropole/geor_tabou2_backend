@@ -19,8 +19,6 @@ import java.util.Date;
 @Controller
 public class TypeDocumentApiController implements TypesDocumentsApi {
 
-    private static final String DEFAULT_ORDER_BY = "dateInactif";
-
 
     @Autowired
     private TypeDocumentService typeDocumentService;
@@ -38,16 +36,12 @@ public class TypeDocumentApiController implements TypesDocumentsApi {
     @Override
     public ResponseEntity<PageResult> getTypeDocument(@Valid Long typeDocumentId, @Valid String libelle, @Valid Date dateInactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
-        if( null == orderBy){
-            orderBy = DEFAULT_ORDER_BY;
-        }
-
         TypeDocumentCriteria typeDocumentCriteria = new TypeDocumentCriteria();
         typeDocumentCriteria.setId(typeDocumentId);
         typeDocumentCriteria.setLibelle(libelle);
         typeDocumentCriteria.setDateInactif(dateInactif);
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeDocument.class);
 
         Page<TypeDocument> page = typeDocumentService.searchTypeDocument(typeDocumentCriteria, pageable);
 

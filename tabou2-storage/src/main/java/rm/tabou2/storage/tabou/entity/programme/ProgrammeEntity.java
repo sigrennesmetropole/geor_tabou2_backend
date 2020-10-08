@@ -20,6 +20,7 @@ public class ProgrammeEntity {
     @Column(name = "code")
     private String code;
 
+    @OrderBy
     @Basic
     @Column(name = "nom")
     private String nom;

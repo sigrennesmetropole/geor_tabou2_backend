@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import rm.tabou2.service.dto.PageResult;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public class PaginationUtils {
@@ -20,7 +21,7 @@ public class PaginationUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Pageable buildPageable(Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
+    public static Pageable buildPageable(Integer start, Integer resultsNumber, String orderBy, Boolean asc, Class<?> classname) {
 
         if (null == start) {
             start = DEFAULT_START;
@@ -32,6 +33,15 @@ public class PaginationUtils {
         Sort.Direction direction = Sort.Direction.ASC;
         if (Boolean.FALSE.equals(asc) || null == asc) {
             direction = Sort.Direction.DESC;
+        }
+
+        if (null == orderBy) {
+            Field[] classFields = classname.getDeclaredFields();
+            for (Field f : classFields) {
+                if (f.isAnnotationPresent(javax.persistence.OrderBy.class)) {
+                    orderBy = f.getName();
+                }
+            }
         }
 
         return PageRequest.of(start, resultsNumber, Sort.by(direction, orderBy));

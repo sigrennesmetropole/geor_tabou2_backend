@@ -65,7 +65,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Override
     public List<Programme> searchProgrammes(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc)  {
 
-        List<ProgrammeEntity> programmes = programmeDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
+        List<ProgrammeEntity> programmes = programmeDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeEntity.class));
 
         return programmeMapper.entitiesToDto(programmes);
 

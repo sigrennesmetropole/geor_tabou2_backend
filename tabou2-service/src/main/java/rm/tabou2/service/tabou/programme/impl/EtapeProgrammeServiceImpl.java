@@ -25,7 +25,7 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
     @Override
     public List<Etape> searchEtapesProgramme(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
 
-        List<EtapeProgrammeEntity> etapes = etapeProgrammeDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
+        List<EtapeProgrammeEntity> etapes = etapeProgrammeDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EtapeProgrammeEntity.class));
 
         return etapeProgrammeMapper.entitiesToDto(etapes);
 

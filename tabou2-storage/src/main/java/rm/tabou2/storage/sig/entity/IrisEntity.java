@@ -14,6 +14,7 @@ public class IrisEntity {
     @Column(name = "objectid")
     private Integer id;
 
+    @OrderBy
     @Basic
     @Column(name = "ccom")
     private String ccom;

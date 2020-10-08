@@ -15,6 +15,7 @@ public class TypeDocumentEntity {
     @Column(name = "id_type_doc")
     private long id;
 
+    @OrderBy
     @Basic
     @Column(name = "libelle")
     private String libelle;
