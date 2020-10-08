@@ -9,9 +9,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
-import rm.tabou2.storage.dao.impl.AbstractCustomDaoImpl;
+import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.TypeDocumentCustomDao;
-import rm.tabou2.storage.tabou.entity.*;
+import rm.tabou2.storage.tabou.entity.document.TypeDocumentEntity;
 import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 
 import javax.persistence.EntityManager;
@@ -39,8 +39,6 @@ public class TypeDocumentCustomDaoImpl extends AbstractCustomDaoImpl implements 
     @Override
     public Page<TypeDocumentEntity> searchTypeDocument(TypeDocumentCriteria typeDocumentCriteria, Pageable pageable) {
 
-
-        List<TypeDocumentEntity> result;
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 

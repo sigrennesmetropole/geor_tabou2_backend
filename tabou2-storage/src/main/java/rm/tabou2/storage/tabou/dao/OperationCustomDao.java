@@ -2,7 +2,7 @@ package rm.tabou2.storage.tabou.dao;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import rm.tabou2.storage.tabou.entity.OperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 

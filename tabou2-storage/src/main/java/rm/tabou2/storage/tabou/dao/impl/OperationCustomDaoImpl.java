@@ -10,9 +10,14 @@ import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import rm.tabou2.storage.dao.impl.AbstractCustomDaoImpl;
+import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.OperationCustomDao;
-import rm.tabou2.storage.tabou.entity.*;
+import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
+import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
+import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import javax.persistence.EntityManager;
