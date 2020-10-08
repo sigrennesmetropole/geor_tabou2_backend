@@ -8,8 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import rm.tabou2.storage.item.ConnectedUser;
-import rm.tabou2.service.UtilContext;
+import rm.tabou2.service.helper.AuthentificationHelper;
 
 
 @Aspect
@@ -19,11 +18,12 @@ public class FacadeAspect {
     private static final Logger LOG = LoggerFactory.getLogger(FacadeAspect.class);
 
     @Autowired
-    UtilContext utilContext;
+    private AuthentificationHelper authentificationHelper;
 
     //Pour chaque entrée dans un controller
     @Pointcut("execution(* rm.tabou2.facade.controller.*.*(..))")
     public void businessMethods() {
+        //Definition du pointcut
     }
 
 
@@ -31,9 +31,10 @@ public class FacadeAspect {
     public Object profile(final ProceedingJoinPoint pjp) throws Throwable {
         final Object output = pjp.proceed();
 
-        final ConnectedUser cnxAccount = utilContext.getConnectedUser();
-        final String accountname = cnxAccount != null ? cnxAccount.getLogin() : "ANONYMOUS";
-        LOG.info(String.format("[Account] = %s - %s : %s", accountname, pjp.getSignature().getDeclaringTypeName(), pjp.getSignature().getName()));
+        final String accountname = authentificationHelper.getConnectedUsername();
+        if (LOG.isInfoEnabled()) {
+            LOG.info(String.format("[Account] = %s - %s : %s", accountname, pjp.getSignature().getDeclaringTypeName(), pjp.getSignature().getName()));
+        }
         return output;
     }
 
