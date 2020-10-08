@@ -11,6 +11,7 @@ import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.dto.*;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.validation.Valid;
@@ -97,11 +98,8 @@ public class ProgrammeApiController implements ProgrammesApi {
         programmeCriteria.setDatDateFin(datDateFin);
         programmeCriteria.setLogementsAides(logementsAides);
 
-        if( null == orderBy){
-            orderBy = "nom";
-        }
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeEntity.class);
 
         Page<Programme> page = programmeService.searchProgrammes(programmeCriteria, pageable);
 
