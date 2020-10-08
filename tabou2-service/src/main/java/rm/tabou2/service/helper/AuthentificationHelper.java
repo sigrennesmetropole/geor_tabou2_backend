@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthentificationHelper {
 
+
     public static final String ROLE_CONSULTATION = "a_determiner";
     public static final String ROLE_CONTRIBUTEUR = "a_determiner";
     public static final String ROLE_REFERENT = "a_determiner";
@@ -83,6 +84,5 @@ public class AuthentificationHelper {
     public boolean hasAdministratorRole() {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(ROLE_ADMINISTRATEUR));
     }
-
 
 }

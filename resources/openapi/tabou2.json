@@ -1893,10 +1893,26 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "typeDocumentId",
+            "description": "Identifiant du type de document",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "libelle du type de document",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "dateInactif",
+            "in": "query",
+            "required": false,
+            "description": "Date d'inactivite",
+            "type": "string",
+            "format": "date"
           },
           {
             "name": "start",
@@ -1905,14 +1921,6 @@
             "description": "Index de début",
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
           },
           {
             "name": "resultsNumber",
@@ -1942,10 +1950,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TypeDocument"
-              }
+                "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -2027,10 +2032,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TypeDocument"
-              }
+              "$ref": "#/definitions/TypeDocument"
             }
           },
           "404": {
@@ -2732,7 +2734,7 @@
         "id": {
           "description": "Identifant de la commune",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
         "nom": {
           "description": "Nom de la commune",
@@ -2740,6 +2742,10 @@
         },
         "codeInsee": {
           "description": "Code Insee de la commune",
+          "type": "integer"
+        },
+        "codePostal": {
+          "description": "Code postal de la commune",
           "type": "string"
         }
       }
@@ -2750,10 +2756,18 @@
         "id": {
           "description": "Identifiant unique",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
-        "nom": {
-          "description": "Nom de l'IRIS",
+        "ccom": {
+          "description": "",
+          "type": "string"
+        },
+        "codeIris": {
+          "description": "Code l'IRIS",
+          "type": "string"
+        },
+        "nmiris": {
+          "description": "",
           "type": "string"
         }
       }
@@ -2764,15 +2778,15 @@
         "id": {
           "description": "Identifiant unique",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
         "nom": {
           "description": "Nom du quartier",
           "type": "string"
         },
-        "numQuartier": {
+        "nuQuart": {
           "description": "",
-          "type": "string"
+          "type": "number"
         }
       }
     },
@@ -2782,9 +2796,9 @@
         "id": {
           "description": "Identifiant unique",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
-        "zonage": {
+        "libelle": {
           "description": "Nom du zonage PLUi",
           "type": "string"
         }
@@ -2950,7 +2964,7 @@
           "description": "Libellé du type document",
           "type": "string"
         },
-        "dateInactivite": {
+        "dateInactif": {
           "description": "Date de mise en inactivité du type de document",
           "type": "string",
           "format": "date"
