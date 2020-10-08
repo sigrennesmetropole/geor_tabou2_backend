@@ -15,6 +15,7 @@ public class PermisConstruireEntity {
     @Column(name = "id")
     private long id;
 
+    @OrderBy
     @Basic
     @Column(name = "num_pc")
     private String numPc;

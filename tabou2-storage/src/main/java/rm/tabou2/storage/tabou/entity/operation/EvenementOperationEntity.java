@@ -16,6 +16,7 @@ public class EvenementOperationEntity {
     @Column(name = "id_evt_operation")
     private long id;
 
+    @OrderBy
     @Basic
     @Column(name = "event_date")
     private Date eventDate;

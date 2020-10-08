@@ -2,9 +2,9 @@ package rm.tabou2.service.tabou.operation.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
+import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
@@ -25,7 +25,7 @@ public class EtapeOperationServiceImpl implements EtapeOperationService {
     @Override
     public List<Etape> searchEtapesOperation(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
 
-        List<EtapeOperationEntity> etapes = etapeOperationDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
+        List<EtapeOperationEntity> etapes = etapeOperationDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EtapeOperationEntity.class));
 
         return etapeOperationMapper.entitiesToDto(etapes);
 

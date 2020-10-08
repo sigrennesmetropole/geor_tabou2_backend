@@ -13,6 +13,7 @@ import java.util.Date;
 @Table(name = "tabou_programme_tiers")
 public class ProgrammeTiersEntity {
 
+    @OrderBy
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_programme_tiers")
