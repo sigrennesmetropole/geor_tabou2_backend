@@ -15,6 +15,7 @@ public class AgapeoEntity {
     @Column(name = "id_agapeo")
     private long id;
 
+    @OrderBy
     @Basic
     @Column(name = "annee_prog")
     private Integer anneeProg;

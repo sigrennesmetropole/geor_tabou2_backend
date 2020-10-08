@@ -45,9 +45,9 @@ public class TiersServiceImpl implements TiersService {
         keyword = (keyword == null) ? "%" : "%" + keyword + "%";
 
         if (Boolean.TRUE.equals(onlyActive)) {
-            tiers = tiersDao.findOnlyActiveByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
+            tiers = tiersDao.findOnlyActiveByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, Tiers.class));
         } else {
-            tiers = tiersDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc));
+            tiers = tiersDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, Tiers.class));
         }
 
         return tiersMapper.entitiesToDto(tiers);

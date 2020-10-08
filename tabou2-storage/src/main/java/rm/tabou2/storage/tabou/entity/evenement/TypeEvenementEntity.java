@@ -15,6 +15,7 @@ public class TypeEvenementEntity {
     @Column(name = "id_type_evt")
     private long id;
 
+    @OrderBy
     @Basic
     @Column(name = "libelle")
     private String libelle;

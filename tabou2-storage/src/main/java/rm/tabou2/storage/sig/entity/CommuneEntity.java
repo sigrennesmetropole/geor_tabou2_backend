@@ -14,6 +14,7 @@ public class CommuneEntity {
     @Column(name = "objectid")
     private Integer id;
 
+    @OrderBy
     @Basic
     @Column(name = "nom")
     private String nom;

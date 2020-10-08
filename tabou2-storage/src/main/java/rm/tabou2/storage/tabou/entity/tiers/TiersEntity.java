@@ -18,6 +18,7 @@ public class TiersEntity {
     @Column(name = "id_tiers")
     private long id;
 
+    @OrderBy
     @Basic
     @Column(name = "nom")
     private String nom;

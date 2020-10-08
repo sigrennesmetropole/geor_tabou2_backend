@@ -13,6 +13,7 @@ public class PluiEntity {
     @Column(name = "objectid")
     private Integer id;
 
+    @OrderBy
     @Basic
     @Column(name = "libelle")
     private String libelle;
