@@ -34,7 +34,7 @@ public class OperationEntity {
     private String description;
 
     @Basic
-    @Column(name = "diffusion_retreinte")
+    @Column(name = "diffusion_restreinte")
     private Boolean diffusionRetreinte;
 
     @Basic

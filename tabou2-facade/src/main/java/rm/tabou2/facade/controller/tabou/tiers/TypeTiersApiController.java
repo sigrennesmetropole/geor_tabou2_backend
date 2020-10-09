@@ -7,13 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.TypesTiersApi;
-import rm.tabou2.service.TypeTiersService;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TypeTiers;
+import rm.tabou2.service.tabou.tiers.TypeTiersService;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 import javax.validation.Valid;
-import java.util.Date;
 
 @Controller
 public class TypeTiersApiController implements TypesTiersApi {
@@ -32,15 +32,11 @@ public class TypeTiersApiController implements TypesTiersApi {
     }
 
     @Override
-    public ResponseEntity<PageResult> getTypeTiers(@Valid String libelle, @Valid Date dateInactivite, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getTypeTiers(@Valid String libelle, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
-        if (null == orderBy) {
-            orderBy = "libelle";
-        }
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeTiersEntity.class);
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc);
-
-        Page<TypeTiers> page = typeTiersService.searchTypeTiers(libelle, dateInactivite, pageable);
+        Page<TypeTiers> page = typeTiersService.searchTypeTiers(libelle, inactif, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }

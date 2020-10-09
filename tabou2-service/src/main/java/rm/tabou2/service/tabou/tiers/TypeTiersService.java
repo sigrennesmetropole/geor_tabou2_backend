@@ -4,8 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.TypeTiers;
 
-import java.util.Date;
-
 public interface TypeTiersService {
 
     /**
@@ -42,10 +40,10 @@ public interface TypeTiersService {
     /**
      * Recherche de type tiers.
      *
-     * @param libelle        libelle du type tiers à rechercher
-     * @param dateInactivite date de mise en inactivité à rechercher
-     * @param pageable       pagination           true si tri ascendant, faux sinon
+     * @param libelle  libelle du type tiers à rechercher
+     * @param inactif  type tiers inactivé ou non
+     * @param pageable pagination           true si tri ascendant, faux sinon
      * @return
      */
-    Page<TypeTiers> searchTypeTiers(String libelle, Date dateInactivite, Pageable pageable);
+    Page<TypeTiers> searchTypeTiers(String libelle, Boolean inactif, Pageable pageable);
 }

@@ -6,10 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.tabou.tiers.TypeTiersService;
 import rm.tabou2.service.dto.TypeTiers;
-import rm.tabou2.service.mapper.TypeTiersMapper;
-import rm.tabou2.storage.tabou.dao.TypeTiersCustomDao;
-import rm.tabou2.storage.tabou.dao.TypeTiersDao;
-import rm.tabou2.storage.tabou.entity.TypeTiersEntity;
+import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
+import rm.tabou2.storage.tabou.dao.tiers.TypeTiersCustomDao;
+import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
+import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 import java.util.Date;
 import java.util.NoSuchElementException;
@@ -85,9 +85,9 @@ public class TypeTiersServiceImpl implements TypeTiersService {
     }
 
     @Override
-    public Page<TypeTiers> searchTypeTiers(String libelle, Date dateInactivite, Pageable pageable) {
+    public Page<TypeTiers> searchTypeTiers(String libelle, Boolean inacatif, Pageable pageable) {
 
-        return typeTiersMapper.entitiesToDto(typeTiersCustomDao.searchTypeTiers(libelle, dateInactivite, pageable), pageable);
+        return typeTiersMapper.entitiesToDto(typeTiersCustomDao.searchTypeTiers(libelle, inacatif, pageable), pageable);
 
     }
 

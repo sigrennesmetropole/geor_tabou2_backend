@@ -1075,7 +1075,7 @@
     },
     "/tiers": {
       "get": {
-        "summary": "Recherche un tiers",
+        "summary": "Recherche des tiers",
         "operationId": "getTiers",
         "produces": [
           "application/json"
@@ -1083,10 +1083,31 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "nom",
+            "description": "Recherche par nom du tiers",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "tiersPrive",
+            "description": "Recherche par tiers privé si true, false si société",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "adresseVille",
+            "description": "Recherche par adresse / ville du tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par tiers inactif",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "start",
@@ -1095,14 +1116,6 @@
             "description": "Index de début",
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
           },
           {
             "name": "resultsNumber",
@@ -1132,10 +1145,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tiers"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -1196,6 +1206,97 @@
         }
       }
     },
+    "/tiers/{tiersId}": {
+      "put": {
+        "summary": "Récupération d'un tiers",
+        "operationId": "getTiersById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}/inactivate": {
+      "put": {
+        "summary": "Rends un tiers inactif",
+        "operationId": "inactivateTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/programmes/tiers": {
+      "post": {
+        "summary": "Association d'un tiers à un programme",
+        "operationId": "associateTiersToProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "programmeTiers",
+            "description": "les Id d'une association d'un tiers à un programme",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProgrammeTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/tiers/programme/{programmeId}": {
       "get": {
         "summary": "Liste les tiers d'un programme",
@@ -1207,9 +1308,10 @@
           {
             "in": "path",
             "name": "programmeId",
-            "description": "Identifiant d'un programme",
+            "description": "Identifiant du programme",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -1228,7 +1330,85 @@
         }
       }
     },
+    "/tiers/operation": {
+      "post": {
+        "summary": "Association d'un tiers à une operation",
+        "operationId": "associateTiersToOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "operationTiers",
+            "description": "les Id d'une association d'un tiers à une operation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OperationTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/tiers/operation/{operationId}": {
+      "put": {
+        "summary": "Modification d'un tiers d'une opération ",
+        "operationId": "updateTiersByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "typeTiersId",
+            "description": "Identifiant du type de tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tiers"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
       "get": {
         "summary": "Liste les tiers d'une opération",
         "operationId": "getTiersByOperationId",
@@ -1241,7 +1421,8 @@
             "name": "operationId",
             "description": "Identifiant d'une opération",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -1260,66 +1441,29 @@
         }
       }
     },
-    "/tiers/{type}": {
-      "get": {
-        "summary": "Recherche les tiers en fonction d'un type donné",
-        "operationId": "getTiersByType",
+    "/tiers/operation/{operationId}/delete": {
+      "put": {
+        "summary": "Supprime un tiers d'une opération ",
+        "operationId": "deleteTiersFromOperation",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "description": "Index de début",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
-          },
-          {
-            "name": "resultsNumber",
-            "in": "query",
-            "required": false,
-            "description": "Nombre de résultats à remonter",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "required": false,
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
-          },
-          {
-            "name": "asc",
-            "in": "query",
-            "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
-            "type": "boolean",
-            "default": true
-          },
-          {
             "in": "path",
-            "name": "type",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
             "required": true,
-            "description": "Type de tiers à récupérer",
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -1355,11 +1499,10 @@
           },
           {
             "in": "query",
-            "name": "dateInactivite",
-            "description": "Date de mise en inactivité",
+            "name": "inactif",
+            "description": "Recherche par tiers inactif",
             "required": false,
-            "type": "string",
-            "format": "date"
+            "type": "boolean"
           },
           {
             "name": "start",
@@ -1368,14 +1511,6 @@
             "description": "Index de début",
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
           },
           {
             "name": "resultsNumber",
@@ -1496,7 +1631,6 @@
         }
       }
     },
-
     "/types-tiers/{typeTiersId}/inactivate": {
       "put": {
         "summary": "Rends un type de tiers inactif",
