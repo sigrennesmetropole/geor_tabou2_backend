@@ -3,8 +3,8 @@ package rm.tabou2.service.tabou.programme;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.validator.ValidProgrammeCreation;
 import rm.tabou2.service.validator.ValidProgrammeUpdate;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
@@ -26,7 +26,16 @@ public interface ProgrammeService {
      * @param programme programme à modifier
      * @return programme modifié
      */
-    Programme editProgramme(@ValidProgrammeUpdate Programme programme) throws AppServiceException;
+    Programme editProgramme(@ValidProgrammeUpdate Programme programme);
+
+    /**
+     * Modification de l'étape d'avancement d'un programme
+     *
+     * @param programmeId   identifiant du programme
+     * @param etape         nouvelle étape
+     * @return              nouveau programme
+     */
+    Programme editEtapeOfProgramme(long programmeId, Etape etape);
 
     /**
      * Récupération d'un programme par son identifiant.

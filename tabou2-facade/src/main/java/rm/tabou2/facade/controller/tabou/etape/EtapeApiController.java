@@ -5,9 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.EtapesApi;
+import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.tabou.programme.ProgrammeService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,6 +23,9 @@ public class EtapeApiController implements EtapesApi {
     @Autowired
     private EtapeProgrammeService etapeProgrammeService;
 
+    @Autowired
+    private ProgrammeService programmeService;
+
     @Override
     public ResponseEntity<Etape> addEtapeOperation(@Valid Etape etape) throws Exception {
 
@@ -33,6 +38,11 @@ public class EtapeApiController implements EtapesApi {
 
         return new ResponseEntity<>(etapeProgrammeService.addEtapeProgramme(etape), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<Programme> editEtapeForProgrammeId(Long programmeId, @Valid Etape etape) throws Exception {
+        return new ResponseEntity<>(programmeService.editEtapeOfProgramme(programmeId, etape), HttpStatus.OK);
     }
 
     @Override

@@ -75,7 +75,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public Programme editProgramme(@ValidProgrammeUpdate Programme programme) throws AppServiceException {
+    public Programme editProgramme(@ValidProgrammeUpdate Programme programme) {
 
         ProgrammeEntity programmeEntity = programmeDao.getById(programme.getId());
         if (programmeEntity == null) {
@@ -91,6 +91,13 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         //TODO: sauvegarge de l'évènement
 
         return programmeMapper.entityToDto(programmeEntity);
+    }
+
+    @Override
+    public Programme editEtapeOfProgramme(long programmeId, Etape etape) {
+        Programme programme = getProgrammeById(programmeId);
+        programme.setEtape(etape);
+        return editProgramme(programme);
     }
 
     @Override

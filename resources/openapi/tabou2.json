@@ -1223,6 +1223,43 @@
             "description": "La resource demandée n'existe pas"
           }
         }
+      },
+      "put": {
+        "summary": "Modification de l'étape d'avancement d'un programme d'aménagement",
+        "operationId": "editEtapeForProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "required": true,
+            "description": "Identifiant du programme",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "etape",
+            "description": "Etape à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
       }
     },
     "/tiers": {
