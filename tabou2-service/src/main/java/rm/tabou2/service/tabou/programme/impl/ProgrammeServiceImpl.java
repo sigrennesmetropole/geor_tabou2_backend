@@ -3,8 +3,7 @@ package rm.tabou2.service.tabou.programme.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
-import rm.tabou2.service.tabou.programme.ProgrammeService;
-import rm.tabou2.service.dto.Logements;
+import rm.tabou2.service.tabou.programme.ProgrammeService;;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.helper.AuthentificationHelper;
@@ -70,14 +69,5 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         return programmeMapper.entitiesToDto(programmes);
 
     }
-
-    public Logements getLogements() {
-
-        //Faire la comparaison entre le nombre de logements issus de la couche agapeo
-
-        return null;
-
-    }
-
 
 }
