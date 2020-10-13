@@ -11,6 +11,6 @@ public interface AgapeoService {
      * @param programmeId id du programme
      * @return List de Agapeo
      */
-    List<Agapeo> getApapeoByProgrammeId(long programmeId);
+    List<Agapeo> getApapeosByProgrammeId(long programmeId);
 
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.service.ddc.PermisConstruireService;
+import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.dto.*;
@@ -32,6 +33,9 @@ public class ProgrammeApiController implements ProgrammesApi {
     @Autowired
     private PermisConstruireService permisConstruireService;
 
+    @Autowired
+    private AgapeoService agapeoService;
+
     @Override
     public ResponseEntity<Programme> addProgramme(@Valid Programme programme) throws Exception {
         return new ResponseEntity<>(programmeService.addProgramme(programme), HttpStatus.OK);
@@ -44,7 +48,7 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Override
     public ResponseEntity<List<Agapeo>> getAgapeoByProgrammeId(Long programmeId) throws Exception {
-        return null;
+        return new ResponseEntity<>(agapeoService.getApapeosByProgrammeId(programmeId), HttpStatus.OK);
     }
 
     @Override

@@ -6,6 +6,8 @@ import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.dto.Agapeo;
 import rm.tabou2.service.mapper.tabou.agapeo.AgapeoMapper;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 import java.util.List;
 
@@ -18,8 +20,15 @@ public class AgapeoServiceImpl implements AgapeoService {
     @Autowired
     private AgapeoDao agapeoDao;
 
+    @Autowired
+    ProgrammeDao programmeDao;
+
     @Override
-    public List<Agapeo> getApapeoByProgrammeId(long programmeId) {
-        return agapeoMapper.entitiesToDto(agapeoDao.findAgapeoEntitiesByNumAds(String.valueOf(programmeId)));
+    public List<Agapeo> getApapeosByProgrammeId(long programmeId) {
+        ProgrammeEntity programmeEntity = programmeDao.getById(programmeId);
+        if (programmeEntity == null) {
+            throw new IllegalArgumentException("L'identifiant du programme est invalide: aucun programme trouvé pour l'id = " + programmeId);
+        }
+        return agapeoMapper.entitiesToDto(agapeoDao.findAllByNumAds(programmeEntity.getNumAds()));
     }
 }
