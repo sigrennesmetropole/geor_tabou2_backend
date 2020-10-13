@@ -284,29 +284,42 @@
         }
       }
     },
-    "/operations/tiers": {
-      "post": {
-        "summary": "Association d'un tiers à une operation",
-        "operationId": "associateTiersToOperation",
+    "/operations/emprises": {
+      "get": {
+        "summary": "Récupération de la liste des emprises des opérations non suivies dans Tabou",
+        "operationId": "getAvailableEmprises",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "operationTiers",
-            "description": "les Id d'une association d'un tiers à une operation",
+            "in": "query",
+            "name": "nature",
+            "description": "Nature de l'opération",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/OperationTiers"
-            }
+            "type": "string",
+            "enum": [
+              "ZAC",
+              "ZA",
+              "EN_DIFFUS"
+            ]
+          },
+          {
+            "in": "query",
+            "name": "estSecteur",
+            "description": "True si la recherche porte sur les secteurs, false si on recherche les opérations",
+            "required": true,
+            "type": "boolean"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Operation"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Emprise"
+              }
             }
           },
           "404": {
@@ -468,37 +481,6 @@
         }
       }
     },
-    "/programmes/tiers": {
-      "post": {
-        "summary": "Association d'un tiers à un programme",
-        "operationId": "associateTiersToProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "programmeTiers",
-            "description": "les Id d'une association d'un tiers à un programme",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ProgrammeTiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Programme"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
     "/programmes/{programmeId}/permis": {
       "get": {
         "summary": "Récupération de la liste des permis de construire d'un programme",
@@ -565,60 +547,6 @@
         }
       }
     },
-    "/programmes/{programmeId}/getDates": {
-      "get": {
-        "summary": "Récupération des dates avec application de la règle de gestion ",
-        "operationId": "getDates",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "programmeId",
-            "description": "Identifiant du programme",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Dates"
-            }
-          }
-        }
-      }
-    },
-    "/programmes/{programmeId}/getLogements": {
-      "get": {
-        "summary": "Récupération des logements avec application de la règle de gestion ",
-        "operationId": "getLogements",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "programmeId",
-            "description": "Identifiant du programme",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Logements"
-            }
-          }
-        }
-      }
-    },
     "/communes": {
       "get": {
         "summary": "Recherche d'une commune",
@@ -629,8 +557,22 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "code_insee",
+            "description": "Recherche par code insee",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom de commune",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "code_postal",
+            "description": "Recherche par code postal de la commune",
             "required": false,
             "type": "string"
           },
@@ -670,11 +612,35 @@
           "200": {
             "description": "OK",
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/Commune"
-                }
+                "$ref": "#/definitions/PageResult"
               }
+          }
+        }
+      }
+    },
+    "/communes/{communeId}": {
+      "get": {
+        "summary": "Recherche d'une commune par son id",
+        "operationId": "getCommuneById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "communeId",
+            "description": "Recherche par object id de la commune",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Commune"
+            }
           }
         }
       }
@@ -689,8 +655,8 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "nom",
+            "description": "Recherche par nom de quartier",
             "required": false,
             "type": "string"
           },
@@ -731,10 +697,34 @@
             "description": "OK",
 
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Quartier"
-              }
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/quartiers/{quartierId}": {
+      "get": {
+        "summary": "Recherche d'un quartier par son id",
+        "operationId": "getQuartierById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "quartierId",
+            "description": "Recherche par object id du quartier",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Quartier"
             }
           }
         }
@@ -750,8 +740,8 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "nom",
+            "description": "Recherche par nom de l'iris",
             "required": false,
             "type": "string"
           },
@@ -791,10 +781,34 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Iris"
-              }
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/iris/{irisId}": {
+      "get": {
+        "summary": "Recherche d'une IRIS par son id",
+        "operationId": "getIrisById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "irisId",
+            "description": "Recherche par object id de l'iris",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Iris"
             }
           }
         }
@@ -808,10 +822,109 @@
           "application/json"
         ],
         "parameters": [
+                    {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libellé du PLUi",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+                "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/plui/{pluiId}": {
+      "get": {
+        "summary": "Recherche d'un PLUi par son id",
+        "operationId": "getPluiById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pluiId",
+            "description": "Recherche par object id du PLUi",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PluiZonage"
+            }
+          }
+        }
+      }
+    },
+    "/epci": {
+      "get": {
+        "summary": "Recherche des EPCI",
+        "operationId": "getEpci",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "objectid",
+            "description": "Recherche identifiant du PLUi",
+            "required": false,
+            "type": "number",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "codeEpci",
+            "description": "Recherche par code EPCI",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "nomEpci",
+            "description": "Recherche par nom EPCI",
             "required": false,
             "type": "string"
           },
@@ -861,85 +974,10 @@
         }
       }
     },
-    "/etapes/operation": {
-      "get": {
-        "summary": "Recherche les étapes d'avancement possibles pour une opération d'aménagement",
-        "operationId": "getEtapesOperation",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Etape"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajoute une étape d'avancement pour les opérations d'aménagement",
-        "operationId": "addEtapeOperation",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à ajouter",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modifie une étape d'avancement pour les opérations d'aménagement",
-        "operationId": "editEtapeOperation",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        }
-      }
-    },
     "/etapes/operation/{operationId}": {
       "get": {
-        "summary": "Récupération de l'étape d'avancement pour une opération d'aménagement",
-        "operationId": "getEtapeByOperationId",
+        "summary": "Liste des étapes d'avancement possibles pour une opération d'aménagement",
+        "operationId": "getEtapesByOperationId",
         "produces": [
           "application/json"
         ],
@@ -957,84 +995,46 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Etape"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
             }
           },
           "404": {
             "description": "La resource demandée n'existe pas"
           }
         }
-      }
-    },
-    "/etapes/programme": {
-      "get": {
-        "summary": "Recherche les étapes d'avancement possibles pour un programme d'aménagement",
-        "operationId": "getEtapesProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Etape"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajoute une étape d'avancement pour les programmes d'aménagement",
-        "operationId": "addEtapeProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à ajouter",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        }
       },
       "put": {
-        "summary": "Modifie une étape d'avancement pour les programmes d'aménagement",
-        "operationId": "editEtapeProgramme",
+        "summary": "Modification de l'étape d'avancement d'une opération d'aménagement",
+        "operationId": "editEtapeByOperationId",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à modifier",
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "etapeId",
+            "description": "Identifiant de la nouvelle étape",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Etape"
+              "$ref": "#/definitions/Operation"
             }
           },
           "404": {
@@ -1297,6 +1297,97 @@
         }
       }
     },
+    "/tiers/{tiersId}": {
+      "put": {
+        "summary": "Récupération d'un tiers",
+        "operationId": "getTiersById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}/inactivate": {
+      "put": {
+        "summary": "Rends un tiers inactif",
+        "operationId": "inactivateTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/programmes/tiers": {
+      "post": {
+        "summary": "Association d'un tiers à un programme",
+        "operationId": "associateTiersToProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "programmeTiers",
+            "description": "les Id d'une association d'un tiers à un programme",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProgrammeTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/tiers/programme/{programmeId}": {
       "get": {
         "summary": "Liste les tiers d'un programme",
@@ -1322,6 +1413,37 @@
               "items": {
                 "$ref": "#/definitions/Tiers"
               }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/operation": {
+      "post": {
+        "summary": "Association d'un tiers à une operation",
+        "operationId": "associateTiersToOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "operationTiers",
+            "description": "les Id d'une association d'un tiers à une operation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OperationTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
             }
           },
           "404": {
@@ -1762,6 +1884,44 @@
         }
       }
     },
+    "/evenements/programme/{programmeId}/delete": {
+      "put": {
+        "summary": "Suppresssion d'un évènement d'un programme d'aménagement",
+        "operationId": "deleteEvenementByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "evenementId",
+            "description": "Evènement à supprimer",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/evenements/operation/{operationId}": {
       "get": {
         "summary": "Recherche la liste des évènements d'une opération d'aménagement",
@@ -1862,6 +2022,44 @@
         }
       }
     },
+    "/evenements/operation/{operationId}/delete": {
+      "put": {
+        "summary": "Suppresssion d'un évènement d'une opération d'aménagement",
+        "operationId": "deleteEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "evenementId",
+            "description": "Evènement à supprimer",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/types-evenements": {
       "get": {
         "summary": "Recherche les types d'évènements",
@@ -1872,10 +2070,17 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "libelle",
+            "description": "Recherche par libellé du type d'évènement",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par type d'évènement inactif",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "start",
@@ -1884,14 +2089,6 @@
             "description": "Index de début",
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
           },
           {
             "name": "resultsNumber",
@@ -2185,8 +2382,15 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "id",
+            "description": "Identifiant du Secteur DDS",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du secteur",
             "required": false,
             "type": "string"
           },
@@ -2253,8 +2457,15 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "id",
+            "description": "Identifiant du secteur",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du secteur",
             "required": false,
             "type": "string"
           },
@@ -2321,8 +2532,15 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "id",
+            "description": "Recherche par identifiant de secteur",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom de secteur",
             "required": false,
             "type": "string"
           },
@@ -2379,18 +2597,25 @@
         }
       }
     },
-    "/secteurs-habitat": {
+    "/secteurs-speu": {
       "get": {
-        "summary": "Recherche la liste des secteurs habitat",
-        "operationId": "getSecteursHabitat",
+        "summary": "Recherche la liste des secteurs SPEU",
+        "operationId": "getSecteursSpeu",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "id",
+            "description": "Identifiant du secteur",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Libellé du secteur",
             "required": false,
             "type": "string"
           },
@@ -2442,33 +2667,6 @@
               "items": {
                 "$ref": "#/definitions/SecteurHabitat"
               }
-            }
-          }
-        }
-      }
-    },
-    "/permis/{permisId}": {
-      "get": {
-        "summary": "Récupération d'un permis de construire à partir de son identifiant",
-        "operationId": "getPermisById",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "permisId",
-            "description": "Identifiant du permis de construire",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/PermisConstruire"
             }
           }
         }
@@ -2938,6 +3136,24 @@
         }
       }
     },
+    "Epci": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant unique",
+          "type": "integer",
+          "format": "int32"
+        },
+        "codeEpci": {
+          "description": "Code de l'EPCI",
+          "type": "string"
+        },
+        "nomEpci": {
+          "description": "Nom l'EPCI",
+          "type": "string"
+        }
+      }
+    },
     "Tiers": {
       "type": "object",
       "properties": {
@@ -2948,9 +3164,6 @@
         },
         "nom": {
           "description": "Nom du tiers (raison sociale)",
-          "type": "string"
-        },
-        "correspondant": {
           "type": "string"
         },
         "adresseNum": {
@@ -2986,8 +3199,12 @@
           "type": "string"
         },
         "contact": {
-          "description": "",
+          "description": "Nom du contact",
           "type": "string"
+        },
+        "estPrive": {
+          "description": "True si le tiers est un privé, false si société",
+          "type": "boolean"
         },
         "dateInactif": {
           "description": "Date de mise en inactivité du tiers",
@@ -3027,12 +3244,21 @@
     "SecteurDds": {
       "type": "object",
       "properties": {
-        "nom": {
-          "description": "Nom du secteur",
-          "type": "string"
+        "id": {
+          "description": "Identifiant du secteur",
+          "type": "integer",
+          "format": "int32"
         },
         "instructeur": {
           "description": "Nom de l'instructeur",
+          "type": "string"
+        },
+        "assistant": {
+          "description": "Nom de l'assistant",
+          "type": "string"
+        },
+        "secteur": {
+          "description": "Nom du secteur",
           "type": "string"
         }
       }
@@ -3040,11 +3266,15 @@
     "SecteurSam": {
       "type": "object",
       "properties": {
+        "id": {
+          "description": "Idenifiant du secteur",
+          "type": "string"
+        },
         "nom": {
           "description": "Nom du secteur",
           "type": "string"
         },
-        "chargeOp": {
+        "referent": {
           "description": "Nom du chargé d'opération",
           "type": "string"
         }
@@ -3244,31 +3474,6 @@
         }
       }
     },
-    "Logements": {
-      "type": "object",
-      "properties": {
-        "logementsAccesSociale": {
-          "description": "Nombre de logements en accession libre",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsLocatifRegule": {
-          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsPls": {
-          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsLocatifSocial": {
-          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
     "PageResult": {
       "type": "object",
       "properties": {
@@ -3282,23 +3487,16 @@
         }
       }
     },
-    "Dates": {
+    "Emprise": {
       "type": "object",
       "properties": {
-        "dateAutorisation": {
-          "description": "Date autorisation",
-          "type": "string",
-          "format": "date"
+        "id": {
+          "description": "Identifiant de l'emprise",
+          "type": "number"
         },
-        "dateOuvertureChantier": {
-          "description": "Date d'ouverture de chantier",
-          "type": "string",
-          "format": "date"
-        },
-        "dateAchevementTravaux": {
-          "description": "Date d'achèvement des travaux",
-          "type": "string",
-          "format": "date"
+        "nom": {
+          "description": "Nom de l'emprise",
+          "type": "string"
         }
       }
     }

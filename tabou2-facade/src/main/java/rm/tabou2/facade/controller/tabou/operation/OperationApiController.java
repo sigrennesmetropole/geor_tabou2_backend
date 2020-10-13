@@ -15,7 +15,9 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 
 @Controller
@@ -39,6 +41,11 @@ public class OperationApiController implements OperationsApi {
 
         return new ResponseEntity<>(operationService.addOperation(operation), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<List<Emprise>> getAvailableEmprises(@NotNull @Valid String nature, @NotNull @Valid Boolean estSecteur) throws Exception {
+        return null;
     }
 
     @Override
@@ -82,9 +89,7 @@ public class OperationApiController implements OperationsApi {
     }
 
 
-    @Override
-    public ResponseEntity<Operation> associateTiersToOperation(@Valid OperationTiers operationTiers) throws Exception {
-        return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationTiers.getOperationId(), operationTiers.getTiersId(), operationTiers.getTypeTiersId()), HttpStatus.OK);
-    }
+    /*@Override
+    */
 
 }

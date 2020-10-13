@@ -5,11 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.EtapesApi;
+import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.dto.Etape;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Controller
@@ -21,33 +23,10 @@ public class EtapeApiController implements EtapesApi {
     @Autowired
     private EtapeProgrammeService etapeProgrammeService;
 
-    @Override
-    public ResponseEntity<Etape> addEtapeOperation(@Valid Etape etape) throws Exception {
-
-        return new ResponseEntity<>(etapeOperationService.addEtapeOperation(etape), HttpStatus.OK);
-
-    }
 
     @Override
-    public ResponseEntity<Etape> addEtapeProgramme(@Valid Etape etape) throws Exception {
-
-        return new ResponseEntity<>(etapeProgrammeService.addEtapeProgramme(etape), HttpStatus.OK);
-
-    }
-
-    @Override
-    public ResponseEntity<Etape> editEtapeOperation(@Valid Etape etape) throws Exception {
-        return new ResponseEntity<>(etapeOperationService.addEtapeOperation(etape), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Etape> editEtapeProgramme(@Valid Etape etape) throws Exception {
-        return new ResponseEntity<>(etapeProgrammeService.addEtapeProgramme(etape), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Etape> getEtapeByOperationId(Long operationId) throws Exception {
-        return new ResponseEntity<>(etapeOperationService.getEtapeOperationById(operationId), HttpStatus.OK);
+    public ResponseEntity<Operation> editEtapeByOperationId(Long operationId, @NotNull @Valid Long etapeId) throws Exception {
+        return null;
     }
 
     @Override
@@ -56,12 +35,11 @@ public class EtapeApiController implements EtapesApi {
     }
 
     @Override
-    public ResponseEntity<List<Etape>> getEtapesOperation() throws Exception {
-        return new ResponseEntity<>(etapeOperationService.getEtapesForOperation(), HttpStatus.OK);
+    public ResponseEntity<List<Etape>> getEtapesByOperationId(Long operationId) throws Exception {
+        //Liste des étapes d'avancement possibles pour
+        //return new ResponseEntity<List<Etape>>(etapeOperationService.getEtapeOperationById(operationId), HttpStatus.OK);
+        return null;
     }
 
-    @Override
-    public ResponseEntity<List<Etape>> getEtapesProgramme() throws Exception {
-        return new ResponseEntity<>(etapeProgrammeService.getEtapesForProgrammes(), HttpStatus.OK);
-    }
+
 }

@@ -11,6 +11,7 @@ import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.OperationTiers;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.Tiers;
+import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
@@ -26,6 +27,9 @@ public class TiersApiController implements TiersApi {
     @Autowired
     private TiersService tiersService;
 
+    @Autowired
+    private OperationTiersService operationTiersService;
+
     @Override
     public ResponseEntity<Tiers> addTiers(@Valid Tiers tiers) throws Exception {
 
@@ -35,7 +39,7 @@ public class TiersApiController implements TiersApi {
 
     @Override
     public ResponseEntity<Operation> associateTiersToOperation(@Valid OperationTiers operationTiers) throws Exception {
-        return null;
+        return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationTiers.getOperationId(), operationTiers.getTiersId(), operationTiers.getTypeTiersId()), HttpStatus.OK);
     }
 
     @Override

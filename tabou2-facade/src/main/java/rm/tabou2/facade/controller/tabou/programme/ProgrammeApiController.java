@@ -38,16 +38,6 @@ public class ProgrammeApiController implements ProgrammesApi {
     }
 
     @Override
-    public ResponseEntity<Dates> getDates(Long programmeId) throws Exception {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<Logements> getLogements(Long programmeId) throws Exception {
-        return null;
-    }
-
-    @Override
     public ResponseEntity<List<PermisConstruire>> getPermisByProgrammeId(Long programmeId) throws Exception {
         return null;
     }
