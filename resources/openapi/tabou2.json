@@ -3148,7 +3148,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "numPc": {
+        "numAds": {
           "description": "Numero du permis de constuire",
           "type": "string"
         },

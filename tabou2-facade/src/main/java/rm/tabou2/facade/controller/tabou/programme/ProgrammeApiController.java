@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
+import rm.tabou2.service.ddc.PermisConstruireService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.dto.*;
@@ -27,6 +28,9 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Autowired
     private ProgrammeTiersService programmeTiersService;
+
+    @Autowired
+    private PermisConstruireService permisConstruireService;
 
     @Override
     public ResponseEntity<Programme> addProgramme(@Valid Programme programme) throws Exception {
@@ -55,7 +59,7 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Override
     public ResponseEntity<List<PermisConstruire>> getPermisByProgrammeId(Long programmeId) throws Exception {
-        return null;
+        return new ResponseEntity<>(permisConstruireService.getPermisConstruiresByProgrammeId(programmeId), HttpStatus.OK);
     }
 
     @Override
