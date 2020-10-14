@@ -101,7 +101,7 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
     }
 
     @Override
-    public Evenement editEvenement(Evenement evenement, Long operationId) throws AppServiceException {
+    public Evenement updateEvenementByOperationId(Evenement evenement, Long operationId) throws AppServiceException {
 
         Optional<EvenementOperationEntity> evenementOperationEntityOpt = evenementOperationDao.findById(evenement.getIdEvent());
         if (evenementOperationEntityOpt.isEmpty()) {

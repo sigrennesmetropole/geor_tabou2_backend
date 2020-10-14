@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.TiersApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.Tiers;
-import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
@@ -23,13 +22,11 @@ public class TiersApiController implements TiersApi {
     @Autowired
     private TiersService tiersService;
 
-    @Autowired
-    private OperationTiersService operationTiersService;
 
     @Override
     public ResponseEntity<Tiers> createTiers(@Valid Tiers tiers) throws Exception {
 
-        return new ResponseEntity<>(tiersService.addTiers(tiers), HttpStatus.OK);
+        return new ResponseEntity<>(tiersService.createTiers(tiers), HttpStatus.OK);
 
     }
 
@@ -37,7 +34,7 @@ public class TiersApiController implements TiersApi {
     @Override
     public ResponseEntity<Tiers> updateTiers(@Valid Tiers tiers) throws Exception {
 
-        return new ResponseEntity<>(tiersService.addTiers(tiers), HttpStatus.OK);
+        return new ResponseEntity<>(tiersService.createTiers(tiers), HttpStatus.OK);
 
     }
 

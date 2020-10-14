@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
-import rm.tabou2.service.tabou.operation.EvenementOperationService;
 import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
@@ -29,10 +28,9 @@ public class ProgrammeApiController implements ProgrammesApi {
     private EvenementProgrammeService evenementProgrammeService;
 
 
-
     @Override
     public ResponseEntity<Programme> createProgramme(@Valid Programme programme) throws Exception {
-        return new ResponseEntity<>(programmeService.addProgramme(programme), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.createProgramme(programme), HttpStatus.OK);
     }
 
     @Override
@@ -42,7 +40,7 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Override
     public ResponseEntity<Programme> updateProgramme(@Valid Programme programme) throws Exception {
-        return new ResponseEntity<>(programmeService.addProgramme(programme), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.createProgramme(programme), HttpStatus.OK);
     }
 
     @Override
@@ -77,7 +75,7 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Override
     public ResponseEntity<Evenement> updateEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
-        return new ResponseEntity<>(evenementProgrammeService.editByProgrammeId(evenement, programmeId), HttpStatus.OK);
+        return new ResponseEntity<>(evenementProgrammeService.updateByProgrammeId(evenement, programmeId), HttpStatus.OK);
     }
 
     @Override

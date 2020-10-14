@@ -11,9 +11,9 @@ import java.util.List;
 public interface TiersService {
     Tiers getTiersById(Long tiersId);
 
-    Tiers addTiers(Tiers tiers);
+    Tiers createTiers(Tiers tiers);
 
-    Tiers editTiers(Tiers tiers);
+    Tiers updateTiers(Tiers tiers);
 
     Tiers inactivateTiers(long tiersId) throws AppServiceException;
 

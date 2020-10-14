@@ -103,7 +103,7 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
     }
 
     @Override
-    public Evenement editByProgrammeId(Evenement evenement, Long programmeId) throws AppServiceException {
+    public Evenement updateByProgrammeId(Evenement evenement, Long programmeId) throws AppServiceException {
 
         EvenementProgrammeEntity evenementProgrammeEntity;
 

@@ -32,7 +32,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private AuthentificationHelper authentificationHelper;
 
     @Override
-    public Programme addProgramme(Programme programme) {
+    public Programme createProgramme(Programme programme) {
 
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
 

@@ -28,7 +28,7 @@ public class TypeTiersServiceImpl implements TypeTiersService {
     private TypeTiersMapper typeTiersMapper;
 
     @Override
-    public TypeTiers addTypeTiers(TypeTiers typeTiers) {
+    public TypeTiers createTypeTiers(TypeTiers typeTiers) {
 
         TypeTiersEntity typeTiersEntity = typeTiersMapper.dtoToEntity(typeTiers);
 
@@ -51,7 +51,7 @@ public class TypeTiersServiceImpl implements TypeTiersService {
     }
 
     @Override
-    public TypeTiers editTypeTiers(TypeTiers typeTiers) {
+    public TypeTiers updateTypeTiers(TypeTiers typeTiers) {
 
         Optional<TypeTiersEntity> typeTiersOpt = typeTiersDao.findById(typeTiers.getId());
         if (typeTiersOpt.isEmpty()) {

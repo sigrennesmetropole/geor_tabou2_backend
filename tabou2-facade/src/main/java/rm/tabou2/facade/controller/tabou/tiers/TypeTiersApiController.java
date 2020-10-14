@@ -23,12 +23,12 @@ public class TypeTiersApiController implements TypesTiersApi {
 
     @Override
     public ResponseEntity<TypeTiers> createTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
-        return new ResponseEntity<>(typeTiersService.addTypeTiers(typeTiers), HttpStatus.OK);
+        return new ResponseEntity<>(typeTiersService.createTypeTiers(typeTiers), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<TypeTiers> updateTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
-        return new ResponseEntity<>(typeTiersService.editTypeTiers(typeTiers), HttpStatus.OK);
+        return new ResponseEntity<>(typeTiersService.updateTypeTiers(typeTiers), HttpStatus.OK);
     }
 
     @Override

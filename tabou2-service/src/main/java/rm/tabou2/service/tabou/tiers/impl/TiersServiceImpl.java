@@ -47,7 +47,7 @@ public class TiersServiceImpl implements TiersService {
     }
 
     @Override
-    public Tiers addTiers(Tiers tiers) {
+    public Tiers createTiers(Tiers tiers) {
 
         TiersEntity tiersEntity = tiersMapper.dtoToEntity(tiers);
 
@@ -58,7 +58,7 @@ public class TiersServiceImpl implements TiersService {
     }
 
     @Override
-    public Tiers editTiers(Tiers tiers) {
+    public Tiers updateTiers(Tiers tiers) {
 
         TiersEntity tiersEntity = tiersMapper.dtoToEntity(tiers);
 

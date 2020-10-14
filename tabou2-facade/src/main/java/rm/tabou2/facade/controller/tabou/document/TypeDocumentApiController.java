@@ -25,12 +25,12 @@ public class TypeDocumentApiController implements TypesDocumentsApi {
 
     @Override
     public ResponseEntity<TypeDocument> createTypeDocument(@Valid TypeDocument typeDocument) throws Exception {
-        return new ResponseEntity<>(typeDocumentService.addTypeDocument(typeDocument), HttpStatus.OK);
+        return new ResponseEntity<>(typeDocumentService.createTypeDocument(typeDocument), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<TypeDocument> updateTypeDocument(@Valid TypeDocument typeDocument) throws Exception {
-        return new ResponseEntity<>(typeDocumentService.editTypeDocument(typeDocument), HttpStatus.OK);
+        return new ResponseEntity<>(typeDocumentService.updateTypeDocument(typeDocument), HttpStatus.OK);
     }
 
     @Override

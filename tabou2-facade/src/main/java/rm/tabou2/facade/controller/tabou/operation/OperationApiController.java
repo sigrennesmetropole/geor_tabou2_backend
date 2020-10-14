@@ -49,7 +49,7 @@ public class OperationApiController implements OperationsApi {
     @Override
     public ResponseEntity<Operation> createOperation(@Valid Operation operation) throws Exception {
 
-        return new ResponseEntity<>(operationService.addOperation(operation), HttpStatus.OK);
+        return new ResponseEntity<>(operationService.createOperation(operation), HttpStatus.OK);
 
     }
 
@@ -66,7 +66,7 @@ public class OperationApiController implements OperationsApi {
     @Override
     public ResponseEntity<Operation> updateOperation(@Valid Operation operation) throws Exception {
 
-        return new ResponseEntity<>(operationService.addOperation(operation), HttpStatus.OK);
+        return new ResponseEntity<>(operationService.createOperation(operation), HttpStatus.OK);
 
     }
 
@@ -150,7 +150,7 @@ public class OperationApiController implements OperationsApi {
     public ResponseEntity<Evenement> updateEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
 
         //TODO : test des droits
-        return new ResponseEntity<>(evenementOperationService.editEvenement(evenement, operationId), HttpStatus.OK);
+        return new ResponseEntity<>(evenementOperationService.updateEvenementByOperationId(evenement, operationId), HttpStatus.OK);
     }
 
 

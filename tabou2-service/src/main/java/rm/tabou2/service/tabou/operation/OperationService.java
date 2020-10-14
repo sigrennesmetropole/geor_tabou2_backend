@@ -8,7 +8,7 @@ import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 public interface OperationService {
 
-    Operation addOperation(Operation operation);
+    Operation createOperation(Operation operation);
 
     Operation getOperationById(long operationId);
 

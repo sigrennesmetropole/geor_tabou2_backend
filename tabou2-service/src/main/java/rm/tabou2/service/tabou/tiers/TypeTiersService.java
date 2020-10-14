@@ -20,7 +20,7 @@ public interface TypeTiersService {
      * @param typeTiers type tiers à ajouter
      * @return nouveau type tiers
      */
-    TypeTiers addTypeTiers(TypeTiers typeTiers);
+    TypeTiers createTypeTiers(TypeTiers typeTiers);
 
     /**
      * Modification d'un type tiers.
@@ -28,7 +28,7 @@ public interface TypeTiersService {
      * @param typeTiers type tiers à modifier
      * @return type tiers modifié
      */
-    TypeTiers editTypeTiers(TypeTiers typeTiers);
+    TypeTiers updateTypeTiers(TypeTiers typeTiers);
 
     /**
      * Désactivation d'un type tiers.
