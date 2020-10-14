@@ -64,7 +64,7 @@ public class ProgrammeApiController implements ProgrammesApi {
     }
 
     @Override
-    public ResponseEntity<List<Tiers>> getTiersByProgrammeId(Long programmeId) throws Exception {
+    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByProgrammeId(Long programmeId) throws Exception {
         return null;
     }
 

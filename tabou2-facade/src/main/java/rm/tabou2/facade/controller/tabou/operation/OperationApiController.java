@@ -42,11 +42,6 @@ public class OperationApiController implements OperationsApi {
     private EvenementProgrammeService evenementProgrammeService;
 
     @Override
-    public ResponseEntity<Operation> associateTiersToOperation(Long operationId, @NotNull @Valid Long tiersId, @NotNull @Valid Long typeTiersId) throws Exception {
-        return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationId, tiersId, typeTiersId), HttpStatus.OK);
-    }
-
-    @Override
     public ResponseEntity<Operation> createOperation(@Valid Operation operation) throws Exception {
 
         return new ResponseEntity<>(operationService.createOperation(operation), HttpStatus.OK);
@@ -59,7 +54,7 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<List<Tiers>> deleteTiersFromOperation(Long operationId, Long tiersId) throws Exception {
+    public ResponseEntity<List<Tiers>> deleteTiersFromOperation(Long operationId, Long associationTiersId) throws Exception {
         return null;
     }
 
@@ -71,7 +66,7 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<List<Tiers>> updateTiersByOperationId(Long operationId, @NotNull @Valid Long tiersId, @NotNull @Valid Long typeTiersId) throws Exception {
+    public ResponseEntity<List<Tiers>> updateTiersByOperationId(Long operationId, @Valid AssociationTiersTypeTiers associationTiers) throws Exception {
         return null;
     }
 
@@ -93,8 +88,9 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<List<Tiers>> getTiersByOperationId(Long operationId) throws Exception {
-        return new ResponseEntity<>(tiersService.getTiersByOperationId(operationId), HttpStatus.OK);
+    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByOperationId(Long operationId) throws Exception {
+        return null;
+        //return new ResponseEntity<>(tiersService.getTiersByOperationId(operationId), HttpStatus.OK);
     }
 
     @Override
@@ -144,6 +140,11 @@ public class OperationApiController implements OperationsApi {
     public ResponseEntity<Evenement> addEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
         return new ResponseEntity<>(evenementOperationService.addEvenement(evenement, operationId), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<Operation> associateTiersToOperation(Long operationId, @Valid TiersTypeTiers tiersTypeTiers) throws Exception {
+        return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationId, tiersTypeTiers.getTiersId(), tiersTypeTiers.getTypeTiersId()), HttpStatus.OK);
     }
 
     @Override
