@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.TiersApi;
-import rm.tabou2.service.dto.Operation;
-import rm.tabou2.service.dto.OperationTiers;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
@@ -18,8 +16,6 @@ import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.item.TiersCriteria;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Controller
 public class TiersApiController implements TiersApi {
@@ -37,15 +33,6 @@ public class TiersApiController implements TiersApi {
 
     }
 
-    @Override
-    public ResponseEntity<Operation> associateTiersToOperation(@Valid OperationTiers operationTiers) throws Exception {
-        return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationTiers.getOperationId(), operationTiers.getTiersId(), operationTiers.getTypeTiersId()), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<List<Tiers>> deleteTiersFromOperation(Long operationId, @NotNull @Valid Long tiersId) throws Exception {
-        return null;
-    }
 
     @Override
     public ResponseEntity<Tiers> updateTiers(@Valid Tiers tiers) throws Exception {
@@ -79,24 +66,8 @@ public class TiersApiController implements TiersApi {
 
 
     @Override
-    public ResponseEntity<List<Tiers>> getTiersByOperationId(Long operationId) throws Exception {
-        return new ResponseEntity<>(tiersService.getTiersByOperationId(operationId), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<List<Tiers>> getTiersByProgrammeId(Long programmeId) throws Exception {
-        return null;
-    }
-
-
-    @Override
     public ResponseEntity<Tiers> inactivateTiers(Long tiersId) throws Exception {
         return new ResponseEntity<>(tiersService.inactivateTiers(tiersId), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<List<Tiers>> updateTiersByOperationId(Long operationId, @NotNull @Valid Long tiersId, @NotNull @Valid Long typeTiersId) throws Exception {
-        return null;
     }
 
 

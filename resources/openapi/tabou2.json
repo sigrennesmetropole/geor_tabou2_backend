@@ -328,6 +328,378 @@
         }
       }
     },
+    "/operations/{operationId}/etapes": {
+      "get": {
+        "summary": "Liste des étapes d'avancement possibles pour une opération d'aménagement",
+        "operationId": "getEtapesByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification de l'étape d'avancement d'une opération d'aménagement",
+        "operationId": "updateEtapeByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "etapeId",
+            "description": "Identifiant de la nouvelle étape",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/tiers": {
+      "post": {
+        "summary": "Association d'un tiers à une operation",
+        "operationId": "associateTiersToOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "typeTiersId",
+            "description": "Identifiant du type de tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un tiers d'une opération ",
+        "operationId": "updateTiersByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "typeTiersId",
+            "description": "Identifiant du type de tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tiers"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "get": {
+        "summary": "Liste les tiers d'une opération",
+        "operationId": "getTiersByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tiers"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/tiers/{tiersId}": {
+      "delete": {
+        "summary": "Supprime un tiers d'une opération ",
+        "operationId": "deleteTiersFromOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tiers"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/evenements": {
+      "get": {
+        "summary": "Recherche la liste des évènements d'une opération d'aménagement",
+        "operationId": "getEvenementsByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Evenement"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un évènement à une opération d'aménagement",
+        "operationId": "addEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Nouvel évènement",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un évènement d'une opération d'aménagement",
+        "operationId": "updateEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Evènement à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/evenements/{evenementId}": {
+      "delete": {
+        "summary": "Suppression d'un évènement d'une opération d'aménagement",
+        "operationId": "deleteEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "evenementId",
+            "description": "Evènement à supprimer",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/programmes": {
       "post": {
         "summary": "Ajout d'un programme d'aménagement",
@@ -547,6 +919,252 @@
         }
       }
     },
+    "/programmes/{programmeId}/tiers": {
+      "get": {
+        "summary": "Liste les tiers d'un programme",
+        "operationId": "getTiersByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Tiers"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "post": {
+        "summary": "Association d'un tiers à un programme",
+        "operationId": "associateTiersToProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant d'un programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "typeTiersId",
+            "description": "Identifiant du type de tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/programmes/{programmeId}/etapes": {
+      "get": {
+        "summary": "Récupération de l'étape d'avancement pour un programme d'aménagement",
+        "operationId": "getEtapeByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "required": true,
+            "description": "Identifiant du programme",
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/programmes/{programmeId}/evenements": {
+      "get": {
+        "summary": "Recherche la liste des évènements d'un programme d'aménagement",
+        "operationId": "getEvenementsByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Evenement"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un évènement à un programme d'aménagement",
+        "operationId": "addEvenementByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Nouvel évènement",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un évènement d'un programme d'aménagement",
+        "operationId": "updateEvenementByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Evènement à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/programmes/{programmeId}/evenements/{evenementId}": {
+      "delete": {
+        "summary": "Suppression d'un évènement d'un programme d'aménagement",
+        "operationId": "deleteEvenementByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "evenementId",
+            "description": "Evènement à supprimer",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/communes": {
       "get": {
         "summary": "Recherche d'une commune",
@@ -630,7 +1248,7 @@
             "in": "path",
             "name": "communeId",
             "description": "Recherche par object id de la commune",
-            "required": false,
+            "required": true,
             "type": "integer",
             "format": "int32"
           }
@@ -715,7 +1333,7 @@
             "in": "path",
             "name": "quartierId",
             "description": "Recherche par object id du quartier",
-            "required": false,
+            "required": true,
             "type": "integer",
             "format": "int32"
           }
@@ -799,7 +1417,7 @@
             "in": "path",
             "name": "irisId",
             "description": "Recherche par object id de l'iris",
-            "required": false,
+            "required": true,
             "type": "integer",
             "format": "int32"
           }
@@ -883,7 +1501,7 @@
             "in": "path",
             "name": "pluiId",
             "description": "Recherche par object id du PLUi",
-            "required": false,
+            "required": true,
             "type": "integer",
             "format": "int32"
           }
@@ -970,105 +1588,6 @@
                 "$ref": "#/definitions/PluiZonage"
               }
             }
-          }
-        }
-      }
-    },
-    "/etapes/operation/{operationId}": {
-      "get": {
-        "summary": "Liste des étapes d'avancement possibles pour une opération d'aménagement",
-        "operationId": "getEtapesByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant de l'opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Etape"
-              }
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      },
-      "put": {
-        "summary": "Modification de l'étape d'avancement d'une opération d'aménagement",
-        "operationId": "updateEtapeByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant de l'opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "query",
-            "name": "etapeId",
-            "description": "Identifiant de la nouvelle étape",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Operation"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/etapes/programme/{programmeId}": {
-      "get": {
-        "summary": "Récupération de l'étape d'avancement pour un programme d'aménagement",
-        "operationId": "getEtapeByProgrammeId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "programmeId",
-            "required": true,
-            "description": "Identifiant du programme",
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1266,344 +1785,6 @@
         }
       }
     },
-    "/programmes/tiers": {
-      "post": {
-        "summary": "Association d'un tiers à un programme",
-        "operationId": "associateTiersToProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "programmeTiers",
-            "description": "les Id d'une association d'un tiers à un programme",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ProgrammeTiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Programme"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/{tiersId}": {
-      "put": {
-        "summary": "Récupération d'un tiers",
-        "operationId": "getTiersById",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "tiersId",
-            "description": "Identifiant du tiers",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Tiers"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/{tiersId}/inactivate": {
-      "put": {
-        "summary": "Rends un tiers inactif",
-        "operationId": "inactivateTiers",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "tiersId",
-            "description": "Identifiant du tiers",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Tiers"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/programmes/tiers": {
-      "post": {
-        "summary": "Association d'un tiers à un programme",
-        "operationId": "associateTiersToProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "programmeTiers",
-            "description": "les Id d'une association d'un tiers à un programme",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ProgrammeTiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Programme"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/programme/{programmeId}": {
-      "get": {
-        "summary": "Liste les tiers d'un programme",
-        "operationId": "getTiersByProgrammeId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "programmeId",
-            "description": "Identifiant du programme",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tiers"
-              }
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/operation": {
-      "post": {
-        "summary": "Association d'un tiers à une operation",
-        "operationId": "associateTiersToOperation",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "operationTiers",
-            "description": "les Id d'une association d'un tiers à une operation",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/OperationTiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Operation"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/operation": {
-      "post": {
-        "summary": "Association d'un tiers à une operation",
-        "operationId": "associateTiersToOperation",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "operationTiers",
-            "description": "les Id d'une association d'un tiers à une operation",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/OperationTiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Operation"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/operation/{operationId}": {
-      "put": {
-        "summary": "Modification d'un tiers d'une opération ",
-        "operationId": "updateTiersByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant d'une opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "query",
-            "name": "tiersId",
-            "description": "Identifiant du tiers",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "query",
-            "name": "typeTiersId",
-            "description": "Identifiant du type de tiers",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tiers"
-              }
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      },
-      "get": {
-        "summary": "Liste les tiers d'une opération",
-        "operationId": "getTiersByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant d'une opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tiers"
-              }
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/operation/{operationId}/delete": {
-      "put": {
-        "summary": "Supprime un tiers d'une opération ",
-        "operationId": "deleteTiersFromOperation",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant d'une opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "query",
-            "name": "tiersId",
-            "description": "Identifiant du tiers",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tiers"
-              }
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
     "/types-tiers": {
       "get": {
         "summary": "Recherche un type de tiers",
@@ -1775,283 +1956,6 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/TypeTiers"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/evenements/programme/{programmeId}": {
-      "get": {
-        "summary": "Recherche la liste des évènements d'un programme d'aménagement",
-        "operationId": "getEvenementsByProgrammeId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "programmeId",
-            "description": "Identifiant du programme",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Evenement"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajout d'un évènement à un programme d'aménagement",
-        "operationId": "addEvenementByProgrammeId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "evenement",
-            "description": "Nouvel évènement",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          },
-          {
-            "in": "path",
-            "name": "programmeId",
-            "description": "Identifiant du programme",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modification d'un évènement d'un programme d'aménagement",
-        "operationId": "updateEvenementByProgrammeId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "evenement",
-            "description": "Evènement à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          },
-          {
-            "in": "path",
-            "name": "programmeId",
-            "description": "Identifiant du programme",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/evenements/programme/{programmeId}/delete": {
-      "put": {
-        "summary": "Suppresssion d'un évènement d'un programme d'aménagement",
-        "operationId": "deleteEvenementByProgrammeId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "evenementId",
-            "description": "Evènement à supprimer",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "path",
-            "name": "programmeId",
-            "description": "Identifiant du programme",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Programme"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/evenements/operation/{operationId}": {
-      "get": {
-        "summary": "Recherche la liste des évènements d'une opération d'aménagement",
-        "operationId": "getEvenementsByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant de l'opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Evenement"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajout d'un évènement à une opération d'aménagement",
-        "operationId": "addEvenementByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "evenement",
-            "description": "Nouvel évènement",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          },
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant du programme",
-            "required": true,
-            "type": "integer",
-            "format": "int64"          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modification d'un évènement d'une opération d'aménagement",
-        "operationId": "updateEvenement",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "evenement",
-            "description": "Evènement à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          },
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant de l'opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/evenements/operation/{operationId}/delete": {
-      "put": {
-        "summary": "Suppresssion d'un évènement d'une opération d'aménagement",
-        "operationId": "deleteEvenementByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "evenementId",
-            "description": "Evènement à supprimer",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant de l'opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Operation"
             }
           },
           "404": {

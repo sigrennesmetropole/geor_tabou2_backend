@@ -7,9 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.OperationsApi;
+import rm.tabou2.service.tabou.operation.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.dto.*;
+import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
+import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
@@ -27,13 +30,37 @@ public class OperationApiController implements OperationsApi {
     private OperationService operationService;
 
     @Autowired
+    private TiersService tiersService;
+
+    @Autowired
     private OperationTiersService operationTiersService;
+
+    @Autowired
+    private EvenementOperationService evenementOperationService;
+
+    @Autowired
+    private EvenementProgrammeService evenementProgrammeService;
+
+    @Override
+    public ResponseEntity<Operation> associateTiersToOperation(Long operationId, @NotNull @Valid Long tiersId, @NotNull @Valid Long typeTiersId) throws Exception {
+        return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationId, tiersId, typeTiersId), HttpStatus.OK);
+    }
 
     @Override
     public ResponseEntity<Operation> createOperation(@Valid Operation operation) throws Exception {
 
         return new ResponseEntity<>(operationService.addOperation(operation), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<Operation> deleteEvenementByOperationId(Long evenementId, Long operationId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Tiers>> deleteTiersFromOperation(Long operationId, Long tiersId) throws Exception {
+        return null;
     }
 
     @Override
@@ -44,7 +71,17 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
+    public ResponseEntity<List<Tiers>> updateTiersByOperationId(Long operationId, @NotNull @Valid Long tiersId, @NotNull @Valid Long typeTiersId) throws Exception {
+        return null;
+    }
+
+    @Override
     public ResponseEntity<List<Emprise>> getAvailableEmprises(@NotNull @Valid String nature, @NotNull @Valid Boolean estSecteur) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Etape>> getEtapesByOperationId(Long operationId) throws Exception {
         return null;
     }
 
@@ -53,6 +90,11 @@ public class OperationApiController implements OperationsApi {
 
         return new ResponseEntity<>(operationService.getOperationById(operationId), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<List<Tiers>> getTiersByOperationId(Long operationId) throws Exception {
+        return new ResponseEntity<>(tiersService.getTiersByOperationId(operationId), HttpStatus.OK);
     }
 
     @Override
@@ -86,6 +128,29 @@ public class OperationApiController implements OperationsApi {
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<Operation> updateEtapeByOperationId(Long operationId, @NotNull @Valid Long etapeId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Evenement>> getEvenementsByOperationId(Long operationId) throws Exception {
+        return new ResponseEntity<>(evenementOperationService.getByOperationId(operationId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Evenement> addEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
+        return new ResponseEntity<>(evenementOperationService.addEvenement(evenement, operationId), HttpStatus.OK);
+
+    }
+
+    @Override
+    public ResponseEntity<Evenement> updateEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
+
+        //TODO : test des droits
+        return new ResponseEntity<>(evenementOperationService.editEvenement(evenement, operationId), HttpStatus.OK);
     }
 
 
