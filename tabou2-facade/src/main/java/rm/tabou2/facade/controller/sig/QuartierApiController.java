@@ -21,7 +21,7 @@ public class QuartierApiController implements QuartiersApi {
     private QuartierService quartierService;
 
     @Override
-    public ResponseEntity<PageResult> getQuartier(@Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchQuartiers(@Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 

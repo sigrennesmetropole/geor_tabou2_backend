@@ -22,17 +22,17 @@ public class TypeTiersApiController implements TypesTiersApi {
     private TypeTiersService typeTiersService;
 
     @Override
-    public ResponseEntity<TypeTiers> addTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
+    public ResponseEntity<TypeTiers> createTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
         return new ResponseEntity<>(typeTiersService.addTypeTiers(typeTiers), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<TypeTiers> editTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
+    public ResponseEntity<TypeTiers> updateTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
         return new ResponseEntity<>(typeTiersService.editTypeTiers(typeTiers), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<PageResult> getTypeTiers(@Valid String libelle, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchTypeTiers(@Valid String libelle, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeTiersEntity.class);
 

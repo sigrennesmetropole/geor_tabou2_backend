@@ -51,7 +51,7 @@
       "get": {
         "summary": "Recherche des operations",
         "description": "Ensemble des opérations",
-        "operationId": "getOperations",
+        "operationId": "searchOperations",
         "produces": [
           "application/json"
         ],
@@ -203,7 +203,7 @@
       },
       "post": {
         "summary": "Ajout d'une opération",
-        "operationId": "addOperation",
+        "operationId": "createOperation",
         "produces": [
           "application/json"
         ],
@@ -229,7 +229,7 @@
       },
       "put": {
         "summary": "Modification d'une opération",
-        "operationId": "editOperation",
+        "operationId": "updateOperation",
         "produces": [
           "application/json"
         ],
@@ -331,7 +331,7 @@
     "/programmes": {
       "post": {
         "summary": "Ajout d'un programme d'aménagement",
-        "operationId": "addProgramme",
+        "operationId": "createProgramme",
         "produces": [
           "application/json"
         ],
@@ -357,7 +357,7 @@
       },
       "put": {
         "summary": "Edition d'un programme d'aménagement",
-        "operationId": "editProgramme",
+        "operationId": "updateProgramme",
         "produces": [
           "application/json"
         ],
@@ -386,7 +386,7 @@
       },
       "get": {
         "summary": "Recherche d'un programme",
-        "operationId": "getProgrammes",
+        "operationId": "searchProgrammes",
         "produces": [
           "application/json"
         ],
@@ -550,7 +550,7 @@
     "/communes": {
       "get": {
         "summary": "Recherche d'une commune",
-        "operationId": "getCommunes",
+        "operationId": "searchCommunes",
         "produces": [
           "application/json"
         ],
@@ -648,7 +648,7 @@
     "/quartiers": {
       "get": {
         "summary": "Recherche d'un quartier",
-        "operationId": "getQuartier",
+        "operationId": "searchQuartiers",
         "produces": [
           "application/json"
         ],
@@ -733,7 +733,7 @@
     "/iris": {
       "get": {
         "summary": "Recherche d'un iris",
-        "operationId": "getIris",
+        "operationId": "searchIris",
         "produces": [
           "application/json"
         ],
@@ -817,7 +817,7 @@
     "/plui": {
       "get": {
         "summary": "Recherche d'un plui",
-        "operationId": "getPlui",
+        "operationId": "searchPlui",
         "produces": [
           "application/json"
         ],
@@ -901,7 +901,7 @@
     "/epci": {
       "get": {
         "summary": "Recherche des EPCI",
-        "operationId": "getEpci",
+        "operationId": "searchEpci",
         "produces": [
           "application/json"
         ],
@@ -1008,7 +1008,7 @@
       },
       "put": {
         "summary": "Modification de l'étape d'avancement d'une opération d'aménagement",
-        "operationId": "editEtapeByOperationId",
+        "operationId": "updateEtapeByOperationId",
         "produces": [
           "application/json"
         ],
@@ -1076,7 +1076,7 @@
     "/tiers": {
       "get": {
         "summary": "Recherche des tiers",
-        "operationId": "getTiers",
+        "operationId": "searchTiers",
         "produces": [
           "application/json"
         ],
@@ -1152,7 +1152,7 @@
       },
       "post": {
         "summary": "Ajout d'un tiers",
-        "operationId": "addTiers",
+        "operationId": "createTiers",
         "produces": [
           "application/json"
         ],
@@ -1178,7 +1178,7 @@
       },
       "put": {
         "summary": "Modification d'un tiers",
-        "operationId": "editTiers",
+        "operationId": "updateTiers",
         "produces": [
           "application/json"
         ],
@@ -1607,7 +1607,7 @@
     "/types-tiers": {
       "get": {
         "summary": "Recherche un type de tiers",
-        "operationId": "getTypeTiers",
+        "operationId": "searchTypeTiers",
         "produces": [
           "application/json"
         ],
@@ -1669,7 +1669,7 @@
       },
       "post": {
         "summary": "Ajout d'un type de tiers",
-        "operationId": "addTypeTiers",
+        "operationId": "createTypeTiers",
         "produces": [
           "application/json"
         ],
@@ -1695,7 +1695,7 @@
       },
       "put": {
         "summary": "Modification d'un type de tiers",
-        "operationId": "editTypeTiers",
+        "operationId": "updateTypeTiers",
         "produces": [
           "application/json"
         ],
@@ -1848,7 +1848,7 @@
       },
       "put": {
         "summary": "Modification d'un évènement d'un programme d'aménagement",
-        "operationId": "editEvenementByProgrammeId",
+        "operationId": "updateEvenementByProgrammeId",
         "produces": [
           "application/json"
         ],
@@ -1986,7 +1986,7 @@
       },
       "put": {
         "summary": "Modification d'un évènement d'une opération d'aménagement",
-        "operationId": "editEvenement",
+        "operationId": "updateEvenement",
         "produces": [
           "application/json"
         ],
@@ -2063,7 +2063,7 @@
     "/types-evenements": {
       "get": {
         "summary": "Recherche les types d'évènements",
-        "operationId": "getTypesEvenements",
+        "operationId": "searchTypesEvenements",
         "produces": [
           "application/json"
         ],
@@ -2128,7 +2128,7 @@
       },
       "post": {
         "summary": "Ajout d'un type d'évènements",
-        "operationId": "addTypeEvenements",
+        "operationId": "createTypeEvenements",
         "produces": [
           "application/json"
         ],
@@ -2154,7 +2154,7 @@
       },
       "put": {
         "summary": "Modification d'un type d'évènements",
-        "operationId": "editTypeEvenements",
+        "operationId": "updateTypeEvenements",
         "produces": [
           "application/json"
         ],
@@ -2217,7 +2217,7 @@
     "/types-documents": {
       "get": {
         "summary": "Recherche la liste des type de document",
-        "operationId": "getTypeDocument",
+        "operationId": "searchTypeDocument",
         "produces": [
           "application/json"
         ],
@@ -2288,7 +2288,7 @@
       },
       "post": {
         "summary": "Ajout d'un type de document",
-        "operationId": "addTypeDocument",
+        "operationId": "createTypeDocument",
         "produces": [
           "application/json"
         ],
@@ -2314,7 +2314,7 @@
       },
       "put": {
         "summary": "Modification d'un type de document",
-        "operationId": "editTypeDocument",
+        "operationId": "updateTypeDocument",
         "produces": [
           "application/json"
         ],
@@ -2375,7 +2375,7 @@
     "/secteurs-dds": {
       "get": {
         "summary": "Recherche la liste des secteurs dds",
-        "operationId": "getSecteursDds",
+        "operationId": "searchSecteursDds",
         "produces": [
           "application/json"
         ],
@@ -2450,7 +2450,7 @@
     "/secteurs-sam": {
       "get": {
         "summary": "Recherche la liste des secteurs SAM",
-        "operationId": "getSecteursSam",
+        "operationId": "searchSecteursSam",
         "produces": [
           "application/json"
         ],
@@ -2525,7 +2525,7 @@
     "/secteurs-foncier": {
       "get": {
         "summary": "Recherche la liste des secteurs fonciers",
-        "operationId": "getSecteursFonciers",
+        "operationId": "searchSecteursFonciers",
         "produces": [
           "application/json"
         ],
@@ -2600,7 +2600,7 @@
     "/secteurs-speu": {
       "get": {
         "summary": "Recherche la liste des secteurs SPEU",
-        "operationId": "getSecteursSpeu",
+        "operationId": "searchSecteursSpeu",
         "produces": [
           "application/json"
         ],

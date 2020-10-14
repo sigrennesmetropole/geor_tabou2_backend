@@ -25,7 +25,7 @@ public class IrisApiController implements IrisApi {
     private IrisService irisService;
 
     @Override
-    public ResponseEntity<PageResult> getIris(@Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchIris(@Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, IrisEntity.class);
 

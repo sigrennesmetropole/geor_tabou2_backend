@@ -14,7 +14,7 @@ public class SecteurSamApiController implements SecteursSamApi {
 
 
     @Override
-    public ResponseEntity<List<SecteurSam>> getSecteursSam(@Valid BigDecimal id, @Valid String nom, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<List<SecteurSam>> searchSecteursSam(@Valid BigDecimal id, @Valid String nom, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 }

@@ -25,7 +25,7 @@ public class EtapeApiController implements EtapesApi {
 
 
     @Override
-    public ResponseEntity<Operation> editEtapeByOperationId(Long operationId, @NotNull @Valid Long etapeId) throws Exception {
+    public ResponseEntity<Operation> updateEtapeByOperationId(Long operationId, @NotNull @Valid Long etapeId) throws Exception {
         return null;
     }
 

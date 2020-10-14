@@ -23,12 +23,12 @@ public class ProgrammeApiController implements ProgrammesApi {
     private ProgrammeTiersService programmeTiersService;
 
     @Override
-    public ResponseEntity<Programme> addProgramme(@Valid Programme programme) throws Exception {
+    public ResponseEntity<Programme> createProgramme(@Valid Programme programme) throws Exception {
         return new ResponseEntity<>(programmeService.addProgramme(programme), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Programme> editProgramme(@Valid Programme programme) throws Exception {
+    public ResponseEntity<Programme> updateProgramme(@Valid Programme programme) throws Exception {
         return new ResponseEntity<>(programmeService.addProgramme(programme), HttpStatus.OK);
     }
 
@@ -48,7 +48,7 @@ public class ProgrammeApiController implements ProgrammesApi {
     }
 
     @Override
-    public ResponseEntity<List<Programme>> getProgrammes(@Valid String keyword, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<List<Programme>> searchProgrammes(@Valid String keyword, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return  new ResponseEntity<>(programmeService.searchProgrammes(keyword, start, resultsNumber, orderBy, asc), HttpStatus.OK);
     }
 

@@ -36,7 +36,7 @@ public class EvenementApiController implements EvenementsApi {
     }
 
     @Override
-    public ResponseEntity<Evenement> editEvenement(@Valid Evenement evenement, Long operationId) throws Exception {
+    public ResponseEntity<Evenement> updateEvenement(@Valid Evenement evenement, Long operationId) throws Exception {
 
         //TODO : test des droits
         return new ResponseEntity<>(evenementOperationService.editEvenement(evenement, operationId), HttpStatus.OK);
@@ -63,7 +63,7 @@ public class EvenementApiController implements EvenementsApi {
     }
 
     @Override
-    public ResponseEntity<Evenement> editEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
+    public ResponseEntity<Evenement> updateEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
         return new ResponseEntity<>(evenementProgrammeService.editByProgrammeId(evenement, programmeId), HttpStatus.OK);
     }
 

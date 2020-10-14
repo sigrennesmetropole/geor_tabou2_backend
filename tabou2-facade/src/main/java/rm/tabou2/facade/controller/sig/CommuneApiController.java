@@ -18,7 +18,7 @@ public class CommuneApiController implements CommunesApi {
     private CommuneService communeService;
 
     @Override
-    public ResponseEntity<PageResult> getCommunes(@Valid String codeInsee, @Valid String nom, @Valid String codePostal, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchCommunes(@Valid String codeInsee, @Valid String nom, @Valid String codePostal, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 

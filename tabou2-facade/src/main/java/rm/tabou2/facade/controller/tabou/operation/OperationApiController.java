@@ -30,14 +30,14 @@ public class OperationApiController implements OperationsApi {
     private OperationTiersService operationTiersService;
 
     @Override
-    public ResponseEntity<Operation> addOperation(@Valid Operation operation) throws Exception {
+    public ResponseEntity<Operation> createOperation(@Valid Operation operation) throws Exception {
 
         return new ResponseEntity<>(operationService.addOperation(operation), HttpStatus.OK);
 
     }
 
     @Override
-    public ResponseEntity<Operation> editOperation(@Valid Operation operation) throws Exception {
+    public ResponseEntity<Operation> updateOperation(@Valid Operation operation) throws Exception {
 
         return new ResponseEntity<>(operationService.addOperation(operation), HttpStatus.OK);
 
@@ -56,7 +56,7 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<PageResult> getOperations(@Valid String nom, @Valid String nature, @Valid String etape, @Valid Boolean diffusionRestreinte, @Valid Boolean estSecteur, @Valid String code, @Valid String numAds, @Valid Date autorisationDateDebut, @Valid Date autorisationDateFin, @Valid Date operationnelDateDebut, @Valid Date operationnelDateFin, @Valid Date clotureDateDebut, @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchOperations(@Valid String nom, @Valid String nature, @Valid String etape, @Valid Boolean diffusionRestreinte, @Valid Boolean estSecteur, @Valid String code, @Valid String numAds, @Valid Date autorisationDateDebut, @Valid Date autorisationDateFin, @Valid Date operationnelDateDebut, @Valid Date operationnelDateFin, @Valid Date clotureDateDebut, @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         OperationsCriteria operationsCriteria = new OperationsCriteria();
 
@@ -88,8 +88,5 @@ public class OperationApiController implements OperationsApi {
 
     }
 
-
-    /*@Override
-    */
 
 }

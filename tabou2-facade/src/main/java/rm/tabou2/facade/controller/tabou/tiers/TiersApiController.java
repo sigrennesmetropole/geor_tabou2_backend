@@ -31,7 +31,7 @@ public class TiersApiController implements TiersApi {
     private OperationTiersService operationTiersService;
 
     @Override
-    public ResponseEntity<Tiers> addTiers(@Valid Tiers tiers) throws Exception {
+    public ResponseEntity<Tiers> createTiers(@Valid Tiers tiers) throws Exception {
 
         return new ResponseEntity<>(tiersService.addTiers(tiers), HttpStatus.OK);
 
@@ -48,14 +48,14 @@ public class TiersApiController implements TiersApi {
     }
 
     @Override
-    public ResponseEntity<Tiers> editTiers(@Valid Tiers tiers) throws Exception {
+    public ResponseEntity<Tiers> updateTiers(@Valid Tiers tiers) throws Exception {
 
         return new ResponseEntity<>(tiersService.addTiers(tiers), HttpStatus.OK);
 
     }
 
     @Override
-    public ResponseEntity<PageResult> getTiers(@Valid String nom, @Valid Boolean tiersPrive, @Valid String adresseVille, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchTiers(@Valid String nom, @Valid Boolean tiersPrive, @Valid String adresseVille, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         TiersCriteria tiersCriteria = new TiersCriteria();
         tiersCriteria.setNom(nom);

@@ -14,7 +14,7 @@ import java.util.List;
 public class PluiApiController implements PluiApi {
 
     @Override
-    public ResponseEntity<PageResult> getPlui(@Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchPlui(@Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 

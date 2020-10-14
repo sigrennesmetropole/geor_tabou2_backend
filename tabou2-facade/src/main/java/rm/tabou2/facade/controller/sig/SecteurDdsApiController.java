@@ -13,7 +13,7 @@ public class SecteurDdsApiController implements SecteursDdsApi {
 
 
     @Override
-    public ResponseEntity<List<SecteurDds>> getSecteursDds(@Valid String id, @Valid String nom, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<List<SecteurDds>> searchSecteursDds(@Valid String id, @Valid String nom, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
         return null;
     }
 }
