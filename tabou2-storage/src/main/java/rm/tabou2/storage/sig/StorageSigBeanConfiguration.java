@@ -16,6 +16,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -51,7 +52,7 @@ public class StorageSigBeanConfiguration {
     }
 
     @Bean(name = "sigEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean sigEntityManagerFactory(@Qualifier("entityManagersigFactoryBuilder") EntityManagerFactoryBuilder builder) {
+    public LocalContainerEntityManagerFactoryBean sigEntityManagerFactory(@Qualifier("entityManagerSigFactoryBuilder") EntityManagerFactoryBuilder builder) {
         return builder.dataSource(sigDataSource())
                 .properties(hibernateProperties())
                 .packages("rm.tabou2.storage.sig.entity")
@@ -59,16 +60,22 @@ public class StorageSigBeanConfiguration {
                 .build();
     }
 
-
-    @Bean
-    public EntityManagerFactoryBuilder entityManagersigFactoryBuilder() {
-        return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
-    }
-
     @Bean(name = "sigTransactionManager")
     public PlatformTransactionManager sigTransactionManager(@Qualifier("sigEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
+
+    @Bean(name = "entityManagerSigFactoryBuilder")
+    public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
+        return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
+    }
+
+
+    @Bean(name = "sigEntityManager")
+    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+        return entityManagerFactory.createEntityManager();
+    }
+
 
     private Map<String, String> hibernateProperties() {
 

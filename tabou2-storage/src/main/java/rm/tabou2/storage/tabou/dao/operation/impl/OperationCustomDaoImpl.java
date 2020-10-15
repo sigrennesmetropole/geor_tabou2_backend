@@ -36,7 +36,7 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
     public static final String FIELD_ETAPE_OPERATION = "etapeOperation";
     public static final String FIELD_CODE = "code";
     public static final String FIELD_NUM_ADS = "numAds";
-    public static final String FIELD_DIFFUSION_RETREINTE = "diffusionRetreinte";
+    public static final String FIELD_DIFFUSION_RETREINTE = "diffusionRestreinte";
     public static final String FIELD_SECTEUR = "secteur";
     public static final String FIELD_AUTORISATION_DATE = "autorisationDate";
     public static final String FIELD_OPERATIONNEL_DATE = "operationnelDate";

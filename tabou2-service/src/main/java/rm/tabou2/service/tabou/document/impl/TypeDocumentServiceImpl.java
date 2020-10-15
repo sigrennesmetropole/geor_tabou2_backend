@@ -31,7 +31,7 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     private TypeDocumentMapper typeDocumentMapper;
 
     @Override
-    public TypeDocument addTypeDocument(TypeDocument typeDocument) throws AppServiceException {
+    public TypeDocument createTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
         TypeDocumentEntity typeDocumentEntity = typeDocumentMapper.dtoToEntity(typeDocument);
 
@@ -46,7 +46,7 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     }
 
     @Override
-    public TypeDocument editTypeDocument(TypeDocument typeDocument) throws AppServiceException {
+    public TypeDocument updateTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
         TypeDocumentEntity typeDocumentEntity;
 

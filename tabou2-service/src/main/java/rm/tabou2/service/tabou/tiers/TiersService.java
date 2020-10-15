@@ -1,11 +1,23 @@
 package rm.tabou2.service.tabou.tiers;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Tiers;
+import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.storage.tabou.item.TiersCriteria;
 
 import java.util.List;
 
 public interface TiersService {
-    Tiers addTiers(Tiers tiers);
+    Tiers getTiersById(Long tiersId);
 
-    List<Tiers> searchTiers(String keyword, Integer start, Boolean onlyActive, Integer resultsNumber, String orderBy, Boolean asc) ;
+    Tiers createTiers(Tiers tiers);
+
+    Tiers updateTiers(Tiers tiers);
+
+    Tiers inactivateTiers(long tiersId) throws AppServiceException;
+
+    Page<Tiers> searchTiers(TiersCriteria tiersCriteria, Pageable pageable);
+
+    List<Tiers> getTiersByOperationId(Long operationId);
 }

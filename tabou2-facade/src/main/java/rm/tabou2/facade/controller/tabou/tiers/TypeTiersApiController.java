@@ -1,35 +1,54 @@
 package rm.tabou2.facade.controller.tabou.tiers;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.TypesTiersApi;
+import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TypeTiers;
+import rm.tabou2.service.tabou.tiers.TypeTiersService;
+import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 public class TypeTiersApiController implements TypesTiersApi {
 
+    @Autowired
+    private TypeTiersService typeTiersService;
 
     @Override
-    public ResponseEntity<TypeTiers> addTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
-        return null;
+    public ResponseEntity<TypeTiers> createTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
+        return new ResponseEntity<>(typeTiersService.createTypeTiers(typeTiers), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<TypeTiers> editTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
-        return null;
+    public ResponseEntity<TypeTiers> updateTypeTiers(@Valid TypeTiers typeTiers) throws Exception {
+        return new ResponseEntity<>(typeTiersService.updateTypeTiers(typeTiers), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<List<TypeTiers>> getTypeTiers(@Valid String keyword, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
-        return null;
+    public ResponseEntity<PageResult> searchTypeTiers(@Valid String libelle, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeTiersEntity.class);
+
+        Page<TypeTiers> page = typeTiersService.searchTypeTiers(libelle, inactif, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<TypeTiers> getTypeTiersById(Long typeTiersId) throws Exception {
+        return new ResponseEntity<>(typeTiersService.getById(typeTiersId), HttpStatus.OK);
     }
 
 
     @Override
-    public ResponseEntity<List<TypeTiers>> inactivateTypeTiers(String typeTiersId) throws Exception {
-        return null;
+    public ResponseEntity<TypeTiers> inactivateTypeTiers(Long typeTiersId) throws Exception {
+        return new ResponseEntity<>(typeTiersService.inactivateTypeTiers(typeTiersId), HttpStatus.OK);
     }
 }

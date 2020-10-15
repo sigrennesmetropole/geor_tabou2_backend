@@ -14,7 +14,7 @@ public interface ProgrammeService {
      * @param programme programme à ajouter
      * @return programme ajouté
      */
-    Programme addProgramme(Programme programme);
+    Programme createProgramme(Programme programme);
 
     /**
      * Récupération d'un programme par son identifiant.

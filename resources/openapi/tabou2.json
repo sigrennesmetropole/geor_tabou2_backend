@@ -51,7 +51,7 @@
       "get": {
         "summary": "Recherche des operations",
         "description": "Ensemble des opérations",
-        "operationId": "getOperations",
+        "operationId": "searchOperations",
         "produces": [
           "application/json"
         ],
@@ -203,7 +203,7 @@
       },
       "post": {
         "summary": "Ajout d'une opération",
-        "operationId": "addOperation",
+        "operationId": "createOperation",
         "produces": [
           "application/json"
         ],
@@ -229,7 +229,7 @@
       },
       "put": {
         "summary": "Modification d'une opération",
-        "operationId": "editOperation",
+        "operationId": "updateOperation",
         "produces": [
           "application/json"
         ],
@@ -284,7 +284,120 @@
         }
       }
     },
-    "/operations/tiers": {
+    "/operations/emprises": {
+      "get": {
+        "summary": "Récupération de la liste des emprises des opérations non suivies dans Tabou",
+        "operationId": "getAvailableEmprises",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nature",
+            "description": "Nature de l'opération",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "ZAC",
+              "ZA",
+              "EN_DIFFUS"
+            ]
+          },
+          {
+            "in": "query",
+            "name": "estSecteur",
+            "description": "True si la recherche porte sur les secteurs, false si on recherche les opérations",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Emprise"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/etapes": {
+      "get": {
+        "summary": "Liste des étapes d'avancement possibles pour une opération d'aménagement",
+        "operationId": "getEtapesByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification de l'étape d'avancement d'une opération d'aménagement",
+        "operationId": "updateEtapeByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "etapeId",
+            "description": "Identifiant de la nouvelle étape",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/tiers": {
       "post": {
         "summary": "Association d'un tiers à une operation",
         "operationId": "associateTiersToOperation",
@@ -293,13 +406,270 @@
         ],
         "parameters": [
           {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
             "in": "body",
-            "name": "operationTiers",
-            "description": "les Id d'une association d'un tiers à une operation",
+            "name": "associationTiers",
+            "description": "Association entre le tiers et le type tiers",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/OperationTiers"
+              "$ref": "#/definitions/TiersTypeTiers"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "get": {
+        "summary": "Liste les tiers d'une opération",
+        "operationId": "getTiersByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AssociationTiersTypeTiers"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/tiers/{associationTiersId}": {
+      "put": {
+        "summary": "Modification d'un tiers d'une opération ",
+        "operationId": "updateTiersByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "associationTiersId",
+            "description": "Identifiant du l'association tiers - type tiers - operation",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "associationTiers",
+            "description": "Association entre le tiers, le type tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TiersTypeTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssociationTiersTypeTiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprime un tiers d'une opération ",
+        "operationId": "deleteTiersFromOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "associationTiersId",
+            "description": "Identifiant du l'association tiers - type tiers - operation",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/evenements": {
+      "get": {
+        "summary": "Recherche la liste des évènements d'une opération d'aménagement",
+        "operationId": "getEvenementsByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Evenement"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un évènement à une opération d'aménagement",
+        "operationId": "addEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Nouvel évènement",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un évènement d'une opération d'aménagement",
+        "operationId": "updateEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "evenement",
+            "description": "Evènement à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Evenement"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/evenements/{evenementId}": {
+      "delete": {
+        "summary": "Suppression d'un évènement d'une opération d'aménagement",
+        "operationId": "deleteEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "evenementId",
+            "description": "Evènement à supprimer",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -318,7 +688,7 @@
     "/programmes": {
       "post": {
         "summary": "Ajout d'un programme d'aménagement",
-        "operationId": "addProgramme",
+        "operationId": "createProgramme",
         "produces": [
           "application/json"
         ],
@@ -344,7 +714,7 @@
       },
       "put": {
         "summary": "Edition d'un programme d'aménagement",
-        "operationId": "editProgramme",
+        "operationId": "updateProgramme",
         "produces": [
           "application/json"
         ],
@@ -373,7 +743,7 @@
       },
       "get": {
         "summary": "Recherche d'un programme",
-        "operationId": "getProgrammes",
+        "operationId": "searchProgrammes",
         "produces": [
           "application/json"
         ],
@@ -468,37 +838,6 @@
         }
       }
     },
-    "/programmes/tiers": {
-      "post": {
-        "summary": "Association d'un tiers à un programme",
-        "operationId": "associateTiersToProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "programmeTiers",
-            "description": "les Id d'une association d'un tiers à un programme",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ProgrammeTiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Programme"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
     "/programmes/{programmeId}/permis": {
       "get": {
         "summary": "Récupération de la liste des permis de construire d'un programme",
@@ -565,10 +904,10 @@
         }
       }
     },
-    "/programmes/{programmeId}/getDates": {
+    "/programmes/{programmeId}/tiers": {
       "get": {
-        "summary": "Récupération des dates avec application de la règle de gestion ",
-        "operationId": "getDates",
+        "summary": "Liste les tiers d'un programme",
+        "operationId": "getTiersByProgrammeId",
         "produces": [
           "application/json"
         ],
@@ -586,16 +925,20 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Dates"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AssociationTiersTypeTiers"
+              }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
-      }
-    },
-    "/programmes/{programmeId}/getLogements": {
-      "get": {
-        "summary": "Récupération des logements avec application de la règle de gestion ",
-        "operationId": "getLogements",
+      },
+      "post": {
+        "summary": "Association d'un tiers à un programme",
+        "operationId": "associateTiersToProgramme",
         "produces": [
           "application/json"
         ],
@@ -603,7 +946,23 @@
           {
             "in": "path",
             "name": "programmeId",
-            "description": "Identifiant du programme",
+            "description": "Identifiant d'un programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "typeTiersId",
+            "description": "Identifiant du type de tiers",
             "required": true,
             "type": "integer",
             "format": "int64"
@@ -613,351 +972,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Logements"
-            }
-          }
-        }
-      }
-    },
-    "/communes": {
-      "get": {
-        "summary": "Recherche d'une commune",
-        "operationId": "getCommunes",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "description": "Index de début",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "resultsNumber",
-            "in": "query",
-            "required": false,
-            "description": "Nombre de résultats à remonter",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "description": "Nom du champ sur lequel trier les résultats"
-          },
-          {
-            "name": "asc",
-            "in": "query",
-            "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
-            "type": "boolean",
-            "default": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/definitions/Commune"
-                }
-              }
-          }
-        }
-      }
-    },
-    "/quartiers": {
-      "get": {
-        "summary": "Recherche d'un quartier",
-        "operationId": "getQuartier",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "description": "Index de début",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "resultsNumber",
-            "in": "query",
-            "required": false,
-            "description": "Nombre de résultats à remonter",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "description": "Nom du champ sur lequel trier les résultats"
-          },
-          {
-            "name": "asc",
-            "in": "query",
-            "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
-            "type": "boolean",
-            "default": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Quartier"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/iris": {
-      "get": {
-        "summary": "Recherche d'un iris",
-        "operationId": "getIris",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "description": "Index de début",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "resultsNumber",
-            "in": "query",
-            "required": false,
-            "description": "Nombre de résultats à remonter",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "required": false,
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
-          },
-          {
-            "name": "asc",
-            "in": "query",
-            "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
-            "type": "boolean",
-            "default": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Iris"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/plui": {
-      "get": {
-        "summary": "Recherche d'un plui",
-        "operationId": "getPlui",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "description": "Index de début",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "resultsNumber",
-            "in": "query",
-            "required": false,
-            "description": "Nombre de résultats à remonter",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "required": false,
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
-          },
-          {
-            "name": "asc",
-            "in": "query",
-            "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
-            "type": "boolean",
-            "default": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PluiZonage"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/etapes/operation": {
-      "get": {
-        "summary": "Recherche les étapes d'avancement possibles pour une opération d'aménagement",
-        "operationId": "getEtapesOperation",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Etape"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajoute une étape d'avancement pour les opérations d'aménagement",
-        "operationId": "addEtapeOperation",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à ajouter",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modifie une étape d'avancement pour les opérations d'aménagement",
-        "operationId": "editEtapeOperation",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        }
-      }
-    },
-    "/etapes/operation/{operationId}": {
-      "get": {
-        "summary": "Récupération de l'étape d'avancement pour une opération d'aménagement",
-        "operationId": "getEtapeByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant de l'opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
+              "$ref": "#/definitions/Programme"
             }
           },
           "404": {
@@ -966,84 +981,7 @@
         }
       }
     },
-    "/etapes/programme": {
-      "get": {
-        "summary": "Recherche les étapes d'avancement possibles pour un programme d'aménagement",
-        "operationId": "getEtapesProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Etape"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajoute une étape d'avancement pour les programmes d'aménagement",
-        "operationId": "addEtapeProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à ajouter",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modifie une étape d'avancement pour les programmes d'aménagement",
-        "operationId": "editEtapeProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/etapes/programme/{programmeId}": {
+    "/programmes/{programmeId}/etapes": {
       "get": {
         "summary": "Récupération de l'étape d'avancement pour un programme d'aménagement",
         "operationId": "getEtapeByProgrammeId",
@@ -1073,427 +1011,7 @@
         }
       }
     },
-    "/tiers": {
-      "get": {
-        "summary": "Recherche un tiers",
-        "operationId": "getTiers",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "description": "Index de début",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
-          },
-          {
-            "name": "resultsNumber",
-            "in": "query",
-            "required": false,
-            "description": "Nombre de résultats à remonter",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "required": false,
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
-          },
-          {
-            "name": "asc",
-            "in": "query",
-            "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
-            "type": "boolean",
-            "default": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tiers"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajout d'un tiers",
-        "operationId": "addTiers",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "tiers",
-            "description": "Nouveau tiers",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Tiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Tiers"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modification d'un tiers",
-        "operationId": "editTiers",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "tiers",
-            "description": "Tiers à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Tiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Tiers"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/programme/{programmeId}": {
-      "get": {
-        "summary": "Liste les tiers d'un programme",
-        "operationId": "getTiersByProgrammeId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "programmeId",
-            "description": "Identifiant d'un programme",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tiers"
-              }
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/operation/{operationId}": {
-      "get": {
-        "summary": "Liste les tiers d'une opération",
-        "operationId": "getTiersByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant d'une opération",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tiers"
-              }
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/tiers/{type}": {
-      "get": {
-        "summary": "Recherche les tiers en fonction d'un type donné",
-        "operationId": "getTiersByType",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "description": "Index de début",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
-          },
-          {
-            "name": "resultsNumber",
-            "in": "query",
-            "required": false,
-            "description": "Nombre de résultats à remonter",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "required": false,
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
-          },
-          {
-            "name": "asc",
-            "in": "query",
-            "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
-            "type": "boolean",
-            "default": true
-          },
-          {
-            "in": "path",
-            "name": "type",
-            "required": true,
-            "description": "Type de tiers à récupérer",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Tiers"
-              }
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/types-tiers": {
-      "get": {
-        "summary": "Recherche un type de tiers",
-        "operationId": "getTypeTiers",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "description": "Index de début",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
-          },
-          {
-            "name": "resultsNumber",
-            "in": "query",
-            "required": false,
-            "description": "Nombre de résultats à remonter",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "required": false,
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
-          },
-          {
-            "name": "asc",
-            "in": "query",
-            "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
-            "type": "boolean",
-            "default": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TypeTiers"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajout d'un type de tiers",
-        "operationId": "addTypeTiers",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "typeTiers",
-            "description": "Nouveau type de tiers",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TypeTiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/TypeTiers"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modification d'un type de tiers",
-        "operationId": "editTypeTiers",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "typeTiers",
-            "description": "Type de tiers à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/TypeTiers"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/TypeTiers"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/types-tiers/{typeTiersId}/inactivate": {
-      "put": {
-        "summary": "Rends un type de tiers inactif",
-        "operationId": "inactivateTypeTiers",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "typeTiersId",
-            "description": "Identifiant du type de tiers",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TypeTiers"
-              }
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
-    "/evenements/programme/{programmeId}": {
+    "/programmes/{programmeId}/evenements": {
       "get": {
         "summary": "Recherche la liste des évènements d'un programme d'aménagement",
         "operationId": "getEvenementsByProgrammeId",
@@ -1558,7 +1076,7 @@
       },
       "put": {
         "summary": "Modification d'un évènement d'un programme d'aménagement",
-        "operationId": "editEvenementByProgrammeId",
+        "operationId": "updateEvenementByProgrammeId",
         "produces": [
           "application/json"
         ],
@@ -1594,90 +1112,28 @@
         }
       }
     },
-    "/evenements/operation/{operationId}": {
-      "get": {
-        "summary": "Recherche la liste des évènements d'une opération d'aménagement",
-        "operationId": "getEvenementsByOperationId",
+    "/programmes/{programmeId}/evenements/{evenementId}": {
+      "delete": {
+        "summary": "Suppression d'un évènement d'un programme d'aménagement",
+        "operationId": "deleteEvenementByProgrammeId",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "path",
-            "name": "operationId",
-            "description": "Identifiant de l'opération",
+            "name": "evenementId",
+            "description": "Evènement à supprimer",
             "required": true,
             "type": "integer",
             "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Evenement"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajout d'un évènement à une opération d'aménagement",
-        "operationId": "addEvenementByOperationId",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "evenement",
-            "description": "Nouvel évènement",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
           },
           {
             "in": "path",
-            "name": "operationId",
+            "name": "programmeId",
             "description": "Identifiant du programme",
             "required": true,
             "type": "integer",
-            "format": "int64"          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modification d'un évènement d'une opération d'aménagement",
-        "operationId": "editEvenement",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "evenement",
-            "description": "Evènement à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Evenement"
-            }
-          },
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant de l'opération",
-            "required": true,
-            "type": "integer",
             "format": "int64"
           }
         ],
@@ -1685,7 +1141,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Evenement"
+              "$ref": "#/definitions/Programme"
             }
           },
           "404": {
@@ -1694,18 +1150,32 @@
         }
       }
     },
-    "/types-evenements": {
+    "/communes": {
       "get": {
-        "summary": "Recherche les types d'évènements",
-        "operationId": "getTypesEvenements",
+        "summary": "Recherche d'une commune",
+        "operationId": "searchCommunes",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "code_insee",
+            "description": "Recherche par code insee",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom de commune",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "code_postal",
+            "description": "Recherche par code postal de la commune",
             "required": false,
             "type": "string"
           },
@@ -1718,12 +1188,796 @@
             "format": "int32"
           },
           {
-            "name": "onlyActive",
+            "name": "resultsNumber",
             "in": "query",
             "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
             "type": "boolean",
             "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/communes/{communeId}": {
+      "get": {
+        "summary": "Recherche d'une commune par son id",
+        "operationId": "getCommuneById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "communeId",
+            "description": "Recherche par object id de la commune",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Commune"
+            }
+          }
+        }
+      }
+    },
+    "/quartiers": {
+      "get": {
+        "summary": "Recherche d'un quartier",
+        "operationId": "searchQuartiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom de quartier",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/quartiers/{quartierId}": {
+      "get": {
+        "summary": "Recherche d'un quartier par son id",
+        "operationId": "getQuartierById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "quartierId",
+            "description": "Recherche par object id du quartier",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Quartier"
+            }
+          }
+        }
+      }
+    },
+    "/iris": {
+      "get": {
+        "summary": "Recherche d'un iris",
+        "operationId": "searchIris",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom de l'iris",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/iris/{irisId}": {
+      "get": {
+        "summary": "Recherche d'une IRIS par son id",
+        "operationId": "getIrisById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "irisId",
+            "description": "Recherche par object id de l'iris",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Iris"
+            }
+          }
+        }
+      }
+    },
+    "/plui": {
+      "get": {
+        "summary": "Recherche d'un plui",
+        "operationId": "searchPlui",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libellé du PLUi",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/plui/{pluiId}": {
+      "get": {
+        "summary": "Recherche d'un PLUi par son id",
+        "operationId": "getPluiById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pluiId",
+            "description": "Recherche par object id du PLUi",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PluiZonage"
+            }
+          }
+        }
+      }
+    },
+    "/epci": {
+      "get": {
+        "summary": "Recherche des EPCI",
+        "operationId": "searchEpci",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "objectid",
+            "description": "Recherche identifiant du PLUi",
+            "required": false,
+            "type": "number",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "codeEpci",
+            "description": "Recherche par code EPCI",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "nomEpci",
+            "description": "Recherche par nom EPCI",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PluiZonage"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tiers": {
+      "get": {
+        "summary": "Recherche des tiers",
+        "operationId": "searchTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom du tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "tiersPrive",
+            "description": "Recherche par tiers privé si true, false si société",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "adresseVille",
+            "description": "Recherche par adresse / ville du tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par tiers inactif",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un tiers",
+        "operationId": "createTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Nouveau tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un tiers",
+        "operationId": "updateTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Tiers à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}": {
+      "put": {
+        "summary": "Récupération d'un tiers",
+        "operationId": "getTiersById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}/inactivate": {
+      "put": {
+        "summary": "Rends un tiers inactif",
+        "operationId": "inactivateTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/types-tiers": {
+      "get": {
+        "summary": "Recherche un type de tiers",
+        "operationId": "searchTypeTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Libellé du type tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par tiers inactif",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un type de tiers",
+        "operationId": "createTypeTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "typeTiers",
+            "description": "Nouveau type de tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un type de tiers",
+        "operationId": "updateTypeTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "typeTiers",
+            "description": "Type de tiers à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/types-tiers/{typeTiersId}": {
+      "get": {
+        "summary": "Récupération du détail d'un type tiers",
+        "operationId": "getTypeTiersById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeTiersId",
+            "description": "Identifiant du type tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/types-tiers/{typeTiersId}/inactivate": {
+      "put": {
+        "summary": "Rends un type de tiers inactif",
+        "operationId": "inactivateTypeTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeTiersId",
+            "description": "Identifiant du type de tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeTiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/types-evenements": {
+      "get": {
+        "summary": "Recherche les types d'évènements",
+        "operationId": "searchTypesEvenements",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libellé du type d'évènement",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par type d'évènement inactif",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "resultsNumber",
@@ -1763,7 +2017,7 @@
       },
       "post": {
         "summary": "Ajout d'un type d'évènements",
-        "operationId": "addTypeEvenements",
+        "operationId": "createTypeEvenements",
         "produces": [
           "application/json"
         ],
@@ -1789,7 +2043,7 @@
       },
       "put": {
         "summary": "Modification d'un type d'évènements",
-        "operationId": "editTypeEvenements",
+        "operationId": "updateTypeEvenements",
         "produces": [
           "application/json"
         ],
@@ -1852,7 +2106,7 @@
     "/types-documents": {
       "get": {
         "summary": "Recherche la liste des type de document",
-        "operationId": "getTypeDocument",
+        "operationId": "searchTypeDocument",
         "produces": [
           "application/json"
         ],
@@ -1916,14 +2170,14 @@
           "200": {
             "description": "OK",
             "schema": {
-                "$ref": "#/definitions/PageResult"
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
       },
       "post": {
         "summary": "Ajout d'un type de document",
-        "operationId": "addTypeDocument",
+        "operationId": "createTypeDocument",
         "produces": [
           "application/json"
         ],
@@ -1949,7 +2203,7 @@
       },
       "put": {
         "summary": "Modification d'un type de document",
-        "operationId": "editTypeDocument",
+        "operationId": "updateTypeDocument",
         "produces": [
           "application/json"
         ],
@@ -2010,15 +2264,22 @@
     "/secteurs-dds": {
       "get": {
         "summary": "Recherche la liste des secteurs dds",
-        "operationId": "getSecteursDds",
+        "operationId": "searchSecteursDds",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "id",
+            "description": "Identifiant du Secteur DDS",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du secteur",
             "required": false,
             "type": "string"
           },
@@ -2078,15 +2339,22 @@
     "/secteurs-sam": {
       "get": {
         "summary": "Recherche la liste des secteurs SAM",
-        "operationId": "getSecteursSam",
+        "operationId": "searchSecteursSam",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "id",
+            "description": "Identifiant du secteur",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du secteur",
             "required": false,
             "type": "string"
           },
@@ -2146,15 +2414,22 @@
     "/secteurs-foncier": {
       "get": {
         "summary": "Recherche la liste des secteurs fonciers",
-        "operationId": "getSecteursFonciers",
+        "operationId": "searchSecteursFonciers",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "id",
+            "description": "Recherche par identifiant de secteur",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom de secteur",
             "required": false,
             "type": "string"
           },
@@ -2211,18 +2486,25 @@
         }
       }
     },
-    "/secteurs-habitat": {
+    "/secteurs-speu": {
       "get": {
-        "summary": "Recherche la liste des secteurs habitat",
-        "operationId": "getSecteursHabitat",
+        "summary": "Recherche la liste des secteurs SPEU",
+        "operationId": "searchSecteursSpeu",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "id",
+            "description": "Identifiant du secteur",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Libellé du secteur",
             "required": false,
             "type": "string"
           },
@@ -2274,33 +2556,6 @@
               "items": {
                 "$ref": "#/definitions/SecteurHabitat"
               }
-            }
-          }
-        }
-      }
-    },
-    "/permis/{permisId}": {
-      "get": {
-        "summary": "Récupération d'un permis de construire à partir de son identifiant",
-        "operationId": "getPermisById",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "permisId",
-            "description": "Identifiant du permis de construire",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/PermisConstruire"
             }
           }
         }
@@ -2467,26 +2722,6 @@
         }
       }
     },
-    "OperationTiers": {
-      "type": "object",
-      "properties": {
-        "operationId": {
-          "description": "Identifiant du programme",
-          "type": "integer",
-          "format": "int64"
-        },
-        "typeTiersId": {
-          "description": "Identifiant du type de tiers",
-          "type": "integer",
-          "format": "int64"
-        },
-        "tiersId": {
-          "description": "Identifiant du tiers",
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
     "Programme": {
       "type": "object",
       "properties": {
@@ -2608,14 +2843,10 @@
         }
       }
     },
-    "ProgrammeTiers": {
+    "TiersTypeTiers": {
       "type": "object",
+      "description": "",
       "properties": {
-        "programmeId": {
-          "description": "Identifiant du programme",
-          "type": "integer",
-          "format": "int64"
-        },
         "typeTiersId": {
           "description": "Identifiant du type de tiers",
           "type": "integer",
@@ -2625,6 +2856,25 @@
           "description": "Identifiant du tiers",
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "AssociationTiersTypeTiers": {
+      "type": "object",
+      "description": "",
+      "properties": {
+        "id": {
+          "description": "Identifiant de la jointure entité opération ou programme - tiers - type tiers",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeTiers": {
+          "description": "Type de tiers",
+          "$ref": "#/definitions/TypeTiers"
+        },
+        "tiers": {
+          "description": "Tiers",
+          "$ref": "#/definitions/Tiers"
         }
       }
     },
@@ -2770,6 +3020,24 @@
         }
       }
     },
+    "Epci": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant unique",
+          "type": "integer",
+          "format": "int32"
+        },
+        "codeEpci": {
+          "description": "Code de l'EPCI",
+          "type": "string"
+        },
+        "nomEpci": {
+          "description": "Nom l'EPCI",
+          "type": "string"
+        }
+      }
+    },
     "Tiers": {
       "type": "object",
       "properties": {
@@ -2780,9 +3048,6 @@
         },
         "nom": {
           "description": "Nom du tiers (raison sociale)",
-          "type": "string"
-        },
-        "correspondant": {
           "type": "string"
         },
         "adresseNum": {
@@ -2818,8 +3083,12 @@
           "type": "string"
         },
         "contact": {
-          "description": "",
+          "description": "Nom du contact",
           "type": "string"
+        },
+        "estPrive": {
+          "description": "True si le tiers est un privé, false si société",
+          "type": "boolean"
         },
         "dateInactif": {
           "description": "Date de mise en inactivité du tiers",
@@ -2859,12 +3128,21 @@
     "SecteurDds": {
       "type": "object",
       "properties": {
-        "nom": {
-          "description": "Nom du secteur",
-          "type": "string"
+        "id": {
+          "description": "Identifiant du secteur",
+          "type": "integer",
+          "format": "int32"
         },
         "instructeur": {
           "description": "Nom de l'instructeur",
+          "type": "string"
+        },
+        "assistant": {
+          "description": "Nom de l'assistant",
+          "type": "string"
+        },
+        "secteur": {
+          "description": "Nom du secteur",
           "type": "string"
         }
       }
@@ -2872,11 +3150,15 @@
     "SecteurSam": {
       "type": "object",
       "properties": {
+        "id": {
+          "description": "Idenifiant du secteur",
+          "type": "string"
+        },
         "nom": {
           "description": "Nom du secteur",
           "type": "string"
         },
-        "chargeOp": {
+        "referent": {
           "description": "Nom du chargé d'opération",
           "type": "string"
         }
@@ -3076,31 +3358,6 @@
         }
       }
     },
-    "Logements": {
-      "type": "object",
-      "properties": {
-        "logementsAccesSociale": {
-          "description": "Nombre de logements en accession libre",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsLocatifRegule": {
-          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsPls": {
-          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsLocatifSocial": {
-          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
     "PageResult": {
       "type": "object",
       "properties": {
@@ -3114,23 +3371,16 @@
         }
       }
     },
-    "Dates": {
+    "Emprise": {
       "type": "object",
       "properties": {
-        "dateAutorisation": {
-          "description": "Date autorisation",
-          "type": "string",
-          "format": "date"
+        "id": {
+          "description": "Identifiant de l'emprise",
+          "type": "number"
         },
-        "dateOuvertureChantier": {
-          "description": "Date d'ouverture de chantier",
-          "type": "string",
-          "format": "date"
-        },
-        "dateAchevementTravaux": {
-          "description": "Date d'achèvement des travaux",
-          "type": "string",
-          "format": "date"
+        "nom": {
+          "description": "Nom de l'emprise",
+          "type": "string"
         }
       }
     }
