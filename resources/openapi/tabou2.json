@@ -2071,7 +2071,7 @@
         }
       }
     },
-    "/types-evenement/{typeEvenementId}/inactivate": {
+    "/types-evenements/{typeEvenementId}/inactivate": {
       "put": {
         "summary": "Rends un type d'évènement inactif",
         "operationId": "inactivateTypeEvenement",
@@ -2084,7 +2084,8 @@
             "name": "typeEvenementId",
             "description": "Identifiant du type d'évènement",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
