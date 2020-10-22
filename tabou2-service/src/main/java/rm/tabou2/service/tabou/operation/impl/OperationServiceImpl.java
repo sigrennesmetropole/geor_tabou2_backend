@@ -33,7 +33,7 @@ public class OperationServiceImpl implements OperationService {
     private AuthentificationHelper authentificationHelper;
 
     @Override
-    public Operation addOperation(Operation operation) {
+    public Operation createOperation(Operation operation) {
 
         OperationEntity operationEntity = operationMapper.dtoToEntity(operation);
 

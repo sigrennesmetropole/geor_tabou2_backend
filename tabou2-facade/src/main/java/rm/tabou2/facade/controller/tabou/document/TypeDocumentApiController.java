@@ -24,17 +24,17 @@ public class TypeDocumentApiController implements TypesDocumentsApi {
     private TypeDocumentService typeDocumentService;
 
     @Override
-    public ResponseEntity<TypeDocument> addTypeDocument(@Valid TypeDocument typeDocument) throws Exception {
-        return new ResponseEntity<>(typeDocumentService.addTypeDocument(typeDocument), HttpStatus.OK);
+    public ResponseEntity<TypeDocument> createTypeDocument(@Valid TypeDocument typeDocument) throws Exception {
+        return new ResponseEntity<>(typeDocumentService.createTypeDocument(typeDocument), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<TypeDocument> editTypeDocument(@Valid TypeDocument typeDocument) throws Exception {
-        return new ResponseEntity<>(typeDocumentService.editTypeDocument(typeDocument), HttpStatus.OK);
+    public ResponseEntity<TypeDocument> updateTypeDocument(@Valid TypeDocument typeDocument) throws Exception {
+        return new ResponseEntity<>(typeDocumentService.updateTypeDocument(typeDocument), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<PageResult> getTypeDocument(@Valid Long typeDocumentId, @Valid String libelle, @Valid Date dateInactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchTypeDocument(@Valid Long typeDocumentId, @Valid String libelle, @Valid Date dateInactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         TypeDocumentCriteria typeDocumentCriteria = new TypeDocumentCriteria();
         typeDocumentCriteria.setId(typeDocumentId);

@@ -18,6 +18,7 @@ import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -83,6 +84,11 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
         return operationService.getOperationById(operationId);
 
+    }
+
+    @Override
+    public List<OperationTiersEntity> getTiersByOperationId(long operationId) {
+        return operationTiersDao.findByOperationId(operationId);
     }
 
 }

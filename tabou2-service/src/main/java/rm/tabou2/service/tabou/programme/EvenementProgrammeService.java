@@ -11,5 +11,5 @@ public interface EvenementProgrammeService {
 
     Evenement addByProgrammeId(Evenement evenement, Long programmeId) throws AppServiceException;
 
-    Evenement editByProgrammeId(Evenement evenement, Long programmeId) throws AppServiceException;
+    Evenement updateByProgrammeId(Evenement evenement, Long programmeId) throws AppServiceException;
 }

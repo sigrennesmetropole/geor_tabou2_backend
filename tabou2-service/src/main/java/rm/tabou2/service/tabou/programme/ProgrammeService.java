@@ -18,24 +18,7 @@ public interface ProgrammeService {
      * @param programme programme à ajouter
      * @return programme ajouté
      */
-    Programme addProgramme(@ValidProgrammeCreation Programme programme);
-
-    /**
-     * modification d'un programme
-     *
-     * @param programme programme à modifier
-     * @return programme modifié
-     */
-    Programme editProgramme(@ValidProgrammeUpdate Programme programme);
-
-    /**
-     * Modification de l'étape d'avancement d'un programme
-     *
-     * @param programmeId   identifiant du programme
-     * @param etape         nouvelle étape
-     * @return              nouveau programme
-     */
-    Programme editEtapeOfProgramme(long programmeId, Etape etape);
+    Programme createProgramme(Programme programme);
 
     /**
      * Récupération d'un programme par son identifiant.

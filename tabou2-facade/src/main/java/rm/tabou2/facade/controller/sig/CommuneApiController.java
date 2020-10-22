@@ -1,15 +1,14 @@
 package rm.tabou2.facade.controller.sig;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.CommunesApi;
-import rm.tabou2.service.sig.CommuneService;
 import rm.tabou2.service.dto.Commune;
+import rm.tabou2.service.dto.PageResult;
+import rm.tabou2.service.sig.CommuneService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 public class CommuneApiController implements CommunesApi {
@@ -19,9 +18,12 @@ public class CommuneApiController implements CommunesApi {
     private CommuneService communeService;
 
     @Override
-    public ResponseEntity<List<Commune>> getCommunes(@Valid String keyword, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchCommunes(@Valid String codeInsee, @Valid String nom, @Valid String codePostal, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+        return null;
+    }
 
-        return new ResponseEntity<>(communeService.searchCommunes(keyword, start, resultsNumber, orderBy, asc), HttpStatus.OK);
-
+    @Override
+    public ResponseEntity<Commune> getCommuneById(@Valid Integer objectid) throws Exception {
+        return null;
     }
 }

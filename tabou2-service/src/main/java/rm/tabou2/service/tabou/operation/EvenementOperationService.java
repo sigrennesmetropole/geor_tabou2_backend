@@ -30,6 +30,6 @@ public interface EvenementOperationService {
      * @param evenement évènement à modifier
      * @return évènement modifié
      */
-    Evenement editEvenement(Evenement evenement, Long operationId) throws AppServiceException;
+    Evenement updateEvenementByOperationId(Evenement evenement, Long operationId) throws AppServiceException;
 
 }

@@ -1,7 +1,5 @@
 package rm.tabou2.storage.common.impl;
 
-import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
@@ -53,6 +51,16 @@ public abstract class AbstractCustomDaoImpl {
             predicates.add(builder.isTrue(root.get(type)));
         } else {
             predicates.add(builder.isFalse(root.get(type)));
+        }
+
+    }
+
+    protected void predicateCriteriaNullOrNot(Boolean criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+
+        if (Boolean.TRUE.equals(criteria)) {
+            predicates.add(builder.isNull(root.get(type)));
+        } else {
+            predicates.add(builder.isNotNull(root.get(type)));
         }
 
     }

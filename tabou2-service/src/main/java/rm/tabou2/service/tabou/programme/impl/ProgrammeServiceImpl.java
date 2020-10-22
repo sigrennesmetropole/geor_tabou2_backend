@@ -7,8 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-import rm.tabou2.service.dto.Etape;
-import rm.tabou2.service.dto.Logements;
+import rm.tabou2.service.dto.Etape;;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
@@ -51,7 +50,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private AuthentificationHelper authentificationHelper;
 
     @Override
-    public Programme addProgramme(@ValidProgrammeCreation Programme programme) {
+    public Programme createProgramme(@ValidProgrammeCreation Programme programme) {
 
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
 
@@ -75,7 +74,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public Programme editProgramme(@ValidProgrammeUpdate Programme programme) {
+    public Programme updateProgramme(@ValidProgrammeUpdate Programme programme) {
 
         ProgrammeEntity programmeEntity = programmeDao.getById(programme.getId());
         if (programmeEntity == null) {
@@ -97,7 +96,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     public Programme editEtapeOfProgramme(long programmeId, Etape etape) {
         Programme programme = getProgrammeById(programmeId);
         programme.setEtape(etape);
-        return editProgramme(programme);
+        return updateProgramme(programme);
     }
 
     @Override
@@ -120,14 +119,5 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
         return programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
     }
-
-    public Logements getLogements() {
-
-        //Faire la comparaison entre le nombre de logements issus de la couche agapeo
-
-        return null;
-
-    }
-
 
 }

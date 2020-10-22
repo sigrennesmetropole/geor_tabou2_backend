@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.mapper.tabou.document.TypeDocumentMapper;
 import rm.tabou2.service.tabou.document.TypeDocumentService;
 import rm.tabou2.storage.tabou.dao.document.TypeDocumentCustomDao;
@@ -30,10 +31,22 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     @Autowired
     private TypeDocumentMapper typeDocumentMapper;
 
+    @Autowired
+    private AuthentificationHelper authentificationHelper;
+
     @Override
-    public TypeDocument addTypeDocument(TypeDocument typeDocument) throws AppServiceException {
+    public TypeDocument createTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
         TypeDocumentEntity typeDocumentEntity = typeDocumentMapper.dtoToEntity(typeDocument);
+
+        //Vérification des champs obligatoires
+        if (typeDocumentEntity.getLibelle().isEmpty()) {
+            throw new AppServiceException("Le champ libelle est manquant");
+        }
+
+        //Historisation
+        typeDocumentEntity.setCreateDate(new Date());
+        typeDocumentEntity.setCreateUser(authentificationHelper.getConnectedUsername());
 
         try {
             typeDocumentEntity = typeDocumentDao.save(typeDocumentEntity);
@@ -46,7 +59,7 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     }
 
     @Override
-    public TypeDocument editTypeDocument(TypeDocument typeDocument) throws AppServiceException {
+    public TypeDocument updateTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
         TypeDocumentEntity typeDocumentEntity;
 

@@ -16,7 +16,7 @@ public interface TypeDocumentService {
      * @param typeDocument type de document à ajouter
      * @return type de document ajouté
      */
-    TypeDocument addTypeDocument(TypeDocument typeDocument) throws AppServiceException;
+    TypeDocument createTypeDocument(TypeDocument typeDocument) throws AppServiceException;
 
     /**
      * Edition d'un type de document.
@@ -24,7 +24,7 @@ public interface TypeDocumentService {
      * @param typeDocument type de document à ajouter
      * @return type de document ajouté
      */
-    TypeDocument editTypeDocument(TypeDocument typeDocument) throws AppServiceException;
+    TypeDocument updateTypeDocument(TypeDocument typeDocument) throws AppServiceException;
 
     /**
      * Désactivation d'un type de document.
