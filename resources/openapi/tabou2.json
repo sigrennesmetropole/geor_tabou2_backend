@@ -598,7 +598,8 @@
             "description": "Identifiant du programme",
             "required": true,
             "type": "integer",
-            "format": "int64"          }
+            "format": "int64"
+          }
         ],
         "responses": {
           "200": {
@@ -1298,7 +1299,6 @@
         "responses": {
           "200": {
             "description": "OK",
-
             "schema": {
               "$ref": "#/definitions/PageResult"
             }
@@ -1566,7 +1566,6 @@
         "responses": {
           "200": {
             "description": "OK",
-
             "schema": {
               "type": "array",
               "items": {
@@ -2007,10 +2006,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TypeEvenement"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -2071,6 +2067,36 @@
         }
       }
     },
+    "/types-evenements/{typeEvenementId}": {
+      "get": {
+        "summary": "Récupération du détail d'un type d'évènement",
+        "operationId": "getTypeEvenementById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeEvenementId",
+            "description": "Identifiant du type d'évènement",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeEvenement"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/types-evenements/{typeEvenementId}/inactivate": {
       "put": {
         "summary": "Rends un type d'évènement inactif",
@@ -2092,10 +2118,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TypeEvenement"
-              }
+              "$ref": "#/definitions/TypeEvenement"
             }
           },
           "404": {

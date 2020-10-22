@@ -37,6 +37,19 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
     private AuthentificationHelper authentificationHelper;
 
     @Override
+    public TypeEvenement getTypeEvenementById(long typeEvenementId) {
+
+        Optional<TypeEvenementEntity> typeEvenementOpt = typeEvenementDao.findById(typeEvenementId);
+
+        if (typeEvenementOpt.isEmpty()) {
+            throw new NoSuchElementException("Le typeEvenement demandé n'existe pas, id=" + typeEvenementId);
+        }
+
+        return (typeEvenementMapper.entityToDto(typeEvenementOpt.get()));
+
+    }
+
+    @Override
     public TypeEvenement createTypeEvenement(TypeEvenement typeEvenement) throws AppServiceException {
 
         //Vérification des autorisations
@@ -68,6 +81,11 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
     @Override
     public TypeEvenement updateTypeEvenement(TypeEvenement typeEvenement) throws AppServiceException {
 
+        //Vérification des autorisations
+        if (!authentificationHelper.hasEditAccess()) {
+            throw new AppServiceException("Utilisateur non autorisé à créer un type d'évènement ", AppServiceExceptionsStatus.FORBIDDEN);
+        }
+
         TypeEvenementEntity typeEvenementEntity;
 
         Optional<TypeEvenementEntity> typeEvenementEntityOpt = typeEvenementDao.findById(typeEvenement.getId());
@@ -95,7 +113,10 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
     @Override
     public TypeEvenement inactivateTypeEvenement(Long typeEvenementId) throws AppServiceException {
 
-
+        //Vérification des autorisations
+        if (!authentificationHelper.hasEditAccess()) {
+            throw new AppServiceException("Utilisateur non autorisé à créer un type d'évènement ", AppServiceExceptionsStatus.FORBIDDEN);
+        }
 
         TypeEvenementEntity typeEvenement;
 
@@ -126,5 +147,5 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
         return typeEvenementMapper.entitiesToDto(typesEvenements, pageable);
 
     }
-    
+
 }

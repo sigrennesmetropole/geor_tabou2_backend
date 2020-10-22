@@ -75,8 +75,10 @@ public class TypeEvenementCustomDaoImpl extends AbstractCustomDaoImpl implements
             predicateStringCriteria(typeEvenementCriteria.getLibelle(), FIELD_LIBELLE, predicates, builder, searchRoot);
 
         }
-        if (typeEvenementCriteria.getDateInactif() != null) {
-            predicates.add(builder.equal(searchRoot.get(FIELD_DATE_INACTIF), typeEvenementCriteria.getDateInactif()));
+
+        //Si on veut les evenements inactifs
+        if (typeEvenementCriteria.getInactif() != null) {
+                predicateCriteriaNullOrNot(!typeEvenementCriteria.getInactif(), FIELD_DATE_INACTIF, predicates, builder, searchRoot);
         }
 
 

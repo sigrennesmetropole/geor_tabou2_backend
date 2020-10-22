@@ -9,6 +9,6 @@ public class TypeEvenementCriteria {
 
     private String libelle;
 
-    private Date dateInactif;
+    private Boolean inactif;
 
 }

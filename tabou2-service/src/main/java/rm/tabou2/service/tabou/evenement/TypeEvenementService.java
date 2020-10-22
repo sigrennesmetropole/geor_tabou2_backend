@@ -9,6 +9,8 @@ import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 public interface TypeEvenementService {
 
 
+    TypeEvenement getTypeEvenementById(long typeEvenementId);
+
     TypeEvenement createTypeEvenement(TypeEvenement typeEvenement) throws AppServiceException;
 
     TypeEvenement updateTypeEvenement(TypeEvenement typeEvenement) throws AppServiceException;
