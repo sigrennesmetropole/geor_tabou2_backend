@@ -2,7 +2,9 @@ package rm.tabou2.service.tabou.programme.impl;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -24,12 +26,12 @@ import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
-import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
 @Validated
 @Transactional(readOnly = true)
 public class ProgrammeServiceImpl implements ProgrammeService {
@@ -53,14 +55,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private AuthentificationHelper authentificationHelper;
 
     @Autowired
-    private ApplicationContext applicationContext;
-
     private ProgrammeService me;
-
-    @PostConstruct
-    private void init() {
-        me = applicationContext.getBean(ProgrammeService.class);
-    }
 
     @Override
     @Transactional
