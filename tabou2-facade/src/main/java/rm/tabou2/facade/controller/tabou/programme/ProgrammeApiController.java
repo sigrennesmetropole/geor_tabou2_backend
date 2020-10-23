@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.service.ddc.PermisConstruireService;
+import rm.tabou2.service.helper.EtapeProgrammeWorkflowHelper;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
@@ -35,6 +36,8 @@ public class ProgrammeApiController implements ProgrammesApi {
     @Autowired
     private EvenementProgrammeService evenementProgrammeService;
 
+    @Autowired
+    private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
 
     @Autowired
     private PermisConstruireService permisConstruireService;
@@ -48,45 +51,20 @@ public class ProgrammeApiController implements ProgrammesApi {
     }
 
     @Override
-    public ResponseEntity<Programme> deleteEvenementByProgrammeId(Long evenementId, Long programmeId) throws Exception {
-        return null;
-    }
-
-    @Override
     public ResponseEntity<Programme> updateProgramme(@Valid Programme programme) throws Exception {
-        return new ResponseEntity<>(programmeService.createProgramme(programme), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.updateProgramme(programme), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<List<Agapeo>> getAgapeoByProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(agapeoService.getApapeosByProgrammeId(programmeId), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Etape> getEtapeByProgrammeId(Long programmeId) throws Exception {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<List<PermisConstruire>> getPermisByProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(permisConstruireService.getPermisConstruiresByProgrammeId(programmeId), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Programme> getProgrammeById(Long programmeId) throws Exception {
-        return new ResponseEntity<>(programmeService.getProgrammeById(programmeId), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<PageResult> getProgrammes(@Valid String nom, @Valid String etape, @Valid Boolean diffusionRestreinte,
-                                                         @Valid String code, @Valid String numAds, @Valid Date clotureDateDebut,
-                                                         @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer attributionFonciereAnneeDebut,
-                                                         @Valid Integer attributionFonciereAnneeFin, @Valid Date attributionDateDebut, @Valid Date attributionDateFin,
-                                                         @Valid Date commercialisationDateDebut, @Valid Date commercialisationDateFin, @Valid Date adsDateDebut,
-                                                         @Valid Date adsDateFin, @Valid Date docDateDebut, @Valid Date docDateFin,
-                                                         @Valid Date datDateDebut, @Valid Date datDateFin, @Valid Boolean logementsAides,
-                                                         @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber,
-                                                         @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchProgrammes(@Valid String nom, @Valid String etape, @Valid Boolean diffusionRestreinte,
+                                                       @Valid String code, @Valid String numAds, @Valid Date clotureDateDebut,
+                                                       @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer attributionFonciereAnneeDebut,
+                                                       @Valid Integer attributionFonciereAnneeFin, @Valid Date attributionDateDebut, @Valid Date attributionDateFin,
+                                                       @Valid Date commercialisationDateDebut, @Valid Date commercialisationDateFin, @Valid Date adsDateDebut,
+                                                       @Valid Date adsDateFin, @Valid Date docDateDebut, @Valid Date docDateFin,
+                                                       @Valid Date datDateDebut, @Valid Date datDateFin, @Valid Boolean logementsAides,
+                                                       @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber,
+                                                       @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         ProgrammeCriteria programmeCriteria = new ProgrammeCriteria();
 
@@ -119,13 +97,31 @@ public class ProgrammeApiController implements ProgrammesApi {
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
-    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByProgrammeId(Long programmeId) throws Exception {
-        return null;
     }
 
     @Override
-    public ResponseEntity<List<Programme>> searchProgrammes(@Valid String keyword, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
-        return  new ResponseEntity<>(programmeService.searchProgrammes(keyword, start, resultsNumber, orderBy, asc), HttpStatus.OK);
+    public ResponseEntity<Programme> getProgrammeById(Long programmeId) throws Exception {
+        return new ResponseEntity<>(programmeService.getProgrammeById(programmeId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<Etape>> getEtapesForProgrammeId(Long programmeId) throws Exception {
+        return new ResponseEntity<>(etapeProgrammeWorkflowHelper.getPossibleEtapesForProgramme(programmeId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<Agapeo>> getAgapeoByProgrammeId(Long programmeId) throws Exception {
+        return new ResponseEntity<>(agapeoService.getApapeosByProgrammeId(programmeId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<PermisConstruire>> getPermisByProgrammeId(Long programmeId) throws Exception {
+        return new ResponseEntity<>(permisConstruireService.getPermisConstruiresByProgrammeId(programmeId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByProgrammeId(Long programmeId) throws Exception {
+        return null;
     }
 
     @Override
@@ -141,6 +137,11 @@ public class ProgrammeApiController implements ProgrammesApi {
     @Override
     public ResponseEntity<Evenement> addEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
         return new ResponseEntity<>(evenementProgrammeService.addByProgrammeId(evenement, programmeId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Programme> deleteEvenementByProgrammeId(Long evenementId, Long programmeId) throws Exception {
+        return null;
     }
 
     @Override

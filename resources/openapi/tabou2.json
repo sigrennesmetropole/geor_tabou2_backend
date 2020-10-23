@@ -1132,8 +1132,8 @@
     },
     "/programmes/{programmeId}/etapes": {
       "get": {
-        "summary": "Récupération de l'étape d'avancement pour un programme d'aménagement",
-        "operationId": "getEtapeByProgrammeId",
+        "summary": "Récupération de la liste des étapes d'avancement possibles pour un programme d'aménagement",
+        "operationId": "getEtapesForProgrammeId",
         "produces": [
           "application/json"
         ],
@@ -1151,7 +1151,10 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Etape"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
             }
           },
           "404": {

@@ -36,7 +36,6 @@ public class PermisConstruireServiceImpl implements PermisConstruireService {
 
         return permisConstuireMapper.entityToDto(permisConstruireOpt.get());
 
-
     }
 
     @Override

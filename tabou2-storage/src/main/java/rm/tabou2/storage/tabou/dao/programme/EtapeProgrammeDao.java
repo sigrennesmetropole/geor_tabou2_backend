@@ -15,4 +15,6 @@ public interface EtapeProgrammeDao extends CrudRepository<EtapeProgrammeEntity, 
     List<EtapeProgrammeEntity> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     EtapeProgrammeEntity findByType(String type);
+
+    EtapeProgrammeEntity findByCode(String code);
 }

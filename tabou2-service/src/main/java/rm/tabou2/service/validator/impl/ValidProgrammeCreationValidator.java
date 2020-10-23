@@ -26,24 +26,21 @@ public class ValidProgrammeCreationValidator implements ConstraintValidator<Vali
         boolean nomValidation = !StringUtils.isEmpty(programme.getNom());
         if (!nomValidation) {
             customMessageForValidation(constraintValidatorContext, "Le nom du programme est invalide");
-            return false;
         }
 
         // code validation
         boolean codeValidation = !StringUtils.isEmpty(programme.getCode()) ;
         if (!codeValidation) {
             customMessageForValidation(constraintValidatorContext, "Le code du programme est invalide");
-            return false;
         }
 
         // diffusion restreinte
         boolean diffusionRestreinteValidation = programme.isDiffusionRestreinte() != null;
         if (!diffusionRestreinteValidation) {
             customMessageForValidation(constraintValidatorContext, "La diffusion restreinte du programme est invalide");
-            return false;
         }
 
-        return true;
+        return nomValidation && codeValidation && diffusionRestreinteValidation;
     }
 
     private void customMessageForValidation(ConstraintValidatorContext constraintContext, String message) {

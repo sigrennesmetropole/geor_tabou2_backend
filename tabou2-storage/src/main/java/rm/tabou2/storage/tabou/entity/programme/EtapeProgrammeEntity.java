@@ -32,7 +32,7 @@ public class EtapeProgrammeEntity {
     @Column(name = "type")
     private String type;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(
             name = "tabou_etape_programme_workflow",
             joinColumns = @JoinColumn(name = "id_etape_programme", referencedColumnName = "id_etape_programme"),

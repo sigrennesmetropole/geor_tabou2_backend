@@ -32,11 +32,12 @@ public abstract class AbstractCustomDaoImpl {
     }
 
     protected void predicateStringCriteriaForJoin(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Join<?, ?> join) {
-
-        if (criteria.indexOf('*') == -1) {
-            predicates.add(builder.equal(join.get(type), criteria));
-        } else {
-            predicates.add(builder.like(join.get(type), criteria.replace("*", "%")));
+        if (criteria != null) {
+            if (criteria.indexOf('*') == -1) {
+                predicates.add(builder.equal(join.get(type), criteria));
+            } else {
+                predicates.add(builder.like(join.get(type), criteria.replace("*", "%")));
+            }
         }
     }
 

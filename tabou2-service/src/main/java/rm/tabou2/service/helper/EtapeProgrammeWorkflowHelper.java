@@ -44,11 +44,11 @@ public class EtapeProgrammeWorkflowHelper {
         if (programmeEntity == null) {
             throw new IllegalArgumentException("L'identifiant du programme est invalide: aucun programme trouvé pour l'id = " + idProgramme);
         }
-        Etape actualEtape = etapeProgrammeMapper.entityToDto(programmeEntity.etapeProgramme);
-        if (actualEtape.getId().equals(newEtape.getId())) {
+        EtapeProgrammeEntity actualEtapeEntity = programmeEntity.getEtapeProgramme();
+        if (actualEtapeEntity.getCode().equals(newEtape.getCode())) {
             return true;
         }
-        List<EtapeProgrammeEntity> nextEtapesEntities = List.copyOf(programmeEntity.getEtapeProgramme().getNextEtapes());
+        List<EtapeProgrammeEntity> nextEtapesEntities = List.copyOf(actualEtapeEntity.getNextEtapes());
         List<Etape> nextEtapes = etapeProgrammeMapper.entitiesToDto(nextEtapesEntities);
         return nextEtapes.contains(newEtape);
     }

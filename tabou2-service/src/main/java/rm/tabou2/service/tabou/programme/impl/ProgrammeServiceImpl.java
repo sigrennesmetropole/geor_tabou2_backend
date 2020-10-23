@@ -2,14 +2,15 @@ package rm.tabou2.service.tabou.programme.impl;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import rm.tabou2.service.dto.Etape;;
+import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
@@ -23,12 +24,14 @@ import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
+import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 @Validated
+@Transactional(readOnly = true)
 public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
@@ -49,7 +52,18 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Autowired
     private AuthentificationHelper authentificationHelper;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    private ProgrammeService me;
+
+    @PostConstruct
+    private void init() {
+        me = applicationContext.getBean(ProgrammeService.class);
+    }
+
     @Override
+    @Transactional
     public Programme createProgramme(@ValidProgrammeCreation Programme programme) {
 
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
@@ -57,7 +71,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // Ajout de l'état initial
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findByType(Etape.TypeEnum.START.toString());
         if (etapeProgrammeEntity == null) {
-            throw new NoSuchElementException("Aucune étape initiale de type " + Etape.TypeEnum.START.toString() + "n'a été défini pour les programmes");
+            throw new NoSuchElementException("Aucune étape initiale de type " + Etape.TypeEnum.START.toString() + " n'a été défini pour les programmes");
         }
         programmeEntity.setEtapeProgramme(etapeProgrammeEntity);
 
@@ -74,6 +88,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
+    @Transactional
     public Programme updateProgramme(@ValidProgrammeUpdate Programme programme) {
 
         ProgrammeEntity programmeEntity = programmeDao.getById(programme.getId());
@@ -93,10 +108,11 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
+    @Transactional
     public Programme editEtapeOfProgramme(long programmeId, Etape etape) {
         Programme programme = getProgrammeById(programmeId);
         programme.setEtape(etape);
-        return updateProgramme(programme);
+        return me.updateProgramme(programme);
     }
 
     @Override

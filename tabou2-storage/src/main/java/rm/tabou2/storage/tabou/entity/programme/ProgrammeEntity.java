@@ -114,10 +114,10 @@ public class ProgrammeEntity {
     private Date modifDate;
 
     @OneToMany(mappedBy = "programme")
-    public Set<ProgrammeTiersEntity> programmeTiers;
+    private Set<ProgrammeTiersEntity> programmeTiers;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_etape_programme")
-    public EtapeProgrammeEntity etapeProgramme;
+    private EtapeProgrammeEntity etapeProgramme;
 
 }
