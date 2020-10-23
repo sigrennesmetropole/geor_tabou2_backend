@@ -20,7 +20,6 @@ public abstract class DatabaseInitializerTest {
                                @Qualifier(value = "sigDataSource") @Autowired DataSource sigDataSource) {
 
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("sql/tabou/common_tabou_data.sql"));
         populator.execute(tabouDataSource);
     }

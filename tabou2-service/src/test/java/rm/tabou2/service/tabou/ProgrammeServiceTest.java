@@ -1,6 +1,7 @@
 package rm.tabou2.service.tabou;
 
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +26,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.validation.ConstraintViolationException;
@@ -38,6 +40,9 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
     private EtapeProgrammeDao etapeProgrammeDao;
 
     @Autowired
+    private ProgrammeDao programmeDao;
+
+    @Autowired
     private EtapeProgrammeMapper etapeProgrammeMapper;
 
     @Autowired
@@ -49,6 +54,11 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
     @BeforeEach
     public void initTest() {
         Mockito.when(authentificationHelper.getConnectedUsername()).thenReturn("ProgrammeServiceTest");
+    }
+
+    @AfterEach
+    public void afterTest() {
+        programmeDao.deleteAll();
     }
 
     @DisplayName("testSearchProgramme: Test de la recherche de programmes")
@@ -108,6 +118,5 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
                 ConstraintViolationException.class,
                 () -> programmeService.updateProgramme(programme5)
         );
-
     }
 }
