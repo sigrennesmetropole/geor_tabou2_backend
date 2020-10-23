@@ -1,6 +1,8 @@
 package rm.tabou2.service.tabou.programme.impl;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,6 +37,8 @@ import java.util.Optional;
 @Validated
 @Transactional(readOnly = true)
 public class ProgrammeServiceImpl implements ProgrammeService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProgrammeServiceImpl.class);
 
     @Autowired
     private ProgrammeDao programmeDao;
@@ -122,8 +126,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     public Page<Programme> searchProgrammes(ProgrammeCriteria programmeCriteria, Pageable pageable) {
+        // Si l'utilisateur n'a pas le droit de voir les programmes en diffusion restreinte, on filtre sur false
         if (BooleanUtils.isTrue(programmeCriteria.getDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
-            throw new AccessDeniedException("Accès non autorisé à des programmes d'accès restreint");
+            programmeCriteria.setDiffusionRestreinte(false);
+            LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
         return programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
     }
