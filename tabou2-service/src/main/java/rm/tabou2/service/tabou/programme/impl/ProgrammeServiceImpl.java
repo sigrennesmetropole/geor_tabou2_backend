@@ -43,9 +43,6 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeCustomDao programmeCustomDao;
 
     @Autowired
-    private AgapeoService agapeoService;
-
-    @Autowired
     private EtapeProgrammeDao etapeProgrammeDao;
 
     @Autowired
