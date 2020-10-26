@@ -54,7 +54,7 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<List<Tiers>> deleteTiersFromOperation(Long operationId, Long associationTiersId) throws Exception {
+    public ResponseEntity<Void> deleteTiersFromOperation(Long operationId, Long associationTiersId) throws Exception {
         return null;
     }
 
@@ -66,7 +66,7 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<List<Tiers>> updateTiersByOperationId(Long operationId, @Valid AssociationTiersTypeTiers associationTiers) throws Exception {
+    public ResponseEntity<AssociationTiersTypeTiers> updateTiersByOperationId(Long operationId, Long associationTiersId, @Valid TiersTypeTiers associationTiers) throws Exception {
         return null;
     }
 

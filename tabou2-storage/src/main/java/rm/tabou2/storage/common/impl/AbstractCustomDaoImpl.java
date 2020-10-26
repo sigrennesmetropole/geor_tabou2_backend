@@ -32,29 +32,18 @@ public abstract class AbstractCustomDaoImpl {
     }
 
     protected void predicateStringCriteriaForJoin(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Join<?, ?> join) {
-
-        if (criteria.indexOf('*') == -1) {
-            predicates.add(builder.equal(join.get(type), criteria));
-        } else {
-            predicates.add(builder.like(join.get(type), criteria.replace("*", "%")));
+        if (criteria != null) {
+            if (criteria.indexOf('*') == -1) {
+                predicates.add(builder.equal(join.get(type), criteria));
+            } else {
+                predicates.add(builder.like(join.get(type), criteria.replace("*", "%")));
+            }
         }
     }
 
     protected void predicateDateCriteria(Date dateDebut, Date dateFin, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
-        if (dateDebut != null && dateFin != null) {
-
-            predicates.add(builder.between(root.get(type), dateDebut, dateFin));
-
-        } else if (dateDebut != null) {
-
-            predicates.add(builder.greaterThanOrEqualTo(root.get(type), dateDebut));
-
-        } else if (dateFin != null) {
-
-            predicates.add(builder.lessThanOrEqualTo(root.get(type), dateFin));
-
-        }
+        predicateBetweenCriteria(dateDebut, dateFin, type, predicates, builder, root);
     }
 
     protected void predicateBooleanCriteria(Boolean criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
@@ -75,6 +64,43 @@ public abstract class AbstractCustomDaoImpl {
             predicates.add(builder.isNotNull(root.get(type)));
         }
 
+    }
+
+    protected void predicateBooleanOrGreaterThanIntegerCriteria(Boolean criteria, Integer lowerValue, List<String> types, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+        if (Boolean.TRUE.equals(criteria)) {
+            Predicate[] predicatesGreater = types.stream()
+                    .map(type -> builder.greaterThan(root.get(type), lowerValue))
+                    .toArray(Predicate[]::new);
+            predicates.add(builder.or(predicatesGreater));
+        } else {
+            Predicate[] predicatesLess = types.stream()
+                    .map(type -> builder.lessThanOrEqualTo(root.get(type), lowerValue))
+                    .toArray(Predicate[]::new);
+            predicates.add(builder.and(predicatesLess));
+        }
+    }
+
+    protected void predicateYearCriteria(Integer anneeDebut, Integer anneeFin, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+
+        predicateBetweenCriteria(anneeDebut, anneeFin, type, predicates, builder, root);
+
+    }
+
+    private <T extends Comparable<? super T>> void predicateBetweenCriteria(T lower, T upper, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+
+        if (lower != null && upper != null) {
+
+            predicates.add(builder.between(root.get(type), lower, upper));
+
+        } else if (lower != null) {
+
+            predicates.add(builder.greaterThanOrEqualTo(root.get(type), lower));
+
+        } else if (upper != null) {
+
+            predicates.add(builder.lessThanOrEqualTo(root.get(type), upper));
+
+        }
     }
 
 }

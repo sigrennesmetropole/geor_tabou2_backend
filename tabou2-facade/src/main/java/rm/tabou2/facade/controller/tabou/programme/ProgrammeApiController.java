@@ -1,16 +1,25 @@
 package rm.tabou2.facade.controller.tabou.programme;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
+import rm.tabou2.service.ddc.PermisConstruireService;
+import rm.tabou2.service.helper.EtapeProgrammeWorkflowHelper;
+import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.dto.*;
+import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
+import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.validation.Valid;
+import java.util.Date;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -27,6 +36,14 @@ public class ProgrammeApiController implements ProgrammesApi {
     @Autowired
     private EvenementProgrammeService evenementProgrammeService;
 
+    @Autowired
+    private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
+
+    @Autowired
+    private PermisConstruireService permisConstruireService;
+
+    @Autowired
+    private AgapeoService agapeoService;
 
     @Override
     public ResponseEntity<Programme> createProgramme(@Valid Programme programme) throws Exception {
@@ -34,28 +51,52 @@ public class ProgrammeApiController implements ProgrammesApi {
     }
 
     @Override
-    public ResponseEntity<Programme> deleteEvenementByProgrammeId(Long evenementId, Long programmeId) throws Exception {
-        return null;
-    }
-
-    @Override
     public ResponseEntity<Programme> updateProgramme(@Valid Programme programme) throws Exception {
-        return new ResponseEntity<>(programmeService.createProgramme(programme), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.updateProgramme(programme), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<List<Agapeo>> getAgapeoByProgrammeId(Long programmeId) throws Exception {
-        return null;
-    }
+    public ResponseEntity<PageResult> searchProgrammes(@Valid String nom, @Valid String etape, @Valid Boolean diffusionRestreinte,
+                                                       @Valid String code, @Valid String numAds, @Valid Date clotureDateDebut,
+                                                       @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer attributionFonciereAnneeDebut,
+                                                       @Valid Integer attributionFonciereAnneeFin, @Valid Date attributionDateDebut, @Valid Date attributionDateFin,
+                                                       @Valid Date commercialisationDateDebut, @Valid Date commercialisationDateFin, @Valid Date adsDateDebut,
+                                                       @Valid Date adsDateFin, @Valid Date docDateDebut, @Valid Date docDateFin,
+                                                       @Valid Date datDateDebut, @Valid Date datDateFin, @Valid Boolean logementsAides,
+                                                       @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber,
+                                                       @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
-    @Override
-    public ResponseEntity<Etape> getEtapeByProgrammeId(Long programmeId) throws Exception {
-        return null;
-    }
+        ProgrammeCriteria programmeCriteria = new ProgrammeCriteria();
 
-    @Override
-    public ResponseEntity<List<PermisConstruire>> getPermisByProgrammeId(Long programmeId) throws Exception {
-        return null;
+        programmeCriteria.setEtape(etape);
+        programmeCriteria.setDiffusionRestreinte(diffusionRestreinte);
+        programmeCriteria.setCode(code);
+        programmeCriteria.setNom(nom);
+        programmeCriteria.setClotureDateDebut(clotureDateDebut);
+        programmeCriteria.setClotureDateFin(clotureDateFin);
+        programmeCriteria.setNumAds(numAds);
+        programmeCriteria.setTiers(tiers);
+        programmeCriteria.setAttributionFonciereAnneeDebut(attributionFonciereAnneeDebut);
+        programmeCriteria.setAttributionFonciereAnneeFin(attributionFonciereAnneeFin);
+        programmeCriteria.setAttributionDateDebut(attributionDateDebut);
+        programmeCriteria.setAttributionDateFin(attributionDateFin);
+        programmeCriteria.setCommercialisationDateDebut(commercialisationDateDebut);
+        programmeCriteria.setCommercialisationDateFin(commercialisationDateFin);
+        programmeCriteria.setAdsDateDebut(adsDateDebut);
+        programmeCriteria.setAdsDateFin(adsDateFin);
+        programmeCriteria.setDocDateDebut(docDateDebut);
+        programmeCriteria.setDocDateFin(docDateFin);
+        programmeCriteria.setDatDateDebut(datDateDebut);
+        programmeCriteria.setDatDateFin(datDateFin);
+        programmeCriteria.setLogementsAides(logementsAides);
+
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeEntity.class);
+
+        Page<Programme> page = programmeService.searchProgrammes(programmeCriteria, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+
     }
 
     @Override
@@ -64,13 +105,23 @@ public class ProgrammeApiController implements ProgrammesApi {
     }
 
     @Override
-    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByProgrammeId(Long programmeId) throws Exception {
-        return null;
+    public ResponseEntity<List<Etape>> getEtapesForProgrammeId(Long programmeId) throws Exception {
+        return new ResponseEntity<>(etapeProgrammeWorkflowHelper.getPossibleEtapesForProgramme(programmeId), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<List<Programme>> searchProgrammes(@Valid String keyword, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
-        return  new ResponseEntity<>(programmeService.searchProgrammes(keyword, start, resultsNumber, orderBy, asc), HttpStatus.OK);
+    public ResponseEntity<List<Agapeo>> getAgapeoByProgrammeId(Long programmeId) throws Exception {
+        return new ResponseEntity<>(agapeoService.getApapeosByProgrammeId(programmeId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<PermisConstruire>> getPermisByProgrammeId(Long programmeId) throws Exception {
+        return new ResponseEntity<>(permisConstruireService.getPermisConstruiresByProgrammeId(programmeId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByProgrammeId(Long programmeId) throws Exception {
+        return null;
     }
 
     @Override
@@ -86,6 +137,16 @@ public class ProgrammeApiController implements ProgrammesApi {
     @Override
     public ResponseEntity<Evenement> addEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
         return new ResponseEntity<>(evenementProgrammeService.addByProgrammeId(evenement, programmeId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Programme> deleteEvenementByProgrammeId(Long evenementId, Long programmeId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Programme> updateEtapeOfProgrammeId (Long programmeId, @Valid Etape etape) throws Exception {
+        return new ResponseEntity<>(programmeService.updateEtapeOfProgrammeId (programmeId, etape), HttpStatus.OK);
     }
 
     @Override

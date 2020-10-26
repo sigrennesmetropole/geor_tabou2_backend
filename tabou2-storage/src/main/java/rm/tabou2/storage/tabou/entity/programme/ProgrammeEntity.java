@@ -66,6 +66,10 @@ public class ProgrammeEntity {
     private Date clotureDate;
 
     @Basic
+    @Column(name = "diffusion_restreinte")
+    private boolean diffusionRestreinte;
+
+    @Basic
     @Column(name = "nb_logements")
     private int nbLogements;
 
@@ -110,10 +114,10 @@ public class ProgrammeEntity {
     private Date modifDate;
 
     @OneToMany(mappedBy = "programme")
-    public Set<ProgrammeTiersEntity> programmeTiers;
+    private Set<ProgrammeTiersEntity> programmeTiers;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_etape_programme")
-    public EtapeProgrammeEntity etapeProgramme;
+    private EtapeProgrammeEntity etapeProgramme;
 
 }
