@@ -34,7 +34,7 @@ public interface ProgrammeService {
      * @param etape nouvelle étape
      * @return programme modifié
      */
-    Programme editEtapeOfProgramme(long programmeId, Etape etape);
+    Programme updateEtapeOfProgrammeId (long programmeId, Etape etape);
 
     /**
      * Récupération d'un programme par son identifiant.

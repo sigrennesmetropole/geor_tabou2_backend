@@ -103,7 +103,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional
-    public Programme editEtapeOfProgramme(long programmeId, Etape etape) {
+    public Programme updateEtapeOfProgrammeId (long programmeId, Etape etape) {
         Programme programme = getProgrammeById(programmeId);
         programme.setEtape(etape);
         return me.updateProgramme(programme);

@@ -1164,7 +1164,7 @@
       },
       "put": {
         "summary": "Modification de l'étape d'avancement d'un programme d'aménagement",
-        "operationId": "editEtapeOfProgrammeId",
+        "operationId": "updateEtapeOfProgrammeId",
         "produces": [
           "application/json"
         ],
