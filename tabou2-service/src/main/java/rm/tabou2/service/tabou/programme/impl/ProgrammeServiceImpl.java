@@ -26,7 +26,6 @@ import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
-import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -69,12 +68,6 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
         programmeEntity.setEtapeProgramme(etapeProgrammeEntity);
 
-        //Ajout des dates et infos sur l'utilisateur connecté
-        programmeEntity.setCreateDate(new Date());
-        programmeEntity.setModifDate(new Date());
-        programmeEntity.setCreateUser(authentificationHelper.getConnectedUsername());
-        programmeEntity.setModifUser(authentificationHelper.getConnectedUsername());
-
         programmeEntity = programmeDao.save(programmeEntity);
 
         return programmeMapper.entityToDto(programmeEntity);
@@ -91,12 +84,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
         programmeMapper.dtoToEntity(programme, programmeEntity);
 
-        programmeEntity.setModifDate(new Date());
-        programmeEntity.setModifUser(authentificationHelper.getConnectedUsername());
-
         programmeEntity = programmeDao.save(programmeEntity);
-
-        //TODO: sauvegarge de l'évènement
 
         return programmeMapper.entityToDto(programmeEntity);
     }

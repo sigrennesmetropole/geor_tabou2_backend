@@ -1,15 +1,30 @@
 package rm.tabou2.storage.tabou.entity.programme;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.Set;
 
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "tabou_programme")
-public class ProgrammeEntity {
+public class ProgrammeEntity extends GenericAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -96,22 +111,6 @@ public class ProgrammeEntity {
     @Basic
     @Column(name = "logements_access_libre_prevu")
     private int logementsAccessLibrePrevu;
-
-    @Basic
-    @Column(name = "create_user")
-    private String createUser;
-
-    @Basic
-    @Column(name = "create_date")
-    private Date createDate;
-
-    @Basic
-    @Column(name = "modif_user")
-    private String modifUser;
-
-    @Basic
-    @Column(name = "modif_date")
-    private Date modifDate;
 
     @OneToMany(mappedBy = "programme")
     private Set<ProgrammeTiersEntity> programmeTiers;

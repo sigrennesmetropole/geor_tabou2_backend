@@ -1,15 +1,18 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "tabou_operation")
-public class OperationEntity {
+public class OperationEntity extends GenericAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -88,22 +91,6 @@ public class OperationEntity {
     @Basic
     @Column(name = "plhlogement_livre")
     private Integer plhlogementLivre;
-
-    @Basic
-    @Column(name = "create_user")
-    private String createUser;
-
-    @Basic
-    @Column(name = "create_date")
-    private Date createDate;
-
-    @Basic
-    @Column(name = "modif_user")
-    private String modifUser;
-
-    @Basic
-    @Column(name = "modif_date")
-    private Date modifDate;
 
     @Basic
     @Column(name = "num_ads")

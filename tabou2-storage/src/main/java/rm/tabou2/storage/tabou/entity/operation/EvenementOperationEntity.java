@@ -1,15 +1,18 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "tabou_evenement_operation")
-public class EvenementOperationEntity {
+public class EvenementOperationEntity extends GenericAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,22 +31,6 @@ public class EvenementOperationEntity {
     @Basic
     @Column(name = "systeme")
     private Boolean systeme;
-
-    @Basic
-    @Column(name = "create_user")
-    private String createUser;
-
-    @Basic
-    @Column(name = "create_date")
-    private Date createDate;
-
-    @Basic
-    @Column(name = "modif_user")
-    private String modifUser;
-
-    @Basic
-    @Column(name = "modif_date")
-    private Date modifDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_operation")
