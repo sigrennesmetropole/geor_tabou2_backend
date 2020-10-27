@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 public class AuthentificationHelper {
 
 
-    public static final String ROLE_CONSULTATION = "a_determiner";
-    public static final String ROLE_CONTRIBUTEUR = "a_determiner";
-    public static final String ROLE_REFERENT = "a_determiner";
-    public static final String ROLE_ADMINISTRATEUR = "a_determiner";
+    public static final String ROLE_CONSULTATION = "EL_APPLIS_TABOU_CONSULT";
+    public static final String ROLE_CONTRIBUTEUR = "EL_APPLIS_TABOU_CONTRIB";
+    public static final String ROLE_REFERENT = "EL_APPLIS_TABOU_REFERENT";
+    public static final String ROLE_ADMINISTRATEUR = "MAPSTORE_ADMIN";
 
     /**
      * Retourne le nom de l'utilisateur connecté.
