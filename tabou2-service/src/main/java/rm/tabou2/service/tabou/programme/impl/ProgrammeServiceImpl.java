@@ -9,12 +9,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.validator.ValidProgrammeCreation;
@@ -53,11 +55,18 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private AuthentificationHelper authentificationHelper;
 
     @Autowired
+    private ProgrammeRightsHelper programmeRightsHelper;
+
+    @Autowired
     private ProgrammeService me;
 
     @Override
     @Transactional
     public Programme createProgramme(@ValidProgrammeCreation Programme programme) {
+        // Vérification des droits utilisateur
+        if (programmeRightsHelper.checkCanCreateProgramme(programme)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de création du programme " + programme.getNom());
+        }
 
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
 
@@ -82,6 +91,13 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         if (programmeEntity == null) {
             throw new NoSuchElementException("Le programme id=" + programme.getId() + " n'existe pas");
         }
+
+        // Vérification des droits utilisateur
+        if (programmeRightsHelper.checkCanUpdateProgramme(programme,
+                programme.isDiffusionRestreinte() != programmeEntity.isDiffusionRestreinte())) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+        }
+
         programmeMapper.dtoToEntity(programme, programmeEntity);
 
         programmeEntity = programmeDao.save(programmeEntity);

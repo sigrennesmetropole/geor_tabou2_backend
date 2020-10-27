@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.service.ddc.PermisConstruireService;
-import rm.tabou2.service.helper.EtapeProgrammeWorkflowHelper;
+import rm.tabou2.service.helper.programme.EtapeProgrammeWorkflowHelper;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;

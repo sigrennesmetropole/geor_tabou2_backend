@@ -61,7 +61,7 @@ public class OperationApiController implements OperationsApi {
     @Override
     public ResponseEntity<Operation> updateOperation(@Valid Operation operation) throws Exception {
 
-        return new ResponseEntity<>(operationService.createOperation(operation), HttpStatus.OK);
+        return new ResponseEntity<>(operationService.updateOperation(operation), HttpStatus.OK);
 
     }
 

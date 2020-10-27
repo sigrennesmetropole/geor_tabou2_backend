@@ -1,4 +1,4 @@
-package rm.tabou2.service.helper;
+package rm.tabou2.service.helper.programme;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
