@@ -1,6 +1,8 @@
 package rm.tabou2.storage.tabou.entity.tiers;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 
@@ -8,10 +10,11 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "tabou_tiers")
-public class TiersEntity {
+public class TiersEntity extends GenericAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,22 +71,6 @@ public class TiersEntity {
     @Basic
     @Column(name = "date_inactif")
     private Date dateInactif;
-
-    @Basic
-    @Column(name = "create_user")
-    private String createUser;
-
-    @Basic
-    @Column(name = "create_date")
-    private Date createDate;
-
-    @Basic
-    @Column(name = "modif_user")
-    private String modifUser;
-
-    @Basic
-    @Column(name = "modif_date")
-    private Date modifDate;
 
     @OneToMany(mappedBy = "tiers")
     public Set<OperationTiersEntity> operationsTiers;
