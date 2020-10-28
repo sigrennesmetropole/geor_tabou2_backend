@@ -3,7 +3,7 @@ package rm.tabou2.service.validator.impl;
 import org.apache.commons.lang.StringUtils;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.ApplicationContextHelper;
-import rm.tabou2.service.helper.EtapeProgrammeWorkflowHelper;
+import rm.tabou2.service.helper.programme.EtapeProgrammeWorkflowHelper;
 import rm.tabou2.service.validator.ValidProgrammeUpdate;
 
 import javax.validation.ConstraintValidator;

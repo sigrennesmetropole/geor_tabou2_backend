@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
-import rm.tabou2.service.helper.EtapeProgrammeWorkflowHelper;
+import rm.tabou2.service.helper.programme.EtapeProgrammeWorkflowHelper;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;

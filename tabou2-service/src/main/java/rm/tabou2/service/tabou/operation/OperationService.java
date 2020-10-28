@@ -10,6 +10,8 @@ public interface OperationService {
 
     Operation createOperation(Operation operation);
 
+    Operation updateOperation(Operation operation);
+
     Operation getOperationById(long operationId);
 
     Page<Operation> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable);

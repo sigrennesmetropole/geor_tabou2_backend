@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.exception.AppServiceException;
@@ -37,6 +38,11 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     @Override
     public TypeDocument createTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
+        if (!authentificationHelper.hasEditAccess()) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de création " +
+                    "du type de document " + typeDocument.getLibelle());
+        }
+
         TypeDocumentEntity typeDocumentEntity = typeDocumentMapper.dtoToEntity(typeDocument);
 
         //Vérification des champs obligatoires
@@ -60,6 +66,11 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
 
     @Override
     public TypeDocument updateTypeDocument(TypeDocument typeDocument) throws AppServiceException {
+
+        if (!authentificationHelper.hasEditAccess()) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification " +
+                    "du type de document " + typeDocument.getLibelle());
+        }
 
         TypeDocumentEntity typeDocumentEntity;
 
@@ -87,6 +98,11 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
 
     @Override
     public TypeDocument inactivateTypeDocument(Long typeDocumentId) throws AppServiceException {
+
+        if (!authentificationHelper.hasEditAccess()) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification " +
+                    "du type de document id = " + typeDocumentId);
+        }
 
         TypeDocumentEntity typeDocument;
 
