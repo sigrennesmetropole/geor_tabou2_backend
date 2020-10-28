@@ -21,10 +21,10 @@ public class EtapeProgrammeWorkflowHelper {
 
     /**
      * Liste des étapes possibles pour un programme
-     * @param idProgramme
+     * @param idProgramme identifiant du programme
      * @return liste des étapes
      */
-    public List<Etape> getPossibleEtapesForProgramme(Long idProgramme) {
+    public List<Etape> getAccessibleEtapesForProgramme(Long idProgramme) {
         ProgrammeEntity programmeEntity = programmeDao.getById(idProgramme);
         if (programmeEntity == null) {
             throw new IllegalArgumentException("L'identifiant du programme est invalide: aucun programme trouvé pour l'id = " + idProgramme);

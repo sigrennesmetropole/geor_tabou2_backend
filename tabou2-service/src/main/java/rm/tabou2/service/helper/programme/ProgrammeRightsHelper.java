@@ -1,10 +1,12 @@
 package rm.tabou2.service.helper.programme;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.AuthentificationHelper;
-
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 
 @Component
@@ -12,6 +14,9 @@ public class ProgrammeRightsHelper {
 
     @Autowired
     private AuthentificationHelper authentificationHelper;
+
+    @Autowired
+    private ProgrammeDao programmeDao;
 
     /**
      * Vérifie si l'utilisateur a les droits d'ajouter un programme
@@ -37,5 +42,18 @@ public class ProgrammeRightsHelper {
         return diffusionRestreinteChanged
                 ? authentificationHelper.hasRestreintAccess()
                 : checkCanCreateProgramme(programme);
+    }
+
+    /**
+     * Vérifie si l'utilisateur peut récupérer la liste des étapes possible pour un programme
+     * @param idProgramme identifiant du programme
+     * @return true si l'utilisateur le peut
+     */
+    public boolean checkCanGetEtapesForProgramme(long idProgramme) {
+        ProgrammeEntity programmeEntity = programmeDao.getById(idProgramme);
+        if (programmeEntity == null) {
+            throw new IllegalArgumentException("L'identifiant du programme est invalide: aucune programme trouvée pour l'id = " + idProgramme);
+        }
+        return !BooleanUtils.isTrue(programmeEntity.getDiffusionRestreinte()) || authentificationHelper.hasRestreintAccess();
     }
 }

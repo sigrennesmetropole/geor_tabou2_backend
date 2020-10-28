@@ -6,8 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.operation.EtapeOperationWorkflowHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.service.tabou.operation.OperationService;
@@ -17,10 +19,12 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class OperationServiceImpl implements OperationService {
 
     @Autowired
@@ -38,7 +42,11 @@ public class OperationServiceImpl implements OperationService {
     @Autowired
     private OperationRightsHelper operationRightsHelper;
 
+    @Autowired
+    private EtapeOperationWorkflowHelper etapeOperationWorkflowHelper;
+
     @Override
+    @Transactional
     public Operation createOperation(Operation operation) {
         // Vérification des droits utilisateur
         if (operationRightsHelper.checkCanCreateOperation(operation)) {
@@ -91,6 +99,13 @@ public class OperationServiceImpl implements OperationService {
 
     }
 
+    @Override
+    public List<Etape> getEtapesForOperation(long operationId) {
+        if (!operationRightsHelper.checkCanGetEtapesForOperation(operationId)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer la liste des étapes pour l'opération id = " + operationId);
+        }
+        return etapeOperationWorkflowHelper.getAccessibleEtapesForOperation(operationId);
+    }
 
 
 }

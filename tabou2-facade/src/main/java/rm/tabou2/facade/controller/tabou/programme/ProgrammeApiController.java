@@ -8,19 +8,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.service.ddc.PermisConstruireService;
-import rm.tabou2.service.helper.programme.EtapeProgrammeWorkflowHelper;
+import rm.tabou2.service.dto.Agapeo;
+import rm.tabou2.service.dto.AssociationTiersTypeTiers;
+import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.Evenement;
+import rm.tabou2.service.dto.PageResult;
+import rm.tabou2.service.dto.PermisConstruire;
+import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
-import rm.tabou2.service.dto.*;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.validation.Valid;
-import java.util.Date;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -35,9 +40,6 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Autowired
     private EvenementProgrammeService evenementProgrammeService;
-
-    @Autowired
-    private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
 
     @Autowired
     private PermisConstruireService permisConstruireService;
@@ -106,7 +108,7 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Override
     public ResponseEntity<List<Etape>> getEtapesForProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(etapeProgrammeWorkflowHelper.getPossibleEtapesForProgramme(programmeId), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.getEtapesForProgramme(programmeId), HttpStatus.OK);
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.programme.EtapeProgrammeWorkflowHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
@@ -28,6 +29,7 @@ import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -56,6 +58,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private ProgrammeRightsHelper programmeRightsHelper;
+
+    @Autowired
+    private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
 
     @Autowired
     private ProgrammeService me;
@@ -94,7 +99,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         // Vérification des droits utilisateur
         if (programmeRightsHelper.checkCanUpdateProgramme(programme,
-                programme.isDiffusionRestreinte() != programmeEntity.isDiffusionRestreinte())) {
+                programme.isDiffusionRestreinte() != programmeEntity.getDiffusionRestreinte())) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
         }
 
@@ -134,6 +139,14 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
         return programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
+    }
+
+    @Override
+    public List<Etape> getEtapesForProgramme(long programmeId) {
+        if (!programmeRightsHelper.checkCanGetEtapesForProgramme(programmeId)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer la liste des étapes pour le programme id = " + programmeId);
+        }
+        return etapeProgrammeWorkflowHelper.getAccessibleEtapesForProgramme(programmeId);
     }
 
 }

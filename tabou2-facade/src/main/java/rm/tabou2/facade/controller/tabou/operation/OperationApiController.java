@@ -7,10 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.OperationsApi;
+import rm.tabou2.service.dto.AssociationTiersTypeTiers;
+import rm.tabou2.service.dto.Emprise;
+import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.Evenement;
+import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.dto.PageResult;
+import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.tabou.operation.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
-import rm.tabou2.service.dto.*;
 import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
 import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.service.utils.PaginationUtils;
@@ -77,7 +83,7 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<List<Etape>> getEtapesByOperationId(Long operationId) throws Exception {
-        return null;
+        return new ResponseEntity<>(operationService.getEtapesForOperation(operationId), HttpStatus.OK);
     }
 
     @Override
