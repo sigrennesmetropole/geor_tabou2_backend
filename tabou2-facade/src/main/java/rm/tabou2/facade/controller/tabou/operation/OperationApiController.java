@@ -14,6 +14,7 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TiersTypeTiers;
+import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.tabou.operation.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
@@ -43,6 +44,9 @@ public class OperationApiController implements OperationsApi {
 
     @Autowired
     private EvenementOperationService evenementOperationService;
+
+    @Autowired
+    private EtapeOperationService etapeOperationService;
 
     @Autowired
     private EvenementProgrammeService evenementProgrammeService;
@@ -83,7 +87,7 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<List<Etape>> getEtapesByOperationId(Long operationId) throws Exception {
-        return new ResponseEntity<>(operationService.getEtapesForOperation(operationId), HttpStatus.OK);
+        return new ResponseEntity<>(etapeOperationService.getEtapesForOperationById(operationId), HttpStatus.OK);
     }
 
     @Override

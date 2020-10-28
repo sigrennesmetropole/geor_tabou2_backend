@@ -16,6 +16,7 @@ import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
+import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
@@ -40,6 +41,9 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Autowired
     private EvenementProgrammeService evenementProgrammeService;
+
+    @Autowired
+    private EtapeProgrammeService etapeProgrammeService;
 
     @Autowired
     private PermisConstruireService permisConstruireService;
@@ -108,7 +112,7 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Override
     public ResponseEntity<List<Etape>> getEtapesForProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(programmeService.getEtapesForProgramme(programmeId), HttpStatus.OK);
+        return new ResponseEntity<>(etapeProgrammeService.getEtapesForProgrammeById(programmeId), HttpStatus.OK);
     }
 
     @Override

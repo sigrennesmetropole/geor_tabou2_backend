@@ -9,8 +9,6 @@ import rm.tabou2.service.validator.ValidProgrammeCreation;
 import rm.tabou2.service.validator.ValidProgrammeUpdate;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
-import java.util.List;
-
 public interface ProgrammeService {
 
 
@@ -45,13 +43,6 @@ public interface ProgrammeService {
      * @return programme
      */
     Programme getProgrammeById(long programmeId);
-
-    /**
-     * Récupération de la liste des étapes possibles pour un programme
-     * @param programmeId identifiant du programme
-     * @return liste des étapes
-     */
-    List<Etape> getEtapesForProgramme(long programmeId);
 
     /**
      * Recherche de programme à partir des paramètres.

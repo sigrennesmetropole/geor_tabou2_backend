@@ -1,7 +1,9 @@
 package rm.tabou2.service.tabou.programme.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
@@ -23,6 +25,9 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
 
     @Autowired
     private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
+
+    @Autowired
+    private ProgrammeRightsHelper programmeRightsHelper;
 
     @Override
     public List<Etape> searchEtapesProgramme(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
@@ -46,7 +51,10 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
 
     @Override
     public List<Etape> getEtapesForProgrammeById(long programmeId) {
-        return etapeProgrammeWorkflowHelper.getPossibleEtapesForProgramme(programmeId);
+        if (!programmeRightsHelper.checkCanGetEtapesForProgramme(programmeId)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer la liste des étapes pour le programme id = " + programmeId);
+        }
+        return etapeProgrammeWorkflowHelper.getAccessibleEtapesForProgramme(programmeId);
     }
 
     @Override

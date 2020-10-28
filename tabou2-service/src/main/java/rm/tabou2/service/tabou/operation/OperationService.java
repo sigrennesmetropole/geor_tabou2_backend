@@ -2,11 +2,8 @@ package rm.tabou2.service.tabou.operation;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
-
-import java.util.List;
 
 
 public interface OperationService {
@@ -31,13 +28,6 @@ public interface OperationService {
      * @return opération
      */
     Operation getOperationById(long operationId);
-
-    /**
-     * Récupération de la liste des étapes possibles pour un programme
-     * @param operationId identifiant de l'opération
-     * @return liste des étapes
-     */
-    List<Etape> getEtapesForOperation(long operationId);
 
     /**
      * Recherche des opérations à partir des paramètres.
