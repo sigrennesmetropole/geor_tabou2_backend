@@ -37,7 +37,7 @@ public class OperationRightsHelper {
      * @param diffusionRestreinteChanged true si le paramètre diffusionRestreinte est modifié
      * @return true si l'utilisateur peut modifier l'operation
      */
-    public boolean checkCanUpdateProgramme(Operation operation, boolean diffusionRestreinteChanged) {
+    public boolean checkCanUpdateOperation(Operation operation, boolean diffusionRestreinteChanged) {
         return diffusionRestreinteChanged
                 ? authentificationHelper.hasRestreintAccess()
                 : checkCanCreateOperation(operation);

@@ -43,7 +43,7 @@ public class OperationServiceImpl implements OperationService {
     @Transactional
     public Operation createOperation(Operation operation) {
         // Vérification des droits utilisateur
-        if (operationRightsHelper.checkCanCreateOperation(operation)) {
+        if (!operationRightsHelper.checkCanCreateOperation(operation)) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de création de l'operation " + operation.getNom());
         }
 
@@ -66,7 +66,7 @@ public class OperationServiceImpl implements OperationService {
 
         // TODO updateOperation
         // Vérification des droits utilisateur
-        if (operationRightsHelper.checkCanUpdateProgramme(operation, true)) {
+        if (!operationRightsHelper.checkCanUpdateOperation(operation, true)) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de création de l'operation " + operation.getNom());
         }
 

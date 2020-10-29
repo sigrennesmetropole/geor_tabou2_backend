@@ -64,7 +64,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Transactional
     public Programme createProgramme(@ValidProgrammeCreation Programme programme) {
         // Vérification des droits utilisateur
-        if (programmeRightsHelper.checkCanCreateProgramme(programme)) {
+        if (!programmeRightsHelper.checkCanCreateProgramme(programme)) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de création du programme " + programme.getNom());
         }
 
@@ -93,7 +93,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         // Vérification des droits utilisateur
-        if (programmeRightsHelper.checkCanUpdateProgramme(programme,
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme,
                 !programme.isDiffusionRestreinte().equals(programmeEntity.getDiffusionRestreinte()))) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
         }

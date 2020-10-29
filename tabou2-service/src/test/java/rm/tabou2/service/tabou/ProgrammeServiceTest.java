@@ -22,7 +22,7 @@ import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
@@ -49,11 +49,12 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
     private ProgrammeService programmeService;
 
     @MockBean
-    private AuthentificationHelper authentificationHelper;
+    private ProgrammeRightsHelper programmeRightsHelper;
 
     @BeforeEach
     public void initTest() {
-        Mockito.when(authentificationHelper.getConnectedUsername()).thenReturn("ProgrammeServiceTest");
+        Mockito.when(programmeRightsHelper.checkCanCreateProgramme(Mockito.any())).thenReturn(true);
+        Mockito.when(programmeRightsHelper.checkCanUpdateProgramme(Mockito.any(), Mockito.anyBoolean())).thenReturn(true);
     }
 
     @AfterEach
