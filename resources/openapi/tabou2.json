@@ -1178,13 +1178,12 @@
             "format": "int64"
           },
           {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à modifier",
+            "in": "query",
+            "name": "etapeId",
+            "description": "Identifiant de la nouvelle étape",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {

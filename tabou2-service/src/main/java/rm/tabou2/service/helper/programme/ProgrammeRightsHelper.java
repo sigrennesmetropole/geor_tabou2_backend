@@ -8,6 +8,9 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 
 @Component
 public class ProgrammeRightsHelper {
@@ -50,10 +53,12 @@ public class ProgrammeRightsHelper {
      * @return true si l'utilisateur le peut
      */
     public boolean checkCanGetEtapesForProgramme(long idProgramme) {
-        ProgrammeEntity programmeEntity = programmeDao.getById(idProgramme);
-        if (programmeEntity == null) {
-            throw new IllegalArgumentException("L'identifiant du programme est invalide: aucune programme trouvée pour l'id = " + idProgramme);
+        Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(idProgramme);
+
+        if (programmeEntityOpt.isEmpty()) {
+            throw new NoSuchElementException("Le programme id=" + idProgramme + " n'existe pas");
         }
+        ProgrammeEntity programmeEntity = programmeEntityOpt.get();
         return !BooleanUtils.isTrue(programmeEntity.getDiffusionRestreinte()) || authentificationHelper.hasRestreintAccess();
     }
 }

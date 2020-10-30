@@ -151,8 +151,8 @@ public class ProgrammeApiController implements ProgrammesApi {
     }
 
     @Override
-    public ResponseEntity<Programme> updateEtapeOfProgrammeId (Long programmeId, @Valid Etape etape) throws Exception {
-        return new ResponseEntity<>(programmeService.updateEtapeOfProgrammeId (programmeId, etape), HttpStatus.OK);
+    public ResponseEntity<Programme> updateEtapeOfProgrammeId (Long programmeId, @Valid Long etapeId) throws Exception {
+        return new ResponseEntity<>(programmeService.updateEtapeOfProgrammeId (programmeId, etapeId), HttpStatus.OK);
     }
 
     @Override

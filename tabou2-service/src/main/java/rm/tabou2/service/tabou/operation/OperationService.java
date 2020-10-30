@@ -30,6 +30,14 @@ public interface OperationService {
     Operation getOperationById(long operationId);
 
     /**
+     * Modification de l'étape d'une opération
+     * @param operationId Identifiant de l'opération
+     * @param etapeId identifiant de l'étape
+     * @return opération modifiée
+     */
+    Operation updateEtapeOfOperationId (long operationId, long etapeId);
+
+    /**
      * Recherche des opérations à partir des paramètres.
      *
      * @param operationsCriteria paramètres des opérations

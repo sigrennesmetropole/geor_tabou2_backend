@@ -138,7 +138,7 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<Operation> updateEtapeByOperationId(Long operationId, @NotNull @Valid Long etapeId) throws Exception {
-        return null;
+        return new ResponseEntity<>(operationService.updateEtapeOfOperationId (operationId, etapeId), HttpStatus.OK);
     }
 
     @Override

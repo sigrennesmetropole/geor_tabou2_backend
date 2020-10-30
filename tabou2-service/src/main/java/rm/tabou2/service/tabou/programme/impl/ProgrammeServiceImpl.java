@@ -17,6 +17,7 @@ import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
+import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.validator.ValidProgrammeCreation;
@@ -50,6 +51,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private ProgrammeMapper programmeMapper;
+
+    @Autowired
+    private EtapeProgrammeMapper etapeProgrammeMapper;
 
     @Autowired
     private AuthentificationHelper authentificationHelper;
@@ -87,10 +91,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Transactional
     public Programme updateProgramme(@ValidProgrammeUpdate Programme programme) {
 
-        ProgrammeEntity programmeEntity = programmeDao.getById(programme.getId());
-        if (programmeEntity == null) {
+        Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(programme.getId());
+
+        if (programmeEntityOpt.isEmpty()) {
             throw new NoSuchElementException("Le programme id=" + programme.getId() + " n'existe pas");
         }
+        ProgrammeEntity programmeEntity = programmeEntityOpt.get();
 
         // Vérification des droits utilisateur
         if (!programmeRightsHelper.checkCanUpdateProgramme(programme,
@@ -107,9 +113,15 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional
-    public Programme updateEtapeOfProgrammeId (long programmeId, Etape etape) {
+    public Programme updateEtapeOfProgrammeId (long programmeId, long etapeId) {
+        Optional<EtapeProgrammeEntity> optionalEtapeProgrammeEntity = etapeProgrammeDao.findById(etapeId);
+        if (optionalEtapeProgrammeEntity.isEmpty()) {
+            throw new NoSuchElementException("L'étape programme id=" + etapeId + " n'existe pas");
+        }
+        EtapeProgrammeEntity etapeProgrammeEntity = optionalEtapeProgrammeEntity.get();
+
         Programme programme = getProgrammeById(programmeId);
-        programme.setEtape(etape);
+        programme.setEtape(etapeProgrammeMapper.entityToDto(etapeProgrammeEntity));
         return me.updateProgramme(programme);
     }
 
