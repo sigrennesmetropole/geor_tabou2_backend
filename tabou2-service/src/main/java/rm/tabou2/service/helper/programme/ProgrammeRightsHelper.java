@@ -1,6 +1,7 @@
 package rm.tabou2.service.helper.programme;
 
-import org.apache.commons.lang.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Programme;
@@ -15,8 +16,13 @@ import java.util.Optional;
 @Component
 public class ProgrammeRightsHelper {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProgrammeRightsHelper.class);
+
     @Autowired
     private AuthentificationHelper authentificationHelper;
+
+    @Autowired
+    private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
 
     @Autowired
     private ProgrammeDao programmeDao;
@@ -38,13 +44,24 @@ public class ProgrammeRightsHelper {
     /**
      * Vérifie si l'utilisateur a les droits de modifier un programme
      * @param programme programme
-     * @param diffusionRestreinteChanged true si le paramètre diffusionRestreinte est modifié
+     * @param actualDiffusionRestreinte actuelle diffusion restreinte du projet avant modification
      * @return true si l'utilisateur peut modifier le programme
      */
-    public boolean checkCanUpdateProgramme(Programme programme, boolean diffusionRestreinteChanged) {
-        return diffusionRestreinteChanged
-                ? authentificationHelper.hasRestreintAccess()
-                : checkCanCreateProgramme(programme);
+    public boolean checkCanUpdateProgramme(Programme programme, boolean actualDiffusionRestreinte) {
+
+        if (actualDiffusionRestreinte && !authentificationHelper.hasRestreintAccess()) {
+            LOGGER.warn("Le programme avec diffusion restreinte ne peut être modifié par un utilisateur qui n'a pas les droits");
+            return false;
+        }
+
+        // validation de l'étape
+        boolean etapeValidation = etapeProgrammeWorkflowHelper.checkCanAssignEtapeToProgramme(programme.getEtape(), programme.getId());
+        if (!etapeValidation) {
+            LOGGER.warn("L'étape ne peut être assigné au programme");
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -59,6 +76,6 @@ public class ProgrammeRightsHelper {
             throw new NoSuchElementException("Le programme id=" + idProgramme + " n'existe pas");
         }
         ProgrammeEntity programmeEntity = programmeEntityOpt.get();
-        return !BooleanUtils.isTrue(programmeEntity.getDiffusionRestreinte()) || authentificationHelper.hasRestreintAccess();
+        return !programmeEntity.isDiffusionRestreinte() || authentificationHelper.hasRestreintAccess();
     }
 }

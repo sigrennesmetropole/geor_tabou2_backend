@@ -1,6 +1,5 @@
 package rm.tabou2.service.helper.operation;
 
-import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Operation;
@@ -53,6 +52,6 @@ public class OperationRightsHelper {
         if (operationEntity == null) {
             throw new IllegalArgumentException("L'identifiant de l'operation est invalide: aucune opération trouvée pour l'id = " + operationId);
         }
-        return !BooleanUtils.isTrue(operationEntity.getDiffusionRestreinte()) || authentificationHelper.hasRestreintAccess();
+        return !operationEntity.isDiffusionRestreinte() || authentificationHelper.hasRestreintAccess();
     }
 }

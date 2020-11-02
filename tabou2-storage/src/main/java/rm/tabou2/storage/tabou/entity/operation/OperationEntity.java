@@ -38,7 +38,7 @@ public class OperationEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "diffusion_restreinte")
-    private Boolean diffusionRestreinte;
+    private boolean diffusionRestreinte;
 
     @Basic
     @Column(name = "est_secteur")

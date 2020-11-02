@@ -16,7 +16,7 @@ public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Program
     @Mapping(source = "etapeProgramme", target = "etape")
     Programme entityToDto(ProgrammeEntity entity);
 
-    @Mapping(source = "etape", target = "etapeProgramme")
+    @Mapping(source = "etape", target = "etapeProgramme", qualifiedByName = "dtoToNewEntity")
     void dtoToEntity(Programme dto, @MappingTarget ProgrammeEntity entity);
 
 }

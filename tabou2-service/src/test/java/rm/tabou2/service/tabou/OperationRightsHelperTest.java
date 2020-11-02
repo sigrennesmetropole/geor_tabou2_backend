@@ -148,10 +148,10 @@ class OperationRightsHelperTest {
         Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
 
         OperationEntity operationEntity = new OperationEntity();
-        operationEntity.setNom("nom1");
+        operationEntity.setNom("nom4");
         operationEntity.setDiffusionRestreinte(true);
-        operationEntity.setCode("code1");
-        operationEntity.setNumAds("numads1");
+        operationEntity.setCode("code4");
+        operationEntity.setNumAds("numads4");
 
         operationDao.save(operationEntity);
 

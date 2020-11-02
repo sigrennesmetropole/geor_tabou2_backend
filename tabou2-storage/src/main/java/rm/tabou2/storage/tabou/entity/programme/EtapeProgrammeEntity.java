@@ -32,6 +32,10 @@ public class EtapeProgrammeEntity {
     @Column(name = "type")
     private String type;
 
+    @Basic
+    @Column(name = "remove_restriction")
+    private boolean removeRestriction;
+
     @ManyToMany
     @JoinTable(
             name = "tabou_etape_programme_workflow",

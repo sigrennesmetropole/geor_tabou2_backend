@@ -20,16 +20,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
-import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
-
-import javax.validation.ConstraintViolationException;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
@@ -105,19 +103,21 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
     @Transactional
     void testUpdateProgrammeWithInaccessibleEtape() {
 
-        Programme programme4 = new Programme();
-        programme4.setNom("nom4");
-        programme4.setDiffusionRestreinte(false);
-        programme4.setCode("code4");
-        programme4.setNumAds("numads4");
+        Programme programme = new Programme();
+        programme.setNom("nom4");
+        programme.setDiffusionRestreinte(true);
+        programme.setCode("code4");
+        programme.setNumAds("numads4");
 
-        Programme programme5 = programmeService.createProgramme(programme4);
+        programme = programmeService.createProgramme(programme);
 
-        Etape etape = etapeProgrammeMapper.entityToDto(etapeProgrammeDao.findByCode("ACHEVE_PUBLIC"));
-        programme5.setEtape(etape);
-        Assertions.assertThrows(
-                ConstraintViolationException.class,
-                () -> programmeService.updateProgramme(programme5)
-        );
+        EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findByCode("EN_PROJET_PUBLIC");
+        long programmeId = programme.getId();
+        long etapeId = etapeProgrammeEntity.getId();
+
+        programme = programmeService.updateEtapeOfProgrammeId(programmeId, etapeId);
+
+        Assertions.assertFalse(programme.isDiffusionRestreinte());
+
     }
 }

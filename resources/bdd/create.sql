@@ -33,6 +33,7 @@ create table tabou_etape_operation (
                                  code varchar(255) unique,
                                  mode varchar(255),
                                  type varchar(255),
+                                 remove_restriction boolean,
                                  primary key (id_etape_operation)
 );
 
@@ -48,6 +49,7 @@ create table tabou_etape_programme (
                                  code varchar(255) unique,
                                  mode varchar(255),
                                  type varchar(255),
+                                 remove_restriction boolean,
                                  primary key (id_etape_programme)
 );
 

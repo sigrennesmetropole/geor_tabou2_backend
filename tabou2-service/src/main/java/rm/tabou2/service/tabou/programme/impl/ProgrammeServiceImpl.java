@@ -67,18 +67,26 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Override
     @Transactional
     public Programme createProgramme(@ValidProgrammeCreation Programme programme) {
+
+        // Ajout des valeurs par défaut
+        if (programme.isDiffusionRestreinte() == null) {
+            programme.setDiffusionRestreinte(true);
+        }
+
         // Vérification des droits utilisateur
         if (!programmeRightsHelper.checkCanCreateProgramme(programme)) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de création du programme " + programme.getNom());
         }
 
-        ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
-
         // Ajout de l'état initial
-        EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findByType(Etape.TypeEnum.START.toString());
+        String code = BooleanUtils.isTrue(programme.isDiffusionRestreinte()) ? "EN_PROJET_OFF" : "EN_PROJET_PUBLIC";
+
+        EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findByTypeAndCode(Etape.TypeEnum.START.toString(), code);
         if (etapeProgrammeEntity == null) {
-            throw new NoSuchElementException("Aucune étape initiale de type " + Etape.TypeEnum.START.toString() + " n'a été défini pour les programmes");
+            throw new NoSuchElementException("Aucune étape initiale de type " + Etape.TypeEnum.START.toString() + " n'a été " +
+                    "défini pour les programmes avec diffusion restreinte = " + programme.isDiffusionRestreinte());
         }
+        ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
         programmeEntity.setEtapeProgramme(etapeProgrammeEntity);
 
         programmeEntity = programmeDao.save(programmeEntity);
@@ -99,9 +107,19 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ProgrammeEntity programmeEntity = programmeEntityOpt.get();
 
         // Vérification des droits utilisateur
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme,
-                !programme.isDiffusionRestreinte().equals(programmeEntity.getDiffusionRestreinte()))) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programmeEntity.isDiffusionRestreinte())) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+        }
+
+        // Mise à jour de la diffusion restreinte à partir de l'étape
+        Optional<EtapeProgrammeEntity> optionalEtapeProgrammeEntity = etapeProgrammeDao.findById(programme.getEtape().getId());
+        if (optionalEtapeProgrammeEntity.isEmpty()) {
+            throw new NoSuchElementException("L'étape programme id=" + programme.getEtape().getId() + " n'existe pas");
+        }
+        EtapeProgrammeEntity etapeProgrammeEntity = optionalEtapeProgrammeEntity.get();
+        programme.setDiffusionRestreinte(null);
+        if (etapeProgrammeEntity.isRemoveRestriction()) {
+            programme.setDiffusionRestreinte(false);
         }
 
         programmeMapper.dtoToEntity(programme, programmeEntity);

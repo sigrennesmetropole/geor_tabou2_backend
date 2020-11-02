@@ -82,7 +82,7 @@ public class ProgrammeEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "diffusion_restreinte")
-    private Boolean diffusionRestreinte;
+    private boolean diffusionRestreinte;
 
     @Basic
     @Column(name = "nb_logements")
