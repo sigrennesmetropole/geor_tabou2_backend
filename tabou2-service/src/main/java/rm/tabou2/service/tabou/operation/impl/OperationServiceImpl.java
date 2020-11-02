@@ -9,10 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
+import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.service.tabou.operation.OperationService;
+import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
@@ -21,6 +24,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class OperationServiceImpl implements OperationService {
 
     @Autowired
@@ -33,15 +37,22 @@ public class OperationServiceImpl implements OperationService {
     private OperationCustomDao operationCustomDao;
 
     @Autowired
+    private EtapeOperationDao etapeOperationDao;
+
+    @Autowired
+    private EtapeOperationMapper etapeOperationMapper;
+
+    @Autowired
     private AuthentificationHelper authentificationHelper;
 
     @Autowired
     private OperationRightsHelper operationRightsHelper;
 
     @Override
+    @Transactional
     public Operation createOperation(Operation operation) {
         // Vérification des droits utilisateur
-        if (operationRightsHelper.checkCanCreateOperation(operation)) {
+        if (!operationRightsHelper.checkCanCreateOperation(operation)) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de création de l'operation " + operation.getNom());
         }
 
@@ -64,12 +75,26 @@ public class OperationServiceImpl implements OperationService {
 
         // TODO updateOperation
         // Vérification des droits utilisateur
-        if (operationRightsHelper.checkCanUpdateProgramme(operation, true)) {
+        if (!operationRightsHelper.checkCanUpdateOperation(operation, true)) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de création de l'operation " + operation.getNom());
         }
 
         return null;
 
+    }
+
+    @Override
+    @Transactional
+    public Operation updateEtapeOfOperationId(long operationId, long etapeId) {
+        Optional<EtapeOperationEntity> optionalEtapeOperationEntity = etapeOperationDao.findById(etapeId);
+        if (optionalEtapeOperationEntity.isEmpty()) {
+            throw new NoSuchElementException("L'étape opération id=" + etapeId + " n'existe pas");
+        }
+        EtapeOperationEntity etapeOperationEntity = optionalEtapeOperationEntity.get();
+
+        Operation operation = getOperationById(operationId);
+        operation.setEtape(etapeOperationMapper.entityToDto(etapeOperationEntity));
+        return updateOperation(operation);
     }
 
     @Override
@@ -90,7 +115,5 @@ public class OperationServiceImpl implements OperationService {
         return (operationMapper.entityToDto(operationOpt.get()));
 
     }
-
-
 
 }

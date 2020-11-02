@@ -12,5 +12,12 @@ public interface EtapeOperationService {
 
     Etape getEtapeOperationById(long etapeOperationId);
 
+    /**
+     * Récupération de la liste des étapes possibles pour un programme
+     * @param operationId identifiant de l'opération
+     * @return liste des étapes
+     */
+    List<Etape> getEtapesForOperationById(long operationId);
+
     List<Etape> getEtapesForOperation();
 }

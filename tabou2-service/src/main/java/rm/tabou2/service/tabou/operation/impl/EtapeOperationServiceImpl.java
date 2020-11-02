@@ -1,8 +1,11 @@
 package rm.tabou2.service.tabou.operation.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.helper.operation.EtapeOperationWorkflowHelper;
+import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.utils.PaginationUtils;
@@ -21,6 +24,12 @@ public class EtapeOperationServiceImpl implements EtapeOperationService {
 
     @Autowired
     private EtapeOperationMapper etapeOperationMapper;
+
+    @Autowired
+    private OperationRightsHelper operationRightsHelper;
+
+    @Autowired
+    private EtapeOperationWorkflowHelper etapeOperationWorkflowHelper;
 
     @Override
     public List<Etape> searchEtapesOperation(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
@@ -52,6 +61,14 @@ public class EtapeOperationServiceImpl implements EtapeOperationService {
         }
 
         return etapeOperationMapper.entityToDto(etapeOperationEntity.get());
+    }
+
+    @Override
+    public List<Etape> getEtapesForOperationById(long operationId) {
+        if (!operationRightsHelper.checkCanGetEtapesForOperation(operationId)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer la liste des étapes pour l'opération id = " + operationId);
+        }
+        return etapeOperationWorkflowHelper.getAccessibleEtapesForOperation(operationId);
     }
 
     @Override

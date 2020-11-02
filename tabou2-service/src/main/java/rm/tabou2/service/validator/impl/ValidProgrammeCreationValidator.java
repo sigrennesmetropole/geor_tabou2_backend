@@ -34,13 +34,7 @@ public class ValidProgrammeCreationValidator implements ConstraintValidator<Vali
             customMessageForValidation(constraintValidatorContext, "Le code du programme est invalide");
         }
 
-        // diffusion restreinte
-        boolean diffusionRestreinteValidation = programme.isDiffusionRestreinte() != null;
-        if (!diffusionRestreinteValidation) {
-            customMessageForValidation(constraintValidatorContext, "La diffusion restreinte du programme est invalide");
-        }
-
-        return nomValidation && codeValidation && diffusionRestreinteValidation;
+        return nomValidation && codeValidation;
     }
 
     private void customMessageForValidation(ConstraintValidatorContext constraintContext, String message) {

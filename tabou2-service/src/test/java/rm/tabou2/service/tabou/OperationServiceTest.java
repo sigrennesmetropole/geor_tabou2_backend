@@ -2,10 +2,13 @@ package rm.tabou2.service.tabou;
 
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
@@ -30,6 +34,15 @@ class OperationServiceTest extends DatabaseInitializerTest {
 
     @Autowired
     private OperationService operationService;
+
+    @MockBean
+    private OperationRightsHelper operationRightsHelper;
+
+    @BeforeEach
+    public void initTest() {
+        Mockito.when(operationRightsHelper.checkCanCreateOperation(Mockito.any())).thenReturn(true);
+        Mockito.when(operationRightsHelper.checkCanUpdateOperation(Mockito.any(), Mockito.anyBoolean())).thenReturn(true);
+    }
 
     @Test
     void testSearchOperation() {

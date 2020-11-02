@@ -3,7 +3,6 @@ package rm.tabou2.service.tabou.programme;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.validator.ValidProgrammeCreation;
 import rm.tabou2.service.validator.ValidProgrammeUpdate;
@@ -31,10 +30,10 @@ public interface ProgrammeService {
     /**
      * Modification de l'étape d'un programme
      * @param programmeId Identifiant du programme
-     * @param etape nouvelle étape
+     * @param etapeId identifiant de l'étape
      * @return programme modifié
      */
-    Programme updateEtapeOfProgrammeId (long programmeId, Etape etape);
+    Programme updateEtapeOfProgrammeId (long programmeId, long etapeId);
 
     /**
      * Récupération d'un programme par son identifiant.
@@ -49,7 +48,7 @@ public interface ProgrammeService {
      *
      * @param programmeCriteria paramètres des programmes
      * @param pageable paramètre lié à la pagination
-     * @return Liste des programme correspondant à la recherche
+     * @return Liste des programmes correspondants à la recherche
      */
     Page<Programme> searchProgrammes(ProgrammeCriteria programmeCriteria, Pageable pageable);
 }
