@@ -25,10 +25,7 @@ public class EtapeProgrammeWorkflowHelper {
      * @return liste des étapes
      */
     public List<Etape> getAccessibleEtapesForProgramme(Long idProgramme) {
-        ProgrammeEntity programmeEntity = programmeDao.getById(idProgramme);
-        if (programmeEntity == null) {
-            throw new IllegalArgumentException("L'identifiant du programme est invalide: aucun programme trouvé pour l'id = " + idProgramme);
-        }
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(idProgramme);
         List<EtapeProgrammeEntity> nextEtapes = List.copyOf(programmeEntity.getEtapeProgramme().getNextEtapes());
         return etapeProgrammeMapper.entitiesToDto(nextEtapes);
     }
@@ -36,14 +33,11 @@ public class EtapeProgrammeWorkflowHelper {
     /**
      * Permet de savoir si on peut affecter une étape à un programme
      * @param newEtape      etape à affecter
-     * @param idProgramme   le programme
+     * @param idProgramme   identifiant du programme
      * @return              true si on peut affectuer newEtape au programme
      */
     public boolean checkCanAssignEtapeToProgramme(Etape newEtape, Long idProgramme) {
-        ProgrammeEntity programmeEntity = programmeDao.getById(idProgramme);
-        if (programmeEntity == null) {
-            throw new IllegalArgumentException("L'identifiant du programme est invalide: aucun programme trouvé pour l'id = " + idProgramme);
-        }
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(idProgramme);
         EtapeProgrammeEntity actualEtapeEntity = programmeEntity.getEtapeProgramme();
         if (actualEtapeEntity.getCode().equals(newEtape.getCode())) {
             return true;

@@ -9,9 +9,6 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 
 @Component
 public class ProgrammeRightsHelper {
@@ -44,7 +41,7 @@ public class ProgrammeRightsHelper {
     /**
      * Vérifie si l'utilisateur a les droits de modifier un programme
      * @param programme programme
-     * @param actualDiffusionRestreinte actuelle diffusion restreinte du projet avant modification
+     * @param actualDiffusionRestreinte actuelle diffusion restreinte du programme avant modification
      * @return true si l'utilisateur peut modifier le programme
      */
     public boolean checkCanUpdateProgramme(Programme programme, boolean actualDiffusionRestreinte) {
@@ -65,17 +62,21 @@ public class ProgrammeRightsHelper {
     }
 
     /**
+     * Vérifie si l'utilisateur peut récupérer un programme
+     * @param programme programme
+     * @return true si l'utilisateur peut récupérer le programme
+     */
+    public boolean checkCanGetProgramme(Programme programme) {
+        return !programme.isDiffusionRestreinte() || authentificationHelper.hasRestreintAccess();
+    }
+
+    /**
      * Vérifie si l'utilisateur peut récupérer la liste des étapes possible pour un programme
      * @param idProgramme identifiant du programme
      * @return true si l'utilisateur le peut
      */
     public boolean checkCanGetEtapesForProgramme(long idProgramme) {
-        Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(idProgramme);
-
-        if (programmeEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le programme id=" + idProgramme + " n'existe pas");
-        }
-        ProgrammeEntity programmeEntity = programmeEntityOpt.get();
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(idProgramme);
         return !programmeEntity.isDiffusionRestreinte() || authentificationHelper.hasRestreintAccess();
     }
 }

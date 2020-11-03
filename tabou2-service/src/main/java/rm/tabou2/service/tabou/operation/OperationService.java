@@ -3,6 +3,8 @@ package rm.tabou2.service.tabou.operation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.validator.ValidOperationCreation;
+import rm.tabou2.service.validator.ValidOperationUpdate;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 
@@ -13,14 +15,14 @@ public interface OperationService {
      * @param operation opération à créer
      * @return opération crée
      */
-    Operation createOperation(Operation operation);
+    Operation createOperation(@ValidOperationCreation Operation operation);
 
     /**
      * Mise à jour d'une opération
      * @param operation opération à modifier
      * @return opération modifiée
      */
-    Operation updateOperation(Operation operation);
+    Operation updateOperation(@ValidOperationUpdate Operation operation);
 
     /**
      * Récupération d'une opération

@@ -22,12 +22,13 @@ import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
-import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
+
+import javax.validation.ConstraintViolationException;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
@@ -41,9 +42,6 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
     private ProgrammeDao programmeDao;
 
     @Autowired
-    private EtapeProgrammeMapper etapeProgrammeMapper;
-
-    @Autowired
     private ProgrammeService programmeService;
 
     @MockBean
@@ -51,6 +49,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
 
     @BeforeEach
     public void initTest() {
+        Mockito.when(programmeRightsHelper.checkCanGetProgramme(Mockito.any())).thenReturn(true);
         Mockito.when(programmeRightsHelper.checkCanCreateProgramme(Mockito.any())).thenReturn(true);
         Mockito.when(programmeRightsHelper.checkCanUpdateProgramme(Mockito.any(), Mockito.anyBoolean())).thenReturn(true);
     }
@@ -98,7 +97,22 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
         Assertions.assertEquals( "nom3", page.getContent().get(1).getNom());
     }
 
-    @DisplayName("testUpdateProgrammeWithInaccessibleEtape: Test de l'édition d'un programme avec une étape inadéquate'")
+    @DisplayName("testCannotCreateProgrammeWithInvalidParameters: Test de l'interdiction de la création d'un programme " +
+            "avec des paramètres obligatoires non présents")
+    @Test
+    void testCannotCreateProgrammeWithInvalidParameters() {
+
+        final Programme programme = new Programme();
+        programme.setDiffusionRestreinte(true);
+        programme.setNumAds("numads4");
+
+        Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> programmeService.createProgramme(programme)
+        );
+    }
+
+    @DisplayName("testUpdateProgrammeWithDiffusionRestreinte: Test de l'édition d'un programme avec une étape qui change la diffusion restreinte'")
     @Test
     @Transactional
     void testUpdateProgrammeWithInaccessibleEtape() {

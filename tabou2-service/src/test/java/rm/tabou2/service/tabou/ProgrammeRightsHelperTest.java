@@ -149,25 +149,25 @@ class ProgrammeRightsHelperTest extends DatabaseInitializerTest {
 
         Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
 
-        EtapeProgrammeEntity etapeProgrammeEntityRestreint = etapeProgrammeDao.findByCode("EN_PROJET_PUBLIC");
+        EtapeProgrammeEntity etapeProgrammeEntityEnProjet = etapeProgrammeDao.findByCode("EN_PROJET_PUBLIC");
 
         ProgrammeEntity programmeEntity = new ProgrammeEntity();
         programmeEntity.setNom("nom1");
         programmeEntity.setDiffusionRestreinte(false);
         programmeEntity.setCode("code1");
         programmeEntity.setNumAds("numads1");
-        programmeEntity.setEtapeProgramme(etapeProgrammeEntityRestreint);
+        programmeEntity.setEtapeProgramme(etapeProgrammeEntityEnProjet);
 
         programmeDao.save(programmeEntity);
 
-        EtapeProgrammeEntity etapeProgrammeEntityNonRestreint = etapeProgrammeDao.findByCode("EN_CHANTIER_PUBLIC");
+        EtapeProgrammeEntity etapeProgrammeEntityEnChantier = etapeProgrammeDao.findByCode("EN_CHANTIER_PUBLIC");
 
         Programme programme = new Programme();
         programme.setId(programmeEntity.getId());
         programme.setNom(programmeEntity.getNom());
         programme.setCode(programmeEntity.getCode());
         programme.setNumAds(programmeEntity.getNumAds());
-        programme.setEtape(etapeProgrammeMapper.entityToDto(etapeProgrammeEntityNonRestreint));
+        programme.setEtape(etapeProgrammeMapper.entityToDto(etapeProgrammeEntityEnChantier));
 
         Assertions.assertFalse(programmeRightsHelper.checkCanUpdateProgramme(programme, programmeEntity.isDiffusionRestreinte()));
     }

@@ -18,6 +18,6 @@ public interface NatureDao extends CrudRepository<NatureEntity, Long>, JpaReposi
     @Query("SELECT n FROM NatureEntity n WHERE n.dateInactif is null")
     List<NatureEntity> findOnlyActive();
 
-
+    NatureEntity findByLibelle(String libelle);
 
 }

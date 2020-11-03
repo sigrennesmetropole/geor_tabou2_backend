@@ -3504,7 +3504,10 @@
         },
         "libelle": {
           "description": "Description de la nature",
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "ZAC", "ZA", "En diffus"
+          ]
         },
         "dateInactivite": {
           "description": "Date de mise en inactivité de la nature",
