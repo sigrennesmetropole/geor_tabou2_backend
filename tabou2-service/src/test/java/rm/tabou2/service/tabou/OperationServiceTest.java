@@ -35,8 +35,11 @@ import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.StreamSupport;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
@@ -106,10 +109,26 @@ class OperationServiceTest extends DatabaseInitializerTest {
         operation.setNumAds("numads4");
         operation.setSecteur(true);
 
-        Assertions.assertThrows(
+        ConstraintViolationException constraintViolationException = Assertions.assertThrows(
                 ConstraintViolationException.class,
                 () -> operationService.createOperation(operation)
         );
+
+        Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
+
+        Assertions.assertEquals(3, constraintViolations.size());
+
+        List<String> errorProperties = new ArrayList<>();
+        constraintViolations.forEach(cv -> {
+            String name = StreamSupport.stream(cv.getPropertyPath().spliterator(), false)
+                    .map(Path.Node::getName)
+                    .reduce((first, second) -> second).orElseGet(() -> cv.getPropertyPath().toString());
+            errorProperties.add(name);
+        });
+
+        Assertions.assertTrue(errorProperties.contains("nom"));
+        Assertions.assertTrue(errorProperties.contains("code"));
+        Assertions.assertTrue(errorProperties.contains("nature"));
     }
 
     @DisplayName("testUpdateOperationWithDiffusionRestreinte: Test de l'édition d'une opération " +

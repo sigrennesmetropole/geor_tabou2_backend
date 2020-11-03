@@ -28,7 +28,13 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.StreamSupport;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
@@ -106,10 +112,26 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
         programme.setDiffusionRestreinte(true);
         programme.setNumAds("numads4");
 
-        Assertions.assertThrows(
+        ConstraintViolationException constraintViolationException = Assertions.assertThrows(
                 ConstraintViolationException.class,
                 () -> programmeService.createProgramme(programme)
         );
+
+        Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
+
+        Assertions.assertEquals(2, constraintViolations.size());
+
+        List<String> errorProperties = new ArrayList<>();
+        constraintViolations.forEach(cv -> {
+            String name = StreamSupport.stream(cv.getPropertyPath().spliterator(), false)
+                    .map(Path.Node::getName)
+                    .reduce((first, second) -> second).orElseGet(() -> cv.getPropertyPath().toString());
+            errorProperties.add(name);
+        });
+
+        Assertions.assertTrue(errorProperties.contains("nom"));
+        Assertions.assertTrue(errorProperties.contains("code"));
+
     }
 
     @DisplayName("testUpdateProgrammeWithDiffusionRestreinte: Test de l'édition d'un programme avec une étape qui change la diffusion restreinte'")
