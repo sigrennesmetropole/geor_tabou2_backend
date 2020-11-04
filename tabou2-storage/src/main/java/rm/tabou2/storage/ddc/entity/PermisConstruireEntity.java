@@ -17,8 +17,8 @@ public class PermisConstruireEntity {
 
     @OrderBy
     @Basic
-    @Column(name = "num_pc")
-    private String numPc;
+    @Column(name = "num_ads")
+    private String numAds;
 
     @Basic
     @Column(name = "depot_dossier")

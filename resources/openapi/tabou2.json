@@ -743,7 +743,7 @@
         }
       },
       "get": {
-        "summary": "Recherche d'un programme",
+        "summary": "Recherche des programmes",
         "operationId": "searchProgrammes",
         "produces": [
           "application/json"
@@ -751,10 +751,162 @@
         "parameters": [
           {
             "in": "query",
-            "name": "keyword",
-            "description": "Mot clé de la recherche",
+            "name": "nom",
+            "description": "Recherche par nom",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "etape",
+            "description": "Recherche par étape",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "diffusionRestreinte",
+            "description": "Indique si les opérations à diffusion restreinte doivent être affichés si les droits le permettent",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "code",
+            "description": "Recherche par code",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "numAds",
+            "description": "Recherche par numéro ADS",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateDebut",
+            "description": "Borne inférieure de recherche par date de cloture",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateFin",
+            "description": "Borne supérieure de recherche par date de cloture",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "tiers",
+            "required": false,
+            "type": "string",
+            "description": "Recherche par tiers"
+          },
+          {
+            "in": "query",
+            "name": "attributionFonciereAnneeDebut",
+            "description": "Borne inférieure de recherche par année d'attribution foncière",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "attributionFonciereAnneeFin",
+            "description": "Borne supérieure de recherche par année d'attribution foncière",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "attributionDateDebut",
+            "description": "Borne inférieure de recherche par date d'attribution",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "attributionDateFin",
+            "description": "Borne supérieure de recherche par date d'attribution",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "commercialisationDateDebut",
+            "description": "Borne inférieure de recherche par date de commercialisation",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "commercialisationDateFin",
+            "description": "Borne supérieure de recherche par date de commercialisation",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "adsDateDebut",
+            "description": "Borne inférieure de recherche par date ADS",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "adsDateFin",
+            "description": "Borne supérieure de recherche par date ADS",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "docDateDebut",
+            "description": "Borne inférieure de recherche par date DOC",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "docDateFin",
+            "description": "Borne supérieure de recherche par date DOC",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "datDateDebut",
+            "description": "Borne inférieure de recherche par date DAT",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "datDateFin",
+            "description": "Borne supérieure de recherche par date DAT",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "logementsAides",
+            "description": "True si recherche sur les logements pour lesquels l'état apporte de l'aide",
+            "required": false,
+            "type": "boolean"
           },
           {
             "name": "start",
@@ -800,10 +952,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Programme"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -984,8 +1133,8 @@
     },
     "/programmes/{programmeId}/etapes": {
       "get": {
-        "summary": "Récupération de l'étape d'avancement pour un programme d'aménagement",
-        "operationId": "getEtapeByProgrammeId",
+        "summary": "Récupération de la liste des étapes d'avancement possibles pour un programme d'aménagement",
+        "operationId": "getEtapesForProgrammeId",
         "produces": [
           "application/json"
         ],
@@ -1003,7 +1152,46 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Etape"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Etape"
+              }
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification de l'étape d'avancement d'un programme d'aménagement",
+        "operationId": "updateEtapeOfProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "required": true,
+            "description": "Identifiant du programme",
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "etapeId",
+            "description": "Identifiant de la nouvelle étape",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Programme"
             }
           },
           "404": {
@@ -1572,6 +1760,61 @@
                 "$ref": "#/definitions/PluiZonage"
               }
             }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajoute une étape d'avancement pour les programmes d'aménagement",
+        "operationId": "addEtapeProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "etape",
+            "description": "Etape à ajouter",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifie une étape d'avancement pour les programmes d'aménagement",
+        "operationId": "editEtapeProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "etape",
+            "description": "Etape à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Etape"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -2811,7 +3054,7 @@
         "logementsTotal": {
           "description": "Nombre de logements total (prévu, jusqu'à l'étape de livraison, livré ensuite)",
           "type": "integer",
-          "format": "int64"
+          "format": "int32"
         },
         "logementsAccesLibre": {
           "description": "Nombre de logements en accession libre",
@@ -2843,7 +3086,7 @@
           "type": "integer",
           "format": "int32"
         },
-        "numPc": {
+        "numAds": {
           "description": "Numéro du permis de construire",
           "type": "string"
         },
@@ -3221,6 +3464,24 @@
         "libelle": {
           "description": "Libellé de l'étape ",
           "type": "string"
+        },
+        "code": {
+          "description": "Identifiant unique pour l'étape",
+          "type": "string"
+        },
+        "type": {
+          "description": "Indicateur permettant de savoir s'il s'agit de l'étape initiale, finale ou intermédiaire",
+          "type": "string",
+          "enum": [
+            "START", "NORMAL", "END"
+          ]
+        },
+        "mode": {
+          "description": "Indicateur permettant de savoir si l'étape est visible en mode off ou publique",
+          "type": "string",
+          "enum": [
+            "OFF", "PUBLIC", "NONE"
+          ]
         }
       }
     },
@@ -3284,7 +3545,7 @@
           "type": "integer",
           "format": "int64"
         },
-        "numPc": {
+        "numAds": {
           "description": "Numero du permis de constuire",
           "type": "string"
         },
@@ -3332,53 +3593,63 @@
           "type": "integer",
           "format": "int64"
         },
-        "libelle": {
-          "description": "Identifiant unique du permis",
-          "type": "string"
-        },
-        "logementsAccesSociale": {
-          "description": "Nombre de logements en accession libre",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsAccesMaitrise": {
-          "description": "Nombre de logements en accession maitrisée",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsLocatifRegule": {
-          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsPls": {
-          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsLocatifSocial": {
-          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "anneeAgrementEtat": {
+        "anneeProg": {
           "description": "Année de l'agrément donné par l'état",
           "type": "integer",
           "format": "int64"
         },
-        "PlhLogementsPrevus": {
-          "description": "Nombre de logement (prévu jusqu'à l'étape de livraison, livré ensuite)",
-          "type": "integer",
-          "format": "int64"
-        },
-        "PlhLogementsLivres": {
-          "description": "Nombre de logements livrés au titre du PLH pour l'opération",
-          "type": "integer",
-          "format": "int64"
-        },
-        "numPc": {
-          "description": "Numéro du permis de construire",
+        "nomOperation": {
+          "description": "Identifiant unique du permis",
           "type": "string"
+        },
+        "numDossier": {
+          "description": "",
+          "type": "integer"
+        },
+        "etat": {
+          "description": "",
+          "type": "string"
+        },
+        "maitreOuvrage": {
+          "description": "",
+          "type": "string"
+        },
+        "commune": {
+          "description": "",
+          "type": "string"
+        },
+        "numADS": {
+          "description": "",
+          "type": "string"
+        },
+        "conventionApplicationPlh": {
+          "description": "",
+          "type": "string"
+        },
+        "logementsLocatifAide": {
+          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsAccessAide": {
+          "description": "Nombre de logements en accession libre",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsLocatifRegulePrive": {
+          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsLocatifReguleHlm": {
+          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsAccessMaitrise": {
+          "description": "Nombre de logements en accession maitrisée",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

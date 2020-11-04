@@ -10,7 +10,12 @@ public interface EtapeProgrammeService {
 
     Etape addEtapeProgramme(Etape etape);
 
-    Etape getEtapeProgrammeById(long etapeProgrammeId);
+    /**
+     * Liste des étapes possibles pour un programme
+     * @param programmeId   id du programme
+     * @return              liste des étapes
+     */
+    List<Etape> getEtapesForProgrammeById(long programmeId);
 
     List<Etape> getEtapesForProgrammes();
 }

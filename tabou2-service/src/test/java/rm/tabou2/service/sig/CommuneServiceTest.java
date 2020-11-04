@@ -1,12 +1,11 @@
 package rm.tabou2.service.sig;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,10 +13,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.Commune;
-import rm.tabou2.service.dto.Operation;
 import rm.tabou2.storage.sig.dao.CommuneDao;
 import rm.tabou2.storage.sig.entity.CommuneEntity;
-import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.util.List;
@@ -25,7 +22,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-public class CommuneServiceTest {
+class CommuneServiceTest {
 
     @Autowired
     private CommuneDao communeDao;
@@ -34,8 +31,8 @@ public class CommuneServiceTest {
     private CommuneService communeService;
 
     @Test
-    @Ignore
-    public void testSearchCommune() {
+    @Disabled
+    void testSearchCommune() {
 
         // enregistrer une operation dans la base temporaire H2
         CommuneEntity commune = new CommuneEntity();
@@ -57,8 +54,8 @@ public class CommuneServiceTest {
         }
 
 
-        Assert.assertEquals(1, page.size());
-        Assert.assertEquals("rennes", page.get(0).getNom());
+        Assertions.assertEquals(1, page.size());
+        Assertions.assertEquals("rennes", page.get(0).getNom());
     }
 
 }

@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.mapper.tabou.document.TypeDocumentMapper;
 import rm.tabou2.service.tabou.document.TypeDocumentService;
 import rm.tabou2.storage.tabou.dao.document.TypeDocumentCustomDao;
@@ -30,10 +32,27 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     @Autowired
     private TypeDocumentMapper typeDocumentMapper;
 
+    @Autowired
+    private AuthentificationHelper authentificationHelper;
+
     @Override
     public TypeDocument createTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
+        if (!authentificationHelper.hasEditAccess()) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de création " +
+                    "du type de document " + typeDocument.getLibelle());
+        }
+
         TypeDocumentEntity typeDocumentEntity = typeDocumentMapper.dtoToEntity(typeDocument);
+
+        //Vérification des champs obligatoires
+        if (typeDocumentEntity.getLibelle().isEmpty()) {
+            throw new AppServiceException("Le champ libelle est manquant");
+        }
+
+        //Historisation
+        typeDocumentEntity.setCreateDate(new Date());
+        typeDocumentEntity.setCreateUser(authentificationHelper.getConnectedUsername());
 
         try {
             typeDocumentEntity = typeDocumentDao.save(typeDocumentEntity);
@@ -47,6 +66,11 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
 
     @Override
     public TypeDocument updateTypeDocument(TypeDocument typeDocument) throws AppServiceException {
+
+        if (!authentificationHelper.hasEditAccess()) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification " +
+                    "du type de document " + typeDocument.getLibelle());
+        }
 
         TypeDocumentEntity typeDocumentEntity;
 
@@ -74,6 +98,11 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
 
     @Override
     public TypeDocument inactivateTypeDocument(Long typeDocumentId) throws AppServiceException {
+
+        if (!authentificationHelper.hasEditAccess()) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification " +
+                    "du type de document id = " + typeDocumentId);
+        }
 
         TypeDocumentEntity typeDocument;
 
