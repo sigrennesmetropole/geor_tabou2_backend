@@ -32,7 +32,12 @@ public class ValidOperationCreationValidator implements ConstraintValidator<Vali
             customMessageForValidation(constraintValidatorContext, "La nature de l'opération est invalide", "nature");
         }
 
-        return nomValidation && codeValidation && natureValidation;
+        boolean empriseValidation = operation.getIdEmprise() != null && operation.getIdEmprise() > 0;
+        if (!empriseValidation) {
+            customMessageForValidation(constraintValidatorContext, "L'identifiant de l'emprise de l'opération est invalide", "idEmprise");
+        }
+
+        return nomValidation && codeValidation && natureValidation && empriseValidation;
     }
 
     private void customMessageForValidation(ConstraintValidatorContext constraintContext, String message, String property) {

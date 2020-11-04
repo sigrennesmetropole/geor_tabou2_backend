@@ -3,6 +3,7 @@
 CREATE SCHEMA ddc;
 CREATE SCHEMA limite_admin;
 CREATE SCHEMA urba_foncier;
+CREATE SCHEMA economie;
 CREATE SCHEMA demographie;
 
 
@@ -94,6 +95,94 @@ CREATE TABLE if not exists urba_foncier.plui_zone_urba
         OIDS=FALSE
     );
 
+CREATE TABLE urba_foncier.zac
+(
+    id_zac serial NOT NULL,
+    code_insee character varying(5),
+    nomzac character varying(50),
+    decis character varying(59),
+    datedecis character varying(8),
+    datedecism character varying(8),
+    datereal character varying(8),
+    daterealm character varying(8),
+    dateclot character varying(8),
+    vocation character varying(9),
+    maouvr character varying(16),
+    modame character varying(13),
+    etape character varying(24),
+    urbcrea character varying(50),
+    amecrea character varying(50),
+    urbreal character varying(50),
+    amereal character varying(50),
+    nature character varying(21),
+    obs character varying(254),
+    datesig character varying(15),
+    taxes character varying(13),
+    shape geometry,
+    date_modif timestamp without time zone,
+    archive boolean DEFAULT false,
+    aire_geo numeric(15,2),
+    perimetre_geo numeric(15,2),
+    id_tabou integer,
+    CONSTRAINT pk_zac_id_zac PRIMARY KEY (id_zac),
+    CONSTRAINT decis_dom CHECK (decis::text = ANY (ARRAY['arrêté préfectoral'::text, 'délibération du Comité Syndical intercommunal'::text, 'délibération du Conseil d''agglomération de Rennes Métropole'::text, 'délibération du Conseil de Rennes Métropole'::text, 'délibération du Conseil Municipal'::text])),
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'MULTIPOLYGON'::text OR geometrytype(shape) = 'POLYGON'::text),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948),
+    CONSTRAINT etape_dom CHECK (etape::text = ANY (ARRAY['Clôturé'::text, 'En cours d''aménagement'::text, 'En études de réalisation'::text, 'Réalisé'::text, 'Supprimé'::text])),
+    CONSTRAINT maouvr_dom CHECK (maouvr::text = ANY (ARRAY['Communale'::text, 'Communautaire'::text, 'Intercommunale'::text, 'Métropolitaine'::text])),
+    CONSTRAINT modame_dom CHECK (modame::text = ANY (ARRAY['Concession'::text, 'CPA'::text, 'Régie directe'::text])),
+    CONSTRAINT nature_dom CHECK (nature::text = ANY (ARRAY['Extension urbaine'::text, 'Renouvellement urbain'::text])),
+    CONSTRAINT taxes_dom CHECK (taxes::text = ANY (ARRAY['PARTICIPATION'::text, 'TA'::text])),
+    CONSTRAINT vocation_dom CHECK (vocation::text = ANY (ARRAY['Activités'::text, 'Habitat'::text, 'Mixte'::text]))
+)
+    WITH (
+        OIDS=FALSE
+    );
+
+CREATE TABLE urba_foncier.oa_secteur
+(
+    objectid integer NOT NULL,
+    secteur character varying(200),
+    shape geometry,
+    id_tabou integer,
+    CONSTRAINT enforce_dims_shape CHECK (st_ndims(shape) = 2),
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'MULTIPOLYGON'::text OR geometrytype(shape) = 'POLYGON'::text),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948)
+)
+    WITH (
+        OIDS=FALSE
+    );
+
+CREATE TABLE economie.za
+(
+    objectid integer NOT NULL,
+    etape character varying(50) NOT NULL,
+    etat character varying(50),
+    scot character varying(50),
+    territoire character varying(50),
+    nomza character varying(50),
+    idza character varying(8),
+    code_insee character varying(6) NOT NULL,
+    saisie character varying(50),
+    observation character varying(254),
+    shape geometry,
+    archive boolean DEFAULT false, -- False = non / True = oui
+    id_tabou integer,
+    date_modif timestamp without time zone DEFAULT now(),
+    datecrea timestamp without time zone,
+    datefin timestamp without time zone,
+    CONSTRAINT za_pkey PRIMARY KEY (objectid),
+    CONSTRAINT enforce_dims_shape CHECK (st_ndims(shape) = 2),
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'MULTIPOLYGON'::text OR geometrytype(shape) = 'POLYGON'::text),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948),
+    CONSTRAINT etape_dom CHECK (etape::text = ANY (ARRAY['créée'::text, 'en cours'::text, 'potentielle'::text, 'terminée'::text])),
+    CONSTRAINT etat_dom CHECK (etat::text = ANY (ARRAY['extension'::text, 'renouvellement'::text])),
+    CONSTRAINT scot_dom CHECK (scot::text = ANY (ARRAY['compatible avec le SCoT'::text, 'non compatible avec le SCoT'::text])),
+    CONSTRAINT territoire_dom CHECK (territoire::text = ANY (ARRAY['Pôle tertiaire'::text, 'Proximité'::text, 'Structurante'::text]))
+)
+    WITH (
+        OIDS=FALSE
+    );
 
 CREATE TABLE if not exists limite_admin.quartier
 (
@@ -115,16 +204,23 @@ CREATE TABLE if not exists limite_admin.quartier
 
 GRANT USAGE ON SCHEMA limite_admin TO sig_user;
 GRANT USAGE ON SCHEMA urba_foncier TO sig_user;
+GRANT USAGE ON SCHEMA economie TO sig_user;
 GRANT USAGE ON SCHEMA demographie TO sig_user;
 
 ALTER TABLE limite_admin.quartier  OWNER TO sig_user;
 ALTER TABLE urba_foncier.plui_zone_urba  OWNER TO sig_user;
+ALTER TABLE urba_foncier.zac  OWNER TO sig_user;
+ALTER TABLE urba_foncier.oa_secteur  OWNER TO sig_user;
+ALTER TABLE economie.za  OWNER TO sig_user;
 ALTER TABLE demographie.iris  OWNER TO sig_user;
 ALTER TABLE limite_admin.commune_emprise  OWNER TO sig_user;
 
 -- GRANT ALL
 GRANT ALL ON TABLE limite_admin.quartier TO sig_user;
 GRANT ALL ON TABLE urba_foncier.plui_zone_urba TO sig_user;
+GRANT ALL ON TABLE urba_foncier.zac TO sig_user;
+GRANT ALL ON TABLE urba_foncier.oa_secteur TO sig_user;
+GRANT ALL ON TABLE economie.za TO sig_user;
 GRANT ALL ON TABLE demographie.iris TO sig_user;
 GRANT ALL ON TABLE limite_admin.commune_emprise TO sig_user;
 

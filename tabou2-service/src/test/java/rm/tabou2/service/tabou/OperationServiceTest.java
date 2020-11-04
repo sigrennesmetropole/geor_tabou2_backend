@@ -25,6 +25,8 @@ import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
 import rm.tabou2.service.tabou.operation.OperationService;
+import rm.tabou2.storage.sig.dao.SecteurDao;
+import rm.tabou2.storage.sig.entity.SecteurEntity;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
@@ -56,6 +58,9 @@ class OperationServiceTest extends DatabaseInitializerTest {
     private NatureDao natureDao;
 
     @Autowired
+    private SecteurDao secteurDao;
+
+    @Autowired
     private NatureMapper natureMapper;
 
     @Autowired
@@ -74,6 +79,7 @@ class OperationServiceTest extends DatabaseInitializerTest {
     @AfterEach
     public void afterTest() {
         operationDao.deleteAll();
+        secteurDao.deleteAll();
     }
 
     @Test
@@ -116,7 +122,7 @@ class OperationServiceTest extends DatabaseInitializerTest {
 
         Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
 
-        Assertions.assertEquals(3, constraintViolations.size());
+        Assertions.assertEquals(4, constraintViolations.size());
 
         List<String> errorProperties = new ArrayList<>();
         constraintViolations.forEach(cv -> {
@@ -129,6 +135,7 @@ class OperationServiceTest extends DatabaseInitializerTest {
         Assertions.assertTrue(errorProperties.contains("nom"));
         Assertions.assertTrue(errorProperties.contains("code"));
         Assertions.assertTrue(errorProperties.contains("nature"));
+        Assertions.assertTrue(errorProperties.contains("idEmprise"));
     }
 
     @DisplayName("testUpdateOperationWithDiffusionRestreinte: Test de l'édition d'une opération " +
@@ -136,6 +143,10 @@ class OperationServiceTest extends DatabaseInitializerTest {
     @Test
     @Transactional
     void testUpdateOperationWithDiffusionRestreinte() {
+
+        SecteurEntity secteurEntity = new SecteurEntity();
+        secteurEntity.setId(1);
+        secteurDao.save(secteurEntity);
 
         NatureEntity natureEntityZAC = natureDao.findByLibelle(Nature.LibelleEnum.ZAC.name());
 
@@ -146,8 +157,12 @@ class OperationServiceTest extends DatabaseInitializerTest {
         operation.setNumAds("numads4");
         operation.setSecteur(true);
         operation.setNature(natureMapper.entityToDto(natureEntityZAC));
+        operation.setIdEmprise(secteurEntity.getId().longValue());
 
         operation = operationService.createOperation(operation);
+
+        SecteurEntity secteurEntityUpdated = secteurDao.findOneById(1);
+        Assertions.assertEquals(operation.getId().intValue(), secteurEntityUpdated.getIdTabou());
 
         EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
         long operationId = operation.getId();

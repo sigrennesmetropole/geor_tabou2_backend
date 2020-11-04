@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
@@ -38,9 +39,6 @@ public class OperationServiceImpl implements OperationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationServiceImpl.class);
 
     @Autowired
-    private OperationMapper operationMapper;
-
-    @Autowired
     private OperationDao operationDao;
 
     @Autowired
@@ -48,6 +46,12 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private EtapeOperationDao etapeOperationDao;
+
+    @Autowired
+    private OperationEmpriseHelper operationEmpriseHelper;
+
+    @Autowired
+    private OperationMapper operationMapper;
 
     @Autowired
     private EtapeOperationMapper etapeOperationMapper;
@@ -86,8 +90,11 @@ public class OperationServiceImpl implements OperationService {
         operationEntity.setEtapeOperation(etapeOperationEntity);
 
         operationDao.save(operationEntity);
+        Operation operationSaved = operationMapper.entityToDto(operationEntity);
 
-        return operationMapper.entityToDto(operationEntity);
+        operationEmpriseHelper.saveEmprise(operationSaved, operation.getIdEmprise());
+
+        return operationSaved;
 
     }
 
