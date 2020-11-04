@@ -46,6 +46,11 @@ public class ProgrammeRightsHelper {
      */
     public boolean checkCanUpdateProgramme(Programme programme, boolean actualDiffusionRestreinte) {
 
+        if (!actualDiffusionRestreinte && !authentificationHelper.hasEditAccess()) {
+            LOGGER.warn("Le programme ne peut être modifié par un utilisateur qui n'a pas les droits de modification");
+            return false;
+        }
+
         if (actualDiffusionRestreinte && !authentificationHelper.hasRestreintAccess()) {
             LOGGER.warn("Le programme avec diffusion restreinte ne peut être modifié par un utilisateur qui n'a pas les droits");
             return false;

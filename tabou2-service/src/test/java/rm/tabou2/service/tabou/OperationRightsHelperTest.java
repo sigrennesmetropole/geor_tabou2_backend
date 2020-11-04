@@ -128,6 +128,39 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
         Assertions.assertTrue(operationRightsHelper.checkCanUpdateOperation(operation, operationMapper.entityToDto(operationEntity)));
     }
 
+    @DisplayName("testCannotUpdateOperationWithRoleConsultation: Test de l'interdiction de modification " +
+            "d'une opération avec le rôle consultation")
+    @Test
+    void testCannotUpdateOperationWithRoleConsultation() {
+
+        Mockito.when(authentificationHelper.hasEditAccess()).thenReturn(false);
+        Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
+
+        EtapeOperationEntity etapeOperationEntityPublic = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
+
+        OperationEntity operationEntity = new OperationEntity();
+        operationEntity.setNom("nom1");
+        operationEntity.setDiffusionRestreinte(false);
+        operationEntity.setCode("code1");
+        operationEntity.setNumAds("numads1");
+        operationEntity.setSecteur(true);
+        operationEntity.setEtapeOperation(etapeOperationEntityPublic);
+
+        operationDao.save(operationEntity);
+
+        EtapeOperationEntity etapeOperationEntityEtude = etapeOperationDao.findByCode("EN_ETUDE_PUBLIC");
+
+        Operation operation = new Operation();
+        operation.setId(operationEntity.getId());
+        operation.setNom(operationEntity.getNom());
+        operation.setCode(operationEntity.getCode());
+        operation.setNumAds(operationEntity.getNumAds());
+        operation.setSecteur(operationEntity.getSecteur());
+        operation.setEtape(etapeOperationMapper.entityToDto(etapeOperationEntityEtude));
+
+        Assertions.assertFalse(operationRightsHelper.checkCanUpdateOperation(operation, operationMapper.entityToDto(operationEntity)));
+    }
+
     @DisplayName("testCanUpdateOperation: Test de l'interdiction de modification d'une opération avec le rôle referent, " +
             "et en modifiant le paramètre esecteur")
     @Test

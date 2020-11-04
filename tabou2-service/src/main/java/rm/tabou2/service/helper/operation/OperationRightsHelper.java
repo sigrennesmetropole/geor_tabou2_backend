@@ -46,6 +46,11 @@ public class OperationRightsHelper {
      */
     public boolean checkCanUpdateOperation(Operation operation, Operation actualOperation) {
 
+        if (BooleanUtils.isFalse(actualOperation.isDiffusionRestreinte()) && !authentificationHelper.hasEditAccess()) {
+            LOGGER.warn("L'opération ne peut être modifié par un utilisateur qui n'a pas les droits de modification");
+            return false;
+        }
+
         if (BooleanUtils.isTrue(actualOperation.isDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
             LOGGER.warn("L'opération avec diffusion restreinte ne peut être modifiée par un utilisateur qui n'a pas les droits");
             return false;

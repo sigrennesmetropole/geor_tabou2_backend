@@ -112,6 +112,37 @@ class ProgrammeRightsHelperTest extends DatabaseInitializerTest {
         Assertions.assertTrue(programmeRightsHelper.checkCanUpdateProgramme(programme, programmeEntity.isDiffusionRestreinte()));
     }
 
+    @DisplayName("testCannotUpdateProgrammeWithRoleConsultation: Test de l'interdiction de modification " +
+            "d'un programme avec le rôle consultation")
+    @Test
+    void testCannotUpdateProgrammeWithRoleConsultation() {
+
+        Mockito.when(authentificationHelper.hasEditAccess()).thenReturn(false);
+        Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
+
+        EtapeProgrammeEntity etapeProgrammeEntityPublic = etapeProgrammeDao.findByCode("EN_PROJET_PUBLIC");
+
+        ProgrammeEntity programmeEntity = new ProgrammeEntity();
+        programmeEntity.setNom("nom1");
+        programmeEntity.setDiffusionRestreinte(false);
+        programmeEntity.setCode("code1");
+        programmeEntity.setNumAds("numads1");
+        programmeEntity.setEtapeProgramme(etapeProgrammeEntityPublic);
+
+        programmeDao.save(programmeEntity);
+
+        EtapeProgrammeEntity etapeProgrammeEntityEtude = etapeProgrammeDao.findByCode("EN_ETUDE_PUBLIC");
+
+        Programme programme = new Programme();
+        programme.setId(programmeEntity.getId());
+        programme.setNom(programmeEntity.getNom());
+        programme.setCode(programmeEntity.getCode());
+        programme.setNumAds(programmeEntity.getNumAds());
+        programme.setEtape(etapeProgrammeMapper.entityToDto(etapeProgrammeEntityEtude));
+
+        Assertions.assertFalse(programmeRightsHelper.checkCanUpdateProgramme(programme, programmeEntity.isDiffusionRestreinte()));
+    }
+
     @DisplayName("testCannotUpdateProgrammeWithDiffusionRestreinte: Test de l'interdiction de modification d'un programme " +
             "avec le rôle contributeur dont la diffusion restreinte est true")
     @Test
