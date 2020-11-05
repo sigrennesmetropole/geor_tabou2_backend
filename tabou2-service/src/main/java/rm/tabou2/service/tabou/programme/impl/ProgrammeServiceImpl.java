@@ -20,8 +20,6 @@ import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
-import rm.tabou2.service.validator.ValidProgrammeCreation;
-import rm.tabou2.service.validator.ValidProgrammeUpdate;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
@@ -30,7 +28,6 @@ import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -66,12 +63,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional
-    public Programme createProgramme(@ValidProgrammeCreation Programme programme) {
+    public Programme createProgramme(Programme programme) {
 
         // Ajout des valeurs par défaut
-        if (programme.isDiffusionRestreinte() == null) {
-            programme.setDiffusionRestreinte(true);
-        }
+        setProgrammeDefaultValues(programme);
 
         // Vérification des droits utilisateur
         if (!programmeRightsHelper.checkCanCreateProgramme(programme)) {
@@ -97,14 +92,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional
-    public Programme updateProgramme(@ValidProgrammeUpdate Programme programme) {
+    public Programme updateProgramme(Programme programme) {
 
-        Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(programme.getId());
-
-        if (programmeEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le programme id=" + programme.getId() + " n'existe pas");
-        }
-        ProgrammeEntity programmeEntity = programmeEntityOpt.get();
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programme.getId());
 
         // Vérification des droits utilisateur
         if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programmeEntity.isDiffusionRestreinte())) {
@@ -112,11 +102,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         // Mise à jour de la diffusion restreinte à partir de l'étape
-        Optional<EtapeProgrammeEntity> optionalEtapeProgrammeEntity = etapeProgrammeDao.findById(programme.getEtape().getId());
-        if (optionalEtapeProgrammeEntity.isEmpty()) {
-            throw new NoSuchElementException("L'étape programme id=" + programme.getEtape().getId() + " n'existe pas");
-        }
-        EtapeProgrammeEntity etapeProgrammeEntity = optionalEtapeProgrammeEntity.get();
+        EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(programme.getEtape().getId());
         programme.setDiffusionRestreinte(null);
         if (etapeProgrammeEntity.isRemoveRestriction()) {
             programme.setDiffusionRestreinte(false);
@@ -132,11 +118,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Override
     @Transactional
     public Programme updateEtapeOfProgrammeId (long programmeId, long etapeId) {
-        Optional<EtapeProgrammeEntity> optionalEtapeProgrammeEntity = etapeProgrammeDao.findById(etapeId);
-        if (optionalEtapeProgrammeEntity.isEmpty()) {
-            throw new NoSuchElementException("L'étape programme id=" + etapeId + " n'existe pas");
-        }
-        EtapeProgrammeEntity etapeProgrammeEntity = optionalEtapeProgrammeEntity.get();
+        EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(etapeId);
 
         Programme programme = getProgrammeById(programmeId);
         programme.setEtape(etapeProgrammeMapper.entityToDto(etapeProgrammeEntity));
@@ -146,13 +128,14 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Override
     public Programme getProgrammeById(long programmeId) {
 
-        Optional<ProgrammeEntity> programmeEntityOpt = programmeDao.findById(programmeId);
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
 
-        if (programmeEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le programme id=" + programmeId + " n'existe pas");
+        if (!programmeRightsHelper.checkCanGetProgramme(programme)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le programme id = " + programmeId);
         }
 
-        return programmeMapper.entityToDto(programmeEntityOpt.get());
+        return programmeMapper.entityToDto(programmeEntity);
 
     }
 
@@ -164,6 +147,16 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
         return programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
+    }
+
+    /**
+     * Ajout des valeurs par défaut d'un programme
+     * @param programme programme
+     */
+    private void setProgrammeDefaultValues(Programme programme) {
+        if (programme.isDiffusionRestreinte() == null) {
+            programme.setDiffusionRestreinte(true);
+        }
     }
 
 }

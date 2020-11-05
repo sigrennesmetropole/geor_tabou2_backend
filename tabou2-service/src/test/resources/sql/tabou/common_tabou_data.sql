@@ -94,7 +94,7 @@ INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction
 INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('En étude', 'EN_ETUDE_OFF', 'OFF', 'NORMAL', false);
 INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('Annulé', 'ANNULE_OFF', 'OFF', 'END', false);
 
-INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('En projet', 'EN_PROJET_PUBLIC', 'START', 'NORMAL', true);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('En projet', 'EN_PROJET_PUBLIC', 'PUBLIC', 'START', true);
 INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('En étude', 'EN_ETUDE_PUBLIC', 'PUBLIC', 'NORMAL', true);
 INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('Opérationnel', 'OPERATIONNEL_PUBLIC', 'PUBLIC', 'NORMAL', false);
 INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('Clôturé', 'CLOTURE_PUBLIC', 'PUBLIC', 'END', false);
@@ -161,3 +161,10 @@ INSERT INTO tabou_etape_operation_workflow (id_etape_operation, id_etape_operati
 select teo1.id_etape_operation as id_etape_operation, teo2.id_etape_operation as id_etape_operation_next
 from tabou_etape_operation teo1, tabou_etape_operation teo2
 where teo1.code = 'ANNULE_PUBLIC' and teo2.code = 'CLOTURE_PUBLIC';
+
+
+-- Insertion des natures d'une opération
+
+INSERT INTO tabou_nature (libelle) VALUES ('ZAC');
+INSERT INTO tabou_nature (libelle) VALUES ('ZA');
+INSERT INTO tabou_nature (libelle) VALUES ('En diffus');

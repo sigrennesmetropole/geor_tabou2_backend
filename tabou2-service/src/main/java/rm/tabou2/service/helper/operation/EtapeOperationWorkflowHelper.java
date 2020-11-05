@@ -25,11 +25,25 @@ public class EtapeOperationWorkflowHelper {
      * @return              étapes
      */
     public List<Etape> getAccessibleEtapesForOperation(Long idOperation) {
-        OperationEntity operationEntity = operationDao.getById(idOperation);
-        if (operationEntity == null) {
-            throw new IllegalArgumentException("L'identifiant de l'operation est invalide: aucune opération trouvée pour l'id = " + idOperation);
-        }
+        OperationEntity operationEntity = operationDao.findOneById(idOperation);
         List<EtapeOperationEntity> nextEtapes = List.copyOf(operationEntity.getEtapeOperation().getNextEtapes());
         return etapeOperationMapper.entitiesToDto(nextEtapes);
+    }
+
+    /**
+     * Permet de savoir si on peut affecter une étape à une opération
+     * @param newEtape      etape à affecter
+     * @param idOperation   identifiant de l'opération
+     * @return              true si on peut affectuer newEtape à l'opération
+     */
+    public boolean checkCanAssignEtapeToOperation(Etape newEtape, Long idOperation) {
+        OperationEntity operationEntity = operationDao.findOneById(idOperation);
+        EtapeOperationEntity actualEtapeEntity = operationEntity.getEtapeOperation();
+        if (actualEtapeEntity.getCode().equals(newEtape.getCode())) {
+            return true;
+        }
+        List<EtapeOperationEntity> nextEtapesEntities = List.copyOf(actualEtapeEntity.getNextEtapes());
+        List<Etape> nextEtapes = etapeOperationMapper.entitiesToDto(nextEtapesEntities);
+        return nextEtapes.contains(newEtape);
     }
 }

@@ -1,5 +1,8 @@
 package rm.tabou2.service.helper.operation;
 
+import org.apache.commons.lang.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Operation;
@@ -10,8 +13,13 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 @Component
 public class OperationRightsHelper {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OperationRightsHelper.class);
+
     @Autowired
     private AuthentificationHelper authentificationHelper;
+
+    @Autowired
+    private EtapeOperationWorkflowHelper etapeOperationWorkflowHelper;
 
     @Autowired
     private OperationDao operationDao;
@@ -33,13 +41,48 @@ public class OperationRightsHelper {
     /**
      * Vérifie si l'utilisateur a les droits de modifier une operation
      * @param operation l'operation
-     * @param diffusionRestreinteChanged true si le paramètre diffusionRestreinte est modifié
+     * @param actualOperation actuelle diffusion restreinte de l'opération avant modification
      * @return true si l'utilisateur peut modifier l'operation
      */
-    public boolean checkCanUpdateOperation(Operation operation, boolean diffusionRestreinteChanged) {
-        return diffusionRestreinteChanged
-                ? authentificationHelper.hasRestreintAccess()
-                : checkCanCreateOperation(operation);
+    public boolean checkCanUpdateOperation(Operation operation, Operation actualOperation) {
+
+        if (BooleanUtils.isFalse(actualOperation.isDiffusionRestreinte()) && !authentificationHelper.hasEditAccess()) {
+            LOGGER.warn("L'opération ne peut être modifié par un utilisateur qui n'a pas les droits de modification");
+            return false;
+        }
+
+        if (BooleanUtils.isTrue(actualOperation.isDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
+            LOGGER.warn("L'opération avec diffusion restreinte ne peut être modifiée par un utilisateur qui n'a pas les droits");
+            return false;
+        }
+
+        // validation de l'étape
+        boolean etapeValidation = etapeOperationWorkflowHelper.checkCanAssignEtapeToOperation(operation.getEtape(), operation.getId());
+        if (!etapeValidation) {
+            LOGGER.warn("L'étape ne peut être assignée à l'opération");
+            return false;
+        }
+
+        if (operation.getNature() != null && operation.getNature() != actualOperation.getNature()) {
+            LOGGER.warn("La nature d'une opération ne doit pas être modifiée");
+            return false;
+        }
+
+        if (operation.isSecteur() != null && !operation.isSecteur().equals(actualOperation.isSecteur())) {
+            LOGGER.warn("le paramètre secteur d'une opération ne doit pas être modifiée");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Vérifie si l'utilsiateur peut récupérer une opération
+     * @param operation operation
+     * @return true si l'utilisateur peut récupérer l'opération
+     */
+    public boolean checkCanGetOperation(Operation operation) {
+        return !operation.isDiffusionRestreinte() || authentificationHelper.hasRestreintAccess();
     }
 
     /**
@@ -48,10 +91,7 @@ public class OperationRightsHelper {
      * @return true si l'utilisateur le peut
      */
     public boolean checkCanGetEtapesForOperation(long operationId) {
-        OperationEntity operationEntity = operationDao.getById(operationId);
-        if (operationEntity == null) {
-            throw new IllegalArgumentException("L'identifiant de l'operation est invalide: aucune opération trouvée pour l'id = " + operationId);
-        }
+        OperationEntity operationEntity = operationDao.findOneById(operationId);
         return !operationEntity.isDiffusionRestreinte() || authentificationHelper.hasRestreintAccess();
     }
 }

@@ -2916,6 +2916,11 @@
           "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)",
           "type": "string"
         },
+        "idEmprise":{
+          "description": "Identifiant de l'emprise de l'opération",
+          "type": "integer",
+          "format": "int64"
+        },
         "autorisationDate": {
           "description": "Date d'autorisation (liée à un document d'urbanisme)",
           "type": "string",
@@ -3528,7 +3533,10 @@
         },
         "libelle": {
           "description": "Description de la nature",
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "ZAC", "ZA", "En diffus"
+          ]
         },
         "dateInactivite": {
           "description": "Date de mise en inactivité de la nature",
@@ -3671,7 +3679,8 @@
       "properties": {
         "id": {
           "description": "Identifiant de l'emprise",
-          "type": "number"
+          "type": "integer",
+          "format": "int64"
         },
         "nom": {
           "description": "Nom de l'emprise",

@@ -14,6 +14,7 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TiersTypeTiers;
+import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.tabou.operation.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
@@ -51,6 +52,9 @@ public class OperationApiController implements OperationsApi {
     @Autowired
     private EvenementProgrammeService evenementProgrammeService;
 
+    @Autowired
+    private OperationEmpriseHelper operationEmpriseHelper;
+
     @Override
     public ResponseEntity<Operation> createOperation(@Valid Operation operation) throws Exception {
 
@@ -82,7 +86,7 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<List<Emprise>> getAvailableEmprises(@NotNull @Valid String nature, @NotNull @Valid Boolean estSecteur) throws Exception {
-        return null;
+        return new ResponseEntity<>(operationEmpriseHelper.getAvailableEmprises(nature, estSecteur), HttpStatus.OK);
     }
 
     @Override

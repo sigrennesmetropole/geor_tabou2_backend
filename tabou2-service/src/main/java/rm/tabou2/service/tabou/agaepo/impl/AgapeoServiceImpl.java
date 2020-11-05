@@ -25,7 +25,7 @@ public class AgapeoServiceImpl implements AgapeoService {
 
     @Override
     public List<Agapeo> getApapeosByProgrammeId(long programmeId) {
-        ProgrammeEntity programmeEntity = programmeDao.getById(programmeId);
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
         if (programmeEntity == null) {
             throw new IllegalArgumentException("L'identifiant du programme est invalide: aucun programme trouvé pour l'id = " + programmeId);
         }
