@@ -33,13 +33,6 @@ public class EvenementProgrammeEntity extends GenericAuditableEntity {
     private Boolean systeme;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_programme")
-    public ProgrammeEntity programme;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_type_evt")
     public TypeEvenementEntity typeEvenement;
-
-
-
 }

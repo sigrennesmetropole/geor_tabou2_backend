@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
+import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
@@ -28,18 +29,13 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.StreamSupport;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-class ProgrammeServiceTest extends DatabaseInitializerTest {
+class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionTest {
 
     @Autowired
     private EtapeProgrammeDao etapeProgrammeDao;
@@ -117,20 +113,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest {
                 () -> programmeService.createProgramme(programme)
         );
 
-        Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
-
-        Assertions.assertEquals(2, constraintViolations.size());
-
-        List<String> errorProperties = new ArrayList<>();
-        constraintViolations.forEach(cv -> {
-            String name = StreamSupport.stream(cv.getPropertyPath().spliterator(), false)
-                    .map(Path.Node::getName)
-                    .reduce((first, second) -> second).orElseGet(() -> cv.getPropertyPath().toString());
-            errorProperties.add(name);
-        });
-
-        Assertions.assertTrue(errorProperties.contains("nom"));
-        Assertions.assertTrue(errorProperties.contains("code"));
+        testConstraintViolationException(constraintViolationException, List.of("nom", "code"));
 
     }
 

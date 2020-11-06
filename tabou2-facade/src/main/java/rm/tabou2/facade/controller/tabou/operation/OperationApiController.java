@@ -19,7 +19,6 @@ import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.tabou.operation.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
-import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
 import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
@@ -48,9 +47,6 @@ public class OperationApiController implements OperationsApi {
 
     @Autowired
     private EtapeOperationService etapeOperationService;
-
-    @Autowired
-    private EvenementProgrammeService evenementProgrammeService;
 
     @Autowired
     private OperationEmpriseHelper operationEmpriseHelper;

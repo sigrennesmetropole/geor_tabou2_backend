@@ -94,7 +94,7 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
             evenementOperationEntity = evenementOperationDao.save(evenementOperationEntity);
         } catch (DataAccessException e) {
             throw new AppServiceException("Impossible d'ajouter l'évènement Opération, IdEvent =  "
-                    + evenement.getIdEvent(), e);
+                    + evenement.getId(), e);
         }
 
         return evenementOperationMapper.entityToDto(evenementOperationEntity);
@@ -103,15 +103,15 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
     @Override
     public Evenement updateEvenementByOperationId(Evenement evenement, Long operationId) throws AppServiceException {
 
-        Optional<EvenementOperationEntity> evenementOperationEntityOpt = evenementOperationDao.findById(evenement.getIdEvent());
+        Optional<EvenementOperationEntity> evenementOperationEntityOpt = evenementOperationDao.findById(evenement.getId());
         if (evenementOperationEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("L'évènement id= " + evenement.getIdEvent() + " n'existe pas");
+            throw new NoSuchElementException("L'évènement id= " + evenement.getId() + " n'existe pas");
         }
         EvenementOperationEntity evenementOperationEntity = evenementOperationEntityOpt.get();
 
 
         if (Boolean.TRUE.equals(evenementOperationEntity.getSysteme())) {
-            throw new AppServiceException("Il n'est pas permis de modifier l'évènement id=" + evenement.getIdEvent());
+            throw new AppServiceException("Il n'est pas permis de modifier l'évènement id=" + evenement.getId());
         }
 
         //Utilisateur
@@ -132,7 +132,7 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
             evenementOperationEntity = evenementOperationDao.save(evenementOperationEntity);
         } catch (DataAccessException e) {
             throw new AppServiceException("Impossible de faire la mise à jour de l'évènement Opération, id="
-                    + evenement.getIdEvent(), e);
+                    + evenement.getId(), e);
         }
 
         return evenementOperationMapper.entityToDto(evenementOperationEntity);

@@ -3154,7 +3154,7 @@
       "type": "object",
       "description": "Liste des évènements : système et utilisateur",
       "properties": {
-        "idEvent": {
+        "id": {
           "description": "Identifant de l'évènement",
           "type": "integer",
           "format": "int64"
