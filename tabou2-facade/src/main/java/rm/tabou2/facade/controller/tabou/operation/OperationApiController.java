@@ -16,7 +16,6 @@ import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
-import rm.tabou2.service.tabou.operation.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.tabou.tiers.TiersService;
@@ -41,9 +40,6 @@ public class OperationApiController implements OperationsApi {
 
     @Autowired
     private OperationTiersService operationTiersService;
-
-    @Autowired
-    private EvenementOperationService evenementOperationService;
 
     @Autowired
     private EtapeOperationService etapeOperationService;
@@ -143,25 +139,22 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<List<Evenement>> getEvenementsByOperationId(Long operationId) throws Exception {
-        return new ResponseEntity<>(evenementOperationService.getByOperationId(operationId), HttpStatus.OK);
+        return new ResponseEntity<>(operationService.getEvenementsByOperationId(operationId), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Evenement> addEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
-        return new ResponseEntity<>(evenementOperationService.addEvenement(evenement, operationId), HttpStatus.OK);
+        return new ResponseEntity<>(operationService.addEvenementNonSystemeByOperationId(operationId, evenement), HttpStatus.OK);
+    }
 
+    @Override
+    public ResponseEntity<Evenement> updateEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
+        return new ResponseEntity<>(operationService.updateEvenementByOperationId(operationId, evenement), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Operation> associateTiersToOperation(Long operationId, @Valid TiersTypeTiers tiersTypeTiers) throws Exception {
         return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationId, tiersTypeTiers.getTiersId(), tiersTypeTiers.getTypeTiersId()), HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Evenement> updateEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
-
-        //TODO : test des droits
-        return new ResponseEntity<>(evenementOperationService.updateEvenementByOperationId(evenement, operationId), HttpStatus.OK);
     }
 
 

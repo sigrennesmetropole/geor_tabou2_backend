@@ -85,7 +85,7 @@ public interface ProgrammeService {
     Evenement addEvenementNonSystemeByProgrammeId(Long programmeId, @ValidEvenementCreation Evenement evenement) throws AppServiceException;
 
     /**
-     * Modification d'un événement programme
+     * Modification d'un événement d'un programme
      * @param programmeId           identifiant du programme
      * @param evenement             événement à modifier
      * @return                      événement modifié

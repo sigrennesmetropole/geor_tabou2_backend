@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,21 +15,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
+import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.service.tabou.operation.OperationService;
+import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
+import rm.tabou2.storage.tabou.dao.operation.EvenementOperationDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -48,7 +59,22 @@ public class OperationServiceImpl implements OperationService {
     private EtapeOperationDao etapeOperationDao;
 
     @Autowired
+    private EvenementOperationDao evenementOperationDao;
+
+    @Autowired
+    private TypeEvenementDao typeEvenementDao;
+
+    @Autowired
     private OperationEmpriseHelper operationEmpriseHelper;
+
+    @Autowired
+    private AuthentificationHelper authentificationHelper;
+
+    @Autowired
+    private OperationRightsHelper operationRightsHelper;
+
+    @Autowired
+    private EvenementOperationRightsHelper evenementOperationRightsHelper;
 
     @Autowired
     private OperationMapper operationMapper;
@@ -57,10 +83,7 @@ public class OperationServiceImpl implements OperationService {
     private EtapeOperationMapper etapeOperationMapper;
 
     @Autowired
-    private AuthentificationHelper authentificationHelper;
-
-    @Autowired
-    private OperationRightsHelper operationRightsHelper;
+    private EvenementOperationMapper evenementOperationMapper;
 
     @Autowired
     private OperationService me;
@@ -148,16 +171,109 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public Operation getOperationById(long operationId) {
 
-        OperationEntity operationEntity = operationDao.findOneById(operationId);
+        OperationEntity operationEntity = getOperationEntityById(operationId);
 
+        return operationMapper.entityToDto(operationEntity);
+
+    }
+
+    @Override
+    public List<Evenement> getEvenementsByOperationId(Long operationId) {
+
+        OperationEntity operationEntity = getOperationEntityById(operationId);
+
+        return evenementOperationMapper.entitiesToDto(List.copyOf(operationEntity.getEvenements()));
+    }
+
+    @Override
+    @Transactional
+    public Evenement addEvenementSystemeByOperationId(Long operationId, Evenement evenement) throws AppServiceException {
+        evenement.setSysteme(true);
+        return addEvenementByOperationId(operationId, evenement);
+    }
+
+    @Override
+    @Transactional
+    public Evenement addEvenementNonSystemeByOperationId(Long operationId, Evenement evenement) throws AppServiceException {
+        evenement.setSysteme(false);
+        return addEvenementByOperationId(operationId, evenement);
+    }
+
+    private Evenement addEvenementByOperationId(Long operationId, Evenement evenement) throws AppServiceException {
+        // Operation
+        OperationEntity operationEntity = operationDao.findOneById(operationId);
+        Operation operation = operationMapper.entityToDto(operationEntity);
+        if (!operationRightsHelper.checkCanUpdateOperation(operation, operation)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un évènement pour l'opération id = " + operationId);
+        }
+
+        EvenementOperationEntity evenementOperationEntity = evenementOperationMapper.dtoToEntity(evenement);
+
+        //type evenement
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        evenementOperationEntity.setTypeEvenement(typeEvenementEntity);
+
+        // Enregistrement en BDD
+        evenementOperationEntity = evenementOperationDao.save(evenementOperationEntity);
+
+        operationEntity.addEvenementOperation(evenementOperationEntity);
+
+        // Enregistrement en BDD
+        try {
+            operationDao.save(operationEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible d'ajouter l'évènement opération , IdEvent = "
+                    + evenement.getId(), e);
+        }
+
+        return evenementOperationMapper.entityToDto(evenementOperationEntity);
+    }
+
+    @Override
+    @Transactional
+    public Evenement updateEvenementByOperationId(long idOperation, Evenement evenement) throws AppServiceException {
+
+        // Récupération de l'opération et recherche de l'évènement à modifier
+        OperationEntity operationEntity = operationDao.findOneById(idOperation);
         Operation operation = operationMapper.entityToDto(operationEntity);
 
-        if (!operationRightsHelper.checkCanGetOperation(operation)) {
+        Optional<EvenementOperationEntity> optionalEvenementOperationEntity = operationEntity.lookupEvenementById(evenement.getId());
+        if (optionalEvenementOperationEntity.isEmpty()) {
+            throw new AppServiceException("L'événement id = " + evenement.getId() + " n'existe pas pour l'opération id = " + operationEntity.getId());
+        }
+        EvenementOperationEntity evenementOperationEntity = optionalEvenementOperationEntity.get();
+
+        if (!evenementOperationRightsHelper.checkCanUpdateEvenementOperation(operation, evenementOperationMapper.entityToDto(evenementOperationEntity))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modifier l'évènement id = " + evenementOperationEntity.getId()
+                    + " de l'opération id = " + idOperation);
+        }
+
+        // type evenement
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        evenementOperationEntity.setTypeEvenement(typeEvenementEntity);
+
+        evenementOperationMapper.dtoToEntity(evenement, evenementOperationEntity);
+
+        // Mise à jour de l'évènement Operation en base de données
+        try {
+            evenementOperationEntity = evenementOperationDao.save(evenementOperationEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException(" Impossible de faire la mise à jour de l'évènement Operation, IdEvent = "
+                    + evenement.getId(), e);
+        }
+
+        return evenementOperationMapper.entityToDto(evenementOperationEntity);
+    }
+
+    private OperationEntity getOperationEntityById(long operationId) {
+
+        OperationEntity operationEntity = operationDao.findOneById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operationEntity))) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
         }
 
-        return operation;
-
+        return operationEntity;
     }
 
     /**
