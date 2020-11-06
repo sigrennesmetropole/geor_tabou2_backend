@@ -124,14 +124,14 @@ public class ProgrammeEntity extends GenericAuditableEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_programme")
-    private Set<EvenementProgrammeEntity> evenementProgrammeEntities;
+    private Set<EvenementProgrammeEntity> evenements;
 
     public void addEvenementProgramme(EvenementProgrammeEntity evenementProgrammeEntity) {
-        this.evenementProgrammeEntities.add(evenementProgrammeEntity);
+        this.evenements.add(evenementProgrammeEntity);
     }
 
     public Optional<EvenementProgrammeEntity> lookupEvenementById(long idEvenementProgramme) {
-        return this.evenementProgrammeEntities.stream()
+        return this.evenements.stream()
                 .filter(ep -> ep.getId() == idEvenementProgramme)
                 .findFirst();
     }

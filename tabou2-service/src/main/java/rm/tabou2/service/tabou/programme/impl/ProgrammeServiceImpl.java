@@ -172,7 +172,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         ProgrammeEntity programmeEntity = getProgrammeEntityById(programmeId);
 
-        return evenementProgrammeMapper.entitiesToDto(List.copyOf(programmeEntity.getEvenementProgrammeEntities()));
+        return evenementProgrammeMapper.entitiesToDto(List.copyOf(programmeEntity.getEvenements()));
     }
 
     @Override
