@@ -172,7 +172,8 @@ INSERT INTO tabou_nature (libelle) VALUES ('En diffus');
 
 -- Insertion des types d'évènements
 
-INSERT INTO tabou_type_evenement (libelle) VALUES ('Reunion');
-INSERT INTO tabou_type_evenement (libelle) VALUES ('Ouverture chantier');
-INSERT INTO tabou_type_evenement (libelle) VALUES ('Instruction');
-INSERT INTO tabou_type_evenement (libelle) VALUES ('Recours');
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Reunion', 'REUNION', false);
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Ouverture chantier', 'OUVERTURE_CHANTIER', false);
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Instruction', 'INSTRUCTION', false);
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Recours', 'RECOURS', false);
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Modification etape', 'ETAPE_UPDATED', true);

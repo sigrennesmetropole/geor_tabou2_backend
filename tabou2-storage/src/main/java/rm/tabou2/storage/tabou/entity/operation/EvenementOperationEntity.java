@@ -39,7 +39,7 @@ public class EvenementOperationEntity extends GenericAuditableEntity {
     private String description;
 
     @Basic
-    @Column(name = "systeme")
+    @Column(name = "systeme", nullable = false)
     private Boolean systeme;
 
     @ManyToOne(fetch = FetchType.LAZY)

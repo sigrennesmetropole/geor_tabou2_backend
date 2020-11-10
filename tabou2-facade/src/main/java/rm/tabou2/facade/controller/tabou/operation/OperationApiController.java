@@ -144,7 +144,7 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<Evenement> addEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
-        return new ResponseEntity<>(operationService.addEvenementNonSystemeByOperationId(operationId, evenement), HttpStatus.OK);
+        return new ResponseEntity<>(operationService.addEvenementByOperationId(operationId, evenement), HttpStatus.OK);
     }
 
     @Override

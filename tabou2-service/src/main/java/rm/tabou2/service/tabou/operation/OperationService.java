@@ -42,8 +42,9 @@ public interface OperationService {
      * @param operationId Identifiant de l'opération
      * @param etapeId identifiant de l'étape
      * @return opération modifiée
+     * @throws AppServiceException Erreur lors de la mise à jour d'une opération
      */
-    Operation updateEtapeOfOperationId (long operationId, long etapeId);
+    Operation updateEtapeOfOperationId (long operationId, long etapeId) throws AppServiceException;
 
     /**
      * Recherche des opérations à partir des paramètres.
@@ -63,22 +64,13 @@ public interface OperationService {
     List<Evenement> getEvenementsByOperationId(Long operationId);
 
     /**
-     * Ajout d'un évènement système pour une opération
+     * Ajout d'un évènement pour une opération
      * @param operationId           identifiant de l'opération
      * @param evenement             evenement
      * @return                      evenement crée
      * @throws AppServiceException  erreur lors de l'enregistrement de l'opération
      */
-    Evenement addEvenementSystemeByOperationId(Long operationId, @ValidEvenementCreation Evenement evenement) throws AppServiceException;
-
-    /**
-     * Ajout d'un évènement non système pour une opération
-     * @param operationId           identifiant de l'opération
-     * @param evenement             evenement
-     * @return                      evenement crée
-     * @throws AppServiceException  erreur lors de l'enregistrement de l'opération
-     */
-    Evenement addEvenementNonSystemeByOperationId(Long operationId, @ValidEvenementCreation Evenement evenement) throws AppServiceException;
+    Evenement addEvenementByOperationId(Long operationId, @ValidEvenementCreation Evenement evenement) throws AppServiceException;
 
     /**
      * Modification d'un événement d'une opération

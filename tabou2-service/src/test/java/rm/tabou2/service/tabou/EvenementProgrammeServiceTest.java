@@ -78,7 +78,7 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
 
         programmeEntity = programmeDao.save(programmeEntity);
 
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByLibelle("Reunion");
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByCode("REUNION");
 
         Evenement evenement1 = new Evenement();
         evenement1.setEventDate(new Date());
@@ -95,9 +95,9 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
         evenement3.setDescription("evenement3");
         evenement3.setIdType(typeEvenementEntity.getId());
 
-        programmeService.addEvenementNonSystemeByProgrammeId(programmeEntity.getId(), evenement1);
-        programmeService.addEvenementNonSystemeByProgrammeId(programmeEntity.getId(), evenement2);
-        programmeService.addEvenementNonSystemeByProgrammeId(programmeEntity.getId(), evenement3);
+        programmeService.addEvenementByProgrammeId(programmeEntity.getId(), evenement1);
+        programmeService.addEvenementByProgrammeId(programmeEntity.getId(), evenement2);
+        programmeService.addEvenementByProgrammeId(programmeEntity.getId(), evenement3);
 
         List<Evenement> evenementList = programmeService.getEvenementsByProgrammeId(programmeEntity.getId());
 
@@ -116,7 +116,7 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
 
         ConstraintViolationException constraintViolationException = Assertions.assertThrows(
                 ConstraintViolationException.class,
-                () -> programmeService.addEvenementNonSystemeByProgrammeId(1L, evenement)
+                () -> programmeService.addEvenementByProgrammeId(1L, evenement)
         );
 
         testConstraintViolationException(constraintViolationException, List.of("idType", "eventDate", "description"));
@@ -150,20 +150,22 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
 
         programmeEntity = programmeDao.save(programmeEntity);
 
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByLibelle("Reunion");
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByCode("REUNION");
 
         Evenement evenement1 = new Evenement();
         evenement1.setEventDate(new Date());
         evenement1.setDescription("evenement1");
         evenement1.setIdType(typeEvenementEntity.getId());
 
-        evenement1 = programmeService.addEvenementNonSystemeByProgrammeId(programmeEntity.getId(), evenement1);
+        evenement1 = programmeService.addEvenementByProgrammeId(programmeEntity.getId(), evenement1);
 
         Evenement evenement2 = new Evenement();
         evenement2.setId(evenement1.getId());
         evenement2.setDescription("evenement2");
         evenement2.setEventDate(evenement1.getEventDate());
         evenement2.setIdType(evenement1.getIdType());
+        evenement2.setSysteme(evenement1.isSysteme());
+
         evenement2 = programmeService.updateEvenementByProgrammeId(programmeEntity.getId(), evenement2);
 
         Assertions.assertEquals("evenement2", evenement2.getDescription());

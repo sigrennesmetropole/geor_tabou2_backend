@@ -137,7 +137,7 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Override
     public ResponseEntity<Evenement> addEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
-        return new ResponseEntity<>(programmeService.addEvenementNonSystemeByProgrammeId(programmeId, evenement), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.addEvenementByProgrammeId(programmeId, evenement), HttpStatus.OK);
     }
 
     @Override

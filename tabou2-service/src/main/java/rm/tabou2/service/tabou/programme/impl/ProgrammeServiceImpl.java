@@ -4,6 +4,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -36,6 +37,8 @@ import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
+import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -84,6 +87,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Autowired
     private ProgrammeService me;
 
+    @Value("${typeevenement.changementetape.code}")
+    private String etapeUpdatedCode;
+
+    @Value("${typeevenement.changementetape.message}")
+    private String etapeUpdatedMessage;
+
     @Override
     @Transactional
     public Programme createProgramme(Programme programme) {
@@ -107,6 +116,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
         programmeEntity.setEtapeProgramme(etapeProgrammeEntity);
 
+        // ajout d'un événement système de changement d'état
+        programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
+
         programmeEntity = programmeDao.save(programmeEntity);
 
         return programmeMapper.entityToDto(programmeEntity);
@@ -124,14 +136,24 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
         }
 
-        // Mise à jour de la diffusion restreinte à partir de l'étape
+        // Récupération de la prochaine étape
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(programme.getEtape().getId());
+
+        // Mise à jour de la diffusion restreinte à partir de l'étape
         programme.setDiffusionRestreinte(null);
         if (etapeProgrammeEntity.isRemoveRestriction()) {
             programme.setDiffusionRestreinte(false);
         }
 
+        // Permet de savoir s'il y a changement d'étape
+        boolean etapeChanged = programmeEntity.getEtapeProgramme().getId() != etapeProgrammeEntity.getId();
+
         programmeMapper.dtoToEntity(programme, programmeEntity);
+
+        // Ajout d'un événement système en cas de changement d'étape
+        if (etapeChanged) {
+            programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
+        }
 
         programmeEntity = programmeDao.save(programmeEntity);
 
@@ -175,21 +197,44 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         return evenementProgrammeMapper.entitiesToDto(List.copyOf(programmeEntity.getEvenements()));
     }
 
-    @Override
-    @Transactional
-    public Evenement addEvenementSystemeByProgrammeId(Long programmeId, Evenement evenement) throws AppServiceException {
-        evenement.setSysteme(true);
-        return addEvenementByProgrammeId(programmeId, evenement);
+    /**
+     * Construction d'un évenement programme système
+     * @param code                      code du type d'événement
+     * @param evenementDescription      description de l'événement
+     * @return                          evenement crée
+     */
+    private EvenementProgrammeEntity buildEvenementProgrammeSysteme(String code, String evenementDescription) {
+
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByCode(code);
+        if (typeEvenementEntity == null) {
+            throw new NoSuchElementException("Le type d'événement de modification d'étape n'est pas défini.");
+        }
+        EvenementProgrammeEntity evenementProgrammeEntity = new EvenementProgrammeEntity();
+        evenementProgrammeEntity.setEventDate(new Date());
+        evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
+        evenementProgrammeEntity.setDescription(evenementDescription);
+        evenementProgrammeEntity.setSysteme(true);
+
+        return evenementProgrammeEntity;
+
+    }
+
+    /**
+     * Construction d'un évenement programme système après changement d'étape
+     * @param libelleEtape      libelle de l'étape
+     * @return                  evenement crée
+     */
+    private EvenementProgrammeEntity buildEvenementProgrammeEtapeUpdated(String libelleEtape) {
+        return this.buildEvenementProgrammeSysteme(etapeUpdatedCode, formatEtapeUpdatedMessage(libelleEtape));
+    }
+
+    private String formatEtapeUpdatedMessage(String libelleEtape) {
+        return MessageFormat.format(etapeUpdatedMessage, libelleEtape);
     }
 
     @Override
     @Transactional
-    public Evenement addEvenementNonSystemeByProgrammeId(Long programmeId, Evenement evenement) throws AppServiceException {
-        evenement.setSysteme(false);
-        return addEvenementByProgrammeId(programmeId, evenement);
-    }
-
-    private Evenement addEvenementByProgrammeId(Long programmeId, Evenement evenement) throws AppServiceException {
+    public Evenement addEvenementByProgrammeId(Long programmeId, Evenement evenement) throws AppServiceException {
 
         // Programme
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
@@ -198,10 +243,14 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un évènement pour le programme id = " + programmeId);
         }
 
-        EvenementProgrammeEntity evenementProgrammeEntity = evenementProgrammeMapper.dtoToEntity(evenement);
-
         //type evenement
         TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        if (typeEvenementEntity.isSysteme()) {
+            throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
+        }
+
+        evenement.setSysteme(false);
+        EvenementProgrammeEntity evenementProgrammeEntity = evenementProgrammeMapper.dtoToEntity(evenement);
         evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
 
         // Enregistrement en BDD

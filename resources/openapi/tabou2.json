@@ -3213,6 +3213,14 @@
           "description": "Date de mise en inactivité du type de document",
           "type": "string",
           "format": "date"
+        },
+        "code":  {
+          "description": "Code unique d'un type de document",
+          "type": "string"
+        },
+        "systeme": {
+          "description": "Indique si le type d'évènement est de type système ou non",
+          "type": "boolean"
         }
       }
     },
@@ -3626,7 +3634,7 @@
           "description": "",
           "type": "string"
         },
-        "numADS": {
+        "numAds": {
           "description": "",
           "type": "string"
         },

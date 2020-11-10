@@ -4,6 +4,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -37,6 +38,8 @@ import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
+import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -88,6 +91,12 @@ public class OperationServiceImpl implements OperationService {
     @Autowired
     private OperationService me;
 
+    @Value("${typeevenement.changementetape.code}")
+    private String etapeUpdatedCode;
+
+    @Value("${typeevenement.changementetape.message}")
+    private String etapeUpdatedMessage;
+
     @Override
     @Transactional
     public Operation createOperation(Operation operation) {
@@ -112,6 +121,9 @@ public class OperationServiceImpl implements OperationService {
         OperationEntity operationEntity = operationMapper.dtoToEntity(operation);
         operationEntity.setEtapeOperation(etapeOperationEntity);
 
+        // ajout d'un événement système de changement d'état
+        operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperationEntity.getLibelle()));
+
         operationDao.save(operationEntity);
         Operation operationSaved = operationMapper.entityToDto(operationEntity);
 
@@ -132,14 +144,24 @@ public class OperationServiceImpl implements OperationService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification de l'operation " + operation.getNom());
         }
 
-        // Mise à jour de la diffusion restreinte à partir de l'étape
+        // Récupération de la prochaine étape
         EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findOneById(operation.getEtape().getId());
+
+        // Mise à jour de la diffusion restreinte à partir de l'étape
         operation.setDiffusionRestreinte(null);
         if (etapeOperationEntity.isRemoveRestriction()) {
             operation.setDiffusionRestreinte(false);
         }
 
+        // Permet de savoir s'il y a changement d'étape
+        boolean etapeChanged = operationEntity.getEtapeOperation().getId() != etapeOperationEntity.getId();
+
         operationMapper.dtoToEntity(operation, operationEntity);
+
+        // Ajout d'un événement système en cas de changement d'étape
+        if (etapeChanged) {
+            operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperationEntity.getLibelle()));
+        }
 
         operationEntity = operationDao.save(operationEntity);
 
@@ -185,21 +207,44 @@ public class OperationServiceImpl implements OperationService {
         return evenementOperationMapper.entitiesToDto(List.copyOf(operationEntity.getEvenements()));
     }
 
-    @Override
-    @Transactional
-    public Evenement addEvenementSystemeByOperationId(Long operationId, Evenement evenement) throws AppServiceException {
-        evenement.setSysteme(true);
-        return addEvenementByOperationId(operationId, evenement);
+    /**
+     * Construction d'un évenement opération système
+     * @param code                      code du type d'événement
+     * @param evenementDescription      description de l'événement
+     * @return                          evenement crée
+     */
+    private EvenementOperationEntity buildEvenementOperationSysteme(String code, String evenementDescription) {
+
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByCode(code);
+        if (typeEvenementEntity == null) {
+            throw new NoSuchElementException("Le type d'événement de modification d'étape n'est pas défini.");
+        }
+        EvenementOperationEntity evenementOperationEntity = new EvenementOperationEntity();
+        evenementOperationEntity.setEventDate(new Date());
+        evenementOperationEntity.setTypeEvenement(typeEvenementEntity);
+        evenementOperationEntity.setDescription(evenementDescription);
+        evenementOperationEntity.setSysteme(true);
+
+        return evenementOperationEntity;
+
+    }
+
+    /**
+     * Construction d'un évenement opération système après changement d'étape
+     * @param libelleEtape      libelle de l'étape
+     * @return                  evenement crée
+     */
+    private EvenementOperationEntity buildEvenementOperationEtapeUpdated(String libelleEtape) {
+        return this.buildEvenementOperationSysteme(etapeUpdatedCode, formatEtapeUpdatedMessage(libelleEtape));
+    }
+
+    private String formatEtapeUpdatedMessage(String libelleEtape) {
+        return MessageFormat.format(etapeUpdatedMessage, libelleEtape);
     }
 
     @Override
     @Transactional
-    public Evenement addEvenementNonSystemeByOperationId(Long operationId, Evenement evenement) throws AppServiceException {
-        evenement.setSysteme(false);
-        return addEvenementByOperationId(operationId, evenement);
-    }
-
-    private Evenement addEvenementByOperationId(Long operationId, Evenement evenement) throws AppServiceException {
+    public Evenement addEvenementByOperationId(Long operationId, Evenement evenement) throws AppServiceException {
         // Operation
         OperationEntity operationEntity = operationDao.findOneById(operationId);
         Operation operation = operationMapper.entityToDto(operationEntity);
@@ -207,11 +252,15 @@ public class OperationServiceImpl implements OperationService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un évènement pour l'opération id = " + operationId);
         }
 
-        EvenementOperationEntity evenementOperationEntity = evenementOperationMapper.dtoToEntity(evenement);
-
         //type evenement
         TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        if (typeEvenementEntity.isSysteme()) {
+            throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
+        }
+
+        EvenementOperationEntity evenementOperationEntity = evenementOperationMapper.dtoToEntity(evenement);
         evenementOperationEntity.setTypeEvenement(typeEvenementEntity);
+        evenementOperationEntity.setSysteme(false);
 
         // Enregistrement en BDD
         evenementOperationEntity = evenementOperationDao.save(evenementOperationEntity);

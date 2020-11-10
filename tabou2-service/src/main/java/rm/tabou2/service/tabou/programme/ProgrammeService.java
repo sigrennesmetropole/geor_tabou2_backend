@@ -67,22 +67,13 @@ public interface ProgrammeService {
     List<Evenement> getEvenementsByProgrammeId(Long programmeId) throws AppServiceException;
 
     /**
-     * Ajout d'un évènement système pour un programme
+     * Ajout d'un évènement pour un programme
      * @param programmeId           identifiant du programme
      * @param evenement             evenement
      * @return                      evenement crée
      * @throws AppServiceException  erreur lors de l'enregistrement du programme
      */
-    Evenement addEvenementSystemeByProgrammeId(Long programmeId, @ValidEvenementCreation Evenement evenement) throws AppServiceException;
-
-    /**
-     * Ajout d'un évènement non système pour un programme
-     * @param programmeId           identifiant du programme
-     * @param evenement             evenement
-     * @return                      evenement crée
-     * @throws AppServiceException  erreur lors de l'enregistrement du programme
-     */
-    Evenement addEvenementNonSystemeByProgrammeId(Long programmeId, @ValidEvenementCreation Evenement evenement) throws AppServiceException;
+    Evenement addEvenementByProgrammeId(Long programmeId, @ValidEvenementCreation Evenement evenement) throws AppServiceException;
 
     /**
      * Modification d'un événement d'un programme

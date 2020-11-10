@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -124,7 +125,7 @@ public class ProgrammeEntity extends GenericAuditableEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_programme")
-    private Set<EvenementProgrammeEntity> evenements;
+    private Set<EvenementProgrammeEntity> evenements = new HashSet<>();
 
     public void addEvenementProgramme(EvenementProgrammeEntity evenementProgrammeEntity) {
         this.evenements.add(evenementProgrammeEntity);

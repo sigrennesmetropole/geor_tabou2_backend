@@ -17,6 +17,5 @@ public interface TypeEvenementDao extends CustomCrudRepository<TypeEvenementEnti
     @Query("SELECT t FROM TypeEvenementEntity t WHERE UPPER(t.libelle) like UPPER(:keyword) and t.dateInactif is null")
     List<TypeEvenementEntity> findOnlyActiveByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
-    TypeEvenementEntity findByLibelle(String libelle);
-
+    TypeEvenementEntity findByCode(String code);
 }

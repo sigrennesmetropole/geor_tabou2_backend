@@ -24,6 +24,14 @@ public class TypeEvenementEntity extends GenericCreateAuditableEntity {
     private String libelle;
 
     @Basic
+    @Column(name = "code")
+    private String code;
+
+    @Basic
+    @Column(name = "systeme", nullable = false)
+    private boolean systeme;
+
+    @Basic
     @Column(name = "date_inactif")
     private Date dateInactif;
 
