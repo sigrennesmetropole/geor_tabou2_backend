@@ -17,7 +17,6 @@ import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
-import rm.tabou2.service.tabou.programme.EvenementProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.utils.PaginationUtils;
@@ -32,15 +31,11 @@ import java.util.List;
 @Controller
 public class ProgrammeApiController implements ProgrammesApi {
 
-
     @Autowired
     private ProgrammeService programmeService;
 
     @Autowired
     private ProgrammeTiersService programmeTiersService;
-
-    @Autowired
-    private EvenementProgrammeService evenementProgrammeService;
 
     @Autowired
     private EtapeProgrammeService etapeProgrammeService;
@@ -132,17 +127,17 @@ public class ProgrammeApiController implements ProgrammesApi {
 
     @Override
     public ResponseEntity<Evenement> updateEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
-        return new ResponseEntity<>(evenementProgrammeService.updateByProgrammeId(evenement, programmeId), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.updateEvenementByProgrammeId(programmeId, evenement), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<Evenement>> getEvenementsByProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(evenementProgrammeService.getByProgrammeId( programmeId), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.getEvenementsByProgrammeId( programmeId), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Evenement> addEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
-        return new ResponseEntity<>(evenementProgrammeService.addByProgrammeId(evenement, programmeId), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.addEvenementByProgrammeId(programmeId, evenement), HttpStatus.OK);
     }
 
     @Override

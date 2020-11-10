@@ -29,17 +29,10 @@ public class EvenementProgrammeEntity extends GenericAuditableEntity {
     private String description;
 
     @Basic
-    @Column(name = "systeme")
-    private Boolean systeme;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_programme")
-    public ProgrammeEntity programme;
+    @Column(name = "systeme", nullable = false)
+    private boolean systeme;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_type_evt")
     public TypeEvenementEntity typeEvenement;
-
-
-
 }

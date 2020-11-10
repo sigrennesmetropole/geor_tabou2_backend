@@ -4,9 +4,11 @@ import org.apache.commons.lang.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,20 +16,32 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
+import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
+import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
+import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
+import java.text.MessageFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -47,6 +61,15 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private EtapeProgrammeDao etapeProgrammeDao;
 
     @Autowired
+    private EvenementProgrammeDao evenementProgrammeDao;
+
+    @Autowired
+    private TypeEvenementDao typeEvenementDao;
+
+    @Autowired
+    private EvenementProgrammeMapper evenementProgrammeMapper;
+
+    @Autowired
     private ProgrammeMapper programmeMapper;
 
     @Autowired
@@ -59,7 +82,16 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeRightsHelper programmeRightsHelper;
 
     @Autowired
+    private EvenementProgrammeRigthsHelper evenementProgrammeRigthsHelper;
+
+    @Autowired
     private ProgrammeService me;
+
+    @Value("${typeevenement.changementetape.code}")
+    private String etapeUpdatedCode;
+
+    @Value("${typeevenement.changementetape.message}")
+    private String etapeUpdatedMessage;
 
     @Override
     @Transactional
@@ -84,6 +116,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
         programmeEntity.setEtapeProgramme(etapeProgrammeEntity);
 
+        // ajout d'un événement système de changement d'état
+        programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
+
         programmeEntity = programmeDao.save(programmeEntity);
 
         return programmeMapper.entityToDto(programmeEntity);
@@ -101,14 +136,24 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
         }
 
-        // Mise à jour de la diffusion restreinte à partir de l'étape
+        // Récupération de la prochaine étape
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(programme.getEtape().getId());
+
+        // Mise à jour de la diffusion restreinte à partir de l'étape
         programme.setDiffusionRestreinte(null);
         if (etapeProgrammeEntity.isRemoveRestriction()) {
             programme.setDiffusionRestreinte(false);
         }
 
+        // Permet de savoir s'il y a changement d'étape
+        boolean etapeChanged = programmeEntity.getEtapeProgramme().getId() != etapeProgrammeEntity.getId();
+
         programmeMapper.dtoToEntity(programme, programmeEntity);
+
+        // Ajout d'un événement système en cas de changement d'étape
+        if (etapeChanged) {
+            programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
+        }
 
         programmeEntity = programmeDao.save(programmeEntity);
 
@@ -128,12 +173,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Override
     public Programme getProgrammeById(long programmeId) {
 
-        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
-        Programme programme = programmeMapper.entityToDto(programmeEntity);
-
-        if (!programmeRightsHelper.checkCanGetProgramme(programme)) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le programme id = " + programmeId);
-        }
+        ProgrammeEntity programmeEntity = getProgrammeEntityById(programmeId);
 
         return programmeMapper.entityToDto(programmeEntity);
 
@@ -147,6 +187,134 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
         return programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
+    }
+
+    @Override
+    public List<Evenement> getEvenementsByProgrammeId(Long programmeId) {
+
+        ProgrammeEntity programmeEntity = getProgrammeEntityById(programmeId);
+
+        return evenementProgrammeMapper.entitiesToDto(List.copyOf(programmeEntity.getEvenements()));
+    }
+
+    /**
+     * Construction d'un évenement programme système
+     * @param code                      code du type d'événement
+     * @param evenementDescription      description de l'événement
+     * @return                          evenement crée
+     */
+    private EvenementProgrammeEntity buildEvenementProgrammeSysteme(String code, String evenementDescription) {
+
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByCode(code);
+        if (typeEvenementEntity == null) {
+            throw new NoSuchElementException("Le type d'événement de modification d'étape n'est pas défini.");
+        }
+        EvenementProgrammeEntity evenementProgrammeEntity = new EvenementProgrammeEntity();
+        evenementProgrammeEntity.setEventDate(new Date());
+        evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
+        evenementProgrammeEntity.setDescription(evenementDescription);
+        evenementProgrammeEntity.setSysteme(true);
+
+        return evenementProgrammeEntity;
+
+    }
+
+    /**
+     * Construction d'un évenement programme système après changement d'étape
+     * @param libelleEtape      libelle de l'étape
+     * @return                  evenement crée
+     */
+    private EvenementProgrammeEntity buildEvenementProgrammeEtapeUpdated(String libelleEtape) {
+        return this.buildEvenementProgrammeSysteme(etapeUpdatedCode, formatEtapeUpdatedMessage(libelleEtape));
+    }
+
+    private String formatEtapeUpdatedMessage(String libelleEtape) {
+        return MessageFormat.format(etapeUpdatedMessage, libelleEtape);
+    }
+
+    @Override
+    @Transactional
+    public Evenement addEvenementByProgrammeId(Long programmeId, Evenement evenement) throws AppServiceException {
+
+        // Programme
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programme.isDiffusionRestreinte())) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un évènement pour le programme id = " + programmeId);
+        }
+
+        //type evenement
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        if (typeEvenementEntity.isSysteme()) {
+            throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
+        }
+
+        evenement.setSysteme(false);
+        EvenementProgrammeEntity evenementProgrammeEntity = evenementProgrammeMapper.dtoToEntity(evenement);
+        evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
+
+        // Enregistrement en BDD
+        evenementProgrammeEntity = evenementProgrammeDao.save(evenementProgrammeEntity);
+
+        programmeEntity.addEvenementProgramme(evenementProgrammeEntity);
+
+        // Enregistrement en BDD
+        try {
+            programmeDao.save(programmeEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible d'ajouter l'évènement Programme , IdEvent = "
+                    + evenement.getId(), e);
+        }
+
+        return evenementProgrammeMapper.entityToDto(evenementProgrammeEntity);
+    }
+
+    @Override
+    @Transactional
+    public Evenement updateEvenementByProgrammeId(long idProgramme, Evenement evenement) throws AppServiceException {
+
+        // Récupération du programme et recherche de l'évènement à modifier
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(idProgramme);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
+
+        Optional<EvenementProgrammeEntity> optionalEvenementProgrammeEntity = programmeEntity.lookupEvenementById(evenement.getId());
+        if (optionalEvenementProgrammeEntity.isEmpty()) {
+            throw new AppServiceException("L'événement id = " + evenement.getId() + " n'existe pas pour le programme id = " + programmeEntity.getId());
+        }
+        EvenementProgrammeEntity evenementProgrammeEntity = optionalEvenementProgrammeEntity.get();
+
+        if (!evenementProgrammeRigthsHelper.checkCanUpdateEvenementProgramme(programme, evenementProgrammeMapper.entityToDto(evenementProgrammeEntity))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modifier l'évènement id = " + evenementProgrammeEntity.getId()
+                    + " du programme id = " + idProgramme);
+        }
+
+        // type evenement
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
+
+        evenementProgrammeMapper.dtoToEntity(evenement, evenementProgrammeEntity);
+
+        // Mise à jour de l'évènement Programme en base de données
+        try {
+            evenementProgrammeEntity = evenementProgrammeDao.save(evenementProgrammeEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException(" Impossible de faire la mise à jour de l'évènement Programme, IdEvent = "
+                    + evenement.getId(), e);
+        }
+
+        return evenementProgrammeMapper.entityToDto(evenementProgrammeEntity);
+    }
+
+    private ProgrammeEntity getProgrammeEntityById(long programmeId) {
+
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+
+        if (!programmeRightsHelper.checkCanGetProgramme(programmeMapper.entityToDto(programmeEntity))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le programme id = " + programmeId);
+        }
+
+        return programmeEntity;
+
     }
 
     /**

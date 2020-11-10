@@ -17,11 +17,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.dto.Nature;
 import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
 import rm.tabou2.service.tabou.operation.OperationService;
@@ -141,8 +141,7 @@ class OperationServiceTest extends DatabaseInitializerTest {
     @DisplayName("testUpdateOperationWithDiffusionRestreinte: Test de l'édition d'une opération " +
             "avec une étape qui change la diffusion restreinte'")
     @Test
-    @Transactional
-    void testUpdateOperationWithDiffusionRestreinte() {
+    void testUpdateOperationWithDiffusionRestreinte() throws AppServiceException {
 
         SecteurEntity secteurEntity = new SecteurEntity();
         secteurEntity.setId(1);

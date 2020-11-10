@@ -168,3 +168,12 @@ where teo1.code = 'ANNULE_PUBLIC' and teo2.code = 'CLOTURE_PUBLIC';
 INSERT INTO tabou_nature (libelle) VALUES ('ZAC');
 INSERT INTO tabou_nature (libelle) VALUES ('ZA');
 INSERT INTO tabou_nature (libelle) VALUES ('En diffus');
+
+
+-- Insertion des types d'évènements
+
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Reunion', 'REUNION', false);
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Ouverture chantier', 'OUVERTURE_CHANTIER', false);
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Instruction', 'INSTRUCTION', false);
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Recours', 'RECOURS', false);
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Modification etape', 'ETAPE_UPDATED', true);

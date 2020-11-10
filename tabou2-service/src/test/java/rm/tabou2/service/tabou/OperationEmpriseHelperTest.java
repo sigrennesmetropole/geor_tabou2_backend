@@ -43,7 +43,7 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
     }
 
     @Test
-    void getAvailableEmprises() {
+    void testGetAvailableEmprises() {
         SecteurEntity secteurEntity1 = new SecteurEntity();
         secteurEntity1.setId(1);
         secteurEntity1.setIdTabou(1);

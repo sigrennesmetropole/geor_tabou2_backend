@@ -4,8 +4,22 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -103,15 +117,22 @@ public class OperationEntity extends GenericAuditableEntity {
     @JoinColumn(name = "id_etape_operation")
     public EtapeOperationEntity etapeOperation;
 
-    @OneToMany(mappedBy = "operation")
-    public Set<EvenementOperationEntity> evenements;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_operation")
+    public Set<EvenementOperationEntity> evenements = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_nature")
     public NatureEntity nature;
 
+    public void addEvenementOperation(EvenementOperationEntity evenementOperationEntity) {
+        this.evenements.add(evenementOperationEntity);
+    }
 
-
-
+    public Optional<EvenementOperationEntity> lookupEvenementById(long idEvenementOperation) {
+        return this.evenements.stream()
+                .filter(ep -> ep.getId() == idEvenementOperation)
+                .findFirst();
+    }
 
 }
