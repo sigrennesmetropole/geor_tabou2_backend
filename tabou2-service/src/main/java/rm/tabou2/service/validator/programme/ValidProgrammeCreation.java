@@ -1,6 +1,6 @@
-package rm.tabou2.service.validator;
+package rm.tabou2.service.validator.programme;
 
-import rm.tabou2.service.validator.impl.ValidProgrammeCreationValidator;
+import rm.tabou2.service.validator.programme.impl.ValidProgrammeCreationValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

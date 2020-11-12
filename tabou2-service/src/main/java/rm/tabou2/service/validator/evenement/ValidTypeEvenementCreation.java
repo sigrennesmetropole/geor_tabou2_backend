@@ -1,6 +1,6 @@
-package rm.tabou2.service.validator;
+package rm.tabou2.service.validator.evenement;
 
-import rm.tabou2.service.validator.impl.ValidEvenementCreationValidator;
+import rm.tabou2.service.validator.evenement.impl.ValidTypeEvenementCreationValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -15,11 +15,11 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Constraint(validatedBy = ValidEvenementCreationValidator.class)
+@Constraint(validatedBy = ValidTypeEvenementCreationValidator.class)
 @Target({ METHOD, FIELD, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
 @Documented
-public @interface ValidEvenementCreation {
+public @interface ValidTypeEvenementCreation {
 
     String message() default "";
 

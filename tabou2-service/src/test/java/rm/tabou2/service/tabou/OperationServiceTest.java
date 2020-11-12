@@ -19,6 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
+import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.Nature;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
@@ -46,7 +47,7 @@ import java.util.stream.StreamSupport;
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-class OperationServiceTest extends DatabaseInitializerTest {
+class OperationServiceTest extends DatabaseInitializerTest implements ExceptionTest {
 
     @Autowired
     private OperationDao operationDao;
@@ -120,22 +121,27 @@ class OperationServiceTest extends DatabaseInitializerTest {
                 () -> operationService.createOperation(operation)
         );
 
-        Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
+        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "nature", "idEmprise"));
 
-        Assertions.assertEquals(4, constraintViolations.size());
+    }
 
-        List<String> errorProperties = new ArrayList<>();
-        constraintViolations.forEach(cv -> {
-            String name = StreamSupport.stream(cv.getPropertyPath().spliterator(), false)
-                    .map(Path.Node::getName)
-                    .reduce((first, second) -> second).orElseGet(() -> cv.getPropertyPath().toString());
-            errorProperties.add(name);
-        });
+    @DisplayName("testCannotUpdateOperationWithInvalidParameters: Test de l'interdiction de la modification d'une opération " +
+            "avec des paramètres obligatoires non présents")
+    @Test
+    void testCannotUpdateOperationWithInvalidParameters() {
 
-        Assertions.assertTrue(errorProperties.contains("nom"));
-        Assertions.assertTrue(errorProperties.contains("code"));
-        Assertions.assertTrue(errorProperties.contains("nature"));
-        Assertions.assertTrue(errorProperties.contains("idEmprise"));
+        final Operation operation = new Operation();
+        operation.setDiffusionRestreinte(true);
+        operation.setNumAds("numads4");
+        operation.setSecteur(true);
+
+        ConstraintViolationException constraintViolationException = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> operationService.updateOperation(operation)
+        );
+
+        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "id", "etape"));
+
     }
 
     @DisplayName("testUpdateOperationWithDiffusionRestreinte: Test de l'édition d'une opération " +

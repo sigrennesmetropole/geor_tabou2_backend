@@ -2528,6 +2528,36 @@
         }
       }
     },
+    "/types-documents/{typeDocumentId}": {
+      "get": {
+        "summary": "Récupération d'un type de document",
+        "operationId": "getTypeDocumentById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "typeDocumentId",
+            "description": "Identifiant du type de document",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TypeDocument"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/secteurs-dds": {
       "get": {
         "summary": "Recherche la liste des secteurs dds",
@@ -3209,7 +3239,7 @@
           "description": "Libellé du type de document",
           "type": "string"
         },
-        "dateInactivite": {
+        "dateInactif": {
           "description": "Date de mise en inactivité du type de document",
           "type": "string",
           "format": "date"
@@ -3398,7 +3428,7 @@
           "type": "string",
           "format": "date"
         },
-        "dateInactivite": {
+        "dateInactif": {
           "description": "Date de mise en inactivité du type de document",
           "type": "string",
           "format": "date"
@@ -3546,7 +3576,7 @@
             "ZAC", "ZA", "En diffus"
           ]
         },
-        "dateInactivite": {
+        "dateInactif": {
           "description": "Date de mise en inactivité de la nature",
           "type": "string",
           "format": "date"

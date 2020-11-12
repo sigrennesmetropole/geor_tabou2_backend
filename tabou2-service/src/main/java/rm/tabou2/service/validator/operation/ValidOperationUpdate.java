@@ -1,6 +1,6 @@
-package rm.tabou2.service.validator;
+package rm.tabou2.service.validator.operation;
 
-import rm.tabou2.service.validator.impl.ValidEvenementUpdateValidator;
+import rm.tabou2.service.validator.operation.impl.ValidOperationUpdateValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -15,11 +15,12 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Constraint(validatedBy = ValidEvenementUpdateValidator.class)
+@ValidOperation
+@Constraint(validatedBy = ValidOperationUpdateValidator.class)
 @Target({ METHOD, FIELD, CONSTRUCTOR, PARAMETER, TYPE_USE })
 @Retention(RUNTIME)
 @Documented
-public @interface ValidEvenementUpdate {
+public @interface ValidOperationUpdate {
 
     String message() default "";
 

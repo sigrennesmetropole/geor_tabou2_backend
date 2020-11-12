@@ -135,7 +135,7 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
                 () -> programmeService.updateEvenementByProgrammeId(1L, evenement)
         );
 
-        testConstraintViolationException(constraintViolationException, List.of("idType", "eventDate", "description"));
+        testConstraintViolationException(constraintViolationException, List.of("id", "idType", "eventDate", "description"));
 
     }
 

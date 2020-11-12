@@ -5,10 +5,10 @@ import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
-import rm.tabou2.service.validator.ValidEvenementCreation;
-import rm.tabou2.service.validator.ValidEvenementUpdate;
-import rm.tabou2.service.validator.ValidOperationCreation;
-import rm.tabou2.service.validator.ValidOperationUpdate;
+import rm.tabou2.service.validator.evenement.ValidEvenementCreation;
+import rm.tabou2.service.validator.evenement.ValidEvenementUpdate;
+import rm.tabou2.service.validator.operation.ValidOperationCreation;
+import rm.tabou2.service.validator.operation.ValidOperationUpdate;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.util.List;

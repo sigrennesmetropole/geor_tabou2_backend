@@ -6,6 +6,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
@@ -17,10 +19,10 @@ import rm.tabou2.storage.tabou.entity.document.TypeDocumentEntity;
 import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 
 import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
+@Validated
+@Transactional(readOnly = true)
 public class TypeDocumentServiceImpl implements TypeDocumentService {
 
     @Autowired
@@ -36,6 +38,7 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     private AuthentificationHelper authentificationHelper;
 
     @Override
+    @Transactional
     public TypeDocument createTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
         if (!authentificationHelper.hasEditAccess()) {
@@ -44,15 +47,6 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
         }
 
         TypeDocumentEntity typeDocumentEntity = typeDocumentMapper.dtoToEntity(typeDocument);
-
-        //Vérification des champs obligatoires
-        if (typeDocumentEntity.getLibelle().isEmpty()) {
-            throw new AppServiceException("Le champ libelle est manquant");
-        }
-
-        //Historisation
-        typeDocumentEntity.setCreateDate(new Date());
-        typeDocumentEntity.setCreateUser(authentificationHelper.getConnectedUsername());
 
         try {
             typeDocumentEntity = typeDocumentDao.save(typeDocumentEntity);
@@ -65,6 +59,7 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     }
 
     @Override
+    @Transactional
     public TypeDocument updateTypeDocument(TypeDocument typeDocument) throws AppServiceException {
 
         if (!authentificationHelper.hasEditAccess()) {
@@ -72,19 +67,9 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
                     "du type de document " + typeDocument.getLibelle());
         }
 
-        TypeDocumentEntity typeDocumentEntity;
+        TypeDocumentEntity typeDocumentEntity = typeDocumentDao.findOneById(typeDocument.getId());
 
-        Optional<TypeDocumentEntity> typeDocumentEntityOpt = typeDocumentDao.findById(typeDocument.getId());
-
-        if (typeDocumentEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le type de document id = " + typeDocument.getId() + " n'existe pas");
-        } else {
-            typeDocumentEntity = typeDocumentEntityOpt.get();
-        }
-
-        typeDocumentEntity.setDateInactif(typeDocument.getDateInactif());
-
-        typeDocumentEntity.setLibelle(typeDocument.getLibelle());
+        typeDocumentMapper.dtoToEntity(typeDocument, typeDocumentEntity);
 
         // Enregistrement en BDD
         try {
@@ -97,6 +82,7 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
     }
 
     @Override
+    @Transactional
     public TypeDocument inactivateTypeDocument(Long typeDocumentId) throws AppServiceException {
 
         if (!authentificationHelper.hasEditAccess()) {
@@ -104,25 +90,18 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
                     "du type de document id = " + typeDocumentId);
         }
 
-        TypeDocumentEntity typeDocument;
+        TypeDocumentEntity typeDocumentEntity = typeDocumentDao.findOneById(typeDocumentId);
 
-        Optional<TypeDocumentEntity> typeDocumentOpt = typeDocumentDao.findById(typeDocumentId);
-        if (typeDocumentOpt.isEmpty()) {
-            throw new NoSuchElementException("Le type de document id=" + typeDocumentId + " n'existe pas");
-        } else {
-            typeDocument = typeDocumentOpt.get();
-        }
-
-        typeDocument.setDateInactif(new Date());
+        typeDocumentEntity.setDateInactif(new Date());
 
         // Enregistrement en BDD
         try {
-            typeDocument = typeDocumentDao.save(typeDocument);
+            typeDocumentEntity = typeDocumentDao.save(typeDocumentEntity);
         } catch (DataAccessException e) {
-            throw new AppServiceException("Impossible de rendre inactive le type document " + typeDocument.getId(), e);
+            throw new AppServiceException("Impossible de rendre inactive le type document " + typeDocumentEntity.getId(), e);
         }
 
-        return typeDocumentMapper.entityToDto(typeDocument);
+        return typeDocumentMapper.entityToDto(typeDocumentEntity);
     }
 
     @Override
@@ -132,6 +111,14 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
 
         return typeDocumentMapper.entitiesToDto(typesDocuments, pageable);
 
+    }
+
+    @Override
+    public TypeDocument getTypeDocumentById(Long typeDocumentId) {
+
+        TypeDocumentEntity typeDocumentEntity = typeDocumentDao.findOneById(typeDocumentId);
+
+        return typeDocumentMapper.entityToDto(typeDocumentEntity);
     }
 
 }

@@ -118,6 +118,24 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
 
     }
 
+    @DisplayName("testCannotUpdateProgrammeWithInvalidParameters: Test de l'interdiction de la modification d'un programme " +
+            "avec des paramètres obligatoires non présents")
+    @Test
+    void testCannotUpdateProgrammeWithInvalidParameters() {
+
+        final Programme programme = new Programme();
+        programme.setDiffusionRestreinte(true);
+        programme.setNumAds("numads4");
+
+        ConstraintViolationException constraintViolationException = Assertions.assertThrows(
+                ConstraintViolationException.class,
+                () -> programmeService.updateProgramme(programme)
+        );
+
+        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "id", "etape"));
+
+    }
+
     @DisplayName("testUpdateProgrammeWithDiffusionRestreinte: Test de l'édition d'un programme avec une étape qui change la diffusion restreinte'")
     @Test
     void testUpdateProgrammeWithInaccessibleEtape() {
