@@ -1,14 +1,21 @@
 package rm.tabou2.service.tabou.evenement.impl;
 
+import org.apache.commons.lang.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import rm.tabou2.service.dto.TypeEvenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.evenement.TypeEvenementRigthsHelper;
 import rm.tabou2.service.mapper.tabou.evenement.TypeEvenementMapper;
 import rm.tabou2.service.tabou.evenement.TypeEvenementService;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementCustomDao;
@@ -17,12 +24,13 @@ import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
+@Validated
+@Transactional(readOnly = true)
 public class TypeEvenementServiceImpl implements TypeEvenementService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TypeEvenementServiceImpl.class);
 
     @Autowired
     private TypeEvenementDao typeEvenementDao;
@@ -36,20 +44,20 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
     @Autowired
     private AuthentificationHelper authentificationHelper;
 
+    @Autowired
+    private TypeEvenementRigthsHelper typeEvenementRigthsHelper;
+
     @Override
     public TypeEvenement getTypeEvenementById(long typeEvenementId) {
 
-        Optional<TypeEvenementEntity> typeEvenementOpt = typeEvenementDao.findById(typeEvenementId);
+        TypeEvenementEntity typeEvenementEntity = getTypeEvenementEntityById(typeEvenementId);
 
-        if (typeEvenementOpt.isEmpty()) {
-            throw new NoSuchElementException("Le typeEvenement demandé n'existe pas, id=" + typeEvenementId);
-        }
-
-        return (typeEvenementMapper.entityToDto(typeEvenementOpt.get()));
+        return (typeEvenementMapper.entityToDto(typeEvenementEntity));
 
     }
 
     @Override
+    @Transactional
     public TypeEvenement createTypeEvenement(TypeEvenement typeEvenement) throws AppServiceException {
 
         //Vérification des autorisations
@@ -58,15 +66,7 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
         }
 
         TypeEvenementEntity typeEvenementEntity = typeEvenementMapper.dtoToEntity(typeEvenement);
-
-        //Vérification des champs obligatoires
-        if (typeEvenementEntity.getLibelle().isEmpty()) {
-            throw new AppServiceException("Le champ libelle est manquant");
-        }
-
-        //Historisation
-        typeEvenementEntity.setCreateDate(new Date());
-        typeEvenementEntity.setCreateUser(authentificationHelper.getConnectedUsername());
+        typeEvenementEntity.setSysteme(false);
 
         try {
             typeEvenementEntity = typeEvenementDao.save(typeEvenementEntity);
@@ -79,6 +79,7 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
     }
 
     @Override
+    @Transactional
     public TypeEvenement updateTypeEvenement(TypeEvenement typeEvenement) throws AppServiceException {
 
         //Vérification des autorisations
@@ -86,19 +87,9 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
             throw new AppServiceException("Utilisateur non autorisé à créer un type d'évènement ", AppServiceExceptionsStatus.FORBIDDEN);
         }
 
-        TypeEvenementEntity typeEvenementEntity;
+        TypeEvenementEntity typeEvenementEntity = getTypeEvenementEntityById(typeEvenement.getId());
 
-        Optional<TypeEvenementEntity> typeEvenementEntityOpt = typeEvenementDao.findById(typeEvenement.getId());
-
-        if (typeEvenementEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le type de evenement id = " + typeEvenement.getId() + " n'existe pas");
-        } else {
-            typeEvenementEntity = typeEvenementEntityOpt.get();
-        }
-
-        typeEvenementEntity.setDateInactif(typeEvenement.getDateInactivite());
-
-        typeEvenementEntity.setLibelle(typeEvenement.getLibelle());
+        typeEvenementMapper.dtoToEntity(typeEvenement, typeEvenementEntity);
 
         // Enregistrement en BDD
         try {
@@ -111,6 +102,7 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
     }
 
     @Override
+    @Transactional
     public TypeEvenement inactivateTypeEvenement(Long typeEvenementId) throws AppServiceException {
 
         //Vérification des autorisations
@@ -118,34 +110,41 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
             throw new AppServiceException("Utilisateur non autorisé à créer un type d'évènement ", AppServiceExceptionsStatus.FORBIDDEN);
         }
 
-        TypeEvenementEntity typeEvenement;
+        TypeEvenementEntity typeEvenementEntity = getTypeEvenementEntityById(typeEvenementId);
 
-        Optional<TypeEvenementEntity> typeEvenementOpt = typeEvenementDao.findById(typeEvenementId);
-        if (typeEvenementOpt.isEmpty()) {
-            throw new NoSuchElementException("Le type de evenement id=" + typeEvenementId + " n'existe pas");
-        } else {
-            typeEvenement = typeEvenementOpt.get();
-        }
-
-        typeEvenement.setDateInactif(new Date());
+        typeEvenementEntity.setDateInactif(new Date());
 
         // Enregistrement en BDD
         try {
-            typeEvenement = typeEvenementDao.save(typeEvenement);
+            typeEvenementEntity = typeEvenementDao.save(typeEvenementEntity);
         } catch (DataAccessException e) {
-            throw new AppServiceException("Impossible de rendre inactive le type evenement " + typeEvenement.getId(), e);
+            throw new AppServiceException("Impossible de rendre inactive le type evenement " + typeEvenementEntity.getId(), e);
         }
 
-        return typeEvenementMapper.entityToDto(typeEvenement);
+        return typeEvenementMapper.entityToDto(typeEvenementEntity);
     }
 
     @Override
     public Page<TypeEvenement> searchTypeEvenement(TypeEvenementCriteria typeEvenementCriteria, Pageable pageable) {
 
+        if (BooleanUtils.isTrue(typeEvenementCriteria.getSysteme())) {
+            typeEvenementCriteria.setSysteme(false);
+            LOGGER.warn("Accès non autorisé à des types d'événement système");
+        }
         Page<TypeEvenementEntity> typesEvenements = typeEvenementCustomDao.searchTypeEvenement(typeEvenementCriteria, pageable);
 
         return typeEvenementMapper.entitiesToDto(typesEvenements, pageable);
 
+    }
+
+    private TypeEvenementEntity getTypeEvenementEntityById(long typeEvenementId) {
+
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(typeEvenementId);
+        if (!typeEvenementRigthsHelper.canGetTypeEvenement(typeEvenementEntity)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer un type d'évènement id = " + typeEvenementId);
+        }
+
+        return typeEvenementEntity;
     }
 
 }

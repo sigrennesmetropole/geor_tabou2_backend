@@ -27,6 +27,7 @@ import java.util.List;
 public class TypeEvenementCustomDaoImpl extends AbstractCustomDaoImpl implements TypeEvenementCustomDao {
 
     public static final String FIELD_LIBELLE = "libelle";
+    public static final String FIELD_SYSTEME = "systeme";
     public static final String FIELD_DATE_INACTIF = "dateInactif";
 
     @Qualifier("tabouEntityManager")
@@ -75,6 +76,10 @@ public class TypeEvenementCustomDaoImpl extends AbstractCustomDaoImpl implements
             predicateStringCriteria(typeEvenementCriteria.getLibelle(), FIELD_LIBELLE, predicates, builder, searchRoot);
 
         }
+
+
+        predicateBooleanCriteria(typeEvenementCriteria.getSysteme(), FIELD_SYSTEME, predicates, builder, searchRoot);
+
 
         //Si on veut les evenements inactifs
         if (typeEvenementCriteria.getInactif() != null) {
