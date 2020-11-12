@@ -6,10 +6,10 @@ import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.exception.AppServiceException;
-import rm.tabou2.service.validator.ValidEvenementCreation;
-import rm.tabou2.service.validator.ValidEvenementUpdate;
-import rm.tabou2.service.validator.ValidProgrammeCreation;
-import rm.tabou2.service.validator.ValidProgrammeUpdate;
+import rm.tabou2.service.validator.evenement.ValidEvenementCreation;
+import rm.tabou2.service.validator.evenement.ValidEvenementUpdate;
+import rm.tabou2.service.validator.programme.ValidProgrammeCreation;
+import rm.tabou2.service.validator.programme.ValidProgrammeUpdate;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import java.util.List;
