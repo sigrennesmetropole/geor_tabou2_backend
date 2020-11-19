@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.validator.evenement.ValidEvenementCreation;
 import rm.tabou2.service.validator.evenement.ValidEvenementUpdate;
 import rm.tabou2.service.validator.programme.ValidProgrammeCreation;
@@ -83,4 +84,12 @@ public interface ProgrammeService {
      * @throws AppServiceException  erreur lors de la mise à jour de l'événement
      */
     Evenement updateEvenementByProgrammeId(long programmeId, @ValidEvenementUpdate Evenement evenement) throws AppServiceException;
+
+    /**
+     * Génération de la fiche suivi d'un programme
+     * @param programmeId           identifiant du programme
+     * @return                      document
+     * @throws AppServiceException  erreur lors de la génératino de la fiche suivi
+     */
+    DocumentContent generateFicheSuivi(Long programmeId) throws AppServiceException;
 }

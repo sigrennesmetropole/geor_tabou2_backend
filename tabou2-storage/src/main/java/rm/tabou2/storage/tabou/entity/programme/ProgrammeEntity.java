@@ -115,10 +115,6 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @Column(name = "logements_access_libre_prevu")
     private int logementsAccessLibrePrevu;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_programme")
-    private Set<ProgrammeTiersEntity> programmeTiers;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_etape_programme")
     private EtapeProgrammeEntity etapeProgramme;

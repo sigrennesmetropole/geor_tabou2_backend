@@ -3,12 +3,16 @@ package rm.tabou2.storage.tabou.entity.tiers;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import rm.tabou2.storage.tabou.entity.common.GenericCreateAuditableEntity;
-import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
-import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.util.Date;
-import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -26,14 +30,13 @@ public class TypeTiersEntity extends GenericCreateAuditableEntity {
     @Column(name = "libelle")
     private String libelle;
 
+    @OrderBy
+    @Basic
+    @Column(name = "code")
+    private String code;
+
     @Basic
     @Column(name = "date_inactif")
     private Date dateInactif;
-
-    @OneToMany(mappedBy = "typeTiers")
-    public Set<OperationTiersEntity> operationsTiers;
-
-    @OneToMany(mappedBy = "typeTiers")
-    public Set<ProgrammeTiersEntity> programmeTiers;
 
 }
