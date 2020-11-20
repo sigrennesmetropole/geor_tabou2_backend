@@ -86,6 +86,15 @@ public class OperationRightsHelper {
     }
 
     /**
+     * Vérifie si l'utilsiateur peut récupérer une opération
+     * @param operationEntity operation
+     * @return true si l'utilisateur peut récupérer l'opération
+     */
+    public boolean checkCanGetOperation(OperationEntity operationEntity) {
+        return !operationEntity.isDiffusionRestreinte() || authentificationHelper.hasRestreintAccess();
+    }
+
+    /**
      * Vérifie si l'utilisateur peut récupérer la liste des étapes possibles pour une opération
      * @param operationId identifiant de l'opération
      * @return true si l'utilisateur le peut

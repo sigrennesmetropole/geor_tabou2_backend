@@ -16,6 +16,7 @@ import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.Evenement;
+import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
@@ -55,7 +56,8 @@ class EvenementOperationServiceTest extends DatabaseInitializerTest implements E
 
     @BeforeEach
     public void initTest() {
-        Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any())).thenReturn(true);
+        Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(OperationEntity.class))).thenReturn(true);
+        Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(Operation.class))).thenReturn(true);
         Mockito.when(operationRightsHelper.checkCanCreateOperation(Mockito.any())).thenReturn(true);
         Mockito.when(operationRightsHelper.checkCanUpdateOperation(Mockito.any(), Mockito.any())).thenReturn(true);
         Mockito.when(evenementOperationRightsHelper.checkCanUpdateEvenementOperation(Mockito.any(), Mockito.any())).thenReturn(true);

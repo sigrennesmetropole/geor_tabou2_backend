@@ -15,12 +15,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
+import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
+import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
@@ -35,6 +38,9 @@ class ProgrammeRightsHelperTest extends DatabaseInitializerTest {
 
     @Autowired
     private ProgrammeDao programmeDao;
+
+    @Autowired
+    private OperationDao operationDao;
 
     @Autowired
     private EtapeProgrammeDao etapeProgrammeDao;
@@ -54,17 +60,27 @@ class ProgrammeRightsHelperTest extends DatabaseInitializerTest {
     @AfterEach
     public void afterTest() {
         programmeDao.deleteAll();
+        operationDao.deleteAll();
     }
 
     @DisplayName("testCanCreateProgramme: Test de la possibilité de création d'un programme avec le rôle referent")
     @Test
     void testCanCreateProgramme() {
 
+        OperationEntity operationEntity = new OperationEntity();
+        operationEntity.setNom("test");
+        operationEntity.setDiffusionRestreinte(true);
+        operationEntity = operationDao.save(operationEntity);
+
+        Operation operation = new Operation();
+        operation.setId(operationEntity.getId());
+
         Programme programme = new Programme();
         programme.setNom("nom1");
         programme.setDiffusionRestreinte(false);
         programme.setCode("code1");
         programme.setNumAds("numads1");
+        programme.setOperation(operation);
 
         Assertions.assertTrue(programmeRightsHelper.checkCanCreateProgramme(programme));
     }
@@ -80,6 +96,31 @@ class ProgrammeRightsHelperTest extends DatabaseInitializerTest {
         programme.setDiffusionRestreinte(true);
         programme.setCode("code1");
         programme.setNumAds("numads1");
+
+        Assertions.assertFalse(programmeRightsHelper.checkCanCreateProgramme(programme));
+    }
+
+    @DisplayName("testCannotCreateProgrammeWithAccessDeniedOperation: Test de l'interdiction de création d'un programme le rôle contributeur" +
+            " en lui affectant une opération innaccessible par l'utilisateur")
+    @Test
+    void testCannotCreateProgrammeWithAccessDeniedOperation() {
+
+        OperationEntity operationEntity = new OperationEntity();
+        operationEntity.setNom("test");
+        operationEntity.setDiffusionRestreinte(true);
+        operationEntity = operationDao.save(operationEntity);
+
+        Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
+
+        Operation operation = new Operation();
+        operation.setId(operationEntity.getId());
+
+        Programme programme = new Programme();
+        programme.setNom("nom1");
+        programme.setDiffusionRestreinte(false);
+        programme.setCode("code1");
+        programme.setNumAds("numads1");
+        programme.setOperation(operation);
 
         Assertions.assertFalse(programmeRightsHelper.checkCanCreateProgramme(programme));
     }

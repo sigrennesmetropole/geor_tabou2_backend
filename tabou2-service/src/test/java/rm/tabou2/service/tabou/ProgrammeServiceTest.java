@@ -17,17 +17,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
+import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
+import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.validation.ConstraintViolationException;
@@ -45,6 +47,9 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
     private ProgrammeDao programmeDao;
 
     @Autowired
+    private OperationDao operationDao;
+
+    @Autowired
     private ProgrammeService programmeService;
 
     @MockBean
@@ -52,7 +57,8 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
 
     @BeforeEach
     public void initTest() {
-        Mockito.when(programmeRightsHelper.checkCanGetProgramme(Mockito.any())).thenReturn(true);
+        Mockito.when(programmeRightsHelper.checkCanGetProgramme(Mockito.any(Programme.class))).thenReturn(true);
+        Mockito.when(programmeRightsHelper.checkCanGetProgramme(Mockito.any(ProgrammeEntity.class))).thenReturn(true);
         Mockito.when(programmeRightsHelper.checkCanCreateProgramme(Mockito.any())).thenReturn(true);
         Mockito.when(programmeRightsHelper.checkCanUpdateProgramme(Mockito.any(), Mockito.anyBoolean())).thenReturn(true);
     }
@@ -60,29 +66,41 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
     @AfterEach
     public void afterTest() {
         programmeDao.deleteAll();
+        operationDao.deleteAll();
     }
 
     @DisplayName("testSearchProgramme: Test de la recherche de programmes")
     @Test
     void testSearchProgramme() {
 
+        OperationEntity operationEntity = new OperationEntity();
+        operationEntity.setNom("test");
+        operationEntity.setDiffusionRestreinte(true);
+        operationEntity = operationDao.save(operationEntity);
+
+        Operation operation = new Operation();
+        operation.setId(operationEntity.getId());
+
         Programme programme1 = new Programme();
         programme1.setNom("nom1");
         programme1.setDiffusionRestreinte(false);
         programme1.setCode("code1");
         programme1.setNumAds("numads1");
+        programme1.setOperation(operation);
 
         Programme programme2 = new Programme();
         programme2.setNom("nom2");
         programme2.setDiffusionRestreinte(true);
         programme2.setCode("code2");
         programme2.setNumAds("numads2");
+        programme2.setOperation(operation);
 
         Programme programme3 = new Programme();
         programme3.setNom("nom3");
         programme3.setDiffusionRestreinte(false);
         programme3.setCode("code3");
         programme3.setNumAds("numads3");
+        programme3.setOperation(operation);
 
         programmeService.createProgramme(programme1);
         programmeService.createProgramme(programme2);
@@ -114,7 +132,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
                 () -> programmeService.createProgramme(programme)
         );
 
-        testConstraintViolationException(constraintViolationException, List.of("nom", "code"));
+        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "operation"));
 
     }
 
@@ -138,13 +156,22 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
 
     @DisplayName("testUpdateProgrammeWithDiffusionRestreinte: Test de l'édition d'un programme avec une étape qui change la diffusion restreinte'")
     @Test
-    void testUpdateProgrammeWithInaccessibleEtape() {
+    void testUpdateProgrammeWithDiffusionRestreinte() {
+
+        OperationEntity operationEntity = new OperationEntity();
+        operationEntity.setNom("test");
+        operationEntity.setDiffusionRestreinte(true);
+        operationEntity = operationDao.save(operationEntity);
+
+        Operation operation = new Operation();
+        operation.setId(operationEntity.getId());
 
         Programme programme = new Programme();
         programme.setNom("nom4");
         programme.setDiffusionRestreinte(true);
         programme.setCode("code4");
         programme.setNumAds("numads4");
+        programme.setOperation(operation);
 
         programme = programmeService.createProgramme(programme);
 

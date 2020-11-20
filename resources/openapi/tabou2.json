@@ -786,6 +786,20 @@
           },
           {
             "in": "query",
+            "name": "nomOperation",
+            "description": "Recherche par nom de l'opération associée",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "natureOperation",
+            "description": "Recherche par libellé de la nature associée à l'opération",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
             "name": "clotureDateDebut",
             "description": "Borne inférieure de recherche par date de cloture",
             "required": false,
@@ -3036,6 +3050,11 @@
           "description": "Indique l'étape d'avancement du programme",
           "type": "object",
           "$ref": "#/definitions/Etape"
+        },
+        "operation": {
+          "description": "Indique l'étape d'avancement du programme",
+          "type": "object",
+          "$ref": "#/definitions/Operation"
         },
         "diffusionRestreinte": {
           "description": "Indique si le programme est en diffusion restreinte (en off)e",

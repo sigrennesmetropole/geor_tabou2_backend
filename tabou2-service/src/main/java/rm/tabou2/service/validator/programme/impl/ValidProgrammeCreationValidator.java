@@ -1,6 +1,5 @@
 package rm.tabou2.service.validator.programme.impl;
 
-import org.apache.commons.lang.StringUtils;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.programme.ValidProgrammeCreation;
@@ -15,18 +14,12 @@ public class ValidProgrammeCreationValidator implements CustomConstraintValidato
         // désactivation du message par défaut
         constraintValidatorContext.disableDefaultConstraintViolation();
 
-        // nom validation
-        boolean nomValidation = !StringUtils.isEmpty(programme.getNom());
-        if (!nomValidation) {
-            addConstraintErrorProperty(constraintValidatorContext, "Le nom du programme est invalide", "nom");
+        // operation validation
+        boolean operationValidation = programme.getOperation() != null;
+        if (!operationValidation) {
+            addConstraintErrorProperty(constraintValidatorContext, "L'opération associée au programme est invalide'", "operation");
         }
 
-        // code validation
-        boolean codeValidation = !StringUtils.isEmpty(programme.getCode()) ;
-        if (!codeValidation) {
-            addConstraintErrorProperty(constraintValidatorContext, "Le code du programme est invalide", "code");
-        }
-
-        return nomValidation && codeValidation;
+        return operationValidation;
     }
 }
