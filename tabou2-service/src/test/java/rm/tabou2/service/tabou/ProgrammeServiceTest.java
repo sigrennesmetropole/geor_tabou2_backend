@@ -78,29 +78,26 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         operationEntity.setDiffusionRestreinte(true);
         operationEntity = operationDao.save(operationEntity);
 
-        Operation operation = new Operation();
-        operation.setId(operationEntity.getId());
-
         Programme programme1 = new Programme();
         programme1.setNom("nom1");
         programme1.setDiffusionRestreinte(false);
         programme1.setCode("code1");
         programme1.setNumAds("numads1");
-        programme1.setOperation(operation);
+        programme1.setOperationId(operationEntity.getId());
 
         Programme programme2 = new Programme();
         programme2.setNom("nom2");
         programme2.setDiffusionRestreinte(true);
         programme2.setCode("code2");
         programme2.setNumAds("numads2");
-        programme2.setOperation(operation);
+        programme2.setOperationId(operationEntity.getId());
 
         Programme programme3 = new Programme();
         programme3.setNom("nom3");
         programme3.setDiffusionRestreinte(false);
         programme3.setCode("code3");
         programme3.setNumAds("numads3");
-        programme3.setOperation(operation);
+        programme3.setOperationId(operationEntity.getId());
 
         programmeService.createProgramme(programme1);
         programmeService.createProgramme(programme2);
@@ -132,7 +129,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
                 () -> programmeService.createProgramme(programme)
         );
 
-        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "operation"));
+        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "operationId"));
 
     }
 
@@ -171,7 +168,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         programme.setDiffusionRestreinte(true);
         programme.setCode("code4");
         programme.setNumAds("numads4");
-        programme.setOperation(operation);
+        programme.setOperationId(operationEntity.getId());
 
         programme = programmeService.createProgramme(programme);
 

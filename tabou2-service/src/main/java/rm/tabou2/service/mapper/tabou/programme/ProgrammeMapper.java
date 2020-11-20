@@ -5,10 +5,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.mapper.AbstractMapper;
-import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
-@Mapper(componentModel = "spring", uses = {EtapeProgrammeMapper.class, OperationMapper.class})
+@Mapper(componentModel = "spring", uses = {EtapeProgrammeMapper.class})
 public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Programme> {
 
     @Mapping(source = "etape", target = "etapeProgramme")
@@ -16,7 +15,7 @@ public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Program
     ProgrammeEntity dtoToEntity(Programme dto);
 
     @Mapping(source = "etapeProgramme", target = "etape")
-    @Mapping(source = "operation", target = "operation", qualifiedByName = "entityToDtoNomNature")
+    @Mapping(source = "operation.id", target = "operationId")
     Programme entityToDto(ProgrammeEntity entity);
 
     @Mapping(source = "etape", target = "etapeProgramme", qualifiedByName = "dtoToNewEntity")

@@ -1,11 +1,9 @@
 package rm.tabou2.service.mapper.tabou.operation;
 
 
-import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.mapper.AbstractMapper;
@@ -26,12 +24,4 @@ public interface OperationMapper extends AbstractMapper<OperationEntity, Operati
     @Mapping(target = "secteur",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void dtoToEntity(Operation dto, @MappingTarget OperationEntity operationEntity);
-
-    @Named("entityToDtoNomNature")
-    @BeanMapping(ignoreByDefault = true)
-    @Mapping(target = "id")
-    @Mapping(target = "nom")
-    @Mapping(target = "nature")
-    Operation entityToDtoNomNature(OperationEntity operationEntity);
-
 }

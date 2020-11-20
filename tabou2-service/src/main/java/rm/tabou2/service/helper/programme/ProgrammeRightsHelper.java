@@ -51,8 +51,8 @@ public class ProgrammeRightsHelper {
         }
 
         // Vérification de l'accès à l'éventuelle opération associée
-        if (!operationRightsHelper.checkCanGetOperation(operationDao.findOneById(programme.getOperation().getId()))) {
-            String errorMessage = String.format("L'utilisateur n'a pas les droits de récupérer l'opération %s", programme.getOperation().getNom());
+        if (!operationRightsHelper.checkCanGetOperation(operationDao.findOneById(programme.getOperationId()))) {
+            String errorMessage = String.format("L'utilisateur n'a pas les droits de récupérer l'opération %d", programme.getOperationId());
             LOGGER.warn(errorMessage);
             return false;
         }
@@ -79,8 +79,8 @@ public class ProgrammeRightsHelper {
         }
 
         // Vérification de l'accès à l'éventuelle opération associée
-        if (programme.getOperation() != null && !operationRightsHelper.checkCanGetOperation(operationDao.findOneById(programme.getOperation().getId()))) {
-            String errorMessage = String.format("L'utilisateur n'a pas les droits de récupérer l'opération %s", programme.getOperation().getNom());
+        if (programme.getOperationId() != null && !operationRightsHelper.checkCanGetOperation(operationDao.findOneById(programme.getOperationId()))) {
+            String errorMessage = String.format("L'utilisateur n'a pas les droits de récupérer l'opération %s", programme.getOperationId());
             LOGGER.warn(errorMessage);
             return false;
         }

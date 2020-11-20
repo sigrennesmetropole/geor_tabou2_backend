@@ -15,11 +15,11 @@ public class ValidProgrammeCreationValidator implements CustomConstraintValidato
         constraintValidatorContext.disableDefaultConstraintViolation();
 
         // operation validation
-        boolean operationValidation = programme.getOperation() != null;
-        if (!operationValidation) {
-            addConstraintErrorProperty(constraintValidatorContext, "L'opération associée au programme est invalide'", "operation");
+        boolean operationIdValidation = programme.getOperationId() != null;
+        if (!operationIdValidation) {
+            addConstraintErrorProperty(constraintValidatorContext, "L'opération associée au programme est invalide'", "operationId");
         }
 
-        return operationValidation;
+        return operationIdValidation;
     }
 }

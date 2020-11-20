@@ -124,7 +124,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
 
         // Ajout de l'opération associée
-        programmeEntity.setOperation(operationDao.findOneById(programme.getOperation().getId()));
+        programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
 
         programmeEntity = programmeDao.save(programmeEntity);
 
@@ -163,8 +163,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         // Mise à jour de l'opération associée
-        if (programme.getOperation() != null) {
-            programmeEntity.setOperation(operationDao.findOneById(programme.getOperation().getId()));
+        if (programme.getOperationId()!= null) {
+            programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
         }
 
         programmeEntity = programmeDao.save(programmeEntity);

@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
-import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
@@ -72,15 +71,12 @@ class ProgrammeRightsHelperTest extends DatabaseInitializerTest {
         operationEntity.setDiffusionRestreinte(true);
         operationEntity = operationDao.save(operationEntity);
 
-        Operation operation = new Operation();
-        operation.setId(operationEntity.getId());
-
         Programme programme = new Programme();
         programme.setNom("nom1");
         programme.setDiffusionRestreinte(false);
         programme.setCode("code1");
         programme.setNumAds("numads1");
-        programme.setOperation(operation);
+        programme.setOperationId(operationEntity.getId());
 
         Assertions.assertTrue(programmeRightsHelper.checkCanCreateProgramme(programme));
     }
@@ -112,15 +108,12 @@ class ProgrammeRightsHelperTest extends DatabaseInitializerTest {
 
         Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
 
-        Operation operation = new Operation();
-        operation.setId(operationEntity.getId());
-
         Programme programme = new Programme();
         programme.setNom("nom1");
         programme.setDiffusionRestreinte(false);
         programme.setCode("code1");
         programme.setNumAds("numads1");
-        programme.setOperation(operation);
+        programme.setOperationId(operationEntity.getId());
 
         Assertions.assertFalse(programmeRightsHelper.checkCanCreateProgramme(programme));
     }

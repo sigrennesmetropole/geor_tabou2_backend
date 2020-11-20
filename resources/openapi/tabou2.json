@@ -3051,10 +3051,10 @@
           "type": "object",
           "$ref": "#/definitions/Etape"
         },
-        "operation": {
-          "description": "Indique l'étape d'avancement du programme",
-          "type": "object",
-          "$ref": "#/definitions/Operation"
+        "operationId": {
+          "description": "Identifiant de l'opération",
+          "type": "integer",
+          "format": "int64"
         },
         "diffusionRestreinte": {
           "description": "Indique si le programme est en diffusion restreinte (en off)e",
