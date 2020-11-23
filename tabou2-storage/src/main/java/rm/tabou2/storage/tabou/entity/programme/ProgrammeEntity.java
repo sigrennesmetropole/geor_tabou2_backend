@@ -93,16 +93,16 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     private int nbLogements;
 
     @Basic
-    @Column(name = "logements_locat_aide_prevu")
-    private int logementsLocatAidePrevu;
+    @Column(name = "logements_locatif_aide_prevu")
+    private int logementsLocatifAidePrevu;
 
     @Basic
     @Column(name = "logements_access_aide_prevu")
     private int logementsAccessAidePrevu;
 
     @Basic
-    @Column(name = "logements_locat_regule_prive_prevu")
-    private int logementsLocatRegulePrivePrevu;
+    @Column(name = "logements_locatif_regule_prive_prevu")
+    private int logementsLocatifRegulePrivePrevu;
 
     @Basic
     @Column(name = "logements_locatif_regule_hlm_prevu")

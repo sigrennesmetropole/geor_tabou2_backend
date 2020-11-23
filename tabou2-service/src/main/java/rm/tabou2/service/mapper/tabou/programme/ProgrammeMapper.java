@@ -11,14 +11,17 @@ import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Programme> {
 
     @Mapping(source = "etape", target = "etapeProgramme")
+    @Mapping(source = "logementsTotal", target = "nbLogements")
     @Mapping(target = "operation", ignore = true)
     ProgrammeEntity dtoToEntity(Programme dto);
 
     @Mapping(source = "etapeProgramme", target = "etape")
+    @Mapping(source = "nbLogements", target = "logementsTotal")
     @Mapping(source = "operation.id", target = "operationId")
     Programme entityToDto(ProgrammeEntity entity);
 
     @Mapping(source = "etape", target = "etapeProgramme", qualifiedByName = "dtoToNewEntity")
+    @Mapping(source = "logementsTotal", target = "nbLogements")
     @Mapping(target = "operation", ignore = true)
     void dtoToEntity(Programme dto, @MappingTarget ProgrammeEntity entity);
 
