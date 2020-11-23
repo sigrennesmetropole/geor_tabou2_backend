@@ -11,13 +11,11 @@ public class DataModel {
     private final Map<String, FieldMetadataTypeEnum> contextFieldMetadatas;
 
     public DataModel() {
-        this.contextDatas = new HashMap<>();
-        this.contextFieldMetadatas = new HashMap<>();
+        this(new HashMap<>(), new HashMap<>());
     }
 
     public DataModel(Map<String, Object> contextDatas) {
-        this.contextDatas = contextDatas;
-        this.contextFieldMetadatas = new HashMap<>();
+        this(contextDatas, new HashMap<>());
     }
 
     public DataModel(Map<String, Object> contextDatas, Map<String, FieldMetadataTypeEnum> contextFieldMetadatas) {

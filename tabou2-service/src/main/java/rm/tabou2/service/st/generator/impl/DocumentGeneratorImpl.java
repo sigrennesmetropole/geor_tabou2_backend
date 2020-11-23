@@ -53,6 +53,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
                 generationModel.getOutputFileExtension()));
     }
 
+    /**
+     * Génération d'un document pdf
+     * @param generationModel       modèle d'export
+     * @return                      document
+     * @throws AppServiceException  erreur lors de l'export
+     */
     private DocumentContent generatePDFDocument(GenerationModel generationModel) throws AppServiceException {
         File generateFile;
         try {
@@ -71,6 +77,13 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
         return new DocumentContent(generateFile.getName(), MediaType.APPLICATION_PDF_VALUE, generateFile);
     }
 
+    /**
+     * Génération d'un document vers un fichier
+     * @param generationModel       modèle d'export
+     * @param outputFile            fichier output
+     * @param options               options d'export
+     * @throws AppServiceException  erreur lors de l'export
+     */
     protected void generateDocumentIntoFile(GenerationModel generationModel, File outputFile, Options options) throws AppServiceException {
 
         try (FileOutputStream out = new FileOutputStream(outputFile)) {
@@ -97,6 +110,12 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
         }
     }
 
+    /**
+     *
+     * Construit les métadonnées xdocreport liées au données du document
+     * @param contextFieldMetadatas     model métadonnées
+     * @return                          métadonnées xdocreport
+     */
     private FieldsMetadata buildFieldsMetadata(Map<String, FieldMetadataTypeEnum> contextFieldMetadatas) {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
 

@@ -29,13 +29,11 @@ import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.st.generator.DocumentGenerator;
-import rm.tabou2.service.st.generator.model.DataModel;
 import rm.tabou2.service.st.generator.model.DocumentContent;
-import rm.tabou2.service.st.generator.model.FieldMetadataTypeEnum;
+import rm.tabou2.service.st.generator.model.FicheSuiviProgrammeDataModel;
 import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
-import rm.tabou2.storage.ddc.entity.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
@@ -44,14 +42,13 @@ import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
-import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
-import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -59,7 +56,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -376,62 +372,35 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
 
-        // TODO: lequel choisir ??
-        InputStream templateFileInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("template/template_fiche_suivi.odt");
+        InputStream templateFileInputStream;
+        File fileiImgIllustration;
         try {
             templateFileInputStream = new ClassPathResource("template/template_fiche_suivi.odt").getInputStream();
         } catch (IOException e) {
             throw new AppServiceException("Erreur lors de la récupération du template", e);
         }
 
-        List<EvenementProgrammeEntity> evenementProgrammeEntities = List.copyOf(programmeEntity.getEvenements());
-        List<AgapeoEntity> agapeoEntities = agapeoDao.findAllByNumAds(programmeEntity.getNumAds());
-        List<PermisConstruireEntity> permisConstruireEntities = permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds());
-        List<ProgrammeTiersEntity> programmeTiersEntities = programmeTiersDao.findByProgrammeId(programmeEntity.getId());
+        try {
+            // TODO: récupérer l'image avec alfresco
+            fileiImgIllustration = new ClassPathResource("img/default_img.jpg").getFile();
+        } catch (IOException e) {
+            throw new AppServiceException("Erreur lors de la récupération de l'illustration", e);
+        }
 
-        String nomMaitresOuvrage = programmeTiersEntities.stream()
-                .filter(programmeTiersEntity -> programmeTiersEntity.getTypeTiers().getCode().equals("MAITRE_OUVRAGE"))
-                .map(programmeTiersEntity -> programmeTiersEntity.getTiers().getNom())
-                .collect(Collectors.joining(", "));
+        FicheSuiviProgrammeDataModel ficheSuiviProgrammeDataModel = new FicheSuiviProgrammeDataModel();
+        ficheSuiviProgrammeDataModel.setProgramme(programmeEntity);
+        ficheSuiviProgrammeDataModel.setOperation(programmeEntity.getOperation());
+        ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
+        ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
+        ficheSuiviProgrammeDataModel.setIllustration(fileiImgIllustration);
+        ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds()));
+        ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds()));
+        ficheSuiviProgrammeDataModel.setAgapeos(agapeoDao.findAllByNumAds(programmeEntity.getNumAds()));
+        ficheSuiviProgrammeDataModel.setPermis(permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds()));
+        ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));
+        ficheSuiviProgrammeDataModel.setProgrammeTiers(programmeTiersDao.findByProgrammeId(programmeEntity.getId()));
 
-        String nomMaitresOeuvre = programmeTiersEntities.stream()
-                .filter(programmeTiersEntity -> programmeTiersEntity.getTypeTiers().getCode().equals("MAITRE_OEUVRE"))
-                .map(programmeTiersEntity -> programmeTiersEntity.getTiers().getNom())
-                .collect(Collectors.joining(", "));
-
-        DataModel dataModel = new DataModel();
-        dataModel.addContextData("programme", programmeEntity);
-        dataModel.addContextData("etape", programmeEntity.getEtapeProgramme());
-        dataModel.addContextData("evenements", evenementProgrammeEntities);
-        dataModel.addContextData("agapeos", agapeoEntities);
-        dataModel.addContextData("permis", permisConstruireEntities);
-        dataModel.addContextData("maitresOuvrage", nomMaitresOuvrage);
-        dataModel.addContextData("maitresOeuvre", nomMaitresOeuvre);
-
-        dataModel.addContextFieldMetadata("agapeos.getNumDossier()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getAnneeProg()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getEtat()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getCommune()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getNomOperation()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getConventionApplicationPlh()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getNumAds()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getLogementsLocatAide()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getLogementsLocatRegulHlm()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getLogementsLocatRegulPrive()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("agapeos.getLogementsAccessAide()", FieldMetadataTypeEnum.LIST);
-
-        dataModel.addContextFieldMetadata("permis.getNumAds()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("permis.getSurfBureaux()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("permis.getSurfCommerces()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("permis.getSurfIndustries()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("permis.getSurfEquipPub()", FieldMetadataTypeEnum.LIST);
-
-        dataModel.addContextFieldMetadata("evenements.getModifDate()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("evenements.getDescription()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("evenements.getCreateUser()", FieldMetadataTypeEnum.LIST);
-        dataModel.addContextFieldMetadata("evenements.getModifUser()", FieldMetadataTypeEnum.LIST);
-
-        return new GenerationModel(dataModel, templateFileInputStream, MediaType.APPLICATION_PDF.getSubtype());
+        return new GenerationModel(ficheSuiviProgrammeDataModel, templateFileInputStream, MediaType.APPLICATION_PDF.getSubtype());
     }
 
     private ProgrammeEntity getProgrammeEntityById(long programmeId) {
