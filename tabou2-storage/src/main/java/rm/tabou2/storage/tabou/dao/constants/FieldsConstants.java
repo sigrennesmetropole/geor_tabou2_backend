@@ -18,6 +18,7 @@ public class FieldsConstants {
     public static final String FIELD_AUTORISATION_DATE = "autorisationDate";
     public static final String FIELD_OPERATIONNEL_DATE = "operationnelDate";
     public static final String FIELD_CLOTURE_DATE = "clotureDate";
+    public static final String FIELD_OPERATION = "operation";
     public static final String FIELD_OPERATION_TIERS = "operationsTiers";
     public static final String FIELD_PROGRAMME_TIERS = "programmeTiers";
     public static final String FIELD_TYPE_TIERS = "typeTiers";

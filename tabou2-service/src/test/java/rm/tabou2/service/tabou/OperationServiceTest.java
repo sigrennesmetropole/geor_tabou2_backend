@@ -36,13 +36,8 @@ import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.StreamSupport;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
@@ -72,7 +67,8 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
 
     @BeforeEach
     public void initTest() {
-        Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any())).thenReturn(true);
+        Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(OperationEntity.class))).thenReturn(true);
+        Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(Operation.class))).thenReturn(true);
         Mockito.when(operationRightsHelper.checkCanCreateOperation(Mockito.any())).thenReturn(true);
         Mockito.when(operationRightsHelper.checkCanUpdateOperation(Mockito.any(), Mockito.any())).thenReturn(true);
     }

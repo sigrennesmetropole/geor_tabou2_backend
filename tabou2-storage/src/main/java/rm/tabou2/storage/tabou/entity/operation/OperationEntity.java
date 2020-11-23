@@ -3,6 +3,7 @@ package rm.tabou2.storage.tabou.entity.operation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -120,6 +121,10 @@ public class OperationEntity extends GenericAuditableEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_operation")
     public Set<EvenementOperationEntity> evenements = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_operation")
+    private Set<ProgrammeEntity> programmes = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_nature")

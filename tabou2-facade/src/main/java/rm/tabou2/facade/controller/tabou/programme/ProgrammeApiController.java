@@ -61,13 +61,14 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
     @Override
     public ResponseEntity<PageResult> searchProgrammes(@Valid String nom, @Valid String etape, @Valid Boolean diffusionRestreinte,
-                                                       @Valid String code, @Valid String numAds, @Valid Date clotureDateDebut,
-                                                       @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer attributionFonciereAnneeDebut,
-                                                       @Valid Integer attributionFonciereAnneeFin, @Valid Date attributionDateDebut, @Valid Date attributionDateFin,
-                                                       @Valid Date commercialisationDateDebut, @Valid Date commercialisationDateFin, @Valid Date adsDateDebut,
-                                                       @Valid Date adsDateFin, @Valid Date docDateDebut, @Valid Date docDateFin,
-                                                       @Valid Date datDateDebut, @Valid Date datDateFin, @Valid Boolean logementsAides,
-                                                       @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber,
+                                                       @Valid String code, @Valid String numAds, @Valid String nomOperation,
+                                                       @Valid String natureOperation, @Valid Date clotureDateDebut, @Valid Date clotureDateFin,
+                                                       @Valid String tiers, @Valid Integer attributionFonciereAnneeDebut, @Valid Integer attributionFonciereAnneeFin,
+                                                       @Valid Date attributionDateDebut, @Valid Date attributionDateFin, @Valid Date commercialisationDateDebut,
+                                                       @Valid Date commercialisationDateFin, @Valid Date adsDateDebut, @Valid Date adsDateFin,
+                                                       @Valid Date docDateDebut, @Valid Date docDateFin, @Valid Date datDateDebut,
+                                                       @Valid Date datDateFin, @Valid Boolean logementsAides, @Valid Integer start,
+                                                       @Valid Boolean onlyActive, @Valid Integer resultsNumber,
                                                        @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         ProgrammeCriteria programmeCriteria = new ProgrammeCriteria();
@@ -79,6 +80,8 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
         programmeCriteria.setClotureDateDebut(clotureDateDebut);
         programmeCriteria.setClotureDateFin(clotureDateFin);
         programmeCriteria.setNumAds(numAds);
+        programmeCriteria.setNomOperation(nomOperation);
+        programmeCriteria.setNatureOperation(natureOperation);
         programmeCriteria.setTiers(tiers);
         programmeCriteria.setAttributionFonciereAnneeDebut(attributionFonciereAnneeDebut);
         programmeCriteria.setAttributionFonciereAnneeFin(attributionFonciereAnneeFin);
