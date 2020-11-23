@@ -3090,13 +3090,33 @@
           "type": "string",
           "format": "date"
         },
-        "demarrageDate": {
-          "description": "TODO",
+        "adsDate": {
+          "description": "Date adsDate",
           "type": "string",
           "format": "date"
         },
-        "livraisonDate": {
-          "description": "Date de livraison du programme",
+        "docDate": {
+          "description": "Date d'ouverture de chantier",
+          "type": "string",
+          "format": "date"
+        },
+        "datDate": {
+          "description": "tDate d’achèvement de travaux",
+          "type": "string",
+          "format": "date"
+        },
+        "adsDatePrevu": {
+          "description": "Date adsDate prévue",
+          "type": "string",
+          "format": "date"
+        },
+        "docDatePrevu": {
+          "description": "Date d'ouverture de chantier prévue",
+          "type": "string",
+          "format": "date"
+        },
+        "datDatePrevu": {
+          "description": "Date d’achèvement de travaux prévue",
           "type": "string",
           "format": "date"
         },
@@ -3110,33 +3130,58 @@
           "type": "integer",
           "format": "int32"
         },
-        "logementsAccesLibre": {
-          "description": "Nombre de logements en accession libre",
-          "type": "integer",
-          "format": "int32"
-        },
         "logementsAccessMaitrise": {
           "description": "Nombre de logements en accession maitrisée",
           "type": "integer",
           "format": "int32"
         },
-        "logementsLocatifRegule": {
+        "logementsLocatifRegulePrive": {
           "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
           "type": "integer",
           "format": "int32"
         },
-        "logementsPls": {
+        "logementsLocatifReguleHLM": {
           "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
           "type": "integer",
           "format": "int32"
         },
-        "logementsAccesAide": {
+        "logementsAccessAide": {
           "description": "Nombre de logements en accession sociale (PSLA, OFS-BRS)",
           "type": "integer",
           "format": "int32"
         },
         "logementsLocatifAide": {
           "description": "Nombre de logements en locatif social (PLUS, PLAI)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsAccessAidePrevu": {
+          "description": "Nombre de logements en accession sociale (PSLA, OFS-BRS) prévu",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsLocatifAidePrevu": {
+          "description": "Nombre de logements en locatif social (PLUS, PLAI) prévu",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsLocatifRegulePrivePrevu": {
+          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit) prévu",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsLocatifReguleHlmPrevu": {
+          "description": "Nombre de logements en PLS institutionnel (PLS HLM) prévu",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsAccessMaitrisePrevu": {
+          "description": "Nombre de logements en accession maitrisée prévu",
+          "type": "integer",
+          "format": "int32"
+        },
+        "logementsAccessLibrePrevu": {
+          "description": "Nombre de logements en accession libre prévu",
           "type": "integer",
           "format": "int32"
         },

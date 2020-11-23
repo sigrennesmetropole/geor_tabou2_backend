@@ -8,14 +8,4 @@ import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 
 @Mapper(componentModel = "spring")
 public interface AgapeoMapper extends AbstractMapper<AgapeoEntity, Agapeo> {
-
-    @Mapping(source = "logementsLocatifAide", target = "logementsLocatAide")
-    @Mapping(source = "logementsLocatifRegulePrive", target = "logementsLocatRegulPrive")
-    @Mapping(source = "logementsLocatifReguleHlm", target = "logementsLocatRegulHlm")
-    AgapeoEntity dtoToEntity(Agapeo dto);
-
-    @Mapping(source = "logementsLocatAide", target = "logementsLocatifAide")
-    @Mapping(source = "logementsLocatRegulPrive", target = "logementsLocatifRegulePrive")
-    @Mapping(source = "logementsLocatRegulHlm", target = "logementsLocatifReguleHlm")
-    Agapeo entityToDto(AgapeoEntity entity);
 }
