@@ -23,6 +23,7 @@ import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
+import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
@@ -114,6 +115,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private EvenementProgrammeRigthsHelper evenementProgrammeRigthsHelper;
 
     @Autowired
+    private ProgrammePlannerHelper programmePlannerHelper;
+
+    @Autowired
     private DocumentGenerator documentGenerator;
 
     @Autowired
@@ -155,8 +159,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
 
         programmeEntity = programmeDao.save(programmeEntity);
+        Programme programmeSaved = programmeMapper.entityToDto(programmeEntity);
 
-        return programmeMapper.entityToDto(programmeEntity);
+        // mise à jour du programme avec les données de suivi
+        programmePlannerHelper.computeSuiviHabitatOfProgramme(programmeSaved);
+
+        return programmeSaved;
 
     }
 
@@ -196,8 +204,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         programmeEntity = programmeDao.save(programmeEntity);
+        Programme programmeSaved = programmeMapper.entityToDto(programmeEntity);
 
-        return programmeMapper.entityToDto(programmeEntity);
+        // mise à jour du programme avec les données de suivi
+        programmePlannerHelper.computeSuiviHabitatOfProgramme(programmeSaved);
+
+        return programmeSaved;
     }
 
     @Override
@@ -215,7 +227,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         ProgrammeEntity programmeEntity = getProgrammeEntityById(programmeId);
 
-        return programmeMapper.entityToDto(programmeEntity);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
+
+        // mise à jour du programme avec les données de suivi
+        programmePlannerHelper.computeSuiviHabitatOfProgramme(programme);
+
+        return programme;
 
     }
 

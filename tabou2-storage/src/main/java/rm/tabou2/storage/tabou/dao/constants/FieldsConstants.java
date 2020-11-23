@@ -29,7 +29,7 @@ public class FieldsConstants {
     public static final String FIELD_ADS_DATE_PREVU = "adsDatePrevu";
     public static final String FIELD_DOC_DATE_PREVU = "docDatePrevu";
     public static final String FIELD_DAT_DATE_PREVU = "datDatePrevu";
-    public static final String FIELD_LOGEMENTS_LOCAT_AIDE_PREVU = "logementsLocatAidePrevu";
+    public static final String FIELD_LOGEMENTS_LOCAT_AIDE_PREVU = "logementsLocatifAidePrevu";
     public static final String FIELD_LOGEMENTS_ACCESS_AIDE_PREVU = "logementsAccessAidePrevu";
 
 

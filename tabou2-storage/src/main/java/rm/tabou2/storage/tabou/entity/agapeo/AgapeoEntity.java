@@ -49,20 +49,20 @@ public class AgapeoEntity {
     private String conventionApplicationPlh = null;
 
     @Basic
-    @Column(name = "logements_locat_aide")
-    private int logementsLocatAide;
+    @Column(name = "logements_locatif_aide")
+    private int logementsLocatifAide;
 
     @Basic
     @Column(name = "logements_access_aide")
     private int logementsAccessAide;
 
     @Basic
-    @Column(name = "logements_locat_regul_prive")
-    private int logementsLocatRegulPrive;
+    @Column(name = "logements_locatif_regule_prive")
+    private int logementsLocatifRegulePrive;
 
     @Basic
-    @Column(name = "logements_locat_regul_hlm")
-    private int logementsLocatRegulHlm;
+    @Column(name = "logements_locatif_regule_hlm")
+    private int logementsLocatifReguleHlm;
 
     @Basic
     @Column(name = "logements_access_maitrise")
