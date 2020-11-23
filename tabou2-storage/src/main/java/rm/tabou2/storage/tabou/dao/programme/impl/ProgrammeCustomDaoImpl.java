@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
+import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
@@ -42,8 +44,10 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_ACCESS_AIDE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_LOCAT_AIDE_PREVU;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NATURE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NUM_ADS;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_OPERATION;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_PROGRAMME_TIERS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TIERS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_TIERS;
@@ -126,6 +130,18 @@ public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements Pro
 
                 predicates.add(builder.equal(typeTiersyJoin.get(FIELD_LIBELLE), programmeCriteria.getTiers()));
 
+            }
+
+            // nom et nature de l'opération
+            if(programmeCriteria.getNomOperation() != null || programmeCriteria.getNatureOperation() != null) {
+                Join<ProgrammeEntity, OperationEntity> operationJoin = root.join(FIELD_OPERATION);
+                if (programmeCriteria.getNomOperation() != null) {
+                    predicateStringCriteriaForJoin(programmeCriteria.getNomOperation(), FIELD_NOM, predicates, builder, operationJoin);
+                }
+                if (programmeCriteria.getNatureOperation() != null) {
+                    Join<OperationEntity, NatureEntity> natureJoin = operationJoin.join(FIELD_NATURE);
+                    predicateStringCriteriaForJoin(programmeCriteria.getNatureOperation(), FIELD_LIBELLE, predicates, builder, natureJoin);
+                }
             }
 
             //attributionFonciereAnnee

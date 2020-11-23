@@ -16,6 +16,7 @@ import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.Evenement;
+import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
@@ -55,7 +56,8 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
 
     @BeforeEach
     public void initTest() {
-        Mockito.when(programmeRightsHelper.checkCanGetProgramme(Mockito.any())).thenReturn(true);
+        Mockito.when(programmeRightsHelper.checkCanGetProgramme(Mockito.any(Programme.class))).thenReturn(true);
+        Mockito.when(programmeRightsHelper.checkCanGetProgramme(Mockito.any(ProgrammeEntity.class))).thenReturn(true);
         Mockito.when(programmeRightsHelper.checkCanCreateProgramme(Mockito.any())).thenReturn(true);
         Mockito.when(programmeRightsHelper.checkCanUpdateProgramme(Mockito.any(), Mockito.anyBoolean())).thenReturn(true);
         Mockito.when(evenementProgrammeRigthsHelper.checkCanUpdateEvenementProgramme(Mockito.any(), Mockito.any())).thenReturn(true);

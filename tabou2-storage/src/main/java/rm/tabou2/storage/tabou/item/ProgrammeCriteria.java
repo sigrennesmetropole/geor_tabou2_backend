@@ -12,6 +12,8 @@ public class ProgrammeCriteria {
     private Boolean diffusionRestreinte;
     private String code;
     private String numAds;
+    private String nomOperation;
+    private String natureOperation;
     private Date clotureDateDebut;
     private Date clotureDateFin;
     private String tiers;

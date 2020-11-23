@@ -27,6 +27,7 @@ import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
@@ -65,6 +66,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private TypeEvenementDao typeEvenementDao;
+
+    @Autowired
+    private OperationDao operationDao;
 
     @Autowired
     private EvenementProgrammeMapper evenementProgrammeMapper;
@@ -119,6 +123,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // ajout d'un événement système de changement d'état
         programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
 
+        // Ajout de l'opération associée
+        programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
+
         programmeEntity = programmeDao.save(programmeEntity);
 
         return programmeMapper.entityToDto(programmeEntity);
@@ -153,6 +160,11 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // Ajout d'un événement système en cas de changement d'étape
         if (etapeChanged) {
             programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
+        }
+
+        // Mise à jour de l'opération associée
+        if (programme.getOperationId()!= null) {
+            programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
         }
 
         programmeEntity = programmeDao.save(programmeEntity);
