@@ -19,7 +19,6 @@ public class NatureServiceImpl implements NatureService {
     @Autowired
     private NatureMapper natureMapper;
 
-
     @Override
     public List<Nature> getAllNatures(Boolean onlyActive) {
 
@@ -34,6 +33,5 @@ public class NatureServiceImpl implements NatureService {
         return natureMapper.entitiesToDto(natures);
 
     }
-
 
 }

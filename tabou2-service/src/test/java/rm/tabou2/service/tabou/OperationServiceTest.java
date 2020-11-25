@@ -20,20 +20,40 @@ import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
+import rm.tabou2.service.dto.ConsommationEspace;
+import rm.tabou2.service.dto.Decision;
+import rm.tabou2.service.dto.MaitriseOuvrage;
+import rm.tabou2.service.dto.ModeAmenagement;
 import rm.tabou2.service.dto.Nature;
 import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.dto.Vocation;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
+import rm.tabou2.service.mapper.tabou.operation.ConsommationEspaceMapper;
+import rm.tabou2.service.mapper.tabou.operation.DecisionMapper;
+import rm.tabou2.service.mapper.tabou.operation.MaitriseOuvrageMapper;
+import rm.tabou2.service.mapper.tabou.operation.ModeAmenagementMapper;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
+import rm.tabou2.service.mapper.tabou.operation.VocationMapper;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.storage.sig.dao.SecteurDao;
 import rm.tabou2.storage.sig.entity.SecteurEntity;
+import rm.tabou2.storage.tabou.dao.operation.ConsommationEspaceDao;
+import rm.tabou2.storage.tabou.dao.operation.DecisionDao;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
+import rm.tabou2.storage.tabou.dao.operation.MaitriseOuvrageDao;
+import rm.tabou2.storage.tabou.dao.operation.ModeAmenagementDao;
 import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.VocationDao;
+import rm.tabou2.storage.tabou.entity.operation.ConsommationEspaceEntity;
+import rm.tabou2.storage.tabou.entity.operation.DecisionEntity;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.MaitriseOuvrageEntity;
+import rm.tabou2.storage.tabou.entity.operation.ModeAmenagementEntity;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import javax.validation.ConstraintViolationException;
@@ -57,7 +77,37 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
     private SecteurDao secteurDao;
 
     @Autowired
+    private DecisionDao decisionDao;
+
+    @Autowired
+    private VocationDao vocationDao;
+
+    @Autowired
+    private MaitriseOuvrageDao maitriseOuvrageDao;
+
+    @Autowired
+    private ModeAmenagementDao modeAmenagementDao;
+
+    @Autowired
+    private ConsommationEspaceDao consommationEspaceDao;
+
+    @Autowired
     private NatureMapper natureMapper;
+
+    @Autowired
+    private DecisionMapper decisionMapper;
+
+    @Autowired
+    private VocationMapper vocationMapper;
+
+    @Autowired
+    private MaitriseOuvrageMapper maitriseOuvrageMapper;
+
+    @Autowired
+    private ModeAmenagementMapper modeAmenagementMapper;
+
+    @Autowired
+    private ConsommationEspaceMapper consommationEspaceMapper;
 
     @Autowired
     private OperationService operationService;
@@ -117,7 +167,8 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
                 () -> operationService.createOperation(operation)
         );
 
-        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "nature", "idEmprise"));
+        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "nature",
+                "idEmprise", "vocation", "decision", "maitriseOuvrage", "modeAmenagement", "consommationEspace"));
 
     }
 
@@ -150,6 +201,11 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         secteurDao.save(secteurEntity);
 
         NatureEntity natureEntityZAC = natureDao.findByLibelle(Nature.LibelleEnum.ZAC.name());
+        DecisionEntity decisionEntity = decisionDao.findByCode(Decision.CodeEnum.DELIBERATION_CONSEIL_M.toString());
+        VocationEntity vocationEntity = vocationDao.findByCode(Vocation.CodeEnum.ESPACE_VERT.toString());
+        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrage.CodeEnum.COMMUNAUTAIRE.toString());
+        ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagement.CodeEnum.REGIE.toString());
+        ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspace.CodeEnum.EXTENSION.toString());
 
         Operation operation = new Operation();
         operation.setNom("nom4");
@@ -158,6 +214,11 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         operation.setNumAds("numads4");
         operation.setSecteur(true);
         operation.setNature(natureMapper.entityToDto(natureEntityZAC));
+        operation.setDecision(decisionMapper.entityToDto(decisionEntity));
+        operation.setVocation(vocationMapper.entityToDto(vocationEntity));
+        operation.setMaitriseOuvrage(maitriseOuvrageMapper.entityToDto(maitriseOuvrageEntity));
+        operation.setModeAmenagement(modeAmenagementMapper.entityToDto(modeAmenagementEntity));
+        operation.setConsommationEspace(consommationEspaceMapper.entityToDto(consommationEspaceEntity));
         operation.setIdEmprise(secteurEntity.getId().longValue());
 
         operation = operationService.createOperation(operation);

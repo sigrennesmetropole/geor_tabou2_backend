@@ -2893,6 +2893,116 @@
           }
         }
       }
+    },
+    "/vocations": {
+      "get": {
+        "summary": "Récupère la liste des vocations",
+        "operationId": "getVocations",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Vocation"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/decisions": {
+      "get": {
+        "summary": "Récupère la liste des décisions",
+        "operationId": "getDecisions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Decision"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/maitrise-ouvrage": {
+      "get": {
+        "summary": "Récupère la liste des maitrises d'ouvrage",
+        "operationId": "getMaitrisesOuvrage",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/MaitriseOuvrage"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mode-amenagement": {
+      "get": {
+        "summary": "Récupère la liste des modes d'aménagement",
+        "operationId": "getModesAmenagement",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ModeAmenagement"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/consommation-espace": {
+      "get": {
+        "summary": "Récupère la liste des consommations d'espace",
+        "operationId": "getConsommationsEspace",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ConsommationEspace"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -2928,6 +3038,31 @@
           "description": "Nature de l'opération : ZAC, ZA ou En diffus",
           "type": "object",
           "$ref": "#/definitions/Nature"
+        },
+        "vocation": {
+          "description": "Vocation de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/Vocation"
+        },
+        "decision": {
+          "description": "Décision de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/Decision"
+        },
+        "maitriseOuvrage": {
+          "description": "Maitrise d'ouvrage de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/MaitriseOuvrage"
+        },
+        "modeAmenagement": {
+          "description": "Mode d'aménagement de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/ModeAmenagement"
+        },
+        "consommationEspace": {
+          "description": "Consommation d'espace de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/ConsommationEspace"
         },
         "etape": {
           "description": "Indique l'étape d'avancement de l'opération ou du secteur",
@@ -3644,6 +3779,111 @@
           "description": "Date de mise en inactivité de la nature",
           "type": "string",
           "format": "date"
+        }
+      }
+    },
+    "Vocation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant unique de la vocation",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Description de la vocation",
+          "type": "string"
+        },
+        "code": {
+          "description": "Code de la vocation",
+          "type": "string",
+          "enum": [
+            "HABITAT", "MIXTE", "ACTIVITE", "MOBILITE", "EQUIPEMENT_PUBLIC", "ESPACE_VERT", "AUTRE"
+          ]
+        }
+      }
+    },
+    "Decision": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant unique de la décision",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Description de la décision",
+          "type": "string"
+        },
+        "code": {
+          "description": "Code de la décision",
+          "type": "string",
+          "enum": [
+            "ARRET_PREF", "DELIBERATION_CONSEIL_RM", "DELIBERATION_CONSEIL_M", "NON_PRECISE"
+          ]
+        }
+      }
+    },
+    "MaitriseOuvrage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant unique de la maitrise d'ouvrage",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Description de la maitrise d'ouvrage",
+          "type": "string"
+        },
+        "code": {
+          "description": "Code de la maitrise d'ouvrage",
+          "type": "string",
+          "enum": [
+            "COMMUNALE", "COMMUNAUTAIRE", "INTERCOMMUNALE", "METROPOLITAINE"
+          ]
+        }
+      }
+    },
+    "ModeAmenagement": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant unique du mode d'aménagement",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Description du mode d'aménagement",
+          "type": "string"
+        },
+        "code": {
+          "description": "Code du mode d'aménagement",
+          "type": "string",
+          "enum": [
+            "CONCESSION", "CPA", "REGIE"
+          ]
+        }
+      }
+    },
+    "ConsommationEspace": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant unique de la consommation d'espace",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Description de la consommation d'espace",
+          "type": "string"
+        },
+        "code": {
+          "description": "Code de la consommation d'espace",
+          "type": "string",
+          "enum": [
+            "EXTENSION", "RENOUVELLEMENT", "NON_PRECISE"
+          ]
         }
       }
     },

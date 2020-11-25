@@ -9,7 +9,8 @@ import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.mapper.AbstractMapper;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
-@Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class})
+@Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class, VocationMapper.class,
+        DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, ConsommationEspaceMapper.class})
 public interface OperationMapper extends AbstractMapper<OperationEntity, Operation> {
 
     @Mapping(source = "etape", target = "etapeOperation")
@@ -20,6 +21,16 @@ public interface OperationMapper extends AbstractMapper<OperationEntity, Operati
 
     @Mapping(source = "etape", target = "etapeOperation", qualifiedByName = "dtoToNewEtapeOperationEntity")
     @Mapping(target = "nature", qualifiedByName = "dtoToNewNatureEntity",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "vocation", qualifiedByName = "dtoToNewVocationEntity",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "decision", qualifiedByName = "dtoToNewDecisionEntity",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "maitriseOuvrage", qualifiedByName = "dtoToNewMaitriseOuvrageEntity",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "modeAmenagement", qualifiedByName = "dtoToNewModeAmenagementEntity",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "consommationEspace", qualifiedByName = "dtoToNewConsommationEspaceEntity",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "secteur",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
