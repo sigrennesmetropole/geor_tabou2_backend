@@ -51,40 +51,19 @@ public class FicheSuiviProgrammeDataModel extends DataModel {
     public void setAgapeos(List<AgapeoEntity> agapeos) {
 
         addContextData("agapeos", agapeos);
-
-        addContextFieldList("agapeos.getNumDossier()");
-        addContextFieldList("agapeos.getAnneeProg()");
-        addContextFieldList("agapeos.getEtat()");
-        addContextFieldList("agapeos.getCommune()");
-        addContextFieldList("agapeos.getNomOperation()");
-        addContextFieldList("agapeos.getConventionApplicationPlh()");
-        addContextFieldList("agapeos.getNumAds()");
-        addContextFieldList("agapeos.getLogementsLocatifAide()");
-        addContextFieldList("agapeos.getLogementsLocatifReguleHlm()");
-        addContextFieldList("agapeos.getLogementsLocatifRegulePrive()");
-        addContextFieldList("agapeos.getLogementsAccessAide()");
+        addContextFieldList("agapeos");
     }
 
     public void setPermis(List<PermisConstruireEntity> permis) {
 
-        addContextData("permis", permis);
-
-        addContextFieldList("permis.getNumAds()");
-        addContextFieldList("permis.getSurfBureaux()");
-        addContextFieldList("permis.getSurfCommerces()");
-        addContextFieldList("permis.getSurfIndustries()");
-        addContextFieldList("permis.getSurfEquipPub()");
+        addContextData("listPermis", permis);
+        addContextFieldList("listPermis");
     }
 
     public void setEvenements(List<EvenementProgrammeEntity> evenements) {
 
         addContextData("evenements", evenements);
-
-        addContextFieldList("evenements.getTypeEvenement()");
-        addContextFieldList("evenements.getModifDate()");
-        addContextFieldList("evenements.getDescription()");
-        addContextFieldList("evenements.getCreateUser()");
-        addContextFieldList("evenements.getModifUser()");
+        addContextFieldList("evenements");
     }
 
     public void setProgrammeTiers(List<ProgrammeTiersEntity> programmeTiers) {
