@@ -179,6 +179,12 @@ INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Recours', 'RE
 INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Modification etape', 'ETAPE_UPDATED', true);
 
 
+-- Insertion des types tiers
+
+INSERT INTO tabou_type_tiers (code, libelle) VALUES ('MAITRE_OUVRAGE', 'Maître d''ouvrage');
+INSERT INTO tabou_type_tiers (code, libelle) VALUES ('MAITRE_OEUVRE', 'Maître d''oeuvre');
+
+
 -- Insertion des vocations
 
 INSERT INTO tabou_vocation (libelle, code) VALUES ('Habitat', 'HABITAT');

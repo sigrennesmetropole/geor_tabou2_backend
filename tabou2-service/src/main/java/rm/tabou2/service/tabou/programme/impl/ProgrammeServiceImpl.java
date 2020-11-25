@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,19 +28,29 @@ import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
+import rm.tabou2.service.st.generator.DocumentGenerator;
+import rm.tabou2.service.st.generator.model.DocumentContent;
+import rm.tabou2.service.st.generator.model.FicheSuiviProgrammeDataModel;
+import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
+import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
+import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
@@ -72,6 +84,15 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private OperationDao operationDao;
 
     @Autowired
+    private AgapeoDao agapeoDao;
+
+    @Autowired
+    private PermisConstruireDao permisConstruireDao;
+
+    @Autowired
+    private ProgrammeTiersDao programmeTiersDao;
+
+    @Autowired
     private EvenementProgrammeMapper evenementProgrammeMapper;
 
     @Autowired
@@ -91,6 +112,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private ProgrammePlannerHelper programmePlannerHelper;
+
+    @Autowired
+    private DocumentGenerator documentGenerator;
 
     @Autowired
     private ProgrammeService me;
@@ -332,6 +356,51 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         return evenementProgrammeMapper.entityToDto(evenementProgrammeEntity);
+    }
+
+    @Override
+    public DocumentContent generateFicheSuivi(Long programmeId) throws AppServiceException {
+
+        ProgrammeEntity programmeEntity = getProgrammeEntityById(programmeId);
+        GenerationModel generationModel = buildGenerationModelByProgrammeId(programmeEntity);
+
+        DocumentContent documentContent = documentGenerator.generateDocument(generationModel);
+        documentContent.setFileName("fiche_suivi_" + programmeEntity.getCode() + "_" + System.nanoTime());
+
+        return documentContent;
+    }
+
+    private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
+
+        InputStream templateFileInputStream;
+        File fileiImgIllustration;
+        try {
+            templateFileInputStream = new ClassPathResource("template/template_fiche_suivi.odt").getInputStream();
+        } catch (IOException e) {
+            throw new AppServiceException("Erreur lors de la récupération du template", e);
+        }
+
+        try {
+            // TODO: récupérer l'image avec alfresco
+            fileiImgIllustration = new ClassPathResource("img/default_img.jpg").getFile();
+        } catch (IOException e) {
+            throw new AppServiceException("Erreur lors de la récupération de l'illustration", e);
+        }
+
+        FicheSuiviProgrammeDataModel ficheSuiviProgrammeDataModel = new FicheSuiviProgrammeDataModel();
+        ficheSuiviProgrammeDataModel.setProgramme(programmeEntity);
+        ficheSuiviProgrammeDataModel.setOperation(programmeEntity.getOperation());
+        ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
+        ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
+        ficheSuiviProgrammeDataModel.setIllustration(fileiImgIllustration);
+        ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds()));
+        ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds()));
+        ficheSuiviProgrammeDataModel.setAgapeos(agapeoDao.findAllByNumAds(programmeEntity.getNumAds()));
+        ficheSuiviProgrammeDataModel.setPermis(permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds()));
+        ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));
+        ficheSuiviProgrammeDataModel.setProgrammeTiers(programmeTiersDao.findByProgrammeId(programmeEntity.getId()));
+
+        return new GenerationModel(ficheSuiviProgrammeDataModel, templateFileInputStream, MediaType.APPLICATION_PDF.getSubtype());
     }
 
     private ProgrammeEntity getProgrammeEntityById(long programmeId) {

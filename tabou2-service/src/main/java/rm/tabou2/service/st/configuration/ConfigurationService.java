@@ -1,4 +1,4 @@
-package rm.tabou2.service.st;
+package rm.tabou2.service.st.configuration;
 
 import rm.tabou2.service.dto.ConfigurationApp;
 import rm.tabou2.service.exception.AppServiceNotFoundException;

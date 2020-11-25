@@ -1,12 +1,14 @@
 package rm.tabou2.facade.controller.tabou.programme;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
+import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.ddc.PermisConstruireService;
 import rm.tabou2.service.dto.Agapeo;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
@@ -15,6 +17,7 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
@@ -29,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-public class ProgrammeApiController implements ProgrammesApi {
+public class ProgrammeApiController extends AbstractExportDocumentApi implements ProgrammesApi {
 
     @Autowired
     private ProgrammeService programmeService;
@@ -146,6 +149,11 @@ public class ProgrammeApiController implements ProgrammesApi {
     @Override
     public ResponseEntity<Programme> deleteEvenementByProgrammeId(Long evenementId, Long programmeId) throws Exception {
         return null;
+    }
+
+    @Override
+    public ResponseEntity<Resource> downloadFicheSuivi(Long programmeId) throws Exception {
+        return downloadDocument(programmeService.generateFicheSuivi(programmeId));
     }
 
     @Override
