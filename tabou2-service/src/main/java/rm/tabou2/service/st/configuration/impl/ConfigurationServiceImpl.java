@@ -1,10 +1,10 @@
-package rm.tabou2.service.st.impl;
+package rm.tabou2.service.st.configuration.impl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.ConfigurationApp;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
-import rm.tabou2.service.st.ConfigurationService;
+import rm.tabou2.service.st.configuration.ConfigurationService;
 
 
 @Service

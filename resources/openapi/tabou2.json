@@ -1353,6 +1353,33 @@
         }
       }
     },
+    "/programmes/{programmeId}/fiche-suivi": {
+      "get": {
+        "summary": "Récupération de la fiche de suivi d'un programme",
+        "operationId": "downloadFicheSuivi",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "file"
+            }
+          }
+        }
+      }
+    },
     "/communes": {
       "get": {
         "summary": "Recherche d'une commune",
@@ -3736,7 +3763,7 @@
           "description": "",
           "type": "string"
         },
-        "logementsLocatifAide": {
+        "logementsLocatAide": {
           "description": "Nombre de logements en locatif social (PLUS, PLAI)",
           "type": "integer",
           "format": "int32"
@@ -3746,12 +3773,12 @@
           "type": "integer",
           "format": "int32"
         },
-        "logementsLocatifRegulePrive": {
+        "logementsLocatRegulPrive": {
           "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
           "type": "integer",
           "format": "int32"
         },
-        "logementsLocatifReguleHlm": {
+        "logementsLocatRegulHlm": {
           "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
           "type": "integer",
           "format": "int32"
