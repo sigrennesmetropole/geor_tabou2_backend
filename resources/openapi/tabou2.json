@@ -72,6 +72,41 @@
           },
           {
             "in": "query",
+            "name": "vocation",
+            "description": "Recherche par vocation",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "decision",
+            "description": "Recherche par decision",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "modeAmenagement",
+            "description": "Recherche par mode d'aménagement",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "maitriseOuvrage",
+            "description": "Recherche par maitrise d'ouvrage",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "consommationEspace",
+            "description": "Recherche par consommation d'espace",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
             "name": "etape",
             "description": "Recherche par étape",
             "required": false,

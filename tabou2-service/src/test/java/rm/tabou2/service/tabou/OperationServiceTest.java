@@ -132,15 +132,31 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
     @Test
     void testSearchOperation() {
 
+        DecisionEntity decisionEntity = decisionDao.findByCode(Decision.CodeEnum.DELIBERATION_CONSEIL_M.toString());
+        VocationEntity vocationEntity = vocationDao.findByCode(Vocation.CodeEnum.ESPACE_VERT.toString());
+        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrage.CodeEnum.COMMUNAUTAIRE.toString());
+        ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagement.CodeEnum.REGIE.toString());
+        ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspace.CodeEnum.EXTENSION.toString());
+
         // enregistrer une operation dans la base temporaire H2
         OperationEntity operationEntity = new OperationEntity();
         operationEntity.setNom("test");
         operationEntity.setDiffusionRestreinte(false);
+        operationEntity.setDecision(decisionEntity);
+        operationEntity.setVocation(vocationEntity);
+        operationEntity.setMaitriseOuvrage(maitriseOuvrageEntity);
+        operationEntity.setModeAmenagement(modeAmenagementEntity);
+        operationEntity.setConsommationEspace(consommationEspaceEntity);
         operationDao.save(operationEntity);
 
 
         OperationsCriteria operationsCriteria = new OperationsCriteria();
         operationsCriteria.setNom("tes*");
+        operationsCriteria.setDecision("Délibération du Conseil*");
+        operationsCriteria.setVocation("Espace ver*");
+        operationsCriteria.setMaitriseOuvrage("Communautaire");
+        operationsCriteria.setModeAmenagement("Régie dir*");
+        operationsCriteria.setConsommationEspace("Extension urbaine");
         operationsCriteria.setDiffusionRestreinte(false);
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nom"));
