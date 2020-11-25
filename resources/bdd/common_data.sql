@@ -178,7 +178,49 @@ INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Instruction',
 INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Recours', 'RECOURS', false);
 INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Modification etape', 'ETAPE_UPDATED', true);
 
+
 -- Insertion des types tiers
 
 INSERT INTO tabou_type_tiers (code, libelle) VALUES ('MAITRE_OUVRAGE', 'Maître d''ouvrage');
 INSERT INTO tabou_type_tiers (code, libelle) VALUES ('MAITRE_OEUVRE', 'Maître d''oeuvre');
+
+
+-- Insertion des vocations
+
+INSERT INTO tabou_vocation (libelle, code) VALUES ('Habitat', 'HABITAT');
+INSERT INTO tabou_vocation (libelle, code) VALUES ('Mixte', 'MIXTE');
+INSERT INTO tabou_vocation (libelle, code) VALUES ('Activité, Mobilité', 'ACTIVITE');
+INSERT INTO tabou_vocation (libelle, code) VALUES ('Mobilité', 'MOBILITE');
+INSERT INTO tabou_vocation (libelle, code) VALUES ('Équipement public', 'EQUIPEMENT_PUBLIC');
+INSERT INTO tabou_vocation (libelle, code) VALUES ('Espace vert', 'ESPACE_VERT');
+INSERT INTO tabou_vocation (libelle, code) VALUES ('Autre', 'AUTRE');
+
+
+-- Insertion des décisions
+
+INSERT INTO tabou_decision (libelle, code) VALUES ('Arrêté préfectoral', 'ARRET_PREF');
+INSERT INTO tabou_decision (libelle, code) VALUES ('Délibération du Conseil de Rennes Métropole', 'DELIBERATION_CONSEIL_RM');
+INSERT INTO tabou_decision (libelle, code) VALUES ('Délibération du Conseil Municipal', 'DELIBERATION_CONSEIL_M');
+INSERT INTO tabou_decision (libelle, code) VALUES ('Non précisé', 'NON_PRECISE');
+
+
+-- Insertion des maitrises d'ouvrage
+
+INSERT INTO tabou_maitrise_ouvrage (libelle, code) VALUES ('Communale', 'COMMUNALE');
+INSERT INTO tabou_maitrise_ouvrage (libelle, code) VALUES ('Communautaire', 'COMMUNAUTAIRE');
+INSERT INTO tabou_maitrise_ouvrage (libelle, code) VALUES ('Intercommunale', 'INTERCOMMUNALE');
+INSERT INTO tabou_maitrise_ouvrage (libelle, code) VALUES ('Métropolitaine', 'METROPOLITAINE');
+
+
+-- Insertion des modes d'aménagement
+
+INSERT INTO tabou_mode_amenagement (libelle, code) VALUES ('Concession', 'CONCESSION');
+INSERT INTO tabou_mode_amenagement (libelle, code) VALUES ('CPA', 'CPA');
+INSERT INTO tabou_mode_amenagement (libelle, code) VALUES ('Régie directe', 'REGIE');
+
+
+-- Insertion des consommations d'expace
+
+INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Extension urbaine', 'EXTENSION');
+INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Renouvellement urbain', 'RENOUVELLEMENT');
+INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Non précisé', 'NON_PRECISE');

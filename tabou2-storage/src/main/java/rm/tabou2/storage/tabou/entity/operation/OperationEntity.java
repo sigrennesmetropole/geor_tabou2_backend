@@ -111,12 +111,36 @@ public class OperationEntity extends GenericAuditableEntity {
     @Column(name = "num_ads")
     private String numAds;
 
-    @OneToMany(mappedBy = "operation")
-    public Set<OperationTiersEntity> operationsTiers;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_etape_operation")
     public EtapeOperationEntity etapeOperation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_nature")
+    public NatureEntity nature;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_vocation")
+    public VocationEntity vocation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_decision")
+    public DecisionEntity decision;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_maitrise_ouvrage")
+    public MaitriseOuvrageEntity maitriseOuvrage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_mode_amenagement")
+    public ModeAmenagementEntity modeAmenagement;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_consommation_espace")
+    public ConsommationEspaceEntity consommationEspace;
+
+    @OneToMany(mappedBy = "operation")
+    public Set<OperationTiersEntity> operationsTiers;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_operation")
@@ -125,10 +149,6 @@ public class OperationEntity extends GenericAuditableEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_operation")
     private Set<ProgrammeEntity> programmes = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_nature")
-    public NatureEntity nature;
 
     public void addEvenementOperation(EvenementOperationEntity evenementOperationEntity) {
         this.evenements.add(evenementOperationEntity);

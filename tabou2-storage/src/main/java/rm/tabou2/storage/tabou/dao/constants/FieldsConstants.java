@@ -8,6 +8,11 @@ public class FieldsConstants {
 
     public static final String FIELD_NOM = "nom";
     public static final String FIELD_NATURE = "nature";
+    public static final String FIELD_VOCATION = "vocation";
+    public static final String FIELD_DECISION = "decision";
+    public static final String FIELD_MODE_AMENAGEMENT = "modeAmenagement";
+    public static final String FIELD_CONSOMMATION_ESPACE = "consommationEspace";
+    public static final String FIELD_MAITRISE_OUVRAGE = "maitriseOuvrage";
     public static final String FIELD_LIBELLE = "libelle";
     public static final String FIELD_ETAPE_OPERATION = "etapeOperation";
     public static final String FIELD_ETAPE_PROGRAMME = "etapeProgramme";

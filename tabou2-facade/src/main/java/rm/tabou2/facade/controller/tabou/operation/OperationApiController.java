@@ -100,12 +100,23 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<PageResult> searchOperations(@Valid String nom, @Valid String nature, @Valid String etape, @Valid Boolean diffusionRestreinte, @Valid Boolean estSecteur, @Valid String code, @Valid String numAds, @Valid Date autorisationDateDebut, @Valid Date autorisationDateFin, @Valid Date operationnelDateDebut, @Valid Date operationnelDateFin, @Valid Date clotureDateDebut, @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchOperations(@Valid String nom, @Valid String nature, @Valid String vocation, @Valid String decision,
+                                                       @Valid String modeAmenagement, @Valid String maitriseOuvrage, @Valid String consommationEspace,
+                                                       @Valid String etape, @Valid Boolean diffusionRestreinte, @Valid Boolean estSecteur,
+                                                       @Valid String code, @Valid String numAds, @Valid Date autorisationDateDebut,
+                                                       @Valid Date autorisationDateFin, @Valid Date operationnelDateDebut, @Valid Date operationnelDateFin,
+                                                       @Valid Date clotureDateDebut, @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer start,
+                                                       @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         OperationsCriteria operationsCriteria = new OperationsCriteria();
 
         operationsCriteria.setNom(nom);
         operationsCriteria.setNature(nature);
+        operationsCriteria.setDecision(decision);
+        operationsCriteria.setVocation(vocation);
+        operationsCriteria.setMaitriseOuvrage(maitriseOuvrage);
+        operationsCriteria.setConsommationEspace(consommationEspace);
+        operationsCriteria.setModeAmenagement(modeAmenagement);
         operationsCriteria.setEtape(etape);
         operationsCriteria.setCode(code);
         operationsCriteria.setNumAds(numAds);
@@ -129,7 +140,6 @@ public class OperationApiController implements OperationsApi {
         Page<Operation> page = operationService.searchOperations(operationsCriteria, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
-
     }
 
     @Override

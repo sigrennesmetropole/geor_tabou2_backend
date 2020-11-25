@@ -12,6 +12,16 @@ public class OperationsCriteria {
 
     private String nature;
 
+    private String vocation;
+
+    private String decision;
+
+    private String modeAmenagement;
+
+    private String maitriseOuvrage;
+
+    private String consommationEspace;
+
     private String etape;
 
     private Boolean diffusionRestreinte;

@@ -12,10 +12,15 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.operation.OperationCustomDao;
+import rm.tabou2.storage.tabou.entity.operation.ConsommationEspaceEntity;
+import rm.tabou2.storage.tabou.entity.operation.DecisionEntity;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.MaitriseOuvrageEntity;
+import rm.tabou2.storage.tabou.entity.operation.ModeAmenagementEntity;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
+import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
@@ -29,9 +34,13 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_AUTORISATION_DATE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CLOTURE_DATE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CODE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CONSOMMATION_ESPACE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DECISION;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DIFFUSION_RETREINTE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_OPERATION;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_MAITRISE_OUVRAGE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_MODE_AMENAGEMENT;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NATURE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NUM_ADS;
@@ -40,6 +49,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_OPERAT
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_SECTEUR;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TIERS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_TIERS;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_VOCATION;
 
 
 @Repository
@@ -100,7 +110,35 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
                 predicateStringCriteriaForJoin(operationsCriteria.getNature(), FIELD_LIBELLE, predicates, builder, natureJoin);
             }
 
+            // vocation
+            if(operationsCriteria.getVocation() != null) {
+                Join<OperationEntity, VocationEntity> vocationJoin = root.join(FIELD_VOCATION);
+                predicateStringCriteriaForJoin(operationsCriteria.getVocation(), FIELD_LIBELLE, predicates, builder, vocationJoin);
+            }
 
+            // decision
+            if(operationsCriteria.getDecision() != null) {
+                Join<OperationEntity, DecisionEntity> decisionJoin = root.join(FIELD_DECISION);
+                predicateStringCriteriaForJoin(operationsCriteria.getDecision(), FIELD_LIBELLE, predicates, builder, decisionJoin);
+            }
+
+            // maitrise d'ouvrage
+            if(operationsCriteria.getMaitriseOuvrage() != null) {
+                Join<OperationEntity, MaitriseOuvrageEntity> maitriseOuvrageJoin = root.join(FIELD_MAITRISE_OUVRAGE);
+                predicateStringCriteriaForJoin(operationsCriteria.getMaitriseOuvrage(), FIELD_LIBELLE, predicates, builder, maitriseOuvrageJoin);
+            }
+
+            // consommation d'espace
+            if(operationsCriteria.getConsommationEspace() != null) {
+                Join<OperationEntity, ConsommationEspaceEntity> consommationEspaceJoin = root.join(FIELD_CONSOMMATION_ESPACE);
+                predicateStringCriteriaForJoin(operationsCriteria.getConsommationEspace(), FIELD_LIBELLE, predicates, builder, consommationEspaceJoin);
+            }
+
+            // mode d'aménagement
+            if(operationsCriteria.getModeAmenagement() != null) {
+                Join<OperationEntity, ModeAmenagementEntity> modeAmenagementJoin = root.join(FIELD_MODE_AMENAGEMENT);
+                predicateStringCriteriaForJoin(operationsCriteria.getModeAmenagement(), FIELD_LIBELLE, predicates, builder, modeAmenagementJoin);
+            }
 
             //etape
             if(operationsCriteria.getEtape() != null) {
