@@ -5,10 +5,16 @@ db_password: tabou2
 db_port: 5432
 
 db_ddc_host: database
-db_ddc_name: ddc
-db_ddc_user: root
-db_ddc_password: root
+db_ddc_name: georchestra
+db_ddc_user: ddc_user
+db_ddc_password: ddc_user
 db_ddc_port: 3306
+
+db_sig_host: database
+db_sig_name: georchestra
+db_sig_user: sig_user
+db_sig_password: sig_user
+db_sig_port: 5432
 
 server_expose_port: 8083
 
