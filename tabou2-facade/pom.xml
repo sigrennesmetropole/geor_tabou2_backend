@@ -108,9 +108,9 @@
 							<packagingExcludes>
 								WEB-INF/lib/mapstruct-1.2.0.Final.jar,
 								WEB-INF/lib/jcl-over-slf4j-1.7.29.jar,
-								%regex[WEB-INF/lib/tomcat-embed-core-*\.jar],
-								%regex[WEB-INF/lib/tomcat-annotations-api-*\.jar],
-								%regex[WEB-INF/lib/spring-boot-devtools-*\.RELEASE.jar],
+								WEB-INF/lib/tomcat-embed-core-*.jar,
+								WEB-INF/lib/tomcat-annotations-api-*.jar,
+								WEB-INF/lib/spring-boot-devtools-*.jar,
 								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
 							</packagingExcludes>
 						</configuration>
@@ -134,9 +134,9 @@
 							<packagingExcludes>
 								WEB-INF/lib/mapstruct-1.2.0.Final.jar,
 								WEB-INF/lib/jcl-over-slf4j-1.7.29.jar,
-								%regex[WEB-INF/lib/tomcat-embed-core-*\.jar],
-								%regex[WEB-INF/lib/tomcat-annotations-api-*\.jar],
-								%regex[WEB-INF/lib/spring-boot-devtools-*\.RELEASE.jar],
+								WEB-INF/lib/tomcat-embed-core-*.jar,
+								WEB-INF/lib/tomcat-annotations-api-*.jar,
+								WEB-INF/lib/spring-boot-devtools-*.jar,
 								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
 							</packagingExcludes>
 							<warName>${finalName}</warName>
