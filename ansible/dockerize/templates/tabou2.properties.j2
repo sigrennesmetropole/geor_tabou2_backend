@@ -16,10 +16,10 @@ spring.jpa.properties.hibernate.current_session_context_class=org.springframewor
 
 
 # Base de données habitat
-spring.ddc.datasource.jdbc-url=jdbc:mysql://{{ddc_db_host}}:{{ddc_db_port}}/{{ddc_db_name}}
+spring.ddc.datasource.jdbc-url=jdbc:postgresql://{{ddc_db_host}}:{{ddc_db_port}}/{{ddc_db_name}}
 spring.ddc.datasource.username={{ddc_db_user}}
 spring.ddc.datasource.password={{ddc_db_password}}
-spring.ddc.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.ddc.datasource.driver-class-name=org.postgresql.Driver
 
 spring.ddc.datasource.hibernate.show_sql=true
 spring.ddc.datasource.hibernate.format_sql=true
