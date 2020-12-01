@@ -1,15 +1,6 @@
-## Version de l'application
-application.version=@project.version@
-application.comment=Application Tabou2 @project.version@
 
 ## Path du serveur
 server.servlet.context-path=/v1
-
-## Base de données (H2 emarquée)
-
-spring.jpa.properties.javax.persistence.schema-generation.create-source=metadata
-spring.jpa.properties.javax.persistence.schema-generation.scripts.action=create
-spring.jpa.properties.javax.persistence.schema-generation.scripts.create-target=create.sql   
 
 #Hibernate
 spring.jpa.properties.hibernate.current_session_context_class=org.springframework.orm.hibernate5.SpringSessionContext
@@ -22,37 +13,29 @@ spring.ddc.datasource.password={{ddc_db_password}}
 spring.ddc.datasource.driver-class-name=org.postgresql.Driver
 
 spring.ddc.datasource.hibernate.show_sql=true
-spring.ddc.datasource.hibernate.format_sql=true
-spring.ddc.datasource.hibernate.hbm2ddl.auto=create
-spring.ddc.datasource.hibernate.ddl-auto=create
+spring.ddc.datasource.hibernate.format_sql=false
+spring.ddc.datasource.hibernate.hbm2ddl.auto=validate
 
-
-## Exemple de conf Postgres
+## Base de données Tabou2
 spring.tabou2.datasource.jdbc-url=jdbc:postgresql://{{tabou2_db_host}}:{{tabou2_db_port}}/{{tabou2_db_name}}
 spring.tabou2.datasource.username={{tabou2_db_user}}
 spring.tabou2.datasource.password={{tabou2_db_password}}
 spring.tabou2.datasource.driver-class-name=org.postgresql.Driver
 
 spring.tabou2.datasource.hibernate.show_sql=true
-spring.tabou2.datasource.hibernate.format_sql=true
-spring.tabou2.datasource.hibernate.hbm2ddl.auto=create
-spring.tabou2.datasource.hibernate.ddl-auto=create
+spring.tabou2.datasource.hibernate.format_sql=false
+spring.tabou2.datasource.hibernate.hbm2ddl.auto=validate
 
 ## Base de données SIG de Rennes Metropole
 spring.sig.datasource.jdbc-url=jdbc:postgresql://{{sig_db_host}}:{{sig_db_port}}/{{sig_db_name}}
 spring.sig.datasource.username={{sig_db_user}}
 spring.sig.datasource.password={{sig_db_user}}
 spring.sig.datasource.driver-class-name=org.postgresql.Driver
+
 spring.sig.datasource.hibernate.show_sql=true
-spring.sig.datasource.hibernate.format_sql=true
+spring.sig.datasource.hibernate.format_sql=false
 spring.sig.datasource.hibernate.hbm2ddl.auto=validate
 
-## type évenement
-typeevenement.changementetape.code=ETAPE_UPDATED
-typeevenement.changementetape.message=Passage a l''etape {0}
-
-## génération des documents
-temporary.directory=${java.io.tmpdir}/tabou2/tmp
 
 
 
