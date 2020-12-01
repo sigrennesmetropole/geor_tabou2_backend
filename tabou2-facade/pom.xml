@@ -111,6 +111,7 @@
 								WEB-INF/lib/tomcat-embed-core-*.jar,
 								WEB-INF/lib/tomcat-annotations-api-*.jar,
 								WEB-INF/lib/spring-boot-devtools-*.jar,
+                                WEB-INF/classes/tabou2*.properties,
 								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
 							</packagingExcludes>
 						</configuration>
@@ -137,6 +138,7 @@
 								WEB-INF/lib/tomcat-embed-core-*.jar,
 								WEB-INF/lib/tomcat-annotations-api-*.jar,
 								WEB-INF/lib/spring-boot-devtools-*.jar,
+                                WEB-INF/classes/tabou2*.properties,
 								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
 							</packagingExcludes>
 							<warName>${finalName}</warName>
