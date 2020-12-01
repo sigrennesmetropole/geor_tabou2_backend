@@ -40,7 +40,7 @@ tabou2:build:
 
 tabou2:build:master:
   script:
-    - sh ./mvnw $MAVEN_CLI_OPTS -U package -DskipTests
+    - sh ./mvnw $MAVEN_CLI_OPTS -U clean package -DskipTests
   stage: build  
   only:
     refs:
