@@ -2,18 +2,17 @@ package rm.tabou2.facade;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * Classe de configuration globale de l'application.
  */
-@SpringBootApplication(scanBasePackages = {"rm.tabou2.facade", "rm.tabou2.service", "rm.tabou2.storage.tabou"})
-@PropertySources({@PropertySource(value = {"classpath:tabou2.properties"}), @PropertySource(value = {"file:${tabou2.properties}"}, ignoreResourceNotFound = true)})
+@SpringBootApplication(scanBasePackages = {"rm.tabou2.facade", "rm.tabou2.service", "rm.tabou2.storage.tabou", "rm.tabou2.storage.ddc", "rm.tabou2.storage.sig"})
+@PropertySource(value = { "file:${georchestra.datadir}/default.properties" }, ignoreResourceNotFound = false)
+@PropertySource(value = { "file:${georchestra.datadir}/tabou2/tabou2.properties" }, ignoreResourceNotFound = false)
+@PropertySource(value = { "classpath:tabou2-common.properties" }, ignoreResourceNotFound = false)
 public class AppFacadeApplication extends SpringBootServletInitializer {
 
     public static void main(final String[] args) {
