@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "pc_ddc")
+@Table(name = "pc_ddc", schema = "ddc")
 public class PermisConstruireEntity {
 
     @Id
@@ -15,21 +15,30 @@ public class PermisConstruireEntity {
     @Column(name = "id")
     private long id;
 
+    @OrderBy
     @Basic
-    @Column(name = "num_pc")
-    private String numPc;
+    @Column(name = "num_ads")
+    private String numAds;
 
     @Basic
-    @Column(name = "depot_dossier")
-    private Date depotDossier;
+    @Column(name = "date_depot_dossier")
+    private Date dateDepotDossier;
 
     @Basic
-    @Column(name = "completude_dossier")
-    private Date completudeDossier;
+    @Column(name = "date_completude_dossier")
+    private Date dateCompletudeDossier;
 
     @Basic
-    @Column(name = "decision_dossier")
-    private String decisionDossier;
+    @Column(name = "ads_date")
+    private Date adsDate;
+
+    @Basic
+    @Column(name = "doc_date")
+    private Date docDate;
+
+    @Basic
+    @Column(name = "dat_date")
+    private Date datDate;
 
     @Basic
     @Column(name = "surf_bureaux")

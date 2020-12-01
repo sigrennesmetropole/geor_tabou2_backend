@@ -38,6 +38,9 @@
         <!--<openapi.plugin.version>4.3.1</openapi.plugin.version>/-->
         <swagger.codegen.version>2.4.14</swagger.codegen.version>
         <compiler.plugin.version>3.5.1</compiler.plugin.version>
+        <surefire.plugin.version>2.22.2</surefire.plugin.version>
+        <commons.collections.version>4.4</commons.collections.version>
+
 
         <!-- Configuration SONAR -->
         <sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
@@ -88,6 +91,13 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons.lang.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons.collections.version}</version>
             </dependency>
 
 
@@ -162,6 +172,16 @@
     </dependencies>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.plugin.version}</version>
+                <configuration>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
 
