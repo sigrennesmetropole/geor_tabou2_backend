@@ -13,4 +13,12 @@ Et ajouter les header suivants :
 * sec-org
 * sec-orgname
 
-L'application doit être démarré avec -Dgeochestra.datadir=<projet>/tabou2-facade/src/main/resources
+L'application doit être démarrée avec l'option 
+<pre>-Dgeochestra.datadir=[projet]/tabou2-facade/src/main/resources</pre>
+
+Afin de trouver 
+
+* default.properties qui est la configuration georchestra par défaut
+* tabou2-common.properties pour les éléments communs
+* tabou2/tabou2.properties qui est surchargé sur les environnements lors du déploiements 
+
