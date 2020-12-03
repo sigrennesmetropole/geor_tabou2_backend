@@ -31,7 +31,7 @@ Dans tous les cas, il faut exécuter les scripts sql dans l'ordre suivant:
 La configuration de l'application de trouve dans le répertoire `[projet]/tabou2-facade/src/main/resources`.
 
 * `default.properties` qui est la configuration georchestra par défaut
-* `tabou2-common.properties` pour les éléments communs
+* `tabou2-common.properties` pour les éléments communs. Ce fichier est inclu dans le WAR construit
 * `tabou2/tabou2.properties` qui est surchargé sur les environnements lors du déploiements 
 
 Ces fichiers permettent notamment de configurer les accès aux bases de données, les paramètres de connexion au serveur LDAP.
