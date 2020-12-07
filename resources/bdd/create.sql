@@ -416,26 +416,3 @@ alter table if exists tabou_etape_operation_workflow
     add constraint fk_etape_operation_workflow_etape_operation_next
         foreign key (id_etape_operation_next) references tabou_etape_operation;
 
-alter table if exists tabou_nature
-    add constraint enum_libelle_nature
-        check ( "libelle" in ('ZAC', 'ZA', 'En diffus') );
-
-alter table if exists tabou_vocation
-    add constraint enum_code_vocation
-        check ( "code" in ('HABITAT', 'MIXTE', 'ACTIVITE', 'MOBILITE', 'EQUIPEMENT_PUBLIC', 'ESPACE_VERT', 'AUTRE') );
-
-alter table if exists tabou_decision
-    add constraint enum_code_decision
-        check ( "code" in ('ARRET_PREF', 'DELIBERATION_CONSEIL_RM', 'DELIBERATION_CONSEIL_M', 'NON_PRECISE') );
-
-alter table if exists tabou_maitrise_ouvrage
-    add constraint enum_code_maitrise_ouvrage
-        check ( "code" in ('COMMUNALE', 'COMMUNAUTAIRE', 'INTERCOMMUNALE', 'METROPOLITAINE') );
-
-alter table if exists tabou_mode_amenagement
-    add constraint enum_code_mode_amenagement
-        check ( "code" in ('CONCESSION', 'CPA', 'REGIE') );
-
-alter table if exists tabou_consommation_espace
-    add constraint enum_code_consommation_espace
-        check ( "code" in ('EXTENSION', 'RENOUVELLEMENT', 'NON_PRECISE') );

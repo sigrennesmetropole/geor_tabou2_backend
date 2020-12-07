@@ -37,22 +37,22 @@ public class OperationEmpriseHelper {
             secteurEntity.setIdTabou(operationToSave.getId().intValue());
             secteurDao.save(secteurEntity);
         }
-        else if (Nature.LibelleEnum.ZAC.equals(nature.getLibelle())) {
+        else if ("ZAC".equals(nature.getLibelle())) {
             ZacEntity zacEntity = zacDao.findOneById(idEmprise.intValue());
             zacEntity.setIdTabou(operationToSave.getId().intValue());
             zacDao.save(zacEntity);
         }
-        else if (Nature.LibelleEnum.ZA.equals(nature.getLibelle())) {
+        else if ("ZA".equals(nature.getLibelle())) {
             ZaEntity zaEntity = zaDao.findOneById(idEmprise.intValue());
             zaEntity.setIdTabou(operationToSave.getId().intValue());
             zaDao.save(zaEntity);
         }
-        else if (Nature.LibelleEnum.EN_DIFFUS.equals(nature.getLibelle())) {
+        else if ("EN_DIFFUS".equals(nature.getLibelle())) {
             //TODO à définir par le client
         }
     }
 
-    public List<Emprise> getAvailableEmprises(String nature, Boolean estSecteur) {
+    public List<Emprise> getAvailableEmprises(String libelleNature, Boolean estSecteur) {
         if (BooleanUtils.isTrue(estSecteur)) {
             List<SecteurEntity> secteurEntities = secteurDao.findAllByIdTabouIsNull();
             return secteurEntities.stream().map(secteurEntity -> {
@@ -62,7 +62,7 @@ public class OperationEmpriseHelper {
                 return emprise;
             }).collect(Collectors.toList());
         }
-        else if (Nature.LibelleEnum.ZAC.name().equals(nature)) {
+        else if ("ZAC".equals(libelleNature)) {
             List<ZacEntity> zacEntities = zacDao.findAllByIdTabouIsNull();
             return zacEntities.stream().map(zacEntity -> {
                 Emprise emprise = new Emprise();
@@ -71,7 +71,7 @@ public class OperationEmpriseHelper {
                 return emprise;
             }).collect(Collectors.toList());
         }
-        else if (Nature.LibelleEnum.ZA.name().equals(nature)) {
+        else if ("ZA".equals(libelleNature)) {
             List<ZaEntity> zaEntities = zaDao.findAllByIdTabouIsNull();
             return zaEntities.stream().map(zaEntity -> {
                 Emprise emprise = new Emprise();
@@ -80,7 +80,7 @@ public class OperationEmpriseHelper {
                 return emprise;
             }).collect(Collectors.toList());
         }
-        else if (Nature.LibelleEnum.EN_DIFFUS.name().equals(nature)) {
+        else if ("EN_DIFFUS".equals(libelleNature)) {
             //TODO à définir par le client
         }
         return Collections.emptyList();
