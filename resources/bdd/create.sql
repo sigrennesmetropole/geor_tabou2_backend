@@ -286,7 +286,7 @@ create table tabou_type_tiers (
 
 
 alter table if exists tabou_programme
-    add constraint fkn2d1j3xgkqge6kioikvkstcg9
+    add constraint fk_tabou_programme_tabou_etape_programme
         foreign key (id_etape_programme)
             references tabou_etape_programme;
 
@@ -296,31 +296,31 @@ alter table if exists tabou_programme
             references tabou_operation;
 
 alter table if exists tabou_evenement_operation
-    add constraint FKkr4528e5v3lr3054v1d2tds4c
+    add constraint fk_tabou_evenement_operation_tabou_operation
         foreign key (id_operation)
             references tabou_operation;
 
 
 alter table if exists tabou_evenement_operation
-    add constraint FKcr9ky2twrrxbmle71ploir5g6
+    add constraint fk_tabou_evenement_operation_tabou_type_evenement
         foreign key (id_type_evt)
             references tabou_type_evenement;
 
 
 alter table if exists tabou_evenement_programme
-    add constraint FK7sw203ns1mfwaqkccwplsobgu
+    add constraint fk_tabou_evenement_programme_tabou_programme
         foreign key (id_programme)
             references tabou_programme;
 
 
 alter table if exists tabou_evenement_programme
-    add constraint FKgnmrutcu969nk0arjsh73i212
+    add constraint fk_tabou_evenement_programme_tabou_type_evenement
         foreign key (id_type_evt)
             references tabou_type_evenement;
 
 
 alter table if exists tabou_operation
-    add constraint FKrwdfcmejegpwofrh8suxs9xw6
+    add constraint fk_tabou_operation_tabou_nature
         foreign key (id_nature)
             references tabou_nature;
 
@@ -345,42 +345,42 @@ alter table if exists tabou_operation
         foreign key (id_consommation_espace) references tabou_consommation_espace;
 
 alter table if exists tabou_operation
-    add constraint fkipoc1d5r2vt2uqqwuegw1jsa0
+    add constraint fk_tabou_operation_tabou_etape_operation
         foreign key (id_etape_operation)
             references tabou_etape_operation;
 
 alter table if exists tabou_operation_tiers
-    add constraint FKepwn2h1eghs8imwf4dcplsrpd
+    add constraint fk_tabou_operation_tiers_tabou_operation
         foreign key (id_operation)
             references tabou_operation;
 
 
 alter table if exists tabou_operation_tiers
-    add constraint FK1eadn10xklcnqh0unfuu411ba
+    add constraint fk_tabou_operation_tiers_tabou_tiers
         foreign key (id_tiers)
             references tabou_tiers;
 
 
 alter table if exists tabou_operation_tiers
-    add constraint FK7nefer0uwhs3fsi06b97a4yln
+    add constraint fk_tabou_operation_tiers_tabou_type_tiers
         foreign key (id_type_tiers)
             references tabou_type_tiers;
 
 
 alter table if exists tabou_programme_tiers
-    add constraint FKmhp8mixi41itd1rxx331uahtu
+    add constraint fk_tabou_programme_tiers_tabou_programme
         foreign key (id_programme)
             references tabou_programme;
 
 
 alter table if exists tabou_programme_tiers
-    add constraint FKgkfw9jyg12hc41tp3udh7h49j
+    add constraint fk_tabou_programme_tiers_tabou_tiers
         foreign key (id_tiers)
             references tabou_tiers;
 
 
 alter table if exists tabou_programme_tiers
-    add constraint FKo2rxjnajre6agek7wlpfw3hfn
+    add constraint fk_tabou_programme_tiers_tabou_type_tiers
         foreign key (id_type_tiers)
             references tabou_type_tiers;
 
@@ -416,3 +416,14 @@ alter table if exists tabou_etape_operation_workflow
     add constraint fk_etape_operation_workflow_etape_operation_next
         foreign key (id_etape_operation_next) references tabou_etape_operation;
 
+CREATE INDEX "idx_tabou_programme_id_operation_fk" on tabou_programme(id_operation);
+CREATE INDEX "idx_tabou_programme_id_etape_programme_fk" on tabou_programme(id_etape_programme);
+
+CREATE INDEX "idx_tabou_programme_tiers_id_programme_fk" on tabou_programme_tiers(id_programme);
+CREATE INDEX "idx_tabou_programme_tiers_id_tier_fk" on tabou_programme_tiers(id_tiers);
+
+CREATE INDEX "idx_tabou_operation_id_nature_fk" on tabou_operation(id_nature);
+CREATE INDEX "idx_tabou_operation_id_etape_operation_fk" on tabou_operation(id_etape_operation);
+
+CREATE INDEX "idx_tabou_operation_tiers_id_operation_fk" on tabou_operation_tiers(id_operation);
+CREATE INDEX "idx_tabou_operation_tiers_id_tiers_fk" on tabou_operation_tiers(id_tiers);
