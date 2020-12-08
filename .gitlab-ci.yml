@@ -26,7 +26,7 @@ stages:
 # Build job with maven plugin execution policies define in parent pom
 tabou2:build:
   script:
-    - sh ./mvnw $MAVEN_CLI_OPTS -U package
+    - sh ./mvnw $MAVEN_CLI_OPTS -U clean package
   stage: build
   except:
     refs:
@@ -36,10 +36,11 @@ tabou2:build:
     paths:
       - $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.jar
       - $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.war
-      
+      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2.war
+
 tabou2:build:master:
   script:
-    - sh ./mvnw $MAVEN_CLI_OPTS -U package -DskipTests
+    - sh ./mvnw $MAVEN_CLI_OPTS -U clean package -DskipTests
   stage: build  
   only:
     refs:
@@ -49,6 +50,7 @@ tabou2:build:master:
     paths:
       - $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.jar
       - $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.war   
+      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2.war
 
 # Sonar code quality analysis - note a full test coverage report through a jacoco.exec merged file in base project folder
 tabou2:sonar:
