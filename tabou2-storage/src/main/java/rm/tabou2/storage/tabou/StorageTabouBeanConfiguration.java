@@ -13,9 +13,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -32,13 +34,13 @@ import java.util.Map;
 @Configuration
 public class StorageTabouBeanConfiguration {
 
-    @Value("${spring.ddc.datasource.hibernate.show_sql}")
+    @Value("${spring.tabou2.datasource.hibernate.show_sql}")
     private String hibernateShowSql;
 
-    @Value("${spring.ddc.datasource.hibernate.format_sql}")
+    @Value("${spring.tabou2.datasource.hibernate.format_sql}")
     private String hibernateFormatSql;
 
-    @Value("${spring.ddc.datasource.hibernate.hbm2ddl.auto}")
+    @Value("${spring.tabou2.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
     @Bean
@@ -52,7 +54,7 @@ public class StorageTabouBeanConfiguration {
 
     @Bean(name = "tabouEntityManagerFactory")
     @Primary
-    public LocalContainerEntityManagerFactoryBean tabouEntityManagerFactory(EntityManagerFactoryBuilder builder) {
+    public LocalContainerEntityManagerFactoryBean tabouEntityManagerFactory(@Qualifier("entityManagerFactoryBuilder") EntityManagerFactoryBuilder builder) {
         return builder.dataSource(tabouDataSource())
                 .properties(hibernateProperties())
                 .packages("rm.tabou2.storage.tabou.entity")
@@ -64,6 +66,16 @@ public class StorageTabouBeanConfiguration {
     @Bean(name = "tabouTransactionManager")
     public PlatformTransactionManager tabouTransactionManager(@Qualifier("tabouEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
+    }
+
+    @Bean
+    public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
+        return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
+    }
+
+    @Bean(name = "tabouEntityManager")
+    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+        return entityManagerFactory.createEntityManager();
     }
 
     private Map hibernateProperties() {

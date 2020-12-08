@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tabou2</artifactId>
         <groupId>rm</groupId>
-        <version>V1.0.0.0</version>
+        <version>1.0.0</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -51,6 +51,7 @@
                         <!-- Activier le 'interfaceOnly' à true pour la compile, sinon conflit,
                             et à false pour la génération -->
                         <interfaceOnly>true</interfaceOnly>
+                        <dateLibrary>legacy</dateLibrary>
                         <!--<skipOverwrite>true</skipOverwrite> -->
                     </configOptions>
                     <templateDirectory>${project.basedir}/src/conf/generation/</templateDirectory>
@@ -107,7 +108,9 @@
 							<packagingExcludes>
 								WEB-INF/lib/mapstruct-1.2.0.Final.jar,
 								WEB-INF/lib/jcl-over-slf4j-1.7.29.jar,
-								WEB-INF/lib/spring-boot-devtools-2.1.10.RELEASE.jar,
+								WEB-INF/lib/tomcat-embed-core-*.jar,
+								WEB-INF/lib/tomcat-annotations-api-*.jar,
+								WEB-INF/lib/spring-boot-devtools-*.jar,
 								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
 							</packagingExcludes>
 						</configuration>
@@ -131,7 +134,9 @@
 							<packagingExcludes>
 								WEB-INF/lib/mapstruct-1.2.0.Final.jar,
 								WEB-INF/lib/jcl-over-slf4j-1.7.29.jar,
-								WEB-INF/lib/spring-boot-devtools-2.1.10.RELEASE.jar,
+								WEB-INF/lib/tomcat-embed-core-*.jar,
+								WEB-INF/lib/tomcat-annotations-api-*.jar,
+								WEB-INF/lib/spring-boot-devtools-*.jar,
 								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
 							</packagingExcludes>
 							<warName>${finalName}</warName>
@@ -149,7 +154,7 @@
 			<id>docker</id>
 			<properties>
 				<packageDatadirScmVersion>master</packageDatadirScmVersion>
-				<dockerImageName>sigrennesmetropole/geor_tabou2</dockerImageName>
+				<dockerImageName>sigrennesmetropole/geor_tabou2_backend</dockerImageName>
 				<dockerDatadirScmUrl>scm:git:https://github.com/georchestra/datadir.git</dockerDatadirScmUrl>
 				<dockerDatadirScmVersion>docker-${packageDatadirScmVersion}</dockerDatadirScmVersion>
 			</properties>
@@ -226,6 +231,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
 
         <dependency>
