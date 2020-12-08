@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tabou2</artifactId>
         <groupId>rm</groupId>
-        <version>V1.0.0.0</version>
+        <version>1.0.0</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -154,7 +154,7 @@
 			<id>docker</id>
 			<properties>
 				<packageDatadirScmVersion>master</packageDatadirScmVersion>
-				<dockerImageName>sigrennesmetropole/geor_tabou2</dockerImageName>
+				<dockerImageName>sigrennesmetropole/geor_tabou2_backend</dockerImageName>
 				<dockerDatadirScmUrl>scm:git:https://github.com/georchestra/datadir.git</dockerDatadirScmUrl>
 				<dockerDatadirScmVersion>docker-${packageDatadirScmVersion}</dockerDatadirScmVersion>
 			</properties>
