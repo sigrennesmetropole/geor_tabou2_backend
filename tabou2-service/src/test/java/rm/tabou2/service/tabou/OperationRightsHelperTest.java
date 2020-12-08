@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
-import rm.tabou2.service.dto.Nature;
+import rm.tabou2.service.constant.NatureLibelle;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
@@ -197,7 +197,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
     void testCannotUpdateOperationWithNatureChanged() {
 
         EtapeOperationEntity etapeOperationEntityRestreint = etapeOperationDao.findByCode("EN_PROJET_OFF");
-        NatureEntity natureEntityZAC = natureDao.findByLibelle(Nature.LibelleEnum.ZAC.name());
+        NatureEntity natureEntityZAC = natureDao.findByLibelle(NatureLibelle.ZAC);
 
         OperationEntity operationEntity = new OperationEntity();
         operationEntity.setNom("nom1");
@@ -211,7 +211,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
         operationDao.save(operationEntity);
 
         EtapeOperationEntity etapeOperationEntityNonRestreint = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
-        NatureEntity natureEntityZA = natureDao.findByLibelle(Nature.LibelleEnum.ZA.name());
+        NatureEntity natureEntityZA = natureDao.findByLibelle(NatureLibelle.ZA);
 
         Operation operation = new Operation();
         operation.setId(operationEntity.getId());

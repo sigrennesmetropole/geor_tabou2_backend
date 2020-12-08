@@ -3832,10 +3832,7 @@
         },
         "libelle": {
           "description": "Description de la nature",
-          "type": "string",
-          "enum": [
-            "ZAC", "ZA", "En diffus"
-          ]
+          "type": "string"
         },
         "dateInactif": {
           "description": "Date de mise en inactivité de la nature",
@@ -3858,10 +3855,7 @@
         },
         "code": {
           "description": "Code de la vocation",
-          "type": "string",
-          "enum": [
-            "HABITAT", "MIXTE", "ACTIVITE", "MOBILITE", "EQUIPEMENT_PUBLIC", "ESPACE_VERT", "AUTRE"
-          ]
+          "type": "string"
         }
       }
     },
@@ -3879,10 +3873,7 @@
         },
         "code": {
           "description": "Code de la décision",
-          "type": "string",
-          "enum": [
-            "ARRET_PREF", "DELIBERATION_CONSEIL_RM", "DELIBERATION_CONSEIL_M", "NON_PRECISE"
-          ]
+          "type": "string"
         }
       }
     },
@@ -3900,10 +3891,7 @@
         },
         "code": {
           "description": "Code de la maitrise d'ouvrage",
-          "type": "string",
-          "enum": [
-            "COMMUNALE", "COMMUNAUTAIRE", "INTERCOMMUNALE", "METROPOLITAINE"
-          ]
+          "type": "string"
         }
       }
     },
@@ -3921,10 +3909,7 @@
         },
         "code": {
           "description": "Code du mode d'aménagement",
-          "type": "string",
-          "enum": [
-            "CONCESSION", "CPA", "REGIE"
-          ]
+          "type": "string"
         }
       }
     },
@@ -3942,10 +3927,7 @@
         },
         "code": {
           "description": "Code de la consommation d'espace",
-          "type": "string",
-          "enum": [
-            "EXTENSION", "RENOUVELLEMENT", "NON_PRECISE"
-          ]
+          "type": "string"
         }
       }
     },
