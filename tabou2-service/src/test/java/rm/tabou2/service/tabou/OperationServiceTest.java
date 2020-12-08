@@ -20,6 +20,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
+import rm.tabou2.service.constant.ConsommationEspaceCode;
+import rm.tabou2.service.constant.DecisionCode;
+import rm.tabou2.service.constant.MaitriseOuvrageCode;
+import rm.tabou2.service.constant.ModeAmenagementCode;
+import rm.tabou2.service.constant.NatureLibelle;
+import rm.tabou2.service.constant.VocationCode;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
@@ -126,11 +132,11 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
     @Test
     void testSearchOperation() {
 
-        DecisionEntity decisionEntity = decisionDao.findByCode("DELIBERATION_CONSEIL_M");
-        VocationEntity vocationEntity = vocationDao.findByCode("ESPACE_VERT");
-        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode("COMMUNAUTAIRE");
-        ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode("REGIE");
-        ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode("EXTENSION");
+        DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
+        VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);
+        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.COMMUNAUTAIRE);
+        ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagementCode.REGIE);
+        ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspaceCode.EXTENSION);
 
         // enregistrer une operation dans la base temporaire H2
         OperationEntity operationEntity = new OperationEntity();
@@ -210,12 +216,12 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         secteurEntity.setId(1);
         secteurDao.save(secteurEntity);
 
-        NatureEntity natureEntityZAC = natureDao.findByLibelle("ZAC");
-        DecisionEntity decisionEntity = decisionDao.findByCode("DELIBERATION_CONSEIL_M");
-        VocationEntity vocationEntity = vocationDao.findByCode("ESPACE_VERT");
-        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode("COMMUNAUTAIRE");
-        ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode("REGIE");
-        ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode("EXTENSION");
+        NatureEntity natureEntityZAC = natureDao.findByLibelle(NatureLibelle.ZAC);
+        DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
+        VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);
+        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.COMMUNAUTAIRE);
+        ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagementCode.REGIE);
+        ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspaceCode.EXTENSION);
 
         Operation operation = new Operation();
         operation.setNom("nom4");
