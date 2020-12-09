@@ -44,7 +44,7 @@ jobs:
     - name: "Pushing latest to docker.io"
       if: github.ref == 'refs/heads/master'
       run: |
-        docker tag sigrennesmetropole/geor_tabou2_backend:${{ steps.version.outputs.VERSION }} georchestra/tabou2_backend:latest
+        docker tag sigrennesmetropole/geor_tabou2_backend:${{ steps.version.outputs.VERSION }} sigrennesmetropole/geor_tabou2_backend:latest
         docker push sigrennesmetropole/geor_tabou2_backend:latest
 
     - name: "Pushing release tag to docker.io"
