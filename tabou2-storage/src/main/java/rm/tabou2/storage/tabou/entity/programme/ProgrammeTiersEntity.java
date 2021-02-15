@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "tabou_programme_tiers")
+@Table(name = "tabou_programme_tiers", schema = "tabou2")
 public class ProgrammeTiersEntity extends GenericAuditableEntity {
 
     @OrderBy
