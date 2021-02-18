@@ -10,7 +10,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "tabou_type_document")
+@Table(name = "tabou_type_document", schema = "tabou2")
 public class TypeDocumentEntity extends GenericCreateAuditableEntity {
 
     @Id
