@@ -56,6 +56,12 @@ public abstract class AbstractCustomDaoImpl {
 
     }
 
+    protected void predicateIntegerCriteria(Integer criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+
+            predicates.add(builder.equal(root.get(type), criteria));
+
+    }
+
     protected void predicateCriteriaNullOrNot(Boolean criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
         if (Boolean.TRUE.equals(criteria)) {

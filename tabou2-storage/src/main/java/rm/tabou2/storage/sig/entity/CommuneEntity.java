@@ -24,7 +24,8 @@ public class CommuneEntity {
     private BigDecimal codeInsee;
 
     @Basic
-    @Column(name = "code_postal")
-    private String codePostal;
+    @Column(name = "commune_agglo")
+    private Short communeAgglo;
+
 
 }

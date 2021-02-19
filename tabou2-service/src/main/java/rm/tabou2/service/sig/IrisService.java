@@ -1,10 +1,13 @@
 package rm.tabou2.service.sig;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Iris;
-
-import java.util.List;
+import rm.tabou2.storage.sig.item.IrisCriteria;
 
 public interface IrisService {
 
-    List<Iris> searchIris(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc);
+    Page<Iris> searchIris(IrisCriteria irisCriteria, Pageable pageable);
+
+    Iris getIrisById(int irisId);
 }

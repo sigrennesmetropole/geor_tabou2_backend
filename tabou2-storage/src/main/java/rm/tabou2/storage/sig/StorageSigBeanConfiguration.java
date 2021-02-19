@@ -28,7 +28,7 @@ import java.util.Map;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "sigEntityManagerFactory",
         transactionManagerRef = "sigTransactionManager",
-        basePackages = "rm.tabou2.storage.sig.dao"
+        basePackages = {"rm.tabou2.storage.sig.dao"}
 )
 @Configuration
 public class StorageSigBeanConfiguration {
@@ -43,7 +43,7 @@ public class StorageSigBeanConfiguration {
     private String hibernateHbm2ddlAuto;
 
 
-    @Bean
+    @Bean(name = "sigDataSource")
     @ConfigurationProperties(prefix = "spring.sig.datasource")
     public DataSource sigDataSource() {
         return DataSourceBuilder
@@ -51,17 +51,18 @@ public class StorageSigBeanConfiguration {
                 .build();
     }
 
+    //OK
     @Bean(name = "sigEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean sigEntityManagerFactory(@Qualifier("entityManagerSigFactoryBuilder") EntityManagerFactoryBuilder builder) {
-        return builder.dataSource(sigDataSource())
+    public LocalContainerEntityManagerFactoryBean sigEntityManagerFactory(@Qualifier("sigDataSource") DataSource dataSource, @Qualifier("entityManagerSigFactoryBuilder") EntityManagerFactoryBuilder builder) {
+        return builder.dataSource(dataSource)
                 .properties(hibernateProperties())
                 .packages("rm.tabou2.storage.sig.entity")
                 .persistenceUnit("sigPU")
                 .build();
     }
-
+        //OK
     @Bean(name = "sigTransactionManager")
-    public PlatformTransactionManager sigTransactionManager(@Qualifier("sigEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+    public PlatformTransactionManager sigTransactionManager(EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 

@@ -1438,13 +1438,6 @@
             "type": "string"
           },
           {
-            "in": "query",
-            "name": "code_postal",
-            "description": "Recherche par code postal de la commune",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "start",
             "in": "query",
             "required": false,
@@ -1521,6 +1514,22 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "query",
+            "name": "codeInsee",
+            "description": "Recherche par code insee",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "nuQuart",
+            "description": "Recherche par numéro de quartier",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
           {
             "in": "query",
             "name": "nom",
@@ -1605,6 +1614,20 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "query",
+            "name": "ccom",
+            "description": "Recherche par code insee",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "codeIris",
+            "description": "Recherche par code de l'iris",
+            "required": false,
+            "type": "string"
+          },
           {
             "in": "query",
             "name": "nom",
@@ -1761,136 +1784,6 @@
             "schema": {
               "$ref": "#/definitions/PluiZonage"
             }
-          }
-        }
-      }
-    },
-    "/epci": {
-      "get": {
-        "summary": "Recherche des EPCI",
-        "operationId": "searchEpci",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "objectid",
-            "description": "Recherche identifiant du PLUi",
-            "required": false,
-            "type": "number",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "codeEpci",
-            "description": "Recherche par code EPCI",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "nomEpci",
-            "description": "Recherche par nom EPCI",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "start",
-            "in": "query",
-            "required": false,
-            "description": "Index de début",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "resultsNumber",
-            "in": "query",
-            "required": false,
-            "description": "Nombre de résultats à remonter",
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "required": false,
-            "description": "Nom du champ sur lequel trier les résultats",
-            "type": "string"
-          },
-          {
-            "name": "asc",
-            "in": "query",
-            "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
-            "type": "boolean",
-            "default": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PluiZonage"
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Ajoute une étape d'avancement pour les programmes d'aménagement",
-        "operationId": "addEtapeProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à ajouter",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        }
-      },
-      "put": {
-        "summary": "Modifie une étape d'avancement pour les programmes d'aménagement",
-        "operationId": "editEtapeProgramme",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "etape",
-            "description": "Etape à modifier",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/Etape"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -2644,14 +2537,7 @@
         "parameters": [
           {
             "in": "query",
-            "name": "id",
-            "description": "Identifiant du Secteur DDS",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "nom",
+            "name": "secteur",
             "description": "Nom du secteur",
             "required": false,
             "type": "string"
@@ -2700,10 +2586,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SecteurDds"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -2719,13 +2602,6 @@
         "parameters": [
           {
             "in": "query",
-            "name": "id",
-            "description": "Identifiant du secteur",
-            "required": false,
-            "type": "number"
-          },
-          {
-            "in": "query",
             "name": "nom",
             "description": "Nom du secteur",
             "required": false,
@@ -2775,10 +2651,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SecteurSam"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -2794,15 +2667,8 @@
         "parameters": [
           {
             "in": "query",
-            "name": "id",
-            "description": "Recherche par identifiant de secteur",
-            "required": false,
-            "type": "number"
-          },
-          {
-            "in": "query",
-            "name": "nom",
-            "description": "Recherche par nom de secteur",
+            "name": "negociateur",
+            "description": "Recherche par nom de négociateur",
             "required": false,
             "type": "string"
           },
@@ -2813,14 +2679,6 @@
             "description": "Index de début",
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
           },
           {
             "name": "resultsNumber",
@@ -2850,10 +2708,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SecteurFoncier"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -2869,15 +2724,16 @@
         "parameters": [
           {
             "in": "query",
-            "name": "id",
-            "description": "Identifiant du secteur",
+            "name": "numSecteur",
+            "description": "Numéro du secteur SPEU",
             "required": false,
-            "type": "number"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "in": "query",
-            "name": "libelle",
-            "description": "Libellé du secteur",
+            "name": "nomSecteur",
+            "description": "Nom du secteur SPEU",
             "required": false,
             "type": "string"
           },
@@ -2925,10 +2781,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SecteurHabitat"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -3530,10 +3383,6 @@
         "codeInsee": {
           "description": "Code Insee de la commune",
           "type": "integer"
-        },
-        "codePostal": {
-          "description": "Code postal de la commune",
-          "type": "string"
         }
       }
     },
@@ -3546,7 +3395,7 @@
           "format": "int32"
         },
         "ccom": {
-          "description": "",
+          "description": "Code insee de l'iris",
           "type": "string"
         },
         "codeIris": {
@@ -3554,7 +3403,7 @@
           "type": "string"
         },
         "nmiris": {
-          "description": "",
+          "description": "Nom de l'iris",
           "type": "string"
         }
       }
@@ -3574,37 +3423,18 @@
         "nuQuart": {
           "description": "",
           "type": "number"
+        },
+        "codeInsee": {
+          "description": "Code insee",
+          "type": "number"
         }
       }
     },
     "PluiZonage": {
       "type": "object",
       "properties": {
-        "id": {
-          "description": "Identifiant unique",
-          "type": "integer",
-          "format": "int32"
-        },
         "libelle": {
           "description": "Nom du zonage PLUi",
-          "type": "string"
-        }
-      }
-    },
-    "Epci": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique",
-          "type": "integer",
-          "format": "int32"
-        },
-        "codeEpci": {
-          "description": "Code de l'EPCI",
-          "type": "string"
-        },
-        "nomEpci": {
-          "description": "Nom l'EPCI",
           "type": "string"
         }
       }
@@ -3699,19 +3529,6 @@
     "SecteurDds": {
       "type": "object",
       "properties": {
-        "id": {
-          "description": "Identifiant du secteur",
-          "type": "integer",
-          "format": "int32"
-        },
-        "instructeur": {
-          "description": "Nom de l'instructeur",
-          "type": "string"
-        },
-        "assistant": {
-          "description": "Nom de l'assistant",
-          "type": "string"
-        },
         "secteur": {
           "description": "Nom du secteur",
           "type": "string"
@@ -3721,16 +3538,21 @@
     "SecteurSam": {
       "type": "object",
       "properties": {
-        "id": {
-          "description": "Idenifiant du secteur",
-          "type": "string"
-        },
-        "nom": {
+        "nomSecteur": {
           "description": "Nom du secteur",
           "type": "string"
+        }
+      }
+    },
+    "SecteurSpeu": {
+      "type": "object",
+      "properties": {
+        "numSecteur": {
+          "description": "Numero du secteur",
+          "type": "integer"
         },
-        "referent": {
-          "description": "Nom du chargé d'opération",
+        "nomSecteur": {
+          "description": "Nom du secteur",
           "type": "string"
         }
       }
@@ -3738,12 +3560,8 @@
     "SecteurFoncier": {
       "type": "object",
       "properties": {
-        "nom": {
+        "negociateur": {
           "description": "Nom du secteur",
-          "type": "string"
-        },
-        "instructeur": {
-          "description": "Nom de l'instructeur",
           "type": "string"
         }
       }

@@ -20,6 +20,9 @@ public class FieldsConstants {
     public static final String FIELD_NUM_ADS = "numAds";
     public static final String FIELD_DIFFUSION_RETREINTE = "diffusionRestreinte";
     public static final String FIELD_SECTEUR = "secteur";
+    public static final String FIELD_NUM_SECTEUR = "numSecteur";
+    public static final String FIELD_NOM_SECTEUR = "nomSecteur";
+    public static final String FIELD_NEGOCIATEUR = "negociateur";
     public static final String FIELD_AUTORISATION_DATE = "autorisationDate";
     public static final String FIELD_OPERATIONNEL_DATE = "operationnelDate";
     public static final String FIELD_CLOTURE_DATE = "clotureDate";
@@ -36,6 +39,13 @@ public class FieldsConstants {
     public static final String FIELD_DAT_DATE_PREVU = "datDatePrevu";
     public static final String FIELD_LOGEMENTS_LOCAT_AIDE_PREVU = "logementsLocatifAidePrevu";
     public static final String FIELD_LOGEMENTS_ACCESS_AIDE_PREVU = "logementsAccessAidePrevu";
+    public static final String FIELD_COMMUNE_AGGLO = "communeAgglo";
+    public static final String FIELD_CODE_INSEE = "codeInsee";
+    public static final String FIELD_NU_QUART = "nuQuart";
+    public static final String FIELD_CCOM = "ccom";
+    public static final String FIELD_CODE_IRIS = "codeIris";
+    public static final String FIELD_NOM_IRIS = "nmiris";
+
 
 
 }

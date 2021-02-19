@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -31,31 +32,27 @@ class CommuneServiceTest {
     private CommuneService communeService;
 
     @Test
-    @Disabled
     void testSearchCommune() {
 
         // enregistrer une operation dans la base temporaire H2
         CommuneEntity commune = new CommuneEntity();
         commune.setNom("rennes");
+        commune.setId(1);
         communeDao.save(commune);
 
 
-        OperationsCriteria operationsCriteria = new OperationsCriteria();
-        operationsCriteria.setNom("rennes");
-        operationsCriteria.setDiffusionRestreinte(false);
-
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nom"));
 
-        List<Commune> page = null;
+        Page<Commune> page = null;
         try {
-            page = communeService.searchCommunes("rennes", 0, 10, "nom", true);
+            page = communeService.searchCommunes("rennes", "", pageable);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        Assertions.assertEquals(1, page.size());
-        Assertions.assertEquals("rennes", page.get(0).getNom());
+        Assertions.assertEquals(1, page.getTotalElements());
+        Assertions.assertEquals("rennes", page.getContent().get(0).getNom());
     }
 
 }

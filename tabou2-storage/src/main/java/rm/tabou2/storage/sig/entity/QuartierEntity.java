@@ -22,4 +22,8 @@ public class QuartierEntity {
     @Column(name = "nuquart")
     private Short nuQuart;
 
+    @Basic
+    @Column(name = "code_insee")
+    private Integer codeInsee;
+
 }

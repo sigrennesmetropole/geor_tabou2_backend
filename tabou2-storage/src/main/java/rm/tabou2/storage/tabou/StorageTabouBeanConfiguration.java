@@ -43,7 +43,7 @@ public class StorageTabouBeanConfiguration {
     @Value("${spring.tabou2.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
-    @Bean
+    @Bean(name = "tabou2DataSource")
     @Primary
     @ConfigurationProperties(prefix = "spring.tabou2.datasource")
     public DataSource tabouDataSource() {
@@ -78,8 +78,7 @@ public class StorageTabouBeanConfiguration {
         return entityManagerFactory.createEntityManager();
     }
 
-    private Map hibernateProperties() {
-
+    private Map<String, String> hibernateProperties() {
 
         HashMap<String, String> hibernateProperties = new HashMap<>();
 
