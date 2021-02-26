@@ -51,7 +51,7 @@ public class StorageSigBeanConfiguration {
                 .build();
     }
 
-    //OK
+
     @Bean(name = "sigEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean sigEntityManagerFactory(@Qualifier("sigDataSource") DataSource dataSource, @Qualifier("entityManagerSigFactoryBuilder") EntityManagerFactoryBuilder builder) {
         return builder.dataSource(dataSource)
@@ -60,9 +60,9 @@ public class StorageSigBeanConfiguration {
                 .persistenceUnit("sigPU")
                 .build();
     }
-        //OK
+
     @Bean(name = "sigTransactionManager")
-    public PlatformTransactionManager sigTransactionManager(EntityManagerFactory entityManagerFactory) {
+    public PlatformTransactionManager sigTransactionManager(@Qualifier("sigEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JpaTransactionManager(entityManagerFactory);
     }
 
@@ -73,7 +73,7 @@ public class StorageSigBeanConfiguration {
 
 
     @Bean(name = "sigEntityManager")
-    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+    public EntityManager entityManager(@Qualifier("sigEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return entityManagerFactory.createEntityManager();
     }
 
