@@ -11,8 +11,9 @@ public class SecteurFoncierEntity {
 
     @Id
     @Column(name = "objectid")
-    private Integer id;
+    private Long id;
 
+    @OrderBy
     @Basic
     @Column(name = "negociateur")
     private String negociateur;

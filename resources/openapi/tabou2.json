@@ -2551,14 +2551,6 @@
             "format": "int32"
           },
           {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
-          },
-          {
             "name": "resultsNumber",
             "in": "query",
             "required": false,
@@ -2614,14 +2606,6 @@
             "description": "Index de début",
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
           },
           {
             "name": "resultsNumber",
@@ -2744,14 +2728,6 @@
             "description": "Index de début",
             "type": "integer",
             "format": "int32"
-          },
-          {
-            "name": "onlyActive",
-            "in": "query",
-            "required": false,
-            "description": "Indique si seuls les éléments actifs doivent être remontés",
-            "type": "boolean",
-            "default": true
           },
           {
             "name": "resultsNumber",

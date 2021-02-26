@@ -9,7 +9,13 @@ import rm.tabou2.storage.sig.item.IrisCriteria;
 
 public interface IrisCustomDao {
 
-    @Transactional(transactionManager = "sigTransactionManager", propagation = Propagation.REQUIRED, readOnly = true)
+    /**
+     * Recherche d'un iris à partir des paramètres.
+     *
+     * @param irisCriteria paramètres de recherche des iris
+     * @param pageable     paramètre lié à la pagination
+     * @return liste des iris correspondants à la recherche
+     */
     Page<IrisEntity> searchIris(IrisCriteria irisCriteria, Pageable pageable);
 
 }

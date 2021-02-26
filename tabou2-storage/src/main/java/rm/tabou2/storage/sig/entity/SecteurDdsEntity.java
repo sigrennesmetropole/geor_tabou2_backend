@@ -13,6 +13,7 @@ public class SecteurDdsEntity {
     @Column(name = "id")
     private Integer id;
 
+    @OrderBy
     @Basic
     @Column(name = "secteur")
     private String secteur;

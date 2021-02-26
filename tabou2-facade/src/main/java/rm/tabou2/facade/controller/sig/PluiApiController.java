@@ -34,6 +34,6 @@ public class PluiApiController implements PluiApi {
 
     @Override
     public ResponseEntity<PluiZonage> getPluiById(Integer pluiId) throws Exception {
-        return null;
+        return new ResponseEntity<>(pluiService.getPluiById(pluiId), HttpStatus.OK);
     }
 }

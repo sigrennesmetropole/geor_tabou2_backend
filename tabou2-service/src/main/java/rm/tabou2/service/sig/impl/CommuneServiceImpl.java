@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.dto.Commune;
 import rm.tabou2.service.mapper.sig.CommuneMapper;
 import rm.tabou2.service.sig.CommuneService;
@@ -38,7 +37,6 @@ public class CommuneServiceImpl implements CommuneService {
 
 
     @Override
-    @Transactional(value = "sigTransactionManager")
     public Page<Commune> searchCommunes(String nom, String codeInsee, Pageable pageable) {
 
         return communeMapper.entitiesToDto(communeCustomDao.searchCommunes(nom, codeInsee, pageable), pageable);

@@ -7,6 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.sig.entity.PluiEntity;
 
 public interface PluiCustomDao {
-    @Transactional(transactionManager = "sigTransactionManager", propagation = Propagation.REQUIRED, readOnly = true)
+
+    /**
+     * Recherche de zonage Plui.
+     *
+     * @param libelle  libellé du Plui
+     * @param pageable paramètre lié à la pagination
+     * @return liste des zonage Plui correspondants à la recherche
+     */
     Page<PluiEntity> searchPluis(String libelle, Pageable pageable);
+
 }

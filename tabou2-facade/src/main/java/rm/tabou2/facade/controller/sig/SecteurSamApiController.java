@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.SecteursSamApi;
 import rm.tabou2.service.dto.PageResult;
-import rm.tabou2.service.dto.SecteurDds;
 import rm.tabou2.service.dto.SecteurSam;
 import rm.tabou2.service.sig.SecteurSamService;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.sig.entity.SecteurSamEntity;
 
 import javax.validation.Valid;
 
@@ -22,9 +22,9 @@ public class SecteurSamApiController implements SecteursSamApi {
     private SecteurSamService secteurSamService;
 
     @Override
-    public ResponseEntity<PageResult> searchSecteursSam(@Valid String nom, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchSecteursSam(@Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, SecteurDds.class);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, SecteurSamEntity.class);
 
         Page<SecteurSam> page = secteurSamService.searchSecteursSam(nom, pageable);
 

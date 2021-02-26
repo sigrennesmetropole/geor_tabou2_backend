@@ -11,6 +11,7 @@ import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.SecteurDds;
 import rm.tabou2.service.sig.SecteurDdsService;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.sig.entity.SecteurDdsEntity;
 
 import javax.validation.Valid;
 
@@ -21,9 +22,9 @@ public class SecteurDdsApiController implements SecteursDdsApi {
     private SecteurDdsService secteurDdsService;
 
     @Override
-    public ResponseEntity<PageResult> searchSecteursDds(@Valid String secteur, @Valid Integer start, @Valid Boolean onlyActive, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchSecteursDds(@Valid String secteur, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, SecteurDds.class);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, SecteurDdsEntity.class);
 
         Page<SecteurDds> page = secteurDdsService.searchSecteursDds(secteur, pageable);
 

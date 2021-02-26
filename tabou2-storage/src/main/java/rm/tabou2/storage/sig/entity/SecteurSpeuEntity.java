@@ -13,6 +13,7 @@ public class SecteurSpeuEntity {
     @Column(name = "num_secteur")
     private Integer numSecteur;
 
+    @OrderBy
     @Basic
     @Column(name = "nom_secteur")
     private String nomSecteur;

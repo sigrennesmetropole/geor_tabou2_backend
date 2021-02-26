@@ -17,9 +17,10 @@ public interface CommuneService {
 
     /**
      * Recherche de communes.
-     * @param nom nom de la commune
+     *
+     * @param nom       nom de la commune
      * @param codeInsee code insee de la commune
-     * @param pageable paramètre lié à la pagination
+     * @param pageable  paramètre lié à la pagination
      * @return liste des communes correspondants à la recherche
      */
     Page<Commune> searchCommunes(String nom, String codeInsee, Pageable pageable);

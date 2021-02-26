@@ -13,6 +13,7 @@ public class SecteurSamEntity {
     @Column(name = "id")
     private Integer id;
 
+    @OrderBy
     @Basic
     @Column(name = "nom_secteur")
     private String nomSecteur;

@@ -20,7 +20,9 @@ public class SecteurSpeuServiceImpl implements SecteurSpeuService {
 
     @Override
     public Page<SecteurSpeu> searchSecteursSpeu(Integer numSecteur, String nomSecteur, Pageable pageable) {
+
         return secteurSpeuMapper.entitiesToDto(secteurSpeuCustomDao.searchSecteursSpeu(numSecteur, nomSecteur, pageable), pageable);
+
     }
 
 }

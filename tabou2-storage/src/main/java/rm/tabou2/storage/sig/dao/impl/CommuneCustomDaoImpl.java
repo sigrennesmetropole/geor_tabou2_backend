@@ -32,8 +32,9 @@ public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements Commu
     @Autowired
     private EntityManager sigEntityManager;
 
+
     @Override
-    @Transactional(value = "sigTransactionManager", propagation = Propagation.REQUIRED, readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page<CommuneEntity> searchCommunes(String nom, String codeInsee, Pageable pageable) {
 
         CriteriaBuilder builder = sigEntityManager.getCriteriaBuilder();

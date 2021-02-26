@@ -34,7 +34,7 @@ public class QuartierCustomDaoImpl  extends AbstractCustomDaoImpl implements Qua
     private EntityManager entityManager;
 
     @Override
-    @Transactional(transactionManager = "sigTransactionManager", propagation = Propagation.REQUIRED, readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page<QuartierEntity> searchQuartiers(QuartierCriteria quartierCriteria, Pageable pageable) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -74,11 +74,11 @@ public class QuartierCustomDaoImpl  extends AbstractCustomDaoImpl implements Qua
             //nom
             predicateStringCriteria(quartierCriteria.getNom(), FIELD_NOM, predicates, builder, root);
 
-            //Code inse
+            //Code insee
             predicateIntegerCriteria(quartierCriteria.getCodeInsee(), FIELD_CODE_INSEE, predicates, builder, root);
 
             //Numéro de quartier
-            predicateIntegerCriteria(quartierCriteria.getCodeInsee(), FIELD_NU_QUART, predicates, builder, root);
+            predicateIntegerCriteria(quartierCriteria.getNuQuart(), FIELD_NU_QUART, predicates, builder, root);
 
             if (CollectionUtils.isNotEmpty(predicates)) {
                 criteriaQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
