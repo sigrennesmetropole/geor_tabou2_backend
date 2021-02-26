@@ -1,8 +1,9 @@
 package rm.tabou2.service.sig;
 
 
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,11 +31,12 @@ public class SecteurFoncierServiceTest {
 
     private static final String NEGOCIATEUR = "David Verlingue";
 
+    @DisplayName("testSearchSecteurFoncier : test de recherche d'un secteur foncier")
     @Test
-    void testSearchSecteurFoncier() {
+    public void testSearchSecteurFoncier() {
 
         SecteurFoncierEntity secteurFoncier = new SecteurFoncierEntity();
-        secteurFoncier.setId(1);
+        secteurFoncier.setId(1L);
         secteurFoncier.setNegociateur(NEGOCIATEUR);
         secteurFoncierDao.save(secteurFoncier);
 

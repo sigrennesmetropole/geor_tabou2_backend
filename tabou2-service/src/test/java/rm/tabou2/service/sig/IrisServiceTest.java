@@ -1,8 +1,8 @@
 package rm.tabou2.service.sig;
 
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,7 @@ import rm.tabou2.storage.sig.item.IrisCriteria;
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-class IrisServiceTest {
+public class IrisServiceTest {
 
     private static final String NMIRIS = "Albert de Mun";
 
@@ -31,10 +31,10 @@ class IrisServiceTest {
     @Autowired
     private IrisService irisService;
 
+    @DisplayName("testSearchIris: test de recherche d'une iris")
     @Test
-    void testSearchIris() {
+    public void testSearchIris() {
 
-        // enregistrer une operation dans la base temporaire H2
         IrisEntity iris = new IrisEntity();
         iris.setNmiris(NMIRIS);
         iris.setId(1);

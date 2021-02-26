@@ -1,8 +1,8 @@
 package rm.tabou2.service.sig;
 
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,16 +30,16 @@ public class SecteurDdsServiceTest {
 
     private static final String SECTEUR_NAME = "Est";
 
+    @DisplayName("testSearchSecteurDds : test de recherche d'un secteur DDS")
     @Test
-    void testSearchSecteurDds() {
+    public void testSearchSecteurDds() {
 
-        // enregistrer une operation dans la base temporaire H2
         SecteurDdsEntity secteurDds = new SecteurDdsEntity();
         secteurDds.setId(1);
         secteurDds.setSecteur(SECTEUR_NAME);
         secteurDdsDao.save(secteurDds);
 
-        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nom"));
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "secteur"));
 
         Page<SecteurDds> page = null;
         try {

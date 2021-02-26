@@ -1,8 +1,8 @@
 package rm.tabou2.service.sig;
 
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +20,7 @@ import rm.tabou2.storage.sig.entity.PluiEntity;
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-class PluiServiceTest {
+public class PluiServiceTest {
 
     public static final String LIBELLE_PLUI = "1AU";
     @Autowired
@@ -29,10 +29,10 @@ class PluiServiceTest {
     @Autowired
     private PluiService pluiService;
 
+    @DisplayName("testSearchPlui : test de recherche d'un plui")
     @Test
-    void testSearchPlui() {
+    public void testSearchPlui() {
 
-        // enregistrer une operation dans la base temporaire H2
         PluiEntity plui = new PluiEntity();
         plui.setLibelle(LIBELLE_PLUI);
         plui.setId(1);
