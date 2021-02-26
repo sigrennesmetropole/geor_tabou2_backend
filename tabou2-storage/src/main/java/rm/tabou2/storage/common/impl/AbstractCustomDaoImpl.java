@@ -24,9 +24,9 @@ public abstract class AbstractCustomDaoImpl {
     protected void predicateStringCriteria(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
         if (criteria != null) {
             if (criteria.indexOf('*') == -1) {
-                predicates.add(builder.equal(root.get(type), criteria));
+                predicates.add(builder.equal(builder.lower(root.get(type)), criteria.toLowerCase()));
             } else {
-                predicates.add(builder.like(root.get(type), criteria.replace("*", "%")));
+                predicates.add(builder.like(builder.lower(root.get(type)), criteria.replace("*", "%").toLowerCase()));
             }
         }
     }
@@ -58,7 +58,9 @@ public abstract class AbstractCustomDaoImpl {
 
     protected void predicateIntegerCriteria(Integer criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
+        if (criteria != null) {
             predicates.add(builder.equal(root.get(type), criteria));
+        }
 
     }
 
