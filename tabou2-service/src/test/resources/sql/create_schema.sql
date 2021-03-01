@@ -1,6 +1,5 @@
 
 -- Création du schéma DDC -- temporaire
-CREATE SCHEMA if not exists tabou2;
 CREATE SCHEMA if not exists ddc;
 CREATE SCHEMA if not exists limite_admin;
 CREATE SCHEMA if not exists urba_foncier;
