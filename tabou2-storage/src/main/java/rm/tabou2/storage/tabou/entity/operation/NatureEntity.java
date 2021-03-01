@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "tabou_nature", schema = "tabou2")
+@Table(name = "tabou_nature")
 public class NatureEntity {
 
     @Id
