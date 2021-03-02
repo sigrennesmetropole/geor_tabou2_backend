@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "tabou_maitrise_ouvrage", schema = "tabou2")
+@Table(name = "tabou_maitrise_ouvrage")
 public class MaitriseOuvrageEntity {
 
     @Id

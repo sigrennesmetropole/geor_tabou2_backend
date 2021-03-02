@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "tabou_etape_operation", schema = "tabou2")
+@Table(name = "tabou_etape_operation")
 public class EtapeOperationEntity {
 
     @Id
@@ -49,7 +49,6 @@ public class EtapeOperationEntity {
     @ManyToMany
     @JoinTable(
             name = "tabou_etape_operation_workflow",
-            schema = "tabou2",
             joinColumns = @JoinColumn(name = "id_etape_operation", referencedColumnName = "id_etape_operation"),
             inverseJoinColumns = @JoinColumn(name = "id_etape_operation_next", referencedColumnName = "id_etape_operation")
     )
