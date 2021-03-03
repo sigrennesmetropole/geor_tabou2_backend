@@ -24,7 +24,7 @@ import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
-import rm.tabou2.storage.tabou.item.EtapeOperationCriteria;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import javax.validation.Valid;
@@ -148,14 +148,14 @@ public class OperationApiController implements OperationsApi {
     @Override
     public ResponseEntity<PageResult> searchOperationsEtapes(@Valid String code, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
-        EtapeOperationCriteria etapeOperationCriteria = new EtapeOperationCriteria();
+        EtapeCriteria etapeCriteria = new EtapeCriteria();
 
-        etapeOperationCriteria.setCode(code);
-        etapeOperationCriteria.setLibelle(libelle);
+        etapeCriteria.setCode(code);
+        etapeCriteria.setLibelle(libelle);
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EtapeOperationEntity.class);
 
-        Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeOperationCriteria, pageable);
+        Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }

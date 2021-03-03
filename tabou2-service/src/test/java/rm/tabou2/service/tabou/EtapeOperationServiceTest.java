@@ -22,7 +22,7 @@ import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
-import rm.tabou2.storage.tabou.item.EtapeOperationCriteria;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
@@ -131,26 +131,26 @@ public class EtapeOperationServiceTest {
         Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(false);
 
         // recherche par code
-        EtapeOperationCriteria etapeOperationCriteria = new EtapeOperationCriteria();
+        EtapeCriteria etapeCriteria = new EtapeCriteria();
 
-        etapeOperationCriteria.setCode("EN_PROJET_OFF"); // pas accessible au non référent
+        etapeCriteria.setCode("EN_PROJET_OFF"); // pas accessible au non référent
 
         Pageable pageable = PaginationUtils.buildPageable(0, 10, "code", true, EtapeOperationEntity.class);
 
-        Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeOperationCriteria, pageable);
+        Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
 
         Assert.assertEquals("Aucun élément ne devrait être retourné", 0, page.getNumberOfElements());
         Assert.assertTrue("Aucun élément ne devrait être retourné", page.getContent().isEmpty());
 
         // Recherche par libelle
-        etapeOperationCriteria.setCode(null);
-        etapeOperationCriteria.setLibelle("En*");
-        page = etapeOperationService.searchEtapesOperation(etapeOperationCriteria, pageable);
+        etapeCriteria.setCode(null);
+        etapeCriteria.setLibelle("En*");
+        page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
         Assert.assertEquals("Il n'y a que 2 etapes avec le libelle 'En*' qui sont visibles aux users non réferents", 2, page.getNumberOfElements());
 
         // Sans filtre
-        etapeOperationCriteria.setLibelle(null);
-        page = etapeOperationService.searchEtapesOperation(etapeOperationCriteria, pageable);
+        etapeCriteria.setLibelle(null);
+        page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
         Assert.assertEquals("Il n' ya que 5 etapes  qui sont visibles aux users non referents", 5, page.getNumberOfElements());
 
     }
@@ -162,26 +162,26 @@ public class EtapeOperationServiceTest {
 
         // C'est un référent qui qui effectue la recherche
         Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);
-        EtapeOperationCriteria etapeOperationCriteria = new EtapeOperationCriteria();
+        EtapeCriteria etapeCriteria = new EtapeCriteria();
 
         Pageable pageable = PaginationUtils.buildPageable(0, 10, "code", true, EtapeOperationEntity.class);
 
         // recherche par code
-        etapeOperationCriteria.setCode("EN_PROJET_OFF"); // accessible au référent
-        Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeOperationCriteria, pageable);
+        etapeCriteria.setCode("EN_PROJET_OFF"); // accessible au référent
+        Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
 
         Assert.assertEquals("Un élément devrait être retourné", 1, page.getNumberOfElements());
         Assert.assertFalse("Un élément doit être retourné", page.getContent().isEmpty());
 
         // Recherche par libelle
-        etapeOperationCriteria.setCode(null);
-        etapeOperationCriteria.setLibelle("En*");
-        page = etapeOperationService.searchEtapesOperation(etapeOperationCriteria, pageable);
+        etapeCriteria.setCode(null);
+        etapeCriteria.setLibelle("En*");
+        page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
         Assert.assertEquals("Toutes les 4 etapes avec le libelle 'En*' sont visibles aux users réferents", 4, page.getNumberOfElements());
 
         // Sans filtre
-        etapeOperationCriteria.setLibelle(null);
-        page = etapeOperationService.searchEtapesOperation(etapeOperationCriteria, pageable);
+        etapeCriteria.setLibelle(null);
+        page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
         Assert.assertEquals("Toutes les etapes sont visibles aux users referents", page.getTotalElements(), page.getNumberOfElements());
 
     }

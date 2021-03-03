@@ -1480,6 +1480,71 @@
         }
       }
     },
+    "/programmes/etapes": {
+      "get": {
+        "summary": "Liste des étapes des programmes",
+        "description": "Ensemble d'étapes de programmes",
+        "operationId": "searchProgrammesEtapes",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "code",
+            "description": "Recherche par code",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par nom de l'étapes (avec *)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
     "/communes": {
       "get": {
         "summary": "Recherche d'une commune",

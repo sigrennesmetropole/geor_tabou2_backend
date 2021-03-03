@@ -16,7 +16,7 @@ import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
-import rm.tabou2.storage.tabou.item.EtapeOperationCriteria;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -47,14 +47,14 @@ public class EtapeOperationServiceImpl implements EtapeOperationService {
     private AuthentificationHelper authentificationHelper;
 
     @Override
-    public Page<EtapeRestricted> searchEtapesOperation(EtapeOperationCriteria etapeOperationCriteria, Pageable pageable) {
+    public Page<EtapeRestricted> searchEtapesOperation(EtapeCriteria etapeCriteria, Pageable pageable) {
 
         // si l'utilisateur n'a pas le rôle "APPS_TABOU_REFERENT" alors le filtre mode="PUBLIC" s'applique
         if (!authentificationHelper.hasReferentRole()) {
-            etapeOperationCriteria.setMode(Etape.ModeEnum.PUBLIC.toString());
+            etapeCriteria.setMode(Etape.ModeEnum.PUBLIC.toString());
         }
 
-        Page<EtapeOperationEntity> etapes = etapeOperationCustomDao.searchEtapeOperations(etapeOperationCriteria, pageable);
+        Page<EtapeOperationEntity> etapes = etapeOperationCustomDao.searchEtapeOperations(etapeCriteria, pageable);
 
         return etapeOperationRestrictedMapper.entitiesToDto(etapes, pageable);
 

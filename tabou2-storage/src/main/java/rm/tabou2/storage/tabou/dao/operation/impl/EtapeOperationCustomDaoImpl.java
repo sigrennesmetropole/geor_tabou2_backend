@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationCustomDao;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
-import rm.tabou2.storage.tabou.item.EtapeOperationCriteria;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -35,14 +35,14 @@ public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl implement
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<EtapeOperationEntity> searchEtapeOperations(EtapeOperationCriteria etapeOperationCriteria, Pageable pageable) {
+    public Page<EtapeOperationEntity> searchEtapeOperations(EtapeCriteria etapeCriteria, Pageable pageable) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         //Requête pour compter le nombre de résultats total
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
         Root<EtapeOperationEntity> countRoot = countQuery.from(EtapeOperationEntity.class);
-        buildQuery(etapeOperationCriteria, builder, countQuery, countRoot);
+        buildQuery(etapeCriteria, builder, countQuery, countRoot);
         countQuery.select(builder.countDistinct(countRoot));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
@@ -55,7 +55,7 @@ public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl implement
         CriteriaQuery<EtapeOperationEntity> searchQuery = builder.createQuery(EtapeOperationEntity.class);
         Root<EtapeOperationEntity> searchRoot = searchQuery.from(EtapeOperationEntity.class);
         searchQuery.multiselect(searchRoot.get(FIELD_ID), searchRoot.get(FIELD_CODE), searchRoot.get(FIELD_LIBELLE));
-        buildQuery(etapeOperationCriteria, builder, searchQuery, searchRoot);
+        buildQuery(etapeCriteria, builder, searchQuery, searchRoot);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
 
@@ -64,22 +64,22 @@ public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl implement
         return new PageImpl<>(etapeOperationEntities, pageable, totalCount.intValue());
     }
 
-    private void buildQuery(EtapeOperationCriteria etapeOperationCriteria, CriteriaBuilder builder,
+    private void buildQuery(EtapeCriteria etapeCriteria, CriteriaBuilder builder,
                             CriteriaQuery<?> criteriaQuery, Root<EtapeOperationEntity> root
     ) {
-        if (etapeOperationCriteria != null) {
+        if (etapeCriteria != null) {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (etapeOperationCriteria.getCode() != null) {
-                predicateStringCriteria(etapeOperationCriteria.getCode(), FIELD_CODE, predicates, builder, root);
+            if (etapeCriteria.getCode() != null) {
+                predicateStringCriteria(etapeCriteria.getCode(), FIELD_CODE, predicates, builder, root);
             }
 
-            if (etapeOperationCriteria.getLibelle() != null) {
-                predicateStringCriteria(etapeOperationCriteria.getLibelle(), FIELD_LIBELLE, predicates, builder, root);
+            if (etapeCriteria.getLibelle() != null) {
+                predicateStringCriteria(etapeCriteria.getLibelle(), FIELD_LIBELLE, predicates, builder, root);
             }
 
-            if (etapeOperationCriteria.getMode() != null) {
-                predicateStringCriteria(etapeOperationCriteria.getMode(), FIELD_MODE, predicates, builder, root);
+            if (etapeCriteria.getMode() != null) {
+                predicateStringCriteria(etapeCriteria.getMode(), FIELD_MODE, predicates, builder, root);
             }
 
             if (CollectionUtils.isNotEmpty(predicates)) {

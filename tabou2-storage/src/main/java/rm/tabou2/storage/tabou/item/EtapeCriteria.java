@@ -3,7 +3,7 @@ package rm.tabou2.storage.tabou.item;
 import lombok.Data;
 
 @Data
-public class EtapeOperationCriteria {
+public class EtapeCriteria {
 
     private String code;
 

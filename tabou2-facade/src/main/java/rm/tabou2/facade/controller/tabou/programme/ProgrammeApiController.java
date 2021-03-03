@@ -17,7 +17,6 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
@@ -104,6 +103,11 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<PageResult> searchProgrammesEtapes(@Valid String code, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+        return null;
     }
 
     @Override
