@@ -10,19 +10,15 @@ import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.ddc.PermisConstruireService;
-import rm.tabou2.service.dto.Agapeo;
-import rm.tabou2.service.dto.AssociationTiersTypeTiers;
-import rm.tabou2.service.dto.Etape;
-import rm.tabou2.service.dto.Evenement;
-import rm.tabou2.service.dto.PageResult;
-import rm.tabou2.service.dto.PermisConstruire;
-import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.dto.*;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.validation.Valid;
@@ -107,7 +103,16 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
     @Override
     public ResponseEntity<PageResult> searchProgrammesEtapes(@Valid String code, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
-        return null;
+        EtapeCriteria etapeCriteria = new EtapeCriteria();
+
+        etapeCriteria.setCode(code);
+        etapeCriteria.setLibelle(libelle);
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EtapeProgrammeEntity.class);
+
+        Page<EtapeRestricted> page = etapeProgrammeService.searchEtapesProgramme(etapeCriteria, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }
 
     @Override
