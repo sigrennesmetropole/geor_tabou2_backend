@@ -3848,19 +3848,6 @@
         },
         {
           "properties": {
-            "id": {
-              "description": "Identificateur unique. Clé primaire",
-              "type": "integer",
-              "format": "int64"
-            },
-            "libelle": {
-              "description": "Libellé de l'étape ",
-              "type": "string"
-            },
-            "code": {
-              "description": "Identifiant unique pour l'étape",
-              "type": "string"
-            },
             "type": {
               "description": "Indicateur permettant de savoir s'il s'agit de l'étape initiale, finale ou intermédiaire",
               "type": "string",

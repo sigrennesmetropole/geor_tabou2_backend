@@ -51,7 +51,7 @@ public class EtapeOperationServiceImpl implements EtapeOperationService {
 
         // si l'utilisateur n'a pas le rôle "APPS_TABOU_REFERENT" alors le filtre mode="PUBLIC" s'applique
         if (!authentificationHelper.hasReferentRole()) {
-            etapeOperationCriteria.setMode("PUBLIC");
+            etapeOperationCriteria.setMode(Etape.ModeEnum.PUBLIC.toString());
         }
 
         Page<EtapeOperationEntity> etapes = etapeOperationCustomDao.searchEtapeOperations(etapeOperationCriteria, pageable);
