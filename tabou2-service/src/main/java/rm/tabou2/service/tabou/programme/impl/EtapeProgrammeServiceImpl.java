@@ -1,16 +1,22 @@
 package rm.tabou2.service.tabou.programme.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import rm.tabou2.service.dto.EtapeRestricted;
+import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
+import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeRestrictedMapper;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.helper.programme.EtapeProgrammeWorkflowHelper;
-import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 import java.util.List;
 
@@ -21,7 +27,13 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
     private EtapeProgrammeDao etapeProgrammeDao;
 
     @Autowired
+    private EtapeProgrammeCustomDao etapeProgrammeCustomDao;
+
+    @Autowired
     private EtapeProgrammeMapper etapeProgrammeMapper;
+
+    @Autowired
+    private EtapeProgrammeRestrictedMapper etapeProgrammeRestrictedMapper;
 
     @Autowired
     private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
@@ -29,12 +41,20 @@ public class EtapeProgrammeServiceImpl implements EtapeProgrammeService {
     @Autowired
     private ProgrammeRightsHelper programmeRightsHelper;
 
+    @Autowired
+    private AuthentificationHelper authentificationHelper;
+
     @Override
-    public List<Etape> searchEtapesProgramme(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
+    public Page<EtapeRestricted> searchEtapesProgramme(EtapeCriteria etapeCriteria, Pageable pageable) {
 
-        List<EtapeProgrammeEntity> etapes = etapeProgrammeDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EtapeProgrammeEntity.class));
+        // si l'utilisateur n'a pas le rôle "APPS_TABOU_REFERENT" alors le filtre mode="PUBLIC" s'applique
+        if (!authentificationHelper.hasReferentRole()) {
+            etapeCriteria.setMode("PUBLIC");
+        }
 
-        return etapeProgrammeMapper.entitiesToDto(etapes);
+        Page<EtapeProgrammeEntity> etapes = etapeProgrammeCustomDao.searchEtapeProgrammes(etapeCriteria, pageable);
+
+        return etapeProgrammeRestrictedMapper.entitiesToDto(etapes, pageable);
 
     }
 

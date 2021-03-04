@@ -1,4 +1,4 @@
-package rm.tabou2.storage.tabou.dao.operation.impl;
+package rm.tabou2.storage.tabou.dao.programme.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
-import rm.tabou2.storage.tabou.dao.operation.EtapeOperationCustomDao;
-import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
+import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeCustomDao;
+import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 import javax.persistence.EntityManager;
@@ -27,7 +27,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
-public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl implements EtapeOperationCustomDao {
+public class EtapeProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements EtapeProgrammeCustomDao {
 
     @Qualifier("tabouEntityManager")
     @Autowired
@@ -35,13 +35,13 @@ public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl implement
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<EtapeOperationEntity> searchEtapeOperations(EtapeCriteria etapeCriteria, Pageable pageable) {
+    public Page<EtapeProgrammeEntity> searchEtapeProgrammes(EtapeCriteria etapeCriteria, Pageable pageable) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         //Requête pour compter le nombre de résultats total
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-        Root<EtapeOperationEntity> countRoot = countQuery.from(EtapeOperationEntity.class);
+        Root<EtapeProgrammeEntity> countRoot = countQuery.from(EtapeProgrammeEntity.class);
         buildQuery(etapeCriteria, builder, countQuery, countRoot);
         countQuery.select(builder.countDistinct(countRoot));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
@@ -52,20 +52,20 @@ public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl implement
         }
 
         //Requête de recherche
-        CriteriaQuery<EtapeOperationEntity> searchQuery = builder.createQuery(EtapeOperationEntity.class);
-        Root<EtapeOperationEntity> searchRoot = searchQuery.from(EtapeOperationEntity.class);
+        CriteriaQuery<EtapeProgrammeEntity> searchQuery = builder.createQuery(EtapeProgrammeEntity.class);
+        Root<EtapeProgrammeEntity> searchRoot = searchQuery.from(EtapeProgrammeEntity.class);
         searchQuery.multiselect(searchRoot.get(FIELD_ID), searchRoot.get(FIELD_CODE), searchRoot.get(FIELD_LIBELLE));
         buildQuery(etapeCriteria, builder, searchQuery, searchRoot);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
 
-        TypedQuery<EtapeOperationEntity> typedQuery = entityManager.createQuery(searchQuery);
-        List<EtapeOperationEntity> etapeOperationEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
-        return new PageImpl<>(etapeOperationEntities, pageable, totalCount.intValue());
+        TypedQuery<EtapeProgrammeEntity> typedQuery = entityManager.createQuery(searchQuery);
+        List<EtapeProgrammeEntity> etapeProgrammeEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
+        return new PageImpl<>(etapeProgrammeEntities, pageable, totalCount.intValue());
     }
 
     private void buildQuery(EtapeCriteria etapeCriteria, CriteriaBuilder builder,
-                            CriteriaQuery<?> criteriaQuery, Root<EtapeOperationEntity> root
+                            CriteriaQuery<?> criteriaQuery, Root<EtapeProgrammeEntity> root
     ) {
         if (etapeCriteria != null) {
             List<Predicate> predicates = new ArrayList<>();

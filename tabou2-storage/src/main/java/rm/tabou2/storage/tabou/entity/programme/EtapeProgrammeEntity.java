@@ -1,6 +1,8 @@
 package rm.tabou2.storage.tabou.entity.programme;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -18,7 +20,15 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "tabou_etape_programme")
+@NoArgsConstructor
+@AllArgsConstructor
 public class EtapeProgrammeEntity {
+
+    public EtapeProgrammeEntity(long id, String code, String libelle) {
+        this.id = id;
+        this.libelle = libelle;
+        this.code = code;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
