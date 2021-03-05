@@ -13,6 +13,7 @@ public class ProgrammeCriteria {
     private String code;
     private String numAds;
     private String nomOperation;
+    private long operationId;
     private String natureOperation;
     private Date clotureDateDebut;
     private Date clotureDateFin;

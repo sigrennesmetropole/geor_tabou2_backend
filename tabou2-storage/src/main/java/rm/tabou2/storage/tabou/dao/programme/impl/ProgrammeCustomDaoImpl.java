@@ -41,6 +41,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DAT_DA
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DIFFUSION_RETREINTE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DOC_DATE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_PROGRAMME;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_ACCESS_AIDE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_LOCAT_AIDE_PREVU;
@@ -142,6 +143,12 @@ public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements Pro
                     Join<OperationEntity, NatureEntity> natureJoin = operationJoin.join(FIELD_NATURE);
                     predicateStringCriteriaForJoin(programmeCriteria.getNatureOperation(), FIELD_LIBELLE, predicates, builder, natureJoin);
                 }
+            }
+
+            //identifiant de l'opération
+            if (programmeCriteria.getOperationId() > 0) {
+                Join<ProgrammeEntity, OperationEntity> operationJoin = root.join(FIELD_OPERATION);
+                predicateLongCriteriaForJoin(programmeCriteria.getOperationId(), FIELD_ID, predicates, builder, operationJoin);
             }
 
             //attributionFonciereAnnee

@@ -41,6 +41,12 @@ public abstract class AbstractCustomDaoImpl {
         }
     }
 
+    protected void predicateLongCriteriaForJoin(Long criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Join<?, ?> join) {
+
+        predicates.add(builder.equal(join.get(type), criteria));
+
+    }
+
     protected void predicateDateCriteria(Date dateDebut, Date dateFin, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
         predicateBetweenCriteria(dateDebut, dateFin, type, predicates, builder, root);
@@ -86,6 +92,15 @@ public abstract class AbstractCustomDaoImpl {
 
     }
 
+    protected void predicateLongCriteria(Long criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+
+        if (criteria != null) {
+            predicates.add(builder.equal(root.get(type), criteria));
+        }
+
+    }
+
+
     private <T extends Comparable<? super T>> void predicateBetweenCriteria(T lower, T upper, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
         if (lower != null && upper != null) {
@@ -102,5 +117,6 @@ public abstract class AbstractCustomDaoImpl {
 
         }
     }
+
 
 }

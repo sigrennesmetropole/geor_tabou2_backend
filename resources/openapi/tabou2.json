@@ -721,6 +721,74 @@
         }
       }
     },
+    "/operations/{operationId}/programmes": {
+      "get": {
+        "summary": "Recherche les programmes d'une opération",
+        "operationId": "searchProgrammes",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du programme",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/programmes": {
       "post": {
         "summary": "Ajout d'un programme d'aménagement",
@@ -3230,6 +3298,39 @@
         },
         "modifDate": {
           "description": "Date de dernière modification de l'entité",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "ProgrammeLight": {
+      "type": "object",
+      "description": "",
+      "properties": {
+        "id": {
+          "description": "Identifiant du programme",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nom": {
+          "description": "Nom du programme",
+          "type": "string"
+        },
+        "promoteur": {
+          "description": "Nom du promoteur",
+          "type": "string"
+        },
+        "logements": {
+          "description": "Nombre de logements",
+          "type": "integer",
+          "format": "int64"
+        },
+        "etape": {
+          "description": "Etape du programme",
+          "type": "string"
+        },
+        "dateLiv": {
+          "description": "Date de livraison du programme",
           "type": "string",
           "format": "date"
         }
