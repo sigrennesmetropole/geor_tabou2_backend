@@ -26,6 +26,8 @@ public class ProgrammeCriteria {
     private Date commercialisationDateFin;
     private Date adsDateDebut;
     private Date adsDateFin;
+    private Date livraisonDateDebut;
+    private Date livraisonDateFin;
     private Date docDateDebut;
     private Date docDateFin;
     private Date datDateDebut;

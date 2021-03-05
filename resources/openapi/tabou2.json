@@ -988,6 +988,22 @@
           },
           {
             "in": "query",
+            "name": "livraisonDateDebut",
+            "description": "Borne inférieure de recherche par date de livraison",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "livraisonDateFin",
+            "description": "Borne supérieure de recherche par date de livraison",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
             "name": "docDateDebut",
             "description": "Borne inférieure de recherche par date DOC",
             "required": false,
@@ -3390,6 +3406,11 @@
         },
         "adsDate": {
           "description": "Date adsDate",
+          "type": "string",
+          "format": "date"
+        },
+        "livraisonDate": {
+          "description": "Date de livraison",
           "type": "string",
           "format": "date"
         },

@@ -206,6 +206,7 @@ create table tabou2.tabou_programme (
                            ads_date_prevu timestamp,
                            doc_date_prevu timestamp,
                            dat_date_prevu timestamp,
+                           date_livraison timestamp,
                            attribution_fonciere_annee integer,
                            attribution_date timestamp,
                            commercialisation_date timestamp,

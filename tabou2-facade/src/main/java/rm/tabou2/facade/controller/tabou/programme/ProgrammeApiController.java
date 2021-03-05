@@ -17,7 +17,6 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
@@ -66,6 +65,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
                                                        @Valid String tiers, @Valid Integer attributionFonciereAnneeDebut, @Valid Integer attributionFonciereAnneeFin,
                                                        @Valid Date attributionDateDebut, @Valid Date attributionDateFin, @Valid Date commercialisationDateDebut,
                                                        @Valid Date commercialisationDateFin, @Valid Date adsDateDebut, @Valid Date adsDateFin,
+                                                       @Valid Date livraisonDateDebut, @Valid Date livraisonDateFin,
                                                        @Valid Date docDateDebut, @Valid Date docDateFin, @Valid Date datDateDebut,
                                                        @Valid Date datDateFin, @Valid Boolean logementsAides, @Valid Integer start,
                                                        @Valid Boolean onlyActive, @Valid Integer resultsNumber,
@@ -91,6 +91,8 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
         programmeCriteria.setCommercialisationDateFin(commercialisationDateFin);
         programmeCriteria.setAdsDateDebut(adsDateDebut);
         programmeCriteria.setAdsDateFin(adsDateFin);
+        programmeCriteria.setLivraisonDateDebut(livraisonDateDebut);
+        programmeCriteria.setLivraisonDateFin(livraisonDateFin);
         programmeCriteria.setDocDateDebut(docDateDebut);
         programmeCriteria.setDocDateFin(docDateFin);
         programmeCriteria.setDatDateDebut(datDateDebut);

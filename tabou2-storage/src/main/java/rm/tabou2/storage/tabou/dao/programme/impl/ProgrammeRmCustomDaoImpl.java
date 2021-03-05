@@ -38,8 +38,10 @@ public class ProgrammeRmCustomDaoImpl implements ProgrammeRmCustomDao {
         //Appel à la procédure stockée programmes_of_operation : retourne les programmesRm contenu dans l'opération
 
         String nom = programmeCriteria.getNom();
-        if (!nom.isEmpty()) {
+        if (nom != null && !nom.isEmpty()) {
             nom = nom.replace('*', '%');
+        } else{
+            nom = "%";
         }
 
         //Requête pour compter le nombre de résultats
