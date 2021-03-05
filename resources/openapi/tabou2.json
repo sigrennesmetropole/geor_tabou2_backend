@@ -3440,7 +3440,8 @@
         },
         "attributionFonciereAnnee": {
           "description": "Année de l'attribution foncière",
-          "type": "string"
+          "type": "integer",
+          "format": "int32"
         },
         "attributionDate": {
           "description": "Date d'attribution du programme au promoteur",
