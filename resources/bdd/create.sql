@@ -280,7 +280,7 @@ create table tabou_type_tiers (
 create table tabou_type_financement (
     id_type_financement bigserial,
     libelle varchar(50),
-    code varchar(20),
+    code varchar(20) unique,
     est_aide boolean,
     primary key (id_type_financement)
 );
