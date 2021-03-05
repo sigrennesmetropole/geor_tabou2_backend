@@ -17,7 +17,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "tabou_type_tiers", schema = "tabou2")
+@Table(name = "tabou_type_tiers")
 public class TypeTiersEntity extends GenericCreateAuditableEntity {
 
     @Id

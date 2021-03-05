@@ -7,9 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.OperationsApi;
+
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.EtapeRestricted;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.PageResult;
@@ -21,8 +23,10 @@ import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import javax.validation.Valid;
@@ -105,6 +109,8 @@ public class OperationApiController implements OperationsApi {
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
 
+    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByOperationId(Long operationId) throws Exception {
+        return null;
     }
 
     @Override
@@ -146,6 +152,21 @@ public class OperationApiController implements OperationsApi {
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationEntity.class);
 
         Page<Operation> page = operationService.searchOperations(operationsCriteria, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PageResult> searchOperationsEtapes(@Valid String code, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        EtapeCriteria etapeCriteria = new EtapeCriteria();
+
+        etapeCriteria.setCode(code);
+        etapeCriteria.setLibelle(libelle);
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EtapeOperationEntity.class);
+
+        Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }

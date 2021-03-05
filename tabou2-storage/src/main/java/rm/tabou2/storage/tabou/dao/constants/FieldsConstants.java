@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FieldsConstants {
 
+    public static final String FIELD_ID = "id";
     public static final String FIELD_NOM = "nom";
     public static final String FIELD_NATURE = "nature";
     public static final String FIELD_VOCATION = "vocation";
@@ -14,6 +15,7 @@ public class FieldsConstants {
     public static final String FIELD_CONSOMMATION_ESPACE = "consommationEspace";
     public static final String FIELD_MAITRISE_OUVRAGE = "maitriseOuvrage";
     public static final String FIELD_LIBELLE = "libelle";
+    public static final String FIELD_MODE = "mode";
     public static final String FIELD_ETAPE_OPERATION = "etapeOperation";
     public static final String FIELD_ETAPE_PROGRAMME = "etapeProgramme";
     public static final String FIELD_CODE = "code";
