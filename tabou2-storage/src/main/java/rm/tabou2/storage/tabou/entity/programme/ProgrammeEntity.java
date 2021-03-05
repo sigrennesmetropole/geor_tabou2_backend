@@ -27,7 +27,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Table(name = "tabou_programme", schema = "tabou2")
+@Table(name = "tabou_programme")
 public class ProgrammeEntity extends GenericAuditableEntity {
 
     @Id
@@ -71,6 +71,10 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @Basic
     @Column(name = "ADS_date_prevu")
     private Date adsDatePrevu;
+
+    @Basic
+    @Column(name = "date_livraison")
+    private Date dateLivraison;
 
     @Basic
     @Column(name = "DOC_date_prevu")

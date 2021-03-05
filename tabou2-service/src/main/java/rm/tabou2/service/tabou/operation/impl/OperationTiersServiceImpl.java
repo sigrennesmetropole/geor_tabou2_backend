@@ -2,13 +2,18 @@ package rm.tabou2.service.tabou.operation.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import rm.tabou2.service.dto.TiersAmenagement;
+import rm.tabou2.service.mapper.tabou.operation.OperationTiersMapper;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationTiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
@@ -18,7 +23,6 @@ import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +36,9 @@ public class OperationTiersServiceImpl implements OperationTiersService {
     private OperationDao operationDao;
 
     @Autowired
+    private OperationTiersCustomDao operationTiersCustomDao;
+
+    @Autowired
     private TypeTiersDao typeTiersDao;
 
     @Autowired
@@ -42,6 +49,9 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
     @Autowired
     private AuthentificationHelper authentificationHelper;
+
+    @Autowired
+    private OperationTiersMapper operationTiersMapper;
 
 
     @Override
@@ -86,9 +96,12 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
     }
 
+
     @Override
-    public List<OperationTiersEntity> getTiersByOperationId(long operationId) {
-        return operationTiersDao.findByOperationId(operationId);
+    public Page<TiersAmenagement> searchOperationTiers(long operationId, String libelleType, Pageable pageable) {
+
+         return operationTiersMapper.entitiesToDto(operationTiersCustomDao.searchOperationTiers(libelleType, operationId, pageable),pageable);
+
     }
 
 }

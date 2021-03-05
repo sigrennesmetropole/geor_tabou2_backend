@@ -7,21 +7,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.OperationsApi;
+
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.EtapeRestricted;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.PageResult;
+import rm.tabou2.service.dto.ProgrammeLight;
 import rm.tabou2.service.dto.TiersTypeTiers;
+import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
-import rm.tabou2.service.tabou.tiers.TiersService;
+import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.utils.PaginationUtils;
+
+import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
+import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
+import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -36,7 +46,7 @@ public class OperationApiController implements OperationsApi {
     private OperationService operationService;
 
     @Autowired
-    private TiersService tiersService;
+    private ProgrammeService programmeService;
 
     @Autowired
     private OperationTiersService operationTiersService;
@@ -94,9 +104,14 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByOperationId(Long operationId) throws Exception {
-        return null;
-        //return new ResponseEntity<>(tiersService.getTiersByOperationId(operationId), HttpStatus.OK);
+    public ResponseEntity<PageResult> searchTiersByOperationId(Long operationId, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationTiersEntity.class);
+
+        Page<TiersAmenagement> page = operationTiersService.searchOperationTiers(operationId, libelle, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+
     }
 
     @Override
@@ -143,8 +158,38 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
+    public ResponseEntity<PageResult> searchOperationsEtapes(@Valid String code, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        EtapeCriteria etapeCriteria = new EtapeCriteria();
+
+        etapeCriteria.setCode(code);
+        etapeCriteria.setLibelle(libelle);
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EtapeOperationEntity.class);
+
+        Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PageResult> searchProgrammes(Long operationId, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        ProgrammeCriteria programmeCriteria = new ProgrammeCriteria();
+        programmeCriteria.setOperationId(operationId);
+        programmeCriteria.setNom(nom);
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeRmEntity.class);
+
+        Page<ProgrammeLight> page = programmeService.searchProgrammesOfOperation(programmeCriteria, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+
+    }
+
+    @Override
     public ResponseEntity<Operation> updateEtapeByOperationId(Long operationId, @NotNull @Valid Long etapeId) throws Exception {
-        return new ResponseEntity<>(operationService.updateEtapeOfOperationId (operationId, etapeId), HttpStatus.OK);
+        return new ResponseEntity<>(operationService.updateEtapeOfOperationId(operationId, etapeId), HttpStatus.OK);
     }
 
     @Override

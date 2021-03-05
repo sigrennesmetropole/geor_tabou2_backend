@@ -28,7 +28,7 @@ import java.util.Map;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "sigEntityManagerFactory",
         transactionManagerRef = "sigTransactionManager",
-        basePackages = {"rm.tabou2.storage.sig.dao"}
+        basePackages = "rm.tabou2.storage.sig.dao"
 )
 @Configuration
 public class StorageSigBeanConfiguration {
@@ -42,6 +42,8 @@ public class StorageSigBeanConfiguration {
     @Value("${spring.sig.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
+    @Value("${spring.sig.datasource.hibernate.dialect}")
+    private String hibernateDialect;
 
     @Bean(name = "sigDataSource")
     @ConfigurationProperties(prefix = "spring.sig.datasource")
@@ -86,6 +88,7 @@ public class StorageSigBeanConfiguration {
         hibernateProperties.put("hibernate.show_sql", hibernateFormatSql);
         hibernateProperties.put("hibernate.format_sql", hibernateShowSql);
         hibernateProperties.put("hibernate.hbm2ddl.auto", hibernateHbm2ddlAuto);
+        hibernateProperties.put("hibernate.dialect", hibernateDialect);
 
         return hibernateProperties;
     }
