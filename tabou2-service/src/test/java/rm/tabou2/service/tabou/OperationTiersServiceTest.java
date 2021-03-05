@@ -15,23 +15,31 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
-import rm.tabou2.service.constant.*;
-import rm.tabou2.service.dto.Commune;
-import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.constant.ConsommationEspaceCode;
+import rm.tabou2.service.constant.DecisionCode;
+import rm.tabou2.service.constant.MaitriseOuvrageCode;
+import rm.tabou2.service.constant.ModeAmenagementCode;
+import rm.tabou2.service.constant.VocationCode;
 import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
-import rm.tabou2.storage.tabou.dao.operation.*;
+import rm.tabou2.storage.tabou.dao.operation.ConsommationEspaceDao;
+import rm.tabou2.storage.tabou.dao.operation.DecisionDao;
+import rm.tabou2.storage.tabou.dao.operation.MaitriseOuvrageDao;
+import rm.tabou2.storage.tabou.dao.operation.ModeAmenagementDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.VocationDao;
 import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
-import rm.tabou2.storage.tabou.entity.operation.*;
+import rm.tabou2.storage.tabou.entity.operation.ConsommationEspaceEntity;
+import rm.tabou2.storage.tabou.entity.operation.DecisionEntity;
+import rm.tabou2.storage.tabou.entity.operation.MaitriseOuvrageEntity;
+import rm.tabou2.storage.tabou.entity.operation.ModeAmenagementEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
-import rm.tabou2.storage.tabou.item.OperationsCriteria;
-
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
@@ -77,7 +85,6 @@ public class OperationTiersServiceTest {
     private static final String LIBELLE_TYPE_TIERS = "libelle";
 
     private static final String NOM_TIERS = "nom";
-
 
 
     @Test
