@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
@@ -20,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.dto.ProgrammeLight;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
@@ -27,13 +29,16 @@ import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
+import rm.tabou2.service.mapper.tabou.programme.ProgrammeLightMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.st.generator.DocumentGenerator;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.st.generator.model.FicheSuiviProgrammeDataModel;
 import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
+import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
+import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
@@ -41,21 +46,27 @@ import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
+import rm.tabou2.storage.tabou.dao.programme.impl.ProgrammeRmCustomDaoImpl;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -70,6 +81,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private ProgrammeCustomDao programmeCustomDao;
+
+    @Autowired
+    private ProgrammeTiersCustomDao programmeTiersCustomDao;
+
+    @Autowired
+    private ProgrammeRmCustomDaoImpl programmeRmCustomDao;
 
     @Autowired
     private EtapeProgrammeDao etapeProgrammeDao;
@@ -97,6 +114,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private ProgrammeMapper programmeMapper;
+
+    @Autowired
+    private ProgrammeLightMapper programmeLightMapper;
 
     @Autowired
     private EtapeProgrammeMapper etapeProgrammeMapper;
@@ -195,7 +215,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         // Mise à jour de l'opération associée
-        if (programme.getOperationId()!= null) {
+        if (programme.getOperationId() != null) {
             programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
         }
 
@@ -210,7 +230,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional
-    public Programme updateEtapeOfProgrammeId (long programmeId, long etapeId) {
+    public Programme updateEtapeOfProgrammeId(long programmeId, long etapeId) {
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(etapeId);
 
         Programme programme = getProgrammeById(programmeId);
@@ -243,6 +263,57 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
+    public Page<ProgrammeLight> searchProgrammesOfOperation(ProgrammeCriteria programmeCriteria, Pageable pageable) {
+
+        // Si l'utilisateur n'a pas le droit de voir les programmes en diffusion restreinte, on filtre sur false
+        if (BooleanUtils.isTrue(programmeCriteria.getDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
+            programmeCriteria.setDiffusionRestreinte(false);
+            LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
+        }
+
+        OperationEntity operation = operationDao.findOneById(programmeCriteria.getOperationId());
+
+        Page<ProgrammeLight> results = null;
+
+        if (Boolean.FALSE.equals(operation.getSecteur())) {
+
+            Page<ProgrammeEntity> programmes = programmeCustomDao.searchProgrammes(programmeCriteria, pageable);
+            results = programmeLightMapper.entitiesToDto(programmes, pageable);
+
+        } else {
+
+            List<ProgrammeLight> resultsList = new ArrayList<>();
+
+            Page<ProgrammeRmEntity> programmes = programmeRmCustomDao.searchProgrammesWithinOperation(programmeCriteria, pageable);
+            for (ProgrammeRmEntity p : programmes.getContent()) {
+
+                ProgrammeEntity programme = programmeDao.findOneById(p.getIdTabou().longValue());
+
+                //On cherche les maitres d'oeuvres de chaque programme
+                Page<ProgrammeTiersEntity> programmeTiers = programmeTiersCustomDao.searchProgrammesTiers(null, "MAITRE_OEUVRE", programme.getId(), PaginationUtils.buildPageable(0, null, null, true, ProgrammeTiersEntity.class));
+
+                //On construit la chaine de caractère avec tous les noms des MA
+                String nomMaitresOeuvre = programmeTiers.stream()
+                        .filter(programmeTiersEntity -> programmeTiersEntity.getTypeTiers().getCode().equals("MAITRE_OEUVRE"))
+                        .map(programmeTiersEntity -> programmeTiersEntity.getTiers().getNom())
+                        .collect(Collectors.joining(", "));
+
+                ProgrammeLight programmeLight = programmeLightMapper.entityToDto(programme);
+                programmeLight.setPromoteur(nomMaitresOeuvre);
+
+                //Ajout du programme light à la liste de résultats
+                resultsList.add(programmeLight);
+
+
+            }
+
+            results = new PageImpl<>(resultsList, pageable, programmes.getTotalElements());
+        }
+
+        return results;
+    }
+
+    @Override
     public List<Evenement> getEvenementsByProgrammeId(Long programmeId) {
 
         ProgrammeEntity programmeEntity = getProgrammeEntityById(programmeId);
@@ -252,9 +323,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     /**
      * Construction d'un évenement programme système
-     * @param code                      code du type d'événement
-     * @param evenementDescription      description de l'événement
-     * @return                          evenement crée
+     *
+     * @param code                 code du type d'événement
+     * @param evenementDescription description de l'événement
+     * @return evenement crée
      */
     private EvenementProgrammeEntity buildEvenementProgrammeSysteme(String code, String evenementDescription) {
 
@@ -274,8 +346,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     /**
      * Construction d'un évenement programme système après changement d'étape
-     * @param libelleEtape      libelle de l'étape
-     * @return                  evenement crée
+     *
+     * @param libelleEtape libelle de l'étape
+     * @return evenement crée
      */
     private EvenementProgrammeEntity buildEvenementProgrammeEtapeUpdated(String libelleEtape) {
         return this.buildEvenementProgrammeSysteme(etapeUpdatedCode, formatEtapeUpdatedMessage(libelleEtape));
@@ -417,6 +490,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     /**
      * Ajout des valeurs par défaut d'un programme
+     *
      * @param programme programme
      */
     private void setProgrammeDefaultValues(Programme programme) {

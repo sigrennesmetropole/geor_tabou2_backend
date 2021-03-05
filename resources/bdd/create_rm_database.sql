@@ -180,6 +180,20 @@ CREATE TABLE urba_foncier.oa_secteur
         OIDS=FALSE
     );
 
+CREATE TABLE urba_foncier.oa_programme
+(
+    objectid integer NOT NULL,
+    programme character varying(200),
+    shape geometry,
+    id_tabou integer,
+    CONSTRAINT enforce_dims_shape CHECK (st_ndims(shape) = 2),
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'MULTIPOLYGON'::text OR geometrytype(shape) = 'POLYGON'::text),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948)
+)
+    WITH (
+        OIDS=FALSE
+    );
+
 CREATE TABLE economie.za
 (
     objectid integer NOT NULL,
@@ -233,6 +247,7 @@ ALTER TABLE ddc.pc_ddc  OWNER TO ddc_user;
 ALTER TABLE limite_admin.quartier  OWNER TO sig_user;
 ALTER TABLE urba_foncier.plui_zone_urba  OWNER TO sig_user;
 ALTER TABLE urba_foncier.zac  OWNER TO sig_user;
+ALTER TABLE urba_foncier.oa_programme  OWNER TO sig_user;
 ALTER TABLE urba_foncier.oa_secteur  OWNER TO sig_user;
 ALTER TABLE economie.za  OWNER TO sig_user;
 ALTER TABLE demographie.iris  OWNER TO sig_user;
@@ -244,3 +259,27 @@ GRANT ALL ON SCHEMA limite_admin TO sig_user;
 GRANT ALL ON SCHEMA urba_foncier TO sig_user;
 GRANT ALL ON SCHEMA economie TO sig_user;
 GRANT ALL ON SCHEMA demographie TO sig_user;
+
+-- Création des fonctions
+
+create or replace function urba_foncier.programmes_of_operation(idOperationParam BIGINT, nomParam TEXT) returns SETOF urba_foncier.oa_programme
+    language plpgsql
+as
+$$
+DECLARE
+    programme urba_foncier.oa_programme%ROWTYPE;
+BEGIN
+    FOR programme in SELECT
+            zp.objectid, zp.programme, zp.id_tabou
+         FROM urba_foncier.oa_secteur zs
+            LEFT JOIN urba_foncier.oa_programme zp ON ST_Intersects(zp.shape, zs.shape)
+         WHERE
+            zs.id_tabou = idOperationParam
+         AND
+            lower(zp.programme) like lower(nomParam)
+        LOOP
+            return next programme;
+        END LOOP;
+    return ;
+END;
+$$;

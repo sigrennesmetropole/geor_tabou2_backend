@@ -73,6 +73,10 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     private Date adsDatePrevu;
 
     @Basic
+    @Column(name = "date_livraison")
+    private Date dateLivraison;
+
+    @Basic
     @Column(name = "DOC_date_prevu")
     private Date docDatePrevu;
 

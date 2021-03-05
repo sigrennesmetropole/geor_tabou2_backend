@@ -34,6 +34,7 @@ public class FieldsConstants {
     public static final String FIELD_ATTRIBUTION_DATE = "attributionDate";
     public static final String FIELD_COMMERCIALISATION_DATE = "commercialisationDate";
     public static final String FIELD_ADS_DATE_PREVU = "adsDatePrevu";
+    public static final String FIELD_LIVRAISON_DATE = "dateLivraison";
     public static final String FIELD_DOC_DATE_PREVU = "docDatePrevu";
     public static final String FIELD_DAT_DATE_PREVU = "datDatePrevu";
     public static final String FIELD_LOGEMENTS_LOCAT_AIDE_PREVU = "logementsLocatifAidePrevu";
