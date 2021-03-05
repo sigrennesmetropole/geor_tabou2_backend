@@ -1,16 +1,22 @@
 package rm.tabou2.service.tabou.operation.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.EtapeRestricted;
+import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EtapeOperationWorkflowHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
+import rm.tabou2.service.mapper.tabou.operation.EtapeOperationRestrictedMapper;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
-import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.dao.operation.EtapeOperationCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,7 +29,13 @@ public class EtapeOperationServiceImpl implements EtapeOperationService {
     private EtapeOperationDao etapeOperationDao;
 
     @Autowired
+    private EtapeOperationCustomDao etapeOperationCustomDao;
+
+    @Autowired
     private EtapeOperationMapper etapeOperationMapper;
+
+    @Autowired
+    private EtapeOperationRestrictedMapper etapeOperationRestrictedMapper;
 
     @Autowired
     private OperationRightsHelper operationRightsHelper;
@@ -31,12 +43,20 @@ public class EtapeOperationServiceImpl implements EtapeOperationService {
     @Autowired
     private EtapeOperationWorkflowHelper etapeOperationWorkflowHelper;
 
+    @Autowired
+    private AuthentificationHelper authentificationHelper;
+
     @Override
-    public List<Etape> searchEtapesOperation(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
+    public Page<EtapeRestricted> searchEtapesOperation(EtapeCriteria etapeCriteria, Pageable pageable) {
 
-        List<EtapeOperationEntity> etapes = etapeOperationDao.findByKeyword(keyword, PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EtapeOperationEntity.class));
+        // si l'utilisateur n'a pas le rôle "APPS_TABOU_REFERENT" alors le filtre mode="PUBLIC" s'applique
+        if (!authentificationHelper.hasReferentRole()) {
+            etapeCriteria.setMode(Etape.ModeEnum.PUBLIC.toString());
+        }
 
-        return etapeOperationMapper.entitiesToDto(etapes);
+        Page<EtapeOperationEntity> etapes = etapeOperationCustomDao.searchEtapeOperations(etapeCriteria, pageable);
+
+        return etapeOperationRestrictedMapper.entitiesToDto(etapes, pageable);
 
     }
 

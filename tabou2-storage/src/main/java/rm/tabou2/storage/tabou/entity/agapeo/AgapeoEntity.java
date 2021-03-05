@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "tabou_agapeo", schema = "tabou2")
+@Table(name = "tabou_agapeo")
 public class AgapeoEntity {
 
     @Id

@@ -1,12 +1,22 @@
 package rm.tabou2.service.tabou.operation;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.EtapeRestricted;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 import java.util.List;
 
 public interface EtapeOperationService {
 
-    List<Etape> searchEtapesOperation(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc);
+    /**
+     * Récuperation de la liste des étapes des opérations avec filtrage
+     * @param etapeCriteria
+     * @param pageable
+     * @return
+     */
+    Page<EtapeRestricted> searchEtapesOperation(EtapeCriteria etapeCriteria, Pageable pageable);
 
     Etape addEtapeOperation(Etape etape);
 
