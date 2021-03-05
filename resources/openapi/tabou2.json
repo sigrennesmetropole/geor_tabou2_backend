@@ -222,7 +222,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -471,8 +471,8 @@
         }
       },
       "get": {
-        "summary": "Liste les tiers d'une opération",
-        "operationId": "getTiersByOperationId",
+        "summary": "Recherche les tiers d'une opération",
+        "operationId": "searchTiersByOperationId",
         "produces": [
           "application/json"
         ],
@@ -484,16 +484,51 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+          },
+          {
+            "name": "libelle",
+            "in": "query",
+            "required": false,
+            "description": "Libellé du tiers",
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AssociationTiersTypeTiers"
-              }
+                "$ref": "#/definitions/PageResult"
             }
           },
           "404": {
@@ -1057,7 +1092,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -1601,7 +1636,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -1685,7 +1720,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -1769,7 +1804,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -1853,7 +1888,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -1952,7 +1987,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -2088,7 +2123,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -2267,7 +2302,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -2446,7 +2481,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -2634,7 +2669,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -2821,7 +2856,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -2896,7 +2931,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -2971,7 +3006,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -3046,7 +3081,7 @@
             "name": "asc",
             "in": "query",
             "required": false,
-            "description": "Indique si le tri doit être faire par ordre ascendant",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -3795,6 +3830,20 @@
           "description": "Date de mise en inactivité du tiers",
           "type": "string",
           "format": "date"
+        }
+      }
+    },
+    "TiersAmenagement": {
+      "type": "object",
+      "description": "Tiers d'un programme ou d'une opération d'aménagement",
+      "properties": {
+        "nom": {
+          "description": "Nom du tiers (raison sociale)",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libellé du type de tiers associé",
+          "type": "string"
         }
       }
     },
