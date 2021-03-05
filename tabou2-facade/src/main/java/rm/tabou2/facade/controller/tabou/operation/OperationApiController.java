@@ -108,9 +108,6 @@ public class OperationApiController implements OperationsApi {
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
-
-    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByOperationId(Long operationId) throws Exception {
-        return null;
     }
 
     @Override
