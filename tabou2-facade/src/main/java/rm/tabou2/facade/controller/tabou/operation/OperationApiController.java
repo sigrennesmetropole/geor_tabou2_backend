@@ -32,6 +32,7 @@ import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.item.EtapeCriteria;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -106,9 +107,15 @@ public class OperationApiController implements OperationsApi {
     @Override
     public ResponseEntity<PageResult> searchTiersByOperationId(Long operationId, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationTiersEntity.class);
+        TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
+        criteria.setAsc(asc);
+        criteria.setOrderBy(orderBy);
+        criteria.setLibelle(libelle);
+        criteria.setOperationId(operationId);
 
-        Page<TiersAmenagement> page = operationTiersService.searchOperationTiers(operationId, libelle, pageable);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, criteria.getOrderBy(), criteria.isAsc(), OperationTiersEntity.class);
+
+        Page<TiersAmenagement> page = operationTiersService.searchOperationTiers(criteria, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 

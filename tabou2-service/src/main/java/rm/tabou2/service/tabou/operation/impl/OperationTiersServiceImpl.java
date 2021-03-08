@@ -3,6 +3,7 @@ package rm.tabou2.service.tabou.operation.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.TiersAmenagement;
@@ -21,7 +22,9 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -98,9 +101,19 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
 
     @Override
-    public Page<TiersAmenagement> searchOperationTiers(long operationId, String libelleType, Pageable pageable) {
+    public Page<TiersAmenagement> searchOperationTiers(TiersAmenagementCriteria criteria, Pageable pageable) throws AppServiceException {
 
-         return operationTiersMapper.entitiesToDto(operationTiersCustomDao.searchOperationTiers(libelleType, operationId, pageable),pageable);
+        Optional<OperationEntity> optional = operationDao.findById(criteria.getOperationId());
+
+        if (optional.isEmpty()) {
+            throw new AppServiceException("L'operation' = " + criteria.getOperationId() + " n'existe pas");
+        }
+        // Si diffusion restreinte et utilisateur non referent
+        if ((boolean) optional.get().isDiffusionRestreinte() && !authentificationHelper.hasReferentRole()) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0); // On retourne une page vide
+        }
+
+         return operationTiersMapper.entitiesToDto(operationTiersCustomDao.searchOperationTiers(criteria, pageable),pageable);
 
     }
 
