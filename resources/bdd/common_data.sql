@@ -224,3 +224,13 @@ INSERT INTO tabou_mode_amenagement (libelle, code) VALUES ('Régie directe', 'RE
 INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Extension urbaine', 'EXTENSION');
 INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Renouvellement urbain', 'RENOUVELLEMENT');
 INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Non précisé', 'NON_PRECISE');
+
+
+-- Insertion des types de financements
+
+INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Accession aidée', 'ACC_AIDEE', true);
+INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Accession libre', 'ACC_LIBRE', false);
+INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Accession maitrisée', 'ACC_MAITRISEE', false);
+INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Locatif aidé', 'LOC_AIDE', true);
+INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Locatif régulé privé', 'LOC_REGULE_PRIVE', false);
+INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Locatif régulé HLM', 'LOC_REGULE_HLM', false);
