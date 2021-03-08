@@ -17,12 +17,9 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.constant.*;
-import rm.tabou2.service.dto.Commune;
-import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.storage.tabou.dao.operation.*;
 import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
@@ -30,11 +27,7 @@ import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
 import rm.tabou2.storage.tabou.entity.operation.*;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
-import rm.tabou2.storage.tabou.item.OperationsCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
-
-import java.nio.file.AccessDeniedException;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
@@ -92,7 +85,7 @@ public class OperationTiersServiceTest {
 
 
     @Test
-    public void testSearchTiers() {
+    public void testSearchTiers() throws AppServiceException {
 
 
         DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
@@ -138,8 +131,8 @@ public class OperationTiersServiceTest {
         Page<TiersAmenagement> page = null;
         try {
             page = operationTiersService.searchOperationTiers(criteria, pageable);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (AppServiceException e) {
+            throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
         }
 
 
@@ -150,7 +143,7 @@ public class OperationTiersServiceTest {
     }
 
     @Test
-    public void testSearchTiersDiffusionRestreinte() {
+    public void testSearchTiersDiffusionRestreinte() throws AppServiceException {
 
         DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
         VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);
@@ -183,7 +176,7 @@ public class OperationTiersServiceTest {
             Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(true);
             operationTiersService.associateTiersToOperation(operationEntity.getId(), tiers.getId(), typeTiers.getId());
         }  catch (AppServiceException e) {
-            e.printStackTrace();
+            throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
         } finally {
             Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
         }
@@ -203,8 +196,8 @@ public class OperationTiersServiceTest {
             Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(false);
             Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
             page = operationTiersService.searchOperationTiers(criteria, pageable);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (AppServiceException e) {
+            throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
         }
 
 
