@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 public interface OperationTiersService {
 
@@ -22,10 +23,9 @@ public interface OperationTiersService {
     /**
      * Recherche les tiers des opération à partir de paramètres.
      *
-     * @param operationId identifiant de l'opération
-     * @param libelleType libellé du type de tiers
+     * @param criteria criteria des tiers de l'amenagement
      * @param pageable    paramètres de pagination
      * @return Tiers correspondants à la recherche
      */
-    Page<TiersAmenagement> searchOperationTiers(long operationId, String libelleType, Pageable pageable);
+    Page<TiersAmenagement> searchOperationTiers(TiersAmenagementCriteria criteria, Pageable pageable) throws AppServiceException;
 }
