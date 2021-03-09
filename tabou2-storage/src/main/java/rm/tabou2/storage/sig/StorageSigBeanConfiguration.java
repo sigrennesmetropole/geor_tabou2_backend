@@ -42,8 +42,10 @@ public class StorageSigBeanConfiguration {
     @Value("${spring.sig.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
+    @Value("${spring.sig.datasource.hibernate.dialect}")
+    private String hibernateDialect;
 
-    @Bean
+    @Bean(name = "sigDataSource")
     @ConfigurationProperties(prefix = "spring.sig.datasource")
     public DataSource sigDataSource() {
         return DataSourceBuilder
@@ -51,9 +53,10 @@ public class StorageSigBeanConfiguration {
                 .build();
     }
 
+
     @Bean(name = "sigEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean sigEntityManagerFactory(@Qualifier("entityManagerSigFactoryBuilder") EntityManagerFactoryBuilder builder) {
-        return builder.dataSource(sigDataSource())
+    public LocalContainerEntityManagerFactoryBean sigEntityManagerFactory(@Qualifier("sigDataSource") DataSource dataSource, @Qualifier("entityManagerSigFactoryBuilder") EntityManagerFactoryBuilder builder) {
+        return builder.dataSource(dataSource)
                 .properties(hibernateProperties())
                 .packages("rm.tabou2.storage.sig.entity")
                 .persistenceUnit("sigPU")
@@ -72,7 +75,7 @@ public class StorageSigBeanConfiguration {
 
 
     @Bean(name = "sigEntityManager")
-    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+    public EntityManager entityManager(@Qualifier("sigEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return entityManagerFactory.createEntityManager();
     }
 
@@ -85,6 +88,7 @@ public class StorageSigBeanConfiguration {
         hibernateProperties.put("hibernate.show_sql", hibernateFormatSql);
         hibernateProperties.put("hibernate.format_sql", hibernateShowSql);
         hibernateProperties.put("hibernate.hbm2ddl.auto", hibernateHbm2ddlAuto);
+        hibernateProperties.put("hibernate.dialect", hibernateDialect);
 
         return hibernateProperties;
     }

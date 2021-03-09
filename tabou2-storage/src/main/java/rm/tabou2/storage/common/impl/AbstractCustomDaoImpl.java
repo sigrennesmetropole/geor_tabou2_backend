@@ -24,9 +24,9 @@ public abstract class AbstractCustomDaoImpl {
     protected void predicateStringCriteria(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
         if (criteria != null) {
             if (criteria.indexOf('*') == -1) {
-                predicates.add(builder.equal(root.get(type), criteria));
+                predicates.add(builder.equal(builder.lower(root.get(type)), criteria.toLowerCase()));
             } else {
-                predicates.add(builder.like(root.get(type), criteria.replace("*", "%")));
+                predicates.add(builder.like(builder.lower(root.get(type)), criteria.replace("*", "%").toLowerCase()));
             }
         }
     }
@@ -41,6 +41,12 @@ public abstract class AbstractCustomDaoImpl {
         }
     }
 
+    protected void predicateLongCriteriaForJoin(Long criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Join<?, ?> join) {
+
+        predicates.add(builder.equal(join.get(type), criteria));
+
+    }
+
     protected void predicateDateCriteria(Date dateDebut, Date dateFin, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
         predicateBetweenCriteria(dateDebut, dateFin, type, predicates, builder, root);
@@ -52,6 +58,14 @@ public abstract class AbstractCustomDaoImpl {
             predicates.add(builder.isTrue(root.get(type)));
         } else {
             predicates.add(builder.isFalse(root.get(type)));
+        }
+
+    }
+
+    protected void predicateIntegerCriteria(Integer criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+
+        if (criteria != null) {
+            predicates.add(builder.equal(root.get(type), criteria));
         }
 
     }
@@ -86,6 +100,15 @@ public abstract class AbstractCustomDaoImpl {
 
     }
 
+    protected void predicateLongCriteria(Long criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+
+        if (criteria != null) {
+            predicates.add(builder.equal(root.get(type), criteria));
+        }
+
+    }
+
+
     private <T extends Comparable<? super T>> void predicateBetweenCriteria(T lower, T upper, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
         if (lower != null && upper != null) {
@@ -102,5 +125,6 @@ public abstract class AbstractCustomDaoImpl {
 
         }
     }
+
 
 }
