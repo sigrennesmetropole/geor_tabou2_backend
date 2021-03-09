@@ -1,12 +1,22 @@
 package rm.tabou2.service.tabou.programme;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.EtapeRestricted;
+import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 import java.util.List;
 
 public interface EtapeProgrammeService {
 
-    List<Etape> searchEtapesProgramme(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc);
+    /**
+     * Recherche des d'etapes de programmes
+     * @param etapeCriteria
+     * @param pageable
+     * @return
+     */
+    Page<EtapeRestricted> searchEtapesProgramme(EtapeCriteria etapeCriteria, Pageable pageable);
 
     Etape addEtapeProgramme(Etape etape);
 

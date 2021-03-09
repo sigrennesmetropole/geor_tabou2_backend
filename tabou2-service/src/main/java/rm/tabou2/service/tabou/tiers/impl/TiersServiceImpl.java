@@ -12,7 +12,6 @@ import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.storage.tabou.dao.tiers.TiersCustomDao;
 import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
-import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.item.TiersCriteria;
 
@@ -21,7 +20,6 @@ import java.util.*;
 @Service
 public class TiersServiceImpl implements TiersService {
 
-    public static final String DEFAULT_ORDER_BY = "nom";
 
     @Autowired
     private TiersDao tiersDao;
@@ -93,25 +91,11 @@ public class TiersServiceImpl implements TiersService {
 
     @Override
     public Page<Tiers> searchTiers(TiersCriteria tiersCriteria, Pageable pageable) {
+
         return tiersMapper.entitiesToDto(tiersCustomDao.searchTiers(tiersCriteria, pageable), pageable);
 
     }
 
-    @Override
-    public List<Tiers> getTiersByOperationId(Long operationId) {
-
-        List<TiersEntity> tiers = new ArrayList<>();
-
-        List<OperationTiersEntity> operationTiers = operationTiersService.getTiersByOperationId(operationId);
-
-        for (OperationTiersEntity opTiers : operationTiers) {
-            tiers.add(opTiers.getTiers());
-
-        }
-
-        return tiersMapper.entitiesToDto(tiers);
-
-    }
 
 
 }

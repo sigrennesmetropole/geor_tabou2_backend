@@ -1,14 +1,34 @@
 package rm.tabou2.storage.tabou.entity.programme;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "tabou_etape_programme", schema = "tabou2")
+@Table(name = "tabou_etape_programme")
+@NoArgsConstructor
+@AllArgsConstructor
 public class EtapeProgrammeEntity {
+
+    public EtapeProgrammeEntity(long id, String code, String libelle) {
+        this.id = id;
+        this.libelle = libelle;
+        this.code = code;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +59,6 @@ public class EtapeProgrammeEntity {
     @ManyToMany
     @JoinTable(
             name = "tabou_etape_programme_workflow",
-            schema = "tabou2",
             joinColumns = @JoinColumn(name = "id_etape_programme", referencedColumnName = "id_etape_programme"),
             inverseJoinColumns = @JoinColumn(name = "id_etape_programme_next", referencedColumnName = "id_etape_programme")
     )
