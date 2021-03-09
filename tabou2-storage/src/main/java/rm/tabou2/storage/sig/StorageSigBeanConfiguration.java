@@ -45,7 +45,6 @@ public class StorageSigBeanConfiguration {
     @Value("${spring.sig.datasource.hibernate.dialect}")
     private String hibernateDialect;
 
-
     @Bean(name = "sigDataSource")
     @ConfigurationProperties(prefix = "spring.sig.datasource")
     public DataSource sigDataSource() {
