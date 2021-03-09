@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.operation.OperationTiersCustomDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -21,7 +21,10 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_OPERATION;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_TIERS;
 
 @Repository
@@ -33,14 +36,14 @@ public class OperationTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<OperationTiersEntity> searchOperationTiers(String libelleType, Long operationId, Pageable pageable) {
+    public Page<OperationTiersEntity> searchOperationTiers(TiersAmenagementCriteria criteria, Pageable pageable) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         //Requête pour compter le nombre de résultats total
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
         Root<OperationTiersEntity> countRoot = countQuery.from(OperationTiersEntity.class);
-        buildQuery(libelleType, operationId, builder, countQuery, countRoot);
+        buildQuery(criteria, builder, countQuery, countRoot);
         countQuery.select(builder.countDistinct(countRoot));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
@@ -52,9 +55,7 @@ public class OperationTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
         //Requête de recherche
         CriteriaQuery<OperationTiersEntity> searchQuery = builder.createQuery(OperationTiersEntity.class);
         Root<OperationTiersEntity> searchRoot = searchQuery.from(OperationTiersEntity.class);
-        buildQuery(libelleType, operationId, builder, searchQuery, searchRoot);
-
-        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
+        buildQuery(criteria, builder, searchQuery, searchRoot);
 
         TypedQuery<OperationTiersEntity> typedQuery = entityManager.createQuery(searchQuery);
         List<OperationTiersEntity> tiersEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
@@ -64,7 +65,7 @@ public class OperationTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
     }
 
 
-    private void buildQuery(String libelleType, Long operationId, CriteriaBuilder builder,
+    private void buildQuery(TiersAmenagementCriteria criteria, CriteriaBuilder builder,
                             CriteriaQuery<?> criteriaQuery, Root<OperationTiersEntity> root
     ) {
 
@@ -72,12 +73,12 @@ public class OperationTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
         List<Predicate> predicates = new ArrayList<>();
 
         //Libelle du type tiers associé
-        if (libelleType != null && !libelleType.isEmpty()) {
+        if (criteria.getLibelle() != null && !criteria.getLibelle().isEmpty()) {
             Join<OperationTiersEntity, TypeTiersEntity> typeTiersJoin = root.join(FIELD_TYPE_TIERS);
-            predicateStringCriteriaForJoin(libelleType, FIELD_LIBELLE, predicates, builder, typeTiersJoin);
+            predicateStringCriteriaForJoin(criteria.getLibelle(), FIELD_LIBELLE, predicates, builder, typeTiersJoin);
         }
 
-        predicateLongCriteria(operationId, "operation", predicates, builder, root);
+        predicateLongCriteria(criteria.getOperationId(), "operation", predicates, builder, root);
 
 
         //Définition de la clause Where
@@ -85,7 +86,22 @@ public class OperationTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
             criteriaQuery.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
         }
 
-
+        // Order by
+        if (criteria.getOrderBy().equals(FIELD_LIBELLE)) {
+            if (criteria.isAsc()) {
+                criteriaQuery.orderBy(builder.asc(root.get(FIELD_TYPE_TIERS).get(FIELD_LIBELLE)));
+            } else {
+                criteriaQuery.orderBy(builder.desc(root.get(FIELD_TYPE_TIERS).get(FIELD_LIBELLE)));
+            }
+        } else if (criteria.getOrderBy().equals(FIELD_NOM)) {
+            if (criteria.isAsc()) {
+                criteriaQuery.orderBy(builder.asc(root.get(FIELD_OPERATION).get(FIELD_NOM)));
+            } else {
+                criteriaQuery.orderBy(builder.desc(root.get(FIELD_OPERATION).get(FIELD_NOM)));
+            }
+        } else {
+            criteriaQuery.orderBy(builder.asc(root.get(FIELD_ID)));
+        }
     }
 
 }
