@@ -43,7 +43,7 @@ public class StorageTabouBeanConfiguration {
     @Value("${spring.tabou2.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
-    @Bean(name = "tabou2DataSource")
+    @Bean(name = "tabouDataSource")
     @Primary
     @ConfigurationProperties(prefix = "spring.tabou2.datasource")
     public DataSource tabouDataSource() {
