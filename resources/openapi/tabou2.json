@@ -199,7 +199,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -496,7 +496,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -782,7 +782,7 @@
           {
             "in": "query",
             "name": "start",
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -848,7 +848,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -1145,7 +1145,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -1625,7 +1625,7 @@
           {
             "in": "query",
             "name": "start",
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -1690,7 +1690,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -1790,7 +1790,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -1888,7 +1888,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -1972,7 +1972,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -2077,7 +2077,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -2256,7 +2256,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -2435,7 +2435,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -2623,7 +2623,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -2795,7 +2795,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -2852,7 +2852,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -2909,7 +2909,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -2974,7 +2974,7 @@
             "name": "start",
             "in": "query",
             "required": false,
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "type": "integer",
             "format": "int32"
           },
@@ -3163,7 +3163,7 @@
           {
             "in": "query",
             "name": "start",
-            "description": "Index de début",
+            "description": "Index de début - démarre à 0",
             "required": false,
             "type": "integer",
             "format": "int32"
