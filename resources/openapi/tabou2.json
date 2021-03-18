@@ -1674,10 +1674,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "code_insee",
+            "name": "codeInsee",
             "description": "Recherche par code insee",
             "required": false,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "in": "query",

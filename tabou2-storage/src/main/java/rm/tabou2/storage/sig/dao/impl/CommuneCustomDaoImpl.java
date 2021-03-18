@@ -35,7 +35,7 @@ public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements Commu
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<CommuneEntity> searchCommunes(String nom, String codeInsee, Pageable pageable) {
+    public Page<CommuneEntity> searchCommunes(String nom, Integer codeInsee, Pageable pageable) {
 
         CriteriaBuilder builder = sigEntityManager.getCriteriaBuilder();
 
@@ -63,7 +63,7 @@ public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements Commu
         return new PageImpl<>(communeEntities, pageable, totalCount.intValue());
     }
 
-    private void buildQuery(String nom, String codeInsee, CriteriaBuilder builder,
+    private void buildQuery(String nom, Integer codeInsee, CriteriaBuilder builder,
                             CriteriaQuery<?> criteriaQuery, Root<CommuneEntity> root) {
 
         List<Predicate> predicates = new ArrayList<>();
@@ -72,7 +72,7 @@ public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements Commu
         predicateStringCriteria(nom, FIELD_NOM, predicates, builder, root);
 
         //Code insee
-        predicateStringCriteria(codeInsee, FIELD_CODE_INSEE, predicates, builder, root);
+        predicateIntegerCriteria(codeInsee, FIELD_CODE_INSEE, predicates, builder, root);
 
         //Commune agglo : paramètre fixe
         predicateIntegerCriteria(1, FIELD_COMMUNE_AGGLO, predicates, builder, root);
