@@ -41,7 +41,7 @@ public class StorageDdcBeanConfiguration {
     @Value("${spring.ddc.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
-    @Bean
+    @Bean(name = "ddcDataSource")
     @ConfigurationProperties(prefix = "spring.ddc.datasource")
     public DataSource ddcDataSource() {
         return DataSourceBuilder
@@ -50,8 +50,8 @@ public class StorageDdcBeanConfiguration {
     }
 
     @Bean(name = "ddcEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean ddcEntityManagerFactory(@Qualifier("entityManagerDdcFactoryBuilder") EntityManagerFactoryBuilder builder) {
-        return builder.dataSource(ddcDataSource())
+    public LocalContainerEntityManagerFactoryBean ddcEntityManagerFactory(@Qualifier("ddcDataSource") DataSource dataSource, @Qualifier("entityManagerDdcFactoryBuilder") EntityManagerFactoryBuilder builder) {
+        return builder.dataSource(dataSource)
                 .properties(hibernateProperties())
                 .packages("rm.tabou2.storage.ddc.entity")
                 .persistenceUnit("ddcPU")
@@ -59,7 +59,7 @@ public class StorageDdcBeanConfiguration {
     }
 
 
-    @Bean
+    @Bean(name = "entityManagerDdcFactoryBuilder")
     public EntityManagerFactoryBuilder entityManagerDdcFactoryBuilder() {
         return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
     }

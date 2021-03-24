@@ -15,6 +15,7 @@ import rm.tabou2.storage.sig.dao.SecteurSamCustomDao;
 import rm.tabou2.storage.sig.entity.SecteurSamEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -29,8 +30,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM_SE
 public class SecteurSamCustomDaoImpl extends AbstractCustomDaoImpl implements SecteurSamCustomDao {
 
 
-    @Qualifier("sigEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;
 
     @Override

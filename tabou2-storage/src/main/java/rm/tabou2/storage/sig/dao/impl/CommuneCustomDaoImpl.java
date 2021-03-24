@@ -1,8 +1,6 @@
 package rm.tabou2.storage.sig.dao.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +13,7 @@ import rm.tabou2.storage.sig.dao.CommuneCustomDao;
 import rm.tabou2.storage.sig.entity.CommuneEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,13 +22,15 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CODE_INSEE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_COMMUNE_AGGLO;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
 
 @Repository
 public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements CommuneCustomDao {
 
-    @Qualifier("sigEntityManager")
-    @Autowired
+
+    @PersistenceContext(unitName = "sigPU")
     private EntityManager sigEntityManager;
 
 
