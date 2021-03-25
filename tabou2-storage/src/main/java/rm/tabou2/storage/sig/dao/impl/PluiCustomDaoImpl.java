@@ -51,7 +51,7 @@ public class PluiCustomDaoImpl extends AbstractCustomDaoImpl implements PluiCust
         }
 
         //Requête de recherche
-        CriteriaQuery<PluiEntity> searchQuery = builder.createQuery(PluiEntity.class);
+        CriteriaQuery<PluiEntity> searchQuery = builder.createQuery(PluiEntity.class).distinct(true);
         Root<PluiEntity> searchRoot = searchQuery.from(PluiEntity.class);
         buildQuery(libelle, builder, searchQuery, searchRoot);
 

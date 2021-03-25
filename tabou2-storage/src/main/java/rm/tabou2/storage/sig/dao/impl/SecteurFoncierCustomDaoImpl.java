@@ -51,7 +51,7 @@ public class SecteurFoncierCustomDaoImpl extends AbstractCustomDaoImpl implement
         }
 
         //Requête de recherche
-        CriteriaQuery<SecteurFoncierEntity> searchQuery = builder.createQuery(SecteurFoncierEntity.class);
+        CriteriaQuery<SecteurFoncierEntity> searchQuery = builder.createQuery(SecteurFoncierEntity.class).distinct(true);
         Root<SecteurFoncierEntity> searchRoot = searchQuery.from(SecteurFoncierEntity.class);
         buildQuery(negociateur, builder, searchQuery, searchRoot);
 
