@@ -14,6 +14,7 @@ import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -30,8 +31,7 @@ public class TypeEvenementCustomDaoImpl extends AbstractCustomDaoImpl implements
     public static final String FIELD_SYSTEME = "systeme";
     public static final String FIELD_DATE_INACTIF = "dateInactif";
 
-    @Qualifier("tabouEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
 
     @Override

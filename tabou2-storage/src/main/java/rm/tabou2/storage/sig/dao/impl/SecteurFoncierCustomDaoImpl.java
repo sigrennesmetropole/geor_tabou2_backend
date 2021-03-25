@@ -15,6 +15,7 @@ import rm.tabou2.storage.sig.dao.SecteurFoncierCustomDao;
 import rm.tabou2.storage.sig.entity.SecteurFoncierEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -28,8 +29,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NEGOCI
 @Repository
 public class SecteurFoncierCustomDaoImpl extends AbstractCustomDaoImpl implements SecteurFoncierCustomDao {
 
-    @Qualifier("sigEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;
 
     @Override

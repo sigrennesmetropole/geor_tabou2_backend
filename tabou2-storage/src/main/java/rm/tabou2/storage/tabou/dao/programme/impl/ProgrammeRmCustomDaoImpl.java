@@ -11,6 +11,7 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeRmCustomDao;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +22,7 @@ import java.util.List;
 @Repository
 public class ProgrammeRmCustomDaoImpl implements ProgrammeRmCustomDao {
 
-    @Qualifier("sigEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;
 
 

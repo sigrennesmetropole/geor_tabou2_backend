@@ -16,6 +16,7 @@ import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -29,8 +30,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 @Repository
 public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl implements EtapeOperationCustomDao {
 
-    @Qualifier("tabouEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
 
     @Override
