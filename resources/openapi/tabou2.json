@@ -643,6 +643,9 @@
                 "$ref": "#/definitions/Evenement"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       },
@@ -1459,6 +1462,9 @@
                 "$ref": "#/definitions/Evenement"
               }
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       },
@@ -1595,6 +1601,9 @@
             "schema": {
               "type": "file"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1751,6 +1760,9 @@
             "schema": {
               "$ref": "#/definitions/Commune"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1851,6 +1863,9 @@
             "schema": {
               "$ref": "#/definitions/Quartier"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -1949,6 +1964,9 @@
             "schema": {
               "$ref": "#/definitions/Iris"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -2033,6 +2051,9 @@
             "schema": {
               "$ref": "#/definitions/PluiZonage"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
