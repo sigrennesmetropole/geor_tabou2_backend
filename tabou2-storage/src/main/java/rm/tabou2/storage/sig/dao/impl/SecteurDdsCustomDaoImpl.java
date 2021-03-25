@@ -52,7 +52,7 @@ public class SecteurDdsCustomDaoImpl extends AbstractCustomDaoImpl implements Se
         }
 
         //Requête de recherche
-        CriteriaQuery<SecteurDdsEntity> searchQuery = builder.createQuery(SecteurDdsEntity.class);
+        CriteriaQuery<SecteurDdsEntity> searchQuery = builder.createQuery(SecteurDdsEntity.class).distinct(true);
         Root<SecteurDdsEntity> searchRoot = searchQuery.from(SecteurDdsEntity.class);
         buildQuery(secteur, builder, searchQuery, searchRoot);
 
