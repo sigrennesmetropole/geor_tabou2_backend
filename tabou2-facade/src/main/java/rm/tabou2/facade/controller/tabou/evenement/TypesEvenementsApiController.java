@@ -5,16 +5,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.TypesEvenementsApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TypeEvenement;
 import rm.tabou2.service.tabou.evenement.TypeEvenementService;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 import javax.validation.Valid;
-import java.util.Date;
 
+@Controller
 public class TypesEvenementsApiController implements TypesEvenementsApi {
 
     @Autowired
@@ -38,11 +40,12 @@ public class TypesEvenementsApiController implements TypesEvenementsApi {
 
     @Override
     public ResponseEntity<PageResult> searchTypesEvenements(@Valid String libelle, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
         TypeEvenementCriteria typeEvenementCriteria = new TypeEvenementCriteria();
         typeEvenementCriteria.setLibelle(libelle);
         typeEvenementCriteria.setInactif(inactif);
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeEvenement.class);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeEvenementEntity.class);
 
         Page<TypeEvenement> page = typeEvenementService.searchTypeEvenement(typeEvenementCriteria, pageable);
 
