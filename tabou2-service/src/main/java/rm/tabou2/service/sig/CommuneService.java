@@ -23,6 +23,6 @@ public interface CommuneService {
      * @param pageable  paramètre lié à la pagination
      * @return liste des communes correspondants à la recherche
      */
-    Page<Commune> searchCommunes(String nom, String codeInsee, Pageable pageable);
+    Page<Commune> searchCommunes(String nom, Integer codeInsee, Pageable pageable);
 
 }

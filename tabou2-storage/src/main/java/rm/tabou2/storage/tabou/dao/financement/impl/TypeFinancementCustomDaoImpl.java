@@ -15,6 +15,7 @@ import rm.tabou2.storage.tabou.item.TypeFinancementCriteria;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -27,8 +28,7 @@ import java.util.List;
 @Repository
 public class TypeFinancementCustomDaoImpl extends AbstractCustomDaoImpl implements TypeFinancementCustomDao {
 
-    @Qualifier("tabouEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
 
     @Override

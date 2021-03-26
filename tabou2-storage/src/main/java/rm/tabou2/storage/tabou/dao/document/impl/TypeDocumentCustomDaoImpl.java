@@ -15,6 +15,7 @@ import rm.tabou2.storage.tabou.entity.document.TypeDocumentEntity;
 import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -32,8 +33,7 @@ public class TypeDocumentCustomDaoImpl extends AbstractCustomDaoImpl implements 
     public static final String FIELD_DATE_INACTIF = "dateInactif";
 
 
-    @Qualifier("tabouEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
 
     @Override

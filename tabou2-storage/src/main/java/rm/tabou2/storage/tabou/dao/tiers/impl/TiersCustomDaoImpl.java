@@ -16,6 +16,7 @@ import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.item.TiersCriteria;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -33,8 +34,7 @@ public class TiersCustomDaoImpl extends AbstractCustomDaoImpl implements TiersCu
     public static final String FIELD_EST_PRIVE = "estPrive";
     public static final String FIELD_INACTIF = "dateInactif";
 
-    @Qualifier("tabouEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
 
     @Override
