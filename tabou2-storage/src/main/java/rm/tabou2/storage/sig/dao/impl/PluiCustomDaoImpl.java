@@ -15,6 +15,7 @@ import rm.tabou2.storage.sig.dao.PluiCustomDao;
 import rm.tabou2.storage.sig.entity.PluiEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -28,8 +29,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELL
 @Repository
 public class PluiCustomDaoImpl extends AbstractCustomDaoImpl implements PluiCustomDao {
 
-    @Qualifier("sigEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;
 
     @Override
@@ -51,7 +51,7 @@ public class PluiCustomDaoImpl extends AbstractCustomDaoImpl implements PluiCust
         }
 
         //Requête de recherche
-        CriteriaQuery<PluiEntity> searchQuery = builder.createQuery(PluiEntity.class);
+        CriteriaQuery<PluiEntity> searchQuery = builder.createQuery(PluiEntity.class).distinct(true);
         Root<PluiEntity> searchRoot = searchQuery.from(PluiEntity.class);
         buildQuery(libelle, builder, searchQuery, searchRoot);
 

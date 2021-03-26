@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.mapper.tabou.operation.OperationTiersMapper;
 import rm.tabou2.service.tabou.operation.OperationService;
@@ -101,6 +102,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
 
     @Override
+    @Transactional
     public Page<TiersAmenagement> searchOperationTiers(TiersAmenagementCriteria criteria, Pageable pageable) throws AppServiceException {
 
         Optional<OperationEntity> optional = operationDao.findById(criteria.getOperationId());

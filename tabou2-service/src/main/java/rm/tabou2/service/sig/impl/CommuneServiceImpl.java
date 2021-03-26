@@ -37,7 +37,7 @@ public class CommuneServiceImpl implements CommuneService {
 
 
     @Override
-    public Page<Commune> searchCommunes(String nom, String codeInsee, Pageable pageable) {
+    public Page<Commune> searchCommunes(String nom, Integer codeInsee, Pageable pageable) {
 
         return communeMapper.entitiesToDto(communeCustomDao.searchCommunes(nom, codeInsee, pageable), pageable);
 
