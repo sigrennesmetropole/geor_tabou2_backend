@@ -1,8 +1,6 @@
 package rm.tabou2.storage.sig.dao.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +13,7 @@ import rm.tabou2.storage.sig.dao.CommuneCustomDao;
 import rm.tabou2.storage.sig.entity.CommuneEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,19 +22,21 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CODE_INSEE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_COMMUNE_AGGLO;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
 
 @Repository
 public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements CommuneCustomDao {
 
-    @Qualifier("sigEntityManager")
-    @Autowired
+
+    @PersistenceContext(unitName = "sigPU")
     private EntityManager sigEntityManager;
 
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<CommuneEntity> searchCommunes(String nom, String codeInsee, Pageable pageable) {
+    public Page<CommuneEntity> searchCommunes(String nom, Integer codeInsee, Pageable pageable) {
 
         CriteriaBuilder builder = sigEntityManager.getCriteriaBuilder();
 
@@ -63,7 +64,7 @@ public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements Commu
         return new PageImpl<>(communeEntities, pageable, totalCount.intValue());
     }
 
-    private void buildQuery(String nom, String codeInsee, CriteriaBuilder builder,
+    private void buildQuery(String nom, Integer codeInsee, CriteriaBuilder builder,
                             CriteriaQuery<?> criteriaQuery, Root<CommuneEntity> root) {
 
         List<Predicate> predicates = new ArrayList<>();
@@ -72,7 +73,7 @@ public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements Commu
         predicateStringCriteria(nom, FIELD_NOM, predicates, builder, root);
 
         //Code insee
-        predicateStringCriteria(codeInsee, FIELD_CODE_INSEE, predicates, builder, root);
+        predicateIntegerCriteria(codeInsee, FIELD_CODE_INSEE, predicates, builder, root);
 
         //Commune agglo : paramètre fixe
         predicateIntegerCriteria(1, FIELD_COMMUNE_AGGLO, predicates, builder, root);

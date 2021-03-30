@@ -14,6 +14,6 @@ public interface CommuneCustomDao {
      * @param pageable  paramètre lié à la pagination
      * @return Liste des communes correspondant à la recherche
      */
-    Page<CommuneEntity> searchCommunes(String nom, String codeInsee, Pageable pageable);
+    Page<CommuneEntity> searchCommunes(String nom, Integer codeInsee, Pageable pageable);
 
 }

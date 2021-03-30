@@ -16,6 +16,7 @@ import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -27,8 +28,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 public class ProgrammeTiersCustomDaoImpl extends AbstractCustomDaoImpl implements ProgrammeTiersCustomDao {
 
 
-    @Qualifier("tabouEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
 
     @Override

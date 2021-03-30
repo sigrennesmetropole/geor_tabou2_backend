@@ -16,6 +16,7 @@ import rm.tabou2.storage.sig.entity.IrisEntity;
 import rm.tabou2.storage.sig.item.IrisCriteria;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -29,8 +30,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 @Repository
 public class IrisCustomDaoImpl extends AbstractCustomDaoImpl implements IrisCustomDao {
 
-    @Qualifier("sigEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;
 
     @Override

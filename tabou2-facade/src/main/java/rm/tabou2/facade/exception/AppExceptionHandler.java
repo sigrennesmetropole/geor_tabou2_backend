@@ -14,6 +14,7 @@ import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
 
 import javax.validation.ConstraintViolationException;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class AppExceptionHandler {
@@ -57,6 +58,14 @@ public class AppExceptionHandler {
     @ExceptionHandler(AppServiceNotFoundException.class)
     protected ResponseEntity<Object> handleNotFoundException(final Exception ex, final WebRequest request) {
         LOGGER.error("Ressource non trouvé");
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    }
+
+
+    @ExceptionHandler(NoSuchElementException.class)
+    protected ResponseEntity<Object> handleNoSuchElementException(final Exception ex, final WebRequest request) {
+        LOGGER.error("L'élement demandé n'existe pas", ex);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }

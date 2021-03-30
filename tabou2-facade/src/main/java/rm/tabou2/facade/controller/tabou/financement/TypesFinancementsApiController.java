@@ -11,6 +11,7 @@ import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TypeFinancement;
 import rm.tabou2.service.tabou.financement.TypeFinancementService;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.financement.TypeFinancementEntity;
 import rm.tabou2.storage.tabou.item.TypeFinancementCriteria;
 
 import javax.validation.Valid;
@@ -28,7 +29,7 @@ public class TypesFinancementsApiController implements TypesFinancementsApi {
 
         typeFinancementCriteria.setLibelle(libelle);
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeFinancement.class);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeFinancementEntity.class);
 
         Page<TypeFinancement> page = typeFinancementService.searchTypeFinancement(typeFinancementCriteria, pageable);
 
