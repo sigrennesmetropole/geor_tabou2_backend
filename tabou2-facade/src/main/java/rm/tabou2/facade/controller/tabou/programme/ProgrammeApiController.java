@@ -12,6 +12,7 @@ import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.ddc.PermisConstruireService;
 import rm.tabou2.service.dto.Agapeo;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
+import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.EtapeRestricted;
 import rm.tabou2.service.dto.Evenement;
@@ -23,6 +24,7 @@ import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.EtapeCriteria;
@@ -141,6 +143,17 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
+    public ResponseEntity<PageResult> getAvailableEmprises(@Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeRmEntity.class);
+
+        Page<Emprise> page = programmeService.getEmprisesAvailables(pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+
+    }
+
+    @Override
     public ResponseEntity<List<PermisConstruire>> getPermisByProgrammeId(Long programmeId) throws Exception {
         return new ResponseEntity<>(permisConstruireService.getPermisConstruiresByProgrammeId(programmeId), HttpStatus.OK);
     }
@@ -157,7 +170,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
     @Override
     public ResponseEntity<List<Evenement>> getEvenementsByProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(programmeService.getEvenementsByProgrammeId( programmeId), HttpStatus.OK);
+        return new ResponseEntity<>(programmeService.getEvenementsByProgrammeId(programmeId), HttpStatus.OK);
     }
 
     @Override
@@ -176,8 +189,8 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<Programme> updateEtapeOfProgrammeId (Long programmeId, @Valid Long etapeId) throws Exception {
-        return new ResponseEntity<>(programmeService.updateEtapeOfProgrammeId (programmeId, etapeId), HttpStatus.OK);
+    public ResponseEntity<Programme> updateEtapeOfProgrammeId(Long programmeId, @Valid Long etapeId) throws Exception {
+        return new ResponseEntity<>(programmeService.updateEtapeOfProgrammeId(programmeId, etapeId), HttpStatus.OK);
     }
 
     @Override

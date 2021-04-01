@@ -18,6 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
@@ -27,6 +28,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
+import rm.tabou2.service.mapper.sig.ProgrammeRmMapper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeLightMapper;
@@ -38,6 +40,8 @@ import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
+import rm.tabou2.storage.sig.dao.ProgrammeRmCustomDao;
+import rm.tabou2.storage.sig.dao.ProgrammeRmDao;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
@@ -48,7 +52,6 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
-import rm.tabou2.storage.tabou.dao.programme.impl.ProgrammeRmCustomDaoImpl;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
@@ -86,7 +89,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeTiersCustomDao programmeTiersCustomDao;
 
     @Autowired
-    private ProgrammeRmCustomDaoImpl programmeRmCustomDao;
+    private ProgrammeRmCustomDao programmeRmCustomDao;
+
+    @Autowired
+    private ProgrammeRmDao programmeRmDao;
 
     @Autowired
     private EtapeProgrammeDao etapeProgrammeDao;
@@ -120,6 +126,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private EtapeProgrammeMapper etapeProgrammeMapper;
+
+    @Autowired
+    private ProgrammeRmMapper programmeRmMapper;
 
     @Autowired
     private AuthentificationHelper authentificationHelper;
@@ -441,6 +450,19 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         documentContent.setFileName("fiche_suivi_" + programmeEntity.getCode() + "_" + System.nanoTime());
 
         return documentContent;
+    }
+
+    @Override
+    public Page<Emprise> getEmprisesAvailables(Pageable pageable) {
+
+        if (!authentificationHelper.hasAdministratorRole() && !authentificationHelper.hasContributeurRole()) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification des programmes");
+        }
+
+        Page<ProgrammeRmEntity> programmeRmEntities = programmeRmCustomDao.searchEmprisesNonSuivies(pageable);
+
+        return programmeRmMapper.entitiesToDto(programmeRmEntities, pageable);
+
     }
 
     private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
