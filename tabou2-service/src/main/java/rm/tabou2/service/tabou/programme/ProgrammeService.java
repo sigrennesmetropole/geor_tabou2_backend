@@ -3,6 +3,7 @@ package rm.tabou2.service.tabou.programme;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.dto.ProgrammeLight;
@@ -107,4 +108,12 @@ public interface ProgrammeService {
      * @throws AppServiceException erreur lors de la génératino de la fiche suivi
      */
     DocumentContent generateFicheSuivi(Long programmeId) throws AppServiceException;
+
+    /**
+     * Retourne la liste des emprises des programmes non suivies.
+     *
+     * @param pageable paramètres de la pagination
+     * @return Listes des programmes sans suivi d'emprise
+     */
+    Page<Emprise> getEmprisesAvailables(Pageable pageable);
 }
