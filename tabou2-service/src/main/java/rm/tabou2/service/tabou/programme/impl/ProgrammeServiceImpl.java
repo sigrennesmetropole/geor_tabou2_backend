@@ -61,6 +61,7 @@ import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.item.AgapeoSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import java.io.File;
 import java.io.IOException;
@@ -282,6 +283,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
 
+        TiersAmenagementCriteria tiersAmenagementCriteria = new TiersAmenagementCriteria();
+        tiersAmenagementCriteria.setProgrammeId(programmeCriteria.getProgrammeId());
+        tiersAmenagementCriteria.setLibelle("MAITRE_OEUVRE");
+
         OperationEntity operation = operationDao.findOneById(programmeCriteria.getOperationId());
 
         Page<ProgrammeLight> results = null;
@@ -301,7 +306,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
                 ProgrammeEntity programme = programmeDao.findOneById(p.getIdTabou().longValue());
 
                 //On cherche les maitres d'oeuvres de chaque programme
-                Page<ProgrammeTiersEntity> programmeTiers = programmeTiersCustomDao.searchProgrammesTiers(null, "MAITRE_OEUVRE", programme.getId(), PaginationUtils.buildPageable(0, null, null, true, ProgrammeTiersEntity.class));
+                Page<ProgrammeTiersEntity> programmeTiers = programmeTiersCustomDao.searchProgrammesTiers(tiersAmenagementCriteria, PaginationUtils.buildPageable(0, null, null, true, ProgrammeTiersEntity.class));
 
                 //On construit la chaine de caractère avec tous les noms des MA
                 String nomMaitresOeuvre = programmeTiers.stream()
