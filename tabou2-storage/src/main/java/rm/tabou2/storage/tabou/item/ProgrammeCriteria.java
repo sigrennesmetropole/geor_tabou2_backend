@@ -32,5 +32,5 @@ public class ProgrammeCriteria {
     private Date docDateFin;
     private Date datDateDebut;
     private Date datDateFin;
-    private boolean logementsAides;
+    private Boolean logementsAides;
 }

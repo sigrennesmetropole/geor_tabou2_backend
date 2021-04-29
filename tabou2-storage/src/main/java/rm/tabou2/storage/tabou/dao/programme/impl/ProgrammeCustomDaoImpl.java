@@ -1,8 +1,6 @@
 package rm.tabou2.storage.tabou.dao.programme.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -175,7 +173,9 @@ public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements Pro
         predicateDateCriteria(programmeCriteria.getDatDateDebut(), programmeCriteria.getDatDateFin(), FIELD_DAT_DATE_PREVU, predicates, builder, root);
 
         //logementsAidés
-        predicateBooleanOrGreaterThanIntegerCriteria(programmeCriteria.isLogementsAides(), 0, List.of(FIELD_LOGEMENTS_LOCAT_AIDE_PREVU, FIELD_LOGEMENTS_ACCESS_AIDE_PREVU), predicates, builder, root);
+        if (programmeCriteria.getLogementsAides() != null) {
+            predicateBooleanOrGreaterThanIntegerCriteria(programmeCriteria.getLogementsAides(), 0, List.of(FIELD_LOGEMENTS_LOCAT_AIDE_PREVU, FIELD_LOGEMENTS_ACCESS_AIDE_PREVU), predicates, builder, root);
+        }
 
         if (CollectionUtils.isNotEmpty(predicates)) {
             criteriaQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
