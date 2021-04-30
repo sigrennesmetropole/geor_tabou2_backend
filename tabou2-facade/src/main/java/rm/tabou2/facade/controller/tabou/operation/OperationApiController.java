@@ -72,7 +72,9 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<Void> deleteTiersFromOperation(Long operationId, Long associationTiersId) throws Exception {
-        return null;
+        operationTiersService.deleteTiersByOperationId(operationId, associationTiersId);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
     @Override
@@ -84,7 +86,7 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<AssociationTiersTypeTiers> updateTiersByOperationId(Long operationId, Long associationTiersId, @Valid TiersTypeTiers associationTiers) throws Exception {
-        return null;
+        return new ResponseEntity<>(operationTiersService.updateTiersAssociation(operationId, associationTiersId, associationTiers), HttpStatus.OK);
     }
 
     @Override

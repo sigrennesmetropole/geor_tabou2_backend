@@ -3,6 +3,7 @@ package rm.tabou2.service.tabou.tiers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.TypeTiers;
+import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 public interface TypeTiersService {
 
@@ -21,6 +22,14 @@ public interface TypeTiersService {
      * @return nouveau type tiers
      */
     TypeTiers createTypeTiers(TypeTiers typeTiers);
+
+    /**
+     * Récupération de l'entité type tiers.
+     *
+     * @param typeTiersId identifiant du type de tiers
+     * @return typeTiers
+     */
+    TypeTiersEntity getTypeTiersEntityById(long typeTiersId);
 
     /**
      * Modification d'un type tiers.

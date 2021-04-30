@@ -67,6 +67,17 @@ public class TiersServiceImpl implements TiersService {
     }
 
     @Override
+    public TiersEntity getTiersEntityById(Long tiersId) {
+        Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersId);
+
+        if (tiersEntityOpt.isEmpty()) {
+            throw new NoSuchElementException("Le tiers id=" + tiersId + " n'existe pas");
+        }
+
+        return tiersEntityOpt.get();
+    }
+
+    @Override
     public Tiers inactivateTiers(long tiersId) throws AppServiceException {
 
         Optional<TiersEntity> tiersOpt = tiersDao.findById(tiersId);

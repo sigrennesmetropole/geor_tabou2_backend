@@ -4,14 +4,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.item.TiersCriteria;
 
 public interface TiersService {
+
     Tiers getTiersById(Long tiersId);
 
     Tiers createTiers(Tiers tiers);
 
     Tiers updateTiers(Tiers tiers);
+
+    /**
+     * Récupération de l'entité Tiers.
+     *
+     * @param tiersId identifiant du tiers
+     * @return tiers
+     */
+    TiersEntity getTiersEntityById(Long tiersId);
 
     Tiers inactivateTiers(long tiersId) throws AppServiceException;
 
