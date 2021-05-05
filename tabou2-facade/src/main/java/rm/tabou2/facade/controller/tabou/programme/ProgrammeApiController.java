@@ -11,7 +11,6 @@ import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.tabou.ddc.PermisConstruireService;
 import rm.tabou2.service.dto.Agapeo;
-import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.EtapeRestricted;
@@ -19,16 +18,23 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
+import rm.tabou2.service.tabou.evenement.EvenementProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.ddc.entity.PermisConstruireEntity;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
+import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
+import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.EtapeCriteria;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -46,6 +52,9 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
     @Autowired
     private EtapeProgrammeService etapeProgrammeService;
+
+    @Autowired
+    private EvenementProgrammeService evenementProgrammeService;
 
     @Autowired
     private PermisConstruireService permisConstruireService;
@@ -138,8 +147,13 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<List<Agapeo>> getAgapeoByProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(agapeoService.getApapeosByProgrammeId(programmeId), HttpStatus.OK);
+    public ResponseEntity<PageResult> getAgapeoByProgrammeId(Long programmeId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, AgapeoEntity.class);
+
+        Page<Agapeo> page = agapeoService.getApapeosByProgrammeId(programmeId, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }
 
     @Override
@@ -154,13 +168,31 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<List<PermisConstruire>> getPermisByProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(permisConstruireService.getPermisConstruiresByProgrammeId(programmeId), HttpStatus.OK);
+    public ResponseEntity<PageResult> getPermisByProgrammeId(Long programmeId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, PermisConstruireEntity.class);
+
+        Page<PermisConstruire> page = permisConstruireService.getPermisConstruiresByProgrammeId(programmeId, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+
     }
 
     @Override
-    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByProgrammeId(Long programmeId) throws Exception {
-        return null;
+    public ResponseEntity<PageResult> searchTiersByProgrammeId(Long programmeId, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
+        criteria.setAsc(asc);
+        criteria.setOrderBy(orderBy);
+        criteria.setLibelle(libelle);
+        criteria.setProgrammeId(programmeId);
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, criteria.getOrderBy(), criteria.isAsc(), OperationTiersEntity.class);
+
+        Page<TiersAmenagement> page = programmeTiersService.searchProgrammeTiers(criteria, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+
     }
 
     @Override
@@ -169,8 +201,13 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<List<Evenement>> getEvenementsByProgrammeId(Long programmeId) throws Exception {
-        return new ResponseEntity<>(programmeService.getEvenementsByProgrammeId(programmeId), HttpStatus.OK);
+    public ResponseEntity<PageResult> getEvenementsByProgrammeId(Long programmeId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EvenementProgrammeEntity.class);
+
+        Page<Evenement> page = evenementProgrammeService.searchEvenementsProgramme(programmeId, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }
 
     @Override

@@ -1,16 +1,17 @@
 package rm.tabou2.service.tabou.agaepo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Agapeo;
-
-import java.util.List;
 
 public interface AgapeoService {
 
     /**
-     * liste des données agapeo d'un programme
+     * Liste des données agapeo d'un programme.
+     *
      * @param programmeId id du programme
+     * @param pageable    paramètres de pagination
      * @return List de Agapeo
      */
-    List<Agapeo> getApapeosByProgrammeId(long programmeId);
-
+    Page<Agapeo> getApapeosByProgrammeId(long programmeId, Pageable pageable);
 }

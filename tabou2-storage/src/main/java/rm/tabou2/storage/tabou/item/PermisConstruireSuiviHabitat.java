@@ -13,6 +13,10 @@ public class PermisConstruireSuiviHabitat {
 
     private Date datDate;
 
+    public PermisConstruireSuiviHabitat() {
+
+    }
+
     public PermisConstruireSuiviHabitat(Date adsDate, Date docDate, Date datDate) {
         this.adsDate = adsDate;
         this.docDate = docDate;

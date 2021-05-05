@@ -1,14 +1,14 @@
 package rm.tabou2.service.tabou.operation.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import rm.tabou2.service.tabou.operation.NatureService;
 import rm.tabou2.service.dto.Nature;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
+import rm.tabou2.service.tabou.operation.NatureService;
+import rm.tabou2.storage.tabou.dao.operation.NatureCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.NatureDao;
-import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
-
-import java.util.List;
 
 @Service
 public class NatureServiceImpl implements NatureService {
@@ -17,20 +17,15 @@ public class NatureServiceImpl implements NatureService {
     private NatureDao natureDao;
 
     @Autowired
+    private NatureCustomDao natureCustomDao;
+
+    @Autowired
     private NatureMapper natureMapper;
 
     @Override
-    public List<Nature> getAllNatures(Boolean onlyActive) {
+    public Page<Nature> searchNatures(Boolean onlyActive, Pageable pageable) {
 
-        List<NatureEntity> natures = null;
-
-        if (Boolean.TRUE.equals(onlyActive)) {
-            natures = natureDao.findOnlyActive();
-        } else {
-            natures = natureDao.findAll();
-        }
-
-        return natureMapper.entitiesToDto(natures);
+        return natureMapper.entitiesToDto(natureCustomDao.searchNature(onlyActive, pageable), pageable);
 
     }
 

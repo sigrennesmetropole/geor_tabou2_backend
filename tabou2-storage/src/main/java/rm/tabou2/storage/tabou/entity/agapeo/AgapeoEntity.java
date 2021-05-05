@@ -50,23 +50,23 @@ public class AgapeoEntity {
 
     @Basic
     @Column(name = "logements_locatif_aide")
-    private int logementsLocatifAide;
+    private Integer logementsLocatifAide;
 
     @Basic
     @Column(name = "logements_access_aide")
-    private int logementsAccessAide;
+    private Integer logementsAccessAide;
 
     @Basic
     @Column(name = "logements_locatif_regule_prive")
-    private int logementsLocatifRegulePrive;
+    private Integer logementsLocatifRegulePrive;
 
     @Basic
     @Column(name = "logements_locatif_regule_hlm")
-    private int logementsLocatifReguleHlm;
+    private Integer logementsLocatifReguleHlm;
 
     @Basic
     @Column(name = "logements_access_maitrise")
-    private int logementsAccessMaitrise;
+    private Integer logementsAccessMaitrise;
 
 
 

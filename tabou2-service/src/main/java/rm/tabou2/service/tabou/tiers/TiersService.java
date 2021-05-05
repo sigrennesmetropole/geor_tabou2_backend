@@ -7,6 +7,7 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.storage.tabou.item.TiersCriteria;
 
 public interface TiersService {
+
     Tiers getTiersById(Long tiersId);
 
     Tiers createTiers(Tiers tiers);
