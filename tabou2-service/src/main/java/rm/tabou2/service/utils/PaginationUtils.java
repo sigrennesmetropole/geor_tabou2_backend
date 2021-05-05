@@ -16,9 +16,6 @@ public class PaginationUtils {
 
     private static final Integer DEFAULT_START = 0;
 
-    @Value("${pagination.default.max.results}")
-    private int maxResults;
-
     private static int maxResultsStatic;
 
     @Value("${pagination.default.max.results}")
