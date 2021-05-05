@@ -1,15 +1,15 @@
-package rm.tabou2.service.ddc.impl;
+package rm.tabou2.service.tabou.ddc.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import rm.tabou2.service.ddc.PermisConstruireService;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.mapper.ddc.PermisConstuireMapper;
-import rm.tabou2.storage.ddc.dao.PermisConstruireCustomDao;
-import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
-import rm.tabou2.storage.ddc.entity.PermisConstruireEntity;
+import rm.tabou2.service.tabou.ddc.PermisConstruireService;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireCustomDao;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 

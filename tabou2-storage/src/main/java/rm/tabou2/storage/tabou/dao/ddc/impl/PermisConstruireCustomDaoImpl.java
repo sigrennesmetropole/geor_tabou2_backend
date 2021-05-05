@@ -1,4 +1,4 @@
-package rm.tabou2.storage.ddc.dao.impl;
+package rm.tabou2.storage.tabou.dao.ddc.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
-import rm.tabou2.storage.ddc.dao.PermisConstruireCustomDao;
-import rm.tabou2.storage.ddc.entity.PermisConstruireEntity;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireCustomDao;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,7 +27,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NUM_AD
 @Repository
 public class PermisConstruireCustomDaoImpl extends AbstractCustomDaoImpl implements PermisConstruireCustomDao {
 
-    @PersistenceContext(unitName = "ddcPU")
+    @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
 
     @Override

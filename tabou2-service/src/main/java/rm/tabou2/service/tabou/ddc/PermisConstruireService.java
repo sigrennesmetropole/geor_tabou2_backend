@@ -1,4 +1,4 @@
-package rm.tabou2.service.ddc;
+package rm.tabou2.service.tabou.ddc;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
