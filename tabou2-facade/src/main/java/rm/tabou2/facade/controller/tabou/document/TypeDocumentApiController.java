@@ -11,6 +11,7 @@ import rm.tabou2.service.tabou.document.TypeDocumentService;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.tabou.entity.document.TypeDocumentEntity;
 import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 
 import javax.validation.Valid;
@@ -46,7 +47,7 @@ public class TypeDocumentApiController implements TypesDocumentsApi {
         typeDocumentCriteria.setLibelle(libelle);
         typeDocumentCriteria.setDateInactif(dateInactif);
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeDocument.class);
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeDocumentEntity.class);
 
         Page<TypeDocument> page = typeDocumentService.searchTypeDocument(typeDocumentCriteria, pageable);
 

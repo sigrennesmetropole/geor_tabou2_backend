@@ -35,4 +35,9 @@ public class EvenementProgrammeEntity extends GenericAuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_type_evt")
     public TypeEvenementEntity typeEvenement;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_programme")
+    public ProgrammeEntity programme;
+
 }
