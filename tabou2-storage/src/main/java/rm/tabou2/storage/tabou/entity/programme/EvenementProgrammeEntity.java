@@ -8,7 +8,7 @@ import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import javax.persistence.*;
 import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"programme"})
 @Data
 @Entity
 @Table(name = "tabou_evenement_programme")

@@ -18,7 +18,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"operation"})
 @Data
 @Entity
 @Table(name = "tabou_evenement_operation")
