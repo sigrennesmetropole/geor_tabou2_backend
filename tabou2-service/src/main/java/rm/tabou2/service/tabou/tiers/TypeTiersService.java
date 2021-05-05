@@ -22,6 +22,7 @@ public interface TypeTiersService {
      */
     TypeTiers createTypeTiers(TypeTiers typeTiers);
 
+
     /**
      * Modification d'un type tiers.
      *
@@ -43,7 +44,7 @@ public interface TypeTiersService {
      * @param libelle  libelle du type tiers à rechercher
      * @param inactif  type tiers inactivé ou non
      * @param pageable pagination           true si tri ascendant, faux sinon
-     * @return
+     * @return liste de tiers
      */
     Page<TypeTiers> searchTypeTiers(String libelle, Boolean inactif, Pageable pageable);
 }
