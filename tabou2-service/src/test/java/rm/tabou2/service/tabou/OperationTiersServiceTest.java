@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.constant.ConsommationEspaceCode;
 import rm.tabou2.service.constant.DecisionCode;
@@ -99,7 +100,6 @@ public class OperationTiersServiceTest {
     private static final String NOM_TIERS = "nom";
 
 
-    @Test
     public void testSearchTiers() throws AppServiceException {
 
 
@@ -116,7 +116,7 @@ public class OperationTiersServiceTest {
 
         TypeTiersEntity typeTiers = new TypeTiersEntity();
         typeTiers.setLibelle(LIBELLE_TYPE_TIERS);
-        typeTiers.setId(1L);
+        typeTiers.setId(2L);
         typeTiersDao.save(typeTiers);
 
         OperationEntity operationEntity = new OperationEntity();
@@ -158,6 +158,7 @@ public class OperationTiersServiceTest {
     }
 
     @Test
+    @Transactional
     public void testSearchTiersDiffusionRestreinte() throws AppServiceException {
 
         DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);

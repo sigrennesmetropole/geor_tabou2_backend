@@ -462,7 +462,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Operation"
+              "$ref": "#/definitions/AssociationTiersTypeTiers"
             }
           },
           "404": {
@@ -1477,8 +1477,88 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Programme"
+              "$ref": "#/definitions/AssociationTiersTypeTiers"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/programmes/{programmeId}/tiers/{associationTiersId}": {
+      "put": {
+        "summary": "Modification d'un tiers d'un programme ",
+        "operationId": "updateTiersByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant d'un programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "associationTiersId",
+            "description": "Identifiant du l'association tiers - type tiers - programe",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "associationTiers",
+            "description": "Association entre le tiers, le type tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TiersTypeTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssociationTiersTypeTiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprime un tiers d'un programme ",
+        "operationId": "deleteTiersFromProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant d'un programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "associationTiersId",
+            "description": "Identifiant du l'association tiers - type tiers - programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "404": {
             "description": "La resource demandée n'existe pas"
@@ -4044,10 +4124,10 @@
           "type": "string",
           "format": "date"
         },
-        "idType": {
+        "typeEvenement": {
           "description": "Type de l'évènement",
-          "type": "integer",
-          "format": "int64"
+          "type": "object",
+          "$ref": "#/definitions/TypeEvenement"
         }
       }
     },
