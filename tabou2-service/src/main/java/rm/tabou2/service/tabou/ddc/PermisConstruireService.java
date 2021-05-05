@@ -1,4 +1,4 @@
-package rm.tabou2.service.ddc;
+package rm.tabou2.service.tabou.ddc;
 
 import rm.tabou2.service.dto.PermisConstruire;
 

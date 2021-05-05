@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
-import rm.tabou2.service.ddc.PermisConstruireService;
+import rm.tabou2.service.tabou.ddc.PermisConstruireService;
 import rm.tabou2.service.dto.Agapeo;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.Emprise;

@@ -39,7 +39,7 @@ import rm.tabou2.service.st.generator.model.FicheSuiviProgrammeDataModel;
 import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.utils.PaginationUtils;
-import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.sig.dao.ProgrammeRmCustomDao;
 import rm.tabou2.storage.sig.dao.ProgrammeRmDao;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;

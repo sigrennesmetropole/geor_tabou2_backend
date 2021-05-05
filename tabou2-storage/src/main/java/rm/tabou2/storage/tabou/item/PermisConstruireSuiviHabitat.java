@@ -1,4 +1,4 @@
-package rm.tabou2.storage.ddc.item;
+package rm.tabou2.storage.tabou.item;
 
 import lombok.Data;
 
