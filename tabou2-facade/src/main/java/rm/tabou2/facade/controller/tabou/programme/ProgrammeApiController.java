@@ -11,7 +11,6 @@ import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.ddc.PermisConstruireService;
 import rm.tabou2.service.dto.Agapeo;
-import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.EtapeRestricted;
@@ -19,16 +18,19 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.EtapeCriteria;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -159,8 +161,20 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<List<AssociationTiersTypeTiers>> getTiersByProgrammeId(Long programmeId) throws Exception {
-        return null;
+    public ResponseEntity<PageResult> searchTiersByProgrammeId(Long programmeId, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
+        criteria.setAsc(asc);
+        criteria.setOrderBy(orderBy);
+        criteria.setLibelle(libelle);
+        criteria.setProgrammeId(programmeId);
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, criteria.getOrderBy(), criteria.isAsc(), OperationTiersEntity.class);
+
+        Page<TiersAmenagement> page = programmeTiersService.searchProgrammeTiers(criteria, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+
     }
 
     @Override

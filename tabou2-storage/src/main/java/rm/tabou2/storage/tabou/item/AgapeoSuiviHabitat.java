@@ -15,6 +15,9 @@ public class AgapeoSuiviHabitat {
 
     private int logementsAccessMaitrise;
 
+    public AgapeoSuiviHabitat() {
+
+    }
     public AgapeoSuiviHabitat(long logementsLocatifAide, long logementsAccessAide,
                               long logementsLocatifRegulePrive, long logementsLocatifReguleHlm,
                               long logementsAccessMaitrise) {
