@@ -186,11 +186,20 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // Ajout de l'opération associée
         programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
 
+        // Vérification que l'id emprise existe bien
+        ProgrammeRmEntity programmeRm = programmeRmDao.findOneById(programme.getIdEmprise());
+        if (programmeRm == null) {
+            throw new NoSuchElementException("L'emprise de programme avec id " + programme.getIdEmprise() + " n'existe pas");
+        }
+
         programmeEntity = programmeDao.save(programmeEntity);
         Programme programmeSaved = programmeMapper.entityToDto(programmeEntity);
 
         // mise à jour du programme avec les données de suivi
         programmePlannerHelper.computeSuiviHabitatOfProgramme(programmeSaved);
+
+        //mise à jour de l'id de l'emprise dans la table des programme RM
+        programmeRm.setIdTabou(programmeSaved.getId().intValue());
 
         return programmeSaved;
 
