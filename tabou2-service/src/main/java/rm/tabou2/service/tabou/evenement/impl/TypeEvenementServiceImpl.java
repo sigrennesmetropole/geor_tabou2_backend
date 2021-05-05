@@ -89,7 +89,11 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
 
         TypeEvenementEntity typeEvenementEntity = getTypeEvenementEntityById(typeEvenement.getId());
 
-        typeEvenementMapper.dtoToEntity(typeEvenement, typeEvenementEntity);
+        //On recopie uniquement les valeurs à updater
+        typeEvenementEntity.setCode(typeEvenement.getCode());
+        typeEvenementEntity.setLibelle(typeEvenement.getLibelle());
+        typeEvenementEntity.setDateInactif(typeEvenement.getDateInactif());
+
 
         // Enregistrement en BDD
         try {

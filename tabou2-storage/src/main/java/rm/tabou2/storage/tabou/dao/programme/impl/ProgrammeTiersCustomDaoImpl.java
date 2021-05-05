@@ -1,8 +1,6 @@
 package rm.tabou2.storage.tabou.dao.programme.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,15 +12,25 @@ import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CODE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TIERS;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_TIERS;
 
 @Repository
 public class ProgrammeTiersCustomDaoImpl extends AbstractCustomDaoImpl implements ProgrammeTiersCustomDao {
@@ -33,14 +41,14 @@ public class ProgrammeTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<ProgrammeTiersEntity> searchProgrammesTiers(String libelleType, String codeType, Long programmeId, Pageable pageable) {
+    public Page<ProgrammeTiersEntity> searchProgrammesTiers(TiersAmenagementCriteria criteria, Pageable pageable) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         //Requête pour compter le nombre de résultats total
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
         Root<ProgrammeTiersEntity> countRoot = countQuery.from(ProgrammeTiersEntity.class);
-        buildQuery(libelleType, codeType, programmeId, builder, countQuery, countRoot);
+        buildQuery(criteria, builder, countQuery, countRoot, false);
         countQuery.select(builder.countDistinct(countRoot));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
@@ -52,7 +60,7 @@ public class ProgrammeTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
         //Requête de recherche
         CriteriaQuery<ProgrammeTiersEntity> searchQuery = builder.createQuery(ProgrammeTiersEntity.class);
         Root<ProgrammeTiersEntity> searchRoot = searchQuery.from(ProgrammeTiersEntity.class);
-        buildQuery(libelleType, codeType, programmeId, builder, searchQuery, searchRoot);
+        buildQuery(criteria, builder, searchQuery, searchRoot, true);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
 
@@ -64,26 +72,26 @@ public class ProgrammeTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
     }
 
 
-    private void buildQuery(String libelleType, String codeType, Long programmeId, CriteriaBuilder builder,
-                            CriteriaQuery<?> criteriaQuery, Root<ProgrammeTiersEntity> root
+    private void buildQuery(TiersAmenagementCriteria criteria, CriteriaBuilder builder,
+                            CriteriaQuery<?> criteriaQuery, Root<ProgrammeTiersEntity> root, boolean applyOrderBy
     ) {
 
 
         List<Predicate> predicates = new ArrayList<>();
 
         //Libelle du type tiers associé
-        if (libelleType != null && !libelleType.isEmpty()) {
+        if (criteria.getLibelle() != null && !criteria.getLibelle().isEmpty()) {
             Join<ProgrammeTiersEntity, TypeTiersEntity> typeTiersJoin = root.join(FIELD_TYPE_TIERS);
-            predicateStringCriteriaForJoin(libelleType, FIELD_LIBELLE, predicates, builder, typeTiersJoin);
+            predicateStringCriteriaForJoin(criteria.getLibelle(), FIELD_LIBELLE, predicates, builder, typeTiersJoin);
         }
 
         //Code du type de tiers associé
-        if (codeType != null && !codeType.isEmpty()) {
+        if (criteria.getCodeTypeTiers() != null && !criteria.getCodeTypeTiers().isEmpty()) {
             Join<ProgrammeTiersEntity, TypeTiersEntity> typeTiersJoin = root.join(FIELD_TYPE_TIERS);
-            predicateStringCriteriaForJoin(codeType, FIELD_CODE, predicates, builder, typeTiersJoin);
+            predicateStringCriteriaForJoin(criteria.getCodeTypeTiers(), FIELD_CODE, predicates, builder, typeTiersJoin);
         }
 
-        predicateLongCriteria(programmeId, "programme", predicates, builder, root);
+        predicateLongCriteria(criteria.getProgrammeId(), "programme", predicates, builder, root);
 
 
         //Définition de la clause Where
@@ -91,7 +99,31 @@ public class ProgrammeTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
             criteriaQuery.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
         }
 
+        if (applyOrderBy) {
+            // Order by
+            applyOrderBy(criteria, builder, criteriaQuery, root);
+        }
 
+
+    }
+
+    private void applyOrderBy(TiersAmenagementCriteria criteria, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<ProgrammeTiersEntity> root) {
+
+        if (criteria.getOrderBy() == null || criteria.getOrderBy().equals(FIELD_LIBELLE)) {
+            if (criteria.isAsc()) {
+                criteriaQuery.orderBy(builder.asc(root.get(FIELD_TYPE_TIERS).get(FIELD_LIBELLE)));
+            } else {
+                criteriaQuery.orderBy(builder.desc(root.get(FIELD_TYPE_TIERS).get(FIELD_LIBELLE)));
+            }
+        } else if (criteria.getOrderBy().equals(FIELD_NOM)) {
+            if (criteria.isAsc()) {
+                criteriaQuery.orderBy(builder.asc(root.get(FIELD_TIERS).get(FIELD_NOM)));
+            } else {
+                criteriaQuery.orderBy(builder.desc(root.get(FIELD_TIERS).get(FIELD_NOM)));
+            }
+        } else {
+            criteriaQuery.orderBy(builder.asc(root.get(FIELD_ID)));
+        }
     }
 
 

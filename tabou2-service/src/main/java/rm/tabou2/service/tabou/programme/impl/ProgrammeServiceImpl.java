@@ -40,6 +40,7 @@ import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
+import rm.tabou2.storage.ddc.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.sig.dao.ProgrammeRmCustomDao;
 import rm.tabou2.storage.sig.dao.ProgrammeRmDao;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
@@ -58,7 +59,9 @@ import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
+import rm.tabou2.storage.tabou.item.AgapeoSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import java.io.File;
 import java.io.IOException;
@@ -280,6 +283,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
 
+        TiersAmenagementCriteria tiersAmenagementCriteria = new TiersAmenagementCriteria();
+        tiersAmenagementCriteria.setProgrammeId(programmeCriteria.getProgrammeId());
+        tiersAmenagementCriteria.setLibelle("MAITRE_OEUVRE");
+
         OperationEntity operation = operationDao.findOneById(programmeCriteria.getOperationId());
 
         Page<ProgrammeLight> results = null;
@@ -299,7 +306,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
                 ProgrammeEntity programme = programmeDao.findOneById(p.getIdTabou().longValue());
 
                 //On cherche les maitres d'oeuvres de chaque programme
-                Page<ProgrammeTiersEntity> programmeTiers = programmeTiersCustomDao.searchProgrammesTiers(null, "MAITRE_OEUVRE", programme.getId(), PaginationUtils.buildPageable(0, null, null, true, ProgrammeTiersEntity.class));
+                Page<ProgrammeTiersEntity> programmeTiers = programmeTiersCustomDao.searchProgrammesTiers(tiersAmenagementCriteria, PaginationUtils.buildPageable(0, null, null, true, ProgrammeTiersEntity.class));
 
                 //On construit la chaine de caractère avec tous les noms des MA
                 String nomMaitresOeuvre = programmeTiers.stream()
@@ -488,8 +495,17 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
         ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
         ficheSuiviProgrammeDataModel.setIllustration(fileiImgIllustration);
-        ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds()));
-        ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds()));
+        AgapeoSuiviHabitat ash = agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds());
+        if (ash == null) {
+            ash = new AgapeoSuiviHabitat();
+        }
+
+        ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(ash);
+        PermisConstruireSuiviHabitat pcsh = permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds());
+        if (pcsh == null) {
+            pcsh = new PermisConstruireSuiviHabitat();
+        }
+        ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(pcsh);
         ficheSuiviProgrammeDataModel.setAgapeos(agapeoDao.findAllByNumAds(programmeEntity.getNumAds()));
         ficheSuiviProgrammeDataModel.setPermis(permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds()));
         ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));
