@@ -19,6 +19,7 @@ import rm.tabou2.service.dto.ProgrammeLight;
 import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
+import rm.tabou2.service.tabou.evenement.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
@@ -27,6 +28,7 @@ import rm.tabou2.service.utils.PaginationUtils;
 
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
+import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.item.EtapeCriteria;
@@ -54,6 +56,9 @@ public class OperationApiController implements OperationsApi {
 
     @Autowired
     private EtapeOperationService etapeOperationService;
+
+    @Autowired
+    private EvenementOperationService evenementOperationService;
 
     @Autowired
     private OperationEmpriseHelper operationEmpriseHelper;
@@ -202,8 +207,14 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<List<Evenement>> getEvenementsByOperationId(Long operationId) throws Exception {
-        return new ResponseEntity<>(operationService.getEvenementsByOperationId(operationId), HttpStatus.OK);
+    public ResponseEntity<PageResult> getEvenementsByOperationId(Long operationId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EvenementOperationEntity.class);
+
+        Page<Evenement> page = evenementOperationService.searchEvenementOperation(operationId, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+
     }
 
     @Override

@@ -1,15 +1,18 @@
 package rm.tabou2.service.tabou.operation;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.ConsommationEspace;
-
-import java.util.List;
 
 public interface ConsommationEspaceService {
 
+
     /**
-     * Retourne la liste des consommations d'espace
+     * Retourne la liste des consommations d'espace.
      *
+     * @param pageable paramètres de pagination
      * @return liste des consommations d'espace
      */
-    List<ConsommationEspace> getAllConsommationsEspace();
+    Page<ConsommationEspace> searchConsommationsEspace(Pageable pageable);
+
 }
