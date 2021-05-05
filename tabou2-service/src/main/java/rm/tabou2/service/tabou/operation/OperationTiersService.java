@@ -20,7 +20,7 @@ public interface OperationTiersService {
      * @return
      * @throws AppServiceException
      */
-    Operation associateTiersToOperation(long operationId, long tiersId, long typeTiersId) throws AppServiceException;
+    AssociationTiersTypeTiers associateTiersToOperation(long operationId, long tiersId, long typeTiersId) throws AppServiceException;
 
     /**
      * Recherche les tiers des opération à partir de paramètres.

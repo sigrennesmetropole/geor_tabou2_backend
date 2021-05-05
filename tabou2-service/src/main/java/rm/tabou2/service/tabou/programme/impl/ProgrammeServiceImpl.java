@@ -386,7 +386,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         //type evenement
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         if (typeEvenementEntity.isSysteme()) {
             throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
         }
@@ -431,7 +431,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         // type evenement
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
 
         evenementProgrammeMapper.dtoToEntity(evenement, evenementProgrammeEntity);

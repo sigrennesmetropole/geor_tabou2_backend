@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
+import rm.tabou2.service.dto.AssociationTiersTypeTiers;
+import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.tabou.ddc.PermisConstruireService;
 import rm.tabou2.service.dto.Agapeo;
 import rm.tabou2.service.dto.Emprise;
@@ -70,6 +72,11 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     @Override
     public ResponseEntity<Programme> updateProgramme(@Valid Programme programme) throws Exception {
         return new ResponseEntity<>(programmeService.updateProgramme(programme), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<AssociationTiersTypeTiers> updateTiersByProgrammeId(Long programmeId, Long associationTiersId, @Valid TiersTypeTiers associationTiers) throws Exception {
+        return new ResponseEntity<>(programmeTiersService.updateTiersAssociation(programmeId, associationTiersId, associationTiers), HttpStatus.OK);
     }
 
     @Override
@@ -221,6 +228,12 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
+    public ResponseEntity<Void> deleteTiersFromProgramme(Long programmeId, Long associationTiersId) throws Exception {
+        programmeTiersService.deleteTiersByProgrammeId(programmeId, associationTiersId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<Resource> downloadFicheSuivi(Long programmeId) throws Exception {
         return downloadDocument(programmeService.generateFicheSuivi(programmeId));
     }
@@ -231,7 +244,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<Programme> associateTiersToProgramme(Long programmeId, @NotNull @Valid Long tiersId, @NotNull @Valid Long typeTiersId) throws Exception {
+    public ResponseEntity<AssociationTiersTypeTiers> associateTiersToProgramme(Long programmeId, @NotNull @Valid Long tiersId, @NotNull @Valid Long typeTiersId) throws Exception {
         return new ResponseEntity<>(programmeTiersService.associateTiersToProgramme(programmeId, tiersId, typeTiersId), HttpStatus.OK);
     }
 

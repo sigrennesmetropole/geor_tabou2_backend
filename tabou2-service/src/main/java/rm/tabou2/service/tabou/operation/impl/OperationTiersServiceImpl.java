@@ -39,10 +39,6 @@ import java.util.Optional;
 @Service
 public class OperationTiersServiceImpl implements OperationTiersService {
 
-
-    @Autowired
-    private OperationService operationService;
-
     @Autowired
     private OperationDao operationDao;
 
@@ -54,12 +50,6 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
     @Autowired
     private TiersDao tiersDao;
-
-    @Autowired
-    private TypeTiersService typeTiersService;
-
-    @Autowired
-    private TiersService tiersService;
 
     @Autowired
     private OperationTiersDao operationTiersDao;
@@ -79,7 +69,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
 
     @Override
-    public Operation associateTiersToOperation(long operationId, long tiersId, long typeTiersId) throws AppServiceException {
+    public AssociationTiersTypeTiers associateTiersToOperation(long operationId, long tiersId, long typeTiersId) throws AppServiceException {
 
         OperationTiersEntity operationTiersEntity = new OperationTiersEntity();
 
@@ -110,13 +100,12 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
 
         try {
-            operationTiersDao.save(operationTiersEntity);
+            operationTiersEntity = operationTiersDao.save(operationTiersEntity);
         } catch (DataAccessException e) {
             throw new AppServiceException("Impossible d'ajouter l'opération tiers", e);
         }
 
-
-        return operationService.getOperationById(operationId);
+        return getAssociationById(operationTiersEntity.getId());
 
     }
 

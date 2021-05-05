@@ -7,11 +7,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.dto.TiersAmenagement;
+import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.mapper.tabou.operation.ProgrammeTiersMapper;
+import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
+import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
@@ -19,6 +23,7 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
+import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
@@ -56,10 +61,16 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
     private ProgrammeTiersMapper programmeTiersMapper;
 
     @Autowired
+    private TiersMapper tiersMapper;
+
+    @Autowired
+    private TypeTiersMapper typeTiersMapper;
+
+    @Autowired
     private AuthentificationHelper authentificationHelper;
 
     @Override
-    public Programme associateTiersToProgramme(long programmeId, long tiersId, long typeTiersId) throws AppServiceException {
+    public AssociationTiersTypeTiers associateTiersToProgramme(long programmeId, long tiersId, long typeTiersId) throws AppServiceException {
 
         ProgrammeTiersEntity programmeTiersEntity = new ProgrammeTiersEntity();
 
@@ -91,12 +102,14 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
         programmeTiersEntity.setCreateUser(authentificationHelper.getConnectedUsername());
 
         try {
-            programmeTiersDao.save(programmeTiersEntity);
+            //Enregistrement des modification
+            programmeTiersEntity = programmeTiersDao.save(programmeTiersEntity);
         } catch (DataAccessException e) {
             throw new AppServiceException("Impossible d'associer le programme id=" + programmeId + " au typeTiersId=" + typeTiersId + " et au tiersId=" + tiersId, e);
         }
 
-        return programmeService.getProgrammeById(programmeId);
+        return getAssociationById(programmeTiersEntity.getId());
+
     }
 
     @Override
@@ -115,6 +128,81 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
 
 
         return programmeTiersMapper.entitiesToDto(programmeTiersCustomDao.searchProgrammesTiers(criteria, pageable),pageable);
+
+    }
+
+    @Override
+    public AssociationTiersTypeTiers updateTiersAssociation(long programmeId, long programmeTiersId, TiersTypeTiers tiersTypeTiers) throws AppServiceException {
+
+        Optional<ProgrammeTiersEntity> programmeTiersOpt = programmeTiersDao.findById(programmeTiersId);
+        if (programmeTiersOpt.isEmpty()) {
+            throw new NoSuchElementException("Le programmeTiers id=" + programmeTiersId + " n'existe pas");
+        }
+
+        ProgrammeTiersEntity programmeTiersEntity = programmeTiersOpt.get();
+
+        if (programmeId != programmeTiersEntity.getProgramme().getId()) {
+            throw new AppServiceException("Opération non autorisée : modifier le programmeTiers id=" + programmeTiersId + " pour le programme id =" + programmeId);
+        }
+
+        // Vérification si type tiers existe
+        Optional<TypeTiersEntity> typeTiersEntityOpt = typeTiersDao.findById(tiersTypeTiers.getTypeTiersId());
+        if (typeTiersEntityOpt.isEmpty()) {
+            throw new NoSuchElementException("Le typeTiersId = " + tiersTypeTiers.getTypeTiersId() + " n'existe pas");
+        }
+        programmeTiersEntity.setTypeTiers(typeTiersEntityOpt.get());
+
+        // Vérification si tiers existe
+        Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersTypeTiers.getTiersId());
+        if (tiersEntityOpt.isEmpty()) {
+            throw new NoSuchElementException("Le tiersId = " + tiersTypeTiers.getTiersId() + " n'existe pas");
+        }
+        programmeTiersEntity.setTiers(tiersEntityOpt.get());
+
+        programmeTiersEntity.setModifDate(new Date());
+        programmeTiersEntity.setModifUser(authentificationHelper.getConnectedUsername());
+
+        //Enregistrement des modifications
+        programmeTiersDao.save(programmeTiersEntity);
+
+        return getAssociationById(programmeTiersEntity.getId());
+
+    }
+
+    @Override
+    public void deleteTiersByProgrammeId(long programmeId, long programmeTiersId) throws AppServiceException {
+
+        Optional<ProgrammeTiersEntity> programmeTiersOpt = programmeTiersDao.findById(programmeTiersId);
+        if (programmeTiersOpt.isEmpty()) {
+            throw new NoSuchElementException("Le programmeTiers id=" + programmeTiersId + " n'existe pas");
+        }
+
+        if (programmeId != programmeTiersOpt.get().getProgramme().getId()) {
+            throw new AppServiceException("Opération non autorisée : modifier le programmeTiers id=" + programmeTiersId + " pour le programme id =" + programmeId);
+        }
+
+        programmeTiersDao.deleteById(programmeTiersId);
+
+
+    }
+
+    private AssociationTiersTypeTiers getAssociationById(long programmeTiersId) {
+
+        Optional<ProgrammeTiersEntity> programmeTiersOpt = programmeTiersDao.findById(programmeTiersId);
+        if (programmeTiersOpt.isEmpty()) {
+            throw new NoSuchElementException("L'objet programmeTiers id = " + programmeTiersId);
+        }
+
+        ProgrammeTiersEntity programmeTiers = programmeTiersOpt.get();
+
+        AssociationTiersTypeTiers associationTiersTypeTiers = new AssociationTiersTypeTiers();
+
+        associationTiersTypeTiers.setId(programmeTiers.getId());
+        associationTiersTypeTiers.setTiers(tiersMapper.entityToDto(programmeTiers.getTiers()));
+        associationTiersTypeTiers.setTypeTiers(typeTiersMapper.entityToDto(programmeTiers.getTypeTiers()));
+
+        return associationTiersTypeTiers;
+
 
     }
 }
