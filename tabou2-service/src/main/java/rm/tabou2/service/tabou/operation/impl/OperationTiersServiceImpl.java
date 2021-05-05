@@ -153,8 +153,19 @@ public class OperationTiersServiceImpl implements OperationTiersService {
             throw new AppServiceException("Opération non autorisée : modifier l'operationTiers id=" + operationTiersId + " pour l'operation id =" + operationId);
         }
 
-        operationTiersEntity.setTiers(tiersService.getTiersEntityById(tiersTypeTiers.getTiersId()));
-        operationTiersEntity.setTypeTiers(typeTiersService.getTypeTiersEntityById(tiersTypeTiers.getTypeTiersId()));
+        // Vérification si type tiers existe
+        Optional<TypeTiersEntity> typeTiersEntityOpt = typeTiersDao.findById(tiersTypeTiers.getTypeTiersId());
+        if (typeTiersEntityOpt.isEmpty()) {
+            throw new NoSuchElementException("Le typeTiersId = " + tiersTypeTiers.getTypeTiersId() + " n'existe pas");
+        }
+        operationTiersEntity.setTypeTiers(typeTiersEntityOpt.get());
+
+        // Vérification si tiers existe
+        Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersTypeTiers.getTiersId());
+        if (tiersEntityOpt.isEmpty()) {
+            throw new NoSuchElementException("Le tiersId = " + tiersTypeTiers.getTiersId() + " n'existe pas");
+        }
+        operationTiersEntity.setTiers(tiersEntityOpt.get());
 
         operationTiersEntity.setModifDate(new Date());
         operationTiersEntity.setModifUser(authentificationHelper.getConnectedUsername());

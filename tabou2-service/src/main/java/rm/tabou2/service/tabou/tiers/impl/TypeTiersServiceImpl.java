@@ -50,17 +50,6 @@ public class TypeTiersServiceImpl implements TypeTiersService {
 
     }
 
-    @Override
-    public TypeTiersEntity getTypeTiersEntityById(long typeTiersId) {
-
-        Optional<TypeTiersEntity> typeTiersOpt = typeTiersDao.findById(typeTiersId);
-        if (typeTiersOpt.isEmpty()) {
-            throw new NoSuchElementException("Le type tiers  n'existe pas, id=" + typeTiersId);
-        }
-
-        return typeTiersOpt.get();
-
-    }
 
     @Override
     public TypeTiers updateTypeTiers(TypeTiers typeTiers) {

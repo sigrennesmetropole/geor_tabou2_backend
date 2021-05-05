@@ -3,7 +3,6 @@ package rm.tabou2.service.tabou.tiers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.TypeTiers;
-import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 public interface TypeTiersService {
 
@@ -23,13 +22,6 @@ public interface TypeTiersService {
      */
     TypeTiers createTypeTiers(TypeTiers typeTiers);
 
-    /**
-     * Récupération de l'entité type tiers.
-     *
-     * @param typeTiersId identifiant du type de tiers
-     * @return typeTiers
-     */
-    TypeTiersEntity getTypeTiersEntityById(long typeTiersId);
 
     /**
      * Modification d'un type tiers.
@@ -52,7 +44,7 @@ public interface TypeTiersService {
      * @param libelle  libelle du type tiers à rechercher
      * @param inactif  type tiers inactivé ou non
      * @param pageable pagination           true si tri ascendant, faux sinon
-     * @return
+     * @return liste de tiers
      */
     Page<TypeTiers> searchTypeTiers(String libelle, Boolean inactif, Pageable pageable);
 }

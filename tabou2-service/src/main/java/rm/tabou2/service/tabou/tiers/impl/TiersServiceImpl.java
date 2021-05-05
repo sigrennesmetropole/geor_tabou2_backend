@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
-import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.storage.tabou.dao.tiers.TiersCustomDao;
 import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
@@ -29,9 +28,6 @@ public class TiersServiceImpl implements TiersService {
 
     @Autowired
     private TiersCustomDao tiersCustomDao;
-
-    @Autowired
-    private OperationTiersService operationTiersService;
 
     @Override
     public Tiers getTiersById(Long tiersId) {
@@ -64,17 +60,6 @@ public class TiersServiceImpl implements TiersService {
 
         return tiersMapper.entityToDto(tiersEntity);
 
-    }
-
-    @Override
-    public TiersEntity getTiersEntityById(Long tiersId) {
-        Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersId);
-
-        if (tiersEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le tiers id=" + tiersId + " n'existe pas");
-        }
-
-        return tiersEntityOpt.get();
     }
 
     @Override
