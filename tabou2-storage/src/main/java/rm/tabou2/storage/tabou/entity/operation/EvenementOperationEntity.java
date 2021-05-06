@@ -18,7 +18,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"operation"})
 @Data
 @Entity
 @Table(name = "tabou_evenement_operation")
@@ -45,5 +45,9 @@ public class EvenementOperationEntity extends GenericAuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_type_evt")
     public TypeEvenementEntity typeEvenement;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_operation")
+    public OperationEntity operation;
 
 }

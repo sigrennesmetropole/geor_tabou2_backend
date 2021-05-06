@@ -31,6 +31,7 @@ public class FieldsConstants {
     public static final String FIELD_OPERATION = "operation";
     public static final String FIELD_OPERATION_TIERS = "operationsTiers";
     public static final String FIELD_PROGRAMME_TIERS = "programmeTiers";
+    public static final String FIELD_PROGRAMME = "programme";
     public static final String FIELD_TYPE_TIERS = "typeTiers";
     public static final String FIELD_TIERS = "tiers";
     public static final String FIELD_ATTRIBUTION_FONCIERE_ANNEE = "attributionFonciereAnnee";

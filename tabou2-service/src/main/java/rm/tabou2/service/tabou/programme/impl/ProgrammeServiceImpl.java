@@ -18,6 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
@@ -27,6 +28,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
+import rm.tabou2.service.mapper.sig.ProgrammeRmMapper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeLightMapper;
@@ -37,7 +39,9 @@ import rm.tabou2.service.st.generator.model.FicheSuiviProgrammeDataModel;
 import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.utils.PaginationUtils;
-import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
+import rm.tabou2.storage.sig.dao.ProgrammeRmCustomDao;
+import rm.tabou2.storage.sig.dao.ProgrammeRmDao;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
@@ -48,14 +52,16 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
-import rm.tabou2.storage.tabou.dao.programme.impl.ProgrammeRmCustomDaoImpl;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
+import rm.tabou2.storage.tabou.item.AgapeoSuiviHabitat;
+import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
+import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,7 +92,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeTiersCustomDao programmeTiersCustomDao;
 
     @Autowired
-    private ProgrammeRmCustomDaoImpl programmeRmCustomDao;
+    private ProgrammeRmCustomDao programmeRmCustomDao;
+
+    @Autowired
+    private ProgrammeRmDao programmeRmDao;
 
     @Autowired
     private EtapeProgrammeDao etapeProgrammeDao;
@@ -120,6 +129,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private EtapeProgrammeMapper etapeProgrammeMapper;
+
+    @Autowired
+    private ProgrammeRmMapper programmeRmMapper;
 
     @Autowired
     private AuthentificationHelper authentificationHelper;
@@ -174,11 +186,20 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // Ajout de l'opération associée
         programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
 
+        // Vérification que l'id emprise existe bien
+        ProgrammeRmEntity programmeRm = programmeRmDao.findOneById(programme.getIdEmprise());
+        if (programmeRm == null) {
+            throw new NoSuchElementException("L'emprise de programme avec id " + programme.getIdEmprise() + " n'existe pas");
+        }
+
         programmeEntity = programmeDao.save(programmeEntity);
         Programme programmeSaved = programmeMapper.entityToDto(programmeEntity);
 
         // mise à jour du programme avec les données de suivi
         programmePlannerHelper.computeSuiviHabitatOfProgramme(programmeSaved);
+
+        //mise à jour de l'id de l'emprise dans la table des programme RM
+        programmeRm.setIdTabou(programmeSaved.getId().intValue());
 
         return programmeSaved;
 
@@ -271,6 +292,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
 
+        TiersAmenagementCriteria tiersAmenagementCriteria = new TiersAmenagementCriteria();
+        tiersAmenagementCriteria.setProgrammeId(programmeCriteria.getProgrammeId());
+        tiersAmenagementCriteria.setLibelle("MAITRE_OEUVRE");
+
         OperationEntity operation = operationDao.findOneById(programmeCriteria.getOperationId());
 
         Page<ProgrammeLight> results = null;
@@ -290,7 +315,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
                 ProgrammeEntity programme = programmeDao.findOneById(p.getIdTabou().longValue());
 
                 //On cherche les maitres d'oeuvres de chaque programme
-                Page<ProgrammeTiersEntity> programmeTiers = programmeTiersCustomDao.searchProgrammesTiers(null, "MAITRE_OEUVRE", programme.getId(), PaginationUtils.buildPageable(0, null, null, true, ProgrammeTiersEntity.class));
+                Page<ProgrammeTiersEntity> programmeTiers = programmeTiersCustomDao.searchProgrammesTiers(tiersAmenagementCriteria, PaginationUtils.buildPageable(0, null, null, true, ProgrammeTiersEntity.class));
 
                 //On construit la chaine de caractère avec tous les noms des MA
                 String nomMaitresOeuvre = programmeTiers.stream()
@@ -370,7 +395,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         //type evenement
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         if (typeEvenementEntity.isSysteme()) {
             throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
         }
@@ -415,7 +440,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         // type evenement
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
 
         evenementProgrammeMapper.dtoToEntity(evenement, evenementProgrammeEntity);
@@ -443,6 +468,19 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         return documentContent;
     }
 
+    @Override
+    public Page<Emprise> getEmprisesAvailables(Pageable pageable) {
+
+        if (!authentificationHelper.hasAdministratorRole() && !authentificationHelper.hasContributeurRole()) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification des programmes");
+        }
+
+        Page<ProgrammeRmEntity> programmeRmEntities = programmeRmCustomDao.searchEmprisesNonSuivies(pageable);
+
+        return programmeRmMapper.entitiesToDto(programmeRmEntities, pageable);
+
+    }
+
     private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
 
         InputStream templateFileInputStream;
@@ -466,8 +504,17 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
         ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
         ficheSuiviProgrammeDataModel.setIllustration(fileiImgIllustration);
-        ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds()));
-        ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds()));
+        AgapeoSuiviHabitat ash = agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds());
+        if (ash == null) {
+            ash = new AgapeoSuiviHabitat();
+        }
+
+        ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(ash);
+        PermisConstruireSuiviHabitat pcsh = permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds());
+        if (pcsh == null) {
+            pcsh = new PermisConstruireSuiviHabitat();
+        }
+        ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(pcsh);
         ficheSuiviProgrammeDataModel.setAgapeos(agapeoDao.findAllByNumAds(programmeEntity.getNumAds()));
         ficheSuiviProgrammeDataModel.setPermis(permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds()));
         ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));

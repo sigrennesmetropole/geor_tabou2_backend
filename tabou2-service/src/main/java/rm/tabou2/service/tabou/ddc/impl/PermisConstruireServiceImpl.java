@@ -1,16 +1,18 @@
-package rm.tabou2.service.ddc.impl;
+package rm.tabou2.service.tabou.ddc.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import rm.tabou2.service.ddc.PermisConstruireService;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.mapper.ddc.PermisConstuireMapper;
-import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
-import rm.tabou2.storage.ddc.entity.PermisConstruireEntity;
+import rm.tabou2.service.tabou.ddc.PermisConstruireService;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireCustomDao;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -22,6 +24,9 @@ public class PermisConstruireServiceImpl implements PermisConstruireService {
 
     @Autowired
     PermisConstruireDao permisConstruireDao;
+
+    @Autowired
+    PermisConstruireCustomDao permisConstruireCustomDao;
 
     @Autowired
     ProgrammeDao programmeDao;
@@ -39,12 +44,14 @@ public class PermisConstruireServiceImpl implements PermisConstruireService {
     }
 
     @Override
-    public List<PermisConstruire> getPermisConstruiresByProgrammeId(long programmeId) {
+    public Page<PermisConstruire> getPermisConstruiresByProgrammeId(long programmeId, Pageable pageable) {
+
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
         if (programmeEntity == null) {
             throw new IllegalArgumentException("L'identifiant du programme est invalide: aucun programme trouvé pour l'id = " + programmeId);
         }
-        List<PermisConstruireEntity> permisConstruireEntities = permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds());
-        return permisConstuireMapper.entitiesToDto(permisConstruireEntities);
+
+        return permisConstuireMapper.entitiesToDto(permisConstruireCustomDao.searchPermisConstruire(programmeEntity.getNumAds(), pageable), pageable);
     }
+
 }
