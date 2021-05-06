@@ -472,7 +472,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     public Page<Emprise> getEmprisesAvailables(Pageable pageable) {
 
         if (!authentificationHelper.hasAdministratorRole() && !authentificationHelper.hasContributeurRole()) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification des programmes");
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de consultation des programmes");
         }
 
         Page<ProgrammeRmEntity> programmeRmEntities = programmeRmCustomDao.searchEmprisesNonSuivies(pageable);
