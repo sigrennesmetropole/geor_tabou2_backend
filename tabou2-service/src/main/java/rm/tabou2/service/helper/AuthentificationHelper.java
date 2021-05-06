@@ -12,13 +12,13 @@ public class AuthentificationHelper {
     @Value("${role.consultation}")
     private String roleConsultation;
 
-    @Value("${role.contributeur")
+    @Value("${role.contributeur}")
     private String roleContributeur;
 
     @Value("${role.referent}")
     private String roleReferent;
 
-    @Value("${role.administrateur")
+    @Value("${role.administrateur}")
     private String roleAdministrateur;
 
     /**
