@@ -17,6 +17,7 @@ import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.dto.TypeEvenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
@@ -80,22 +81,23 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
 
         programmeEntity = programmeDao.save(programmeEntity);
 
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByCode("REUNION");
+        TypeEvenement typeEvenement = new TypeEvenement();
+        typeEvenement.setId(1L);
 
         Evenement evenement1 = new Evenement();
         evenement1.setEventDate(new Date());
         evenement1.setDescription("evenement1");
-        evenement1.setIdType(typeEvenementEntity.getId());
+        evenement1.setTypeEvenement(typeEvenement);
 
         Evenement evenement2 = new Evenement();
         evenement2.setEventDate(new Date());
         evenement2.setDescription("evenement2");
-        evenement2.setIdType(typeEvenementEntity.getId());
+        evenement2.setTypeEvenement(typeEvenement);
 
         Evenement evenement3 = new Evenement();
         evenement3.setEventDate(new Date());
         evenement3.setDescription("evenement3");
-        evenement3.setIdType(typeEvenementEntity.getId());
+        evenement3.setTypeEvenement(typeEvenement);
 
         programmeService.addEvenementByProgrammeId(programmeEntity.getId(), evenement1);
         programmeService.addEvenementByProgrammeId(programmeEntity.getId(), evenement2);
@@ -152,12 +154,13 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
 
         programmeEntity = programmeDao.save(programmeEntity);
 
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByCode("REUNION");
+        TypeEvenement typeEvenement = new TypeEvenement();
+        typeEvenement.setId(1L);
 
         Evenement evenement1 = new Evenement();
         evenement1.setEventDate(new Date());
         evenement1.setDescription("evenement1");
-        evenement1.setIdType(typeEvenementEntity.getId());
+        evenement1.setTypeEvenement(typeEvenement);
 
         evenement1 = programmeService.addEvenementByProgrammeId(programmeEntity.getId(), evenement1);
 
@@ -165,7 +168,7 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
         evenement2.setId(evenement1.getId());
         evenement2.setDescription("evenement2");
         evenement2.setEventDate(evenement1.getEventDate());
-        evenement2.setIdType(evenement1.getIdType());
+        evenement2.setTypeEvenement(typeEvenement);
         evenement2.setSysteme(evenement1.isSysteme());
 
         evenement2 = programmeService.updateEvenementByProgrammeId(programmeEntity.getId(), evenement2);

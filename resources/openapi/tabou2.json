@@ -462,7 +462,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Operation"
+              "$ref": "#/definitions/AssociationTiersTypeTiers"
             }
           },
           "404": {
@@ -632,16 +632,44 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Evenement"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           },
           "404": {
@@ -1239,16 +1267,44 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PermisConstruire"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           },
           "404": {
@@ -1272,16 +1328,44 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Agapeo"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           },
           "404": {
@@ -1292,8 +1376,8 @@
     },
     "/programmes/{programmeId}/tiers": {
       "get": {
-        "summary": "Liste les tiers d'un programme",
-        "operationId": "getTiersByProgrammeId",
+        "summary": "Recherche les tiers d'un programme",
+        "operationId": "searchTiersByProgrammeId",
         "produces": [
           "application/json"
         ],
@@ -1305,16 +1389,51 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+          },
+          {
+            "name": "libelle",
+            "in": "query",
+            "required": false,
+            "description": "Libellé du tiers",
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AssociationTiersTypeTiers"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           },
           "404": {
@@ -1358,8 +1477,88 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Programme"
+              "$ref": "#/definitions/AssociationTiersTypeTiers"
             }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/programmes/{programmeId}/tiers/{associationTiersId}": {
+      "put": {
+        "summary": "Modification d'un tiers d'un programme ",
+        "operationId": "updateTiersByProgrammeId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant d'un programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "associationTiersId",
+            "description": "Identifiant du l'association tiers - type tiers - programe",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "associationTiers",
+            "description": "Association entre le tiers, le type tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TiersTypeTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssociationTiersTypeTiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprime un tiers d'un programme ",
+        "operationId": "deleteTiersFromProgramme",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant d'un programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "associationTiersId",
+            "description": "Identifiant du l'association tiers - type tiers - programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "404": {
             "description": "La resource demandée n'existe pas"
@@ -1451,16 +1650,44 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
           }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Evenement"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           },
           "404": {
@@ -1659,6 +1886,57 @@
             "name": "asc",
             "description": "Indique si le tri doit être fait par ordre ascendant",
             "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/programmes/emprises": {
+      "get": {
+        "summary": "Liste des emprises des programmes non suivis dans Tabou",
+        "description": "Ensemble des emprises des programmes",
+        "operationId": "getAvailableEmprises",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
             "type": "boolean",
             "default": true
           }
@@ -3042,15 +3320,43 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Nature"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -3064,15 +3370,43 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Vocation"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -3086,15 +3420,43 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Decision"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -3108,15 +3470,43 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/MaitriseOuvrage"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -3130,15 +3520,43 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ModeAmenagement"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -3152,15 +3570,43 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
         ],
         "responses": {
           "200": {
             "description": "OK",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ConsommationEspace"
-              }
+              "$ref": "#/definitions/PageResult"
             }
           }
         }
@@ -3464,6 +3910,11 @@
           "description": "Description du programme pour des besoins de la communication (par ex: Panorama des ZAC)",
           "type": "string"
         },
+        "idEmprise":{
+          "description": "Identifiant de l'emprise de l'opération",
+          "type": "integer",
+          "format": "int32"
+        },
         "attributionFonciereAnnee": {
           "description": "Année de l'attribution foncière",
           "type": "integer",
@@ -3678,10 +4129,10 @@
           "type": "string",
           "format": "date"
         },
-        "idType": {
+        "typeEvenement": {
           "description": "Type de l'évènement",
-          "type": "integer",
-          "format": "int64"
+          "type": "object",
+          "$ref": "#/definitions/TypeEvenement"
         }
       }
     },

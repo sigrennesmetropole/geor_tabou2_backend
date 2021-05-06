@@ -35,23 +35,6 @@ CREATE EXTENSION fuzzystrmatch;
 CREATE EXTENSION postgis_tiger_geocoder;
 
 
--- Création de la table des permis de construire : nécessaire seulement pour environnement de dev et intégration continue
-
-create table if not exists ddc.pc_ddc (
-    id bigserial,
-    num_ads varchar(255),
-    date_depot_dossier timestamp,
-    date_completude_dossier timestamp,
-    ads_date timestamp,
-    doc_date timestamp,
-    dat_date timestamp,
-    surf_autre float,
-    surf_bureaux float,
-    surf_commerces float,
-    surf_equip_pub float,
-    surf_industries float,
-    primary key (id)
-);
 
 -- Scripts temporaire. A revoir pour intégrer les scripts fournis par denis
 CREATE TABLE limite_admin.commune_emprise
@@ -293,7 +276,7 @@ CREATE TABLE urba_foncier.negociateurfoncier_secteur
        OIDS=FALSE
     );
 
-ALTER TABLE ddc.pc_ddc  OWNER TO ddc_user;
+
 ALTER TABLE limite_admin.quartier  OWNER TO sig_user;
 ALTER TABLE limite_admin.comite_sect_tab  OWNER TO sig_user;
 ALTER TABLE urba_foncier.plui_zone_urba  OWNER TO sig_user;

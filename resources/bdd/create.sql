@@ -287,6 +287,25 @@ create table tabou_type_financement (
 );
 
 
+-- Création de la table des permis de construire : nécessaire seulement pour environnement de dev et intégration continue
+-- En réalité ce sera une Oracle_fdw, mais transparent pour nous
+create table if not exists tabou_pc_ddc (
+                                          id bigserial,
+                                          num_ads varchar(255),
+                                          date_depot_dossier timestamp,
+                                          date_completude_dossier timestamp,
+                                          ads_date timestamp,
+                                          doc_date timestamp,
+                                          dat_date timestamp,
+                                          surf_autre float,
+                                          surf_bureaux float,
+                                          surf_commerces float,
+                                          surf_equip_pub float,
+                                          surf_industries float,
+                                          primary key (id)
+);
+
+
 -- Ajout des clés étrangères
 
 alter table if exists tabou_programme

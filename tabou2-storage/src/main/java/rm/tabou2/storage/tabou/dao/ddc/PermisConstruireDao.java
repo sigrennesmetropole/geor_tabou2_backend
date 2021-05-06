@@ -1,11 +1,11 @@
-package rm.tabou2.storage.ddc.dao;
+package rm.tabou2.storage.tabou.dao.ddc;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import rm.tabou2.storage.ddc.item.PermisConstruireSuiviHabitat;
-import rm.tabou2.storage.ddc.entity.PermisConstruireEntity;
+import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public interface PermisConstruireDao extends CrudRepository<PermisConstruireEnti
      * @param numAds    numads du programme
      * @return          PermisConstruireSuiviHabitat
      */
-    @Query("SELECT new rm.tabou2.storage.ddc.item.PermisConstruireSuiviHabitat(" +
+    @Query("SELECT new rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat(" +
                 "min(p.adsDate), " +
                 "min(p.docDate), " +
                 "min(p.datDate)) "

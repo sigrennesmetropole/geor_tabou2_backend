@@ -17,6 +17,7 @@ import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.dto.TypeEvenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
@@ -24,7 +25,6 @@ import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.EvenementOperationDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
-import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
 import javax.validation.ConstraintViolationException;
@@ -80,22 +80,23 @@ class EvenementOperationServiceTest extends DatabaseInitializerTest implements E
 
         operationEntity = operationDao.save(operationEntity);
 
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByCode("REUNION");
+        TypeEvenement typeEvenement = new TypeEvenement();
+        typeEvenement.setId(1L);
 
         Evenement evenement1 = new Evenement();
         evenement1.setEventDate(new Date());
         evenement1.setDescription("evenement1");
-        evenement1.setIdType(typeEvenementEntity.getId());
+        evenement1.setTypeEvenement(typeEvenement);
 
         Evenement evenement2 = new Evenement();
         evenement2.setEventDate(new Date());
         evenement2.setDescription("evenement2");
-        evenement2.setIdType(typeEvenementEntity.getId());
+        evenement2.setTypeEvenement(typeEvenement);
 
         Evenement evenement3 = new Evenement();
         evenement3.setEventDate(new Date());
         evenement3.setDescription("evenement3");
-        evenement3.setIdType(typeEvenementEntity.getId());
+        evenement3.setTypeEvenement(typeEvenement);
 
         operationService.addEvenementByOperationId(operationEntity.getId(), evenement1);
         operationService.addEvenementByOperationId(operationEntity.getId(), evenement2);
@@ -137,7 +138,7 @@ class EvenementOperationServiceTest extends DatabaseInitializerTest implements E
                 () -> operationService.updateEvenementByOperationId(1L, evenement)
         );
 
-        testConstraintViolationException(constraintViolationException, List.of("id",  "idType", "eventDate", "description"));
+        testConstraintViolationException(constraintViolationException, List.of("id", "idType", "eventDate", "description"));
 
     }
 
@@ -152,12 +153,13 @@ class EvenementOperationServiceTest extends DatabaseInitializerTest implements E
 
         operationEntity = operationDao.save(operationEntity);
 
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findByCode("REUNION");
+        TypeEvenement typeEvenement = new TypeEvenement();
+        typeEvenement.setId(1L);
 
         Evenement evenement1 = new Evenement();
         evenement1.setEventDate(new Date());
         evenement1.setDescription("evenement1");
-        evenement1.setIdType(typeEvenementEntity.getId());
+        evenement1.setTypeEvenement(typeEvenement);
 
         evenement1 = operationService.addEvenementByOperationId(operationEntity.getId(), evenement1);
 
@@ -165,7 +167,7 @@ class EvenementOperationServiceTest extends DatabaseInitializerTest implements E
         evenement2.setId(evenement1.getId());
         evenement2.setDescription("evenement2");
         evenement2.setEventDate(evenement1.getEventDate());
-        evenement2.setIdType(evenement1.getIdType());
+        evenement2.setTypeEvenement(typeEvenement);
         evenement2.setSysteme(evenement1.isSysteme());
 
         evenement2 = operationService.updateEvenementByOperationId(operationEntity.getId(), evenement2);

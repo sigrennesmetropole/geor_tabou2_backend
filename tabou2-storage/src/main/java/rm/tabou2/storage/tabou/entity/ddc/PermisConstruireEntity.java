@@ -1,4 +1,4 @@
-package rm.tabou2.storage.ddc.entity;
+package rm.tabou2.storage.tabou.entity.ddc;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "pc_ddc", schema = "ddc")
+@Table(name = "tabou_pc_ddc")
 public class PermisConstruireEntity {
 
     @Id

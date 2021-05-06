@@ -1,4 +1,4 @@
-package rm.tabou2.storage.ddc.item;
+package rm.tabou2.storage.tabou.item;
 
 import lombok.Data;
 
@@ -12,6 +12,10 @@ public class PermisConstruireSuiviHabitat {
     private Date docDate;
 
     private Date datDate;
+
+    public PermisConstruireSuiviHabitat() {
+
+    }
 
     public PermisConstruireSuiviHabitat(Date adsDate, Date docDate, Date datDate) {
         this.adsDate = adsDate;

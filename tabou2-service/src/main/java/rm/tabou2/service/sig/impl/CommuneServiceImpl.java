@@ -11,6 +11,8 @@ import rm.tabou2.storage.sig.dao.CommuneCustomDao;
 import rm.tabou2.storage.sig.dao.CommuneDao;
 import rm.tabou2.storage.sig.entity.CommuneEntity;
 
+import java.util.NoSuchElementException;
+
 /**
  * Service des communes
  */
@@ -30,6 +32,11 @@ public class CommuneServiceImpl implements CommuneService {
     public Commune getCommuneById(int communeId) {
 
         CommuneEntity communeEntity = communeDao.findOneById(communeId);
+
+        //Si commune RM, on lève une exception 404
+        if (communeEntity.getCommuneAgglo() == 0) {
+            throw new NoSuchElementException("La commune demandée ne fait pas partie de Rennes Metropole");
+        }
 
         return communeMapper.entityToDto(communeEntity);
 

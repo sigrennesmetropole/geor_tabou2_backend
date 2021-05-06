@@ -253,7 +253,7 @@ public class OperationServiceImpl implements OperationService {
         }
 
         //type evenement
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         if (typeEvenementEntity.isSysteme()) {
             throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
         }
@@ -298,7 +298,7 @@ public class OperationServiceImpl implements OperationService {
         }
 
         // type evenement
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         evenementOperationEntity.setTypeEvenement(typeEvenementEntity);
 
         evenementOperationMapper.dtoToEntity(evenement, evenementOperationEntity);
