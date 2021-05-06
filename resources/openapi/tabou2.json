@@ -3910,6 +3910,11 @@
           "description": "Description du programme pour des besoins de la communication (par ex: Panorama des ZAC)",
           "type": "string"
         },
+        "idEmprise":{
+          "description": "Identifiant de l'emprise de l'opération",
+          "type": "integer",
+          "format": "int32"
+        },
         "attributionFonciereAnnee": {
           "description": "Année de l'attribution foncière",
           "type": "integer",
