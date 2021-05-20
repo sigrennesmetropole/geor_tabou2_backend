@@ -24,7 +24,7 @@ public class ValidOperationCreationValidator implements CustomConstraintValidato
             addConstraintErrorProperty(constraintValidatorContext, "L'identifiant de l'emprise de l'opération est invalide", "idEmprise");
         }
 
-        boolean vocationValidation = operation.getVocation() != null;
+     /*   boolean vocationValidation = operation.getVocation() != null;
         if (!vocationValidation) {
             addConstraintErrorProperty(constraintValidatorContext, "La vocation de l'opération est invalide", "vocation");
         }
@@ -48,10 +48,10 @@ public class ValidOperationCreationValidator implements CustomConstraintValidato
         if (!consommationEspaceValidation) {
             addConstraintErrorProperty(constraintValidatorContext, "La consommation d'espace de l'opération est invalide", "consommationEspace");
         }
-
-        return natureValidation && empriseValidation
-                && vocationValidation && decisionValidation
+*/
+        return natureValidation && empriseValidation;
+           /*     && vocationValidation && decisionValidation
                 && maitriseOuvrageValidation && modeAmenagementValidation
-                && consommationEspaceValidation;
+                && consommationEspaceValidation;*/
     }
 }

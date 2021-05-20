@@ -855,7 +855,7 @@
     "/operations/{operationId}/programmes": {
       "get": {
         "summary": "Recherche les programmes d'une opération",
-        "operationId": "searchProgrammes",
+        "operationId": "searchProgrammesOfOperation",
         "produces": [
           "application/json"
         ],
@@ -3694,6 +3694,7 @@
     "Operation": {
       "description": "Opération d'amménagement",
       "type": "object",
+      "required": ["code, id"],
       "properties": {
         "id": {
           "description": "Identificateur unique. Clé primaire",
@@ -3874,6 +3875,7 @@
     },
     "Programme": {
       "type": "object",
+      "required": ["operationId","idEmprise","code","nom","etape"],
       "properties": {
         "id": {
           "description": "Identificateur unique. Clé primaire",
@@ -3911,7 +3913,7 @@
           "type": "string"
         },
         "idEmprise":{
-          "description": "Identifiant de l'emprise de l'opération",
+          "description": "Identifiant de l'emprise du programme",
           "type": "integer",
           "format": "int32"
         },
