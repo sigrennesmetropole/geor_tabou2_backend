@@ -329,15 +329,11 @@
         "parameters": [
           {
             "in": "query",
-            "name": "nature",
-            "description": "Nature de l'opération",
+            "name": "natureId",
+            "description": "Identifiant de la nature de l'opération",
             "required": true,
-            "type": "string",
-            "enum": [
-              "ZAC",
-              "ZA",
-              "EN_DIFFUS"
-            ]
+            "type": "integer",
+            "format": "int64"
           },
           {
             "in": "query",
