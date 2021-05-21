@@ -72,7 +72,8 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<Operation> deleteEvenementByOperationId(Long evenementId, Long operationId) throws Exception {
-        return null;
+        evenementOperationService.deleteEvenementByOperationId(evenementId, operationId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
