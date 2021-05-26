@@ -165,9 +165,9 @@ where teo1.code = 'ANNULE_PUBLIC' and teo2.code = 'CLOTURE_PUBLIC';
 
 -- Insertion des natures d'une opération
 
-INSERT INTO tabou_nature (libelle) VALUES ('ZAC');
-INSERT INTO tabou_nature (libelle) VALUES ('ZA');
-INSERT INTO tabou_nature (libelle) VALUES ('En diffus');
+INSERT INTO tabou_nature (id_nature, libelle) VALUES (1, 'ZAC');
+INSERT INTO tabou_nature (id_nature, libelle) VALUES (2, 'ZA');
+INSERT INTO tabou_nature (id_nature, libelle) VALUES (3, 'En diffus');
 
 
 -- Insertion des types d'évènements

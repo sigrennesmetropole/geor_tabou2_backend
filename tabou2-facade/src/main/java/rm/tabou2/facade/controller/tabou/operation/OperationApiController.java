@@ -96,8 +96,8 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<List<Emprise>> getAvailableEmprises(@NotNull @Valid String nature, @NotNull @Valid Boolean estSecteur) throws Exception {
-        return new ResponseEntity<>(operationEmpriseHelper.getAvailableEmprises(nature, estSecteur), HttpStatus.OK);
+    public ResponseEntity<List<Emprise>> getAvailableEmprises(@NotNull @Valid Long natureId, @NotNull @Valid Boolean estSecteur) throws Exception {
+        return new ResponseEntity<>(operationEmpriseHelper.getAvailableEmprises(natureId, estSecteur), HttpStatus.OK);
     }
 
     @Override
