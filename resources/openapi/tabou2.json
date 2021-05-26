@@ -3694,7 +3694,6 @@
     "Operation": {
       "description": "Opération d'amménagement",
       "type": "object",
-      "required": ["code, id"],
       "properties": {
         "id": {
           "description": "Identificateur unique. Clé primaire",
@@ -3738,8 +3737,7 @@
         },
         "secteur": {
           "description": "Indique que l'opération est un secteur",
-          "type": "boolean",
-          "default": false
+          "type": "boolean"
         },
         "diffusionRestreinte": {
           "description": "Indique si l'opération est en diffusion restreinte (en off)",
@@ -3875,7 +3873,6 @@
     },
     "Programme": {
       "type": "object",
-      "required": ["operationId","idEmprise","code","nom","etape"],
       "properties": {
         "id": {
           "description": "Identificateur unique. Clé primaire",
