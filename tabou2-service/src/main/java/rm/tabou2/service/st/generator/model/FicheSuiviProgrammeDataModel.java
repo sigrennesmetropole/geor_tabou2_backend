@@ -15,6 +15,7 @@ import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.item.AgapeoSuiviHabitat;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,10 @@ public class FicheSuiviProgrammeDataModel extends DataModel {
 
     public FicheSuiviProgrammeDataModel() {
         super();
+        this.setAgapeos(new ArrayList<>());
+        this.setPermis(new ArrayList<>());
+        this.setAgapeoSuiviHabitat(new AgapeoSuiviHabitat());
+        this.setPermisSuiviHabitat(new PermisConstruireSuiviHabitat());
     }
 
     public void setProgramme(ProgrammeEntity programme) {
