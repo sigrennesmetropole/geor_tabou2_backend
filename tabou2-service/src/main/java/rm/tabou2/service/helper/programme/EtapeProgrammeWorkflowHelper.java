@@ -9,6 +9,7 @@ import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class EtapeProgrammeWorkflowHelper {
@@ -21,6 +22,7 @@ public class EtapeProgrammeWorkflowHelper {
 
     /**
      * Liste des étapes possibles pour un programme
+     *
      * @param idProgramme identifiant du programme
      * @return liste des étapes
      */
@@ -31,10 +33,11 @@ public class EtapeProgrammeWorkflowHelper {
     }
 
     /**
-     * Permet de savoir si on peut affecter une étape à un programme
-     * @param newEtape      etape à affecter
-     * @param idProgramme   identifiant du programme
-     * @return              true si on peut affectuer newEtape au programme
+     * Permet de savoir si on peut affecter une étape à un programme.
+     *
+     * @param newEtape    etape à affecter
+     * @param idProgramme identifiant du programme
+     * @return true si on peut affectuer newEtape au programme
      */
     public boolean checkCanAssignEtapeToProgramme(Etape newEtape, Long idProgramme) {
         ProgrammeEntity programmeEntity = programmeDao.findOneById(idProgramme);
@@ -44,6 +47,9 @@ public class EtapeProgrammeWorkflowHelper {
         }
         List<EtapeProgrammeEntity> nextEtapesEntities = List.copyOf(actualEtapeEntity.getNextEtapes());
         List<Etape> nextEtapes = etapeProgrammeMapper.entitiesToDto(nextEtapesEntities);
-        return nextEtapes.contains(newEtape);
+        List<Long> nextEtapesIdList = nextEtapes.stream().map(Etape::getId).collect(Collectors.toList());
+
+
+        return nextEtapesIdList.contains(newEtape.getId());
     }
 }

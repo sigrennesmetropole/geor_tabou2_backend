@@ -188,7 +188,7 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<PageResult> searchProgrammes(Long operationId, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchProgrammesOfOperation(Long operationId, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         ProgrammeCriteria programmeCriteria = new ProgrammeCriteria();
         programmeCriteria.setOperationId(operationId);

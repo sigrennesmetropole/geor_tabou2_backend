@@ -855,7 +855,7 @@
     "/operations/{operationId}/programmes": {
       "get": {
         "summary": "Recherche les programmes d'une opération",
-        "operationId": "searchProgrammes",
+        "operationId": "searchProgrammesOfOperation",
         "produces": [
           "application/json"
         ],
@@ -3737,8 +3737,7 @@
         },
         "secteur": {
           "description": "Indique que l'opération est un secteur",
-          "type": "boolean",
-          "default": false
+          "type": "boolean"
         },
         "diffusionRestreinte": {
           "description": "Indique si l'opération est en diffusion restreinte (en off)",
@@ -3911,7 +3910,7 @@
           "type": "string"
         },
         "idEmprise":{
-          "description": "Identifiant de l'emprise de l'opération",
+          "description": "Identifiant de l'emprise du programme",
           "type": "integer",
           "format": "int32"
         },
