@@ -2,6 +2,8 @@ package rm.tabou2.facade.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,7 +15,10 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -69,6 +74,18 @@ public class AppExceptionHandler {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<Object> handleDataIntegrityViolationException(final DataIntegrityViolationException ex, final WebRequest request) {
+
+        String error = ex.getRootCause().getMessage();
+
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "ConstraintViolationException : la requête ne peut être exécutée", error);
+
+        return  new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleException(final Exception ex, final WebRequest request) {

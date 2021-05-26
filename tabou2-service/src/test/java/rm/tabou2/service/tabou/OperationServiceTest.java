@@ -176,7 +176,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         final Operation operation = new Operation();
         operation.setDiffusionRestreinte(true);
         operation.setNumAds("numads4");
-        operation.setSecteur(true);
+
 
         ConstraintViolationException constraintViolationException = Assertions.assertThrows(
                 ConstraintViolationException.class,
@@ -184,7 +184,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         );
 
         testConstraintViolationException(constraintViolationException, List.of("nom", "code", "nature",
-                "idEmprise", "vocation", "decision", "maitriseOuvrage", "modeAmenagement", "consommationEspace"));
+                "idEmprise", "secteur"));
 
     }
 

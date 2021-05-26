@@ -72,7 +72,8 @@ public class OperationApiController implements OperationsApi {
 
     @Override
     public ResponseEntity<Operation> deleteEvenementByOperationId(Long evenementId, Long operationId) throws Exception {
-        return null;
+        evenementOperationService.deleteEvenementByOperationId(evenementId, operationId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
@@ -95,8 +96,8 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<List<Emprise>> getAvailableEmprises(@NotNull @Valid String nature, @NotNull @Valid Boolean estSecteur) throws Exception {
-        return new ResponseEntity<>(operationEmpriseHelper.getAvailableEmprises(nature, estSecteur), HttpStatus.OK);
+    public ResponseEntity<List<Emprise>> getAvailableEmprises(@NotNull @Valid Long natureId, @NotNull @Valid Boolean estSecteur) throws Exception {
+        return new ResponseEntity<>(operationEmpriseHelper.getAvailableEmprises(natureId, estSecteur), HttpStatus.OK);
     }
 
     @Override
@@ -187,7 +188,7 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<PageResult> searchProgrammes(Long operationId, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchProgrammesOfOperation(Long operationId, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         ProgrammeCriteria programmeCriteria = new ProgrammeCriteria();
         programmeCriteria.setOperationId(operationId);

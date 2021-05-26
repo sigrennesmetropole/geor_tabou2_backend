@@ -30,7 +30,7 @@ public class IrisApiController implements IrisApi {
         IrisCriteria irisCriteria = new IrisCriteria();
         irisCriteria.setCodeIris(codeIris);
         irisCriteria.setCcom(ccom);
-        irisCriteria.setCodeIris(codeIris);
+        irisCriteria.setNom(nom);
 
         Page<Iris> page = irisService.searchIris(irisCriteria, pageable);
 

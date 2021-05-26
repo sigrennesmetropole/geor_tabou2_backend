@@ -52,6 +52,8 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
+import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
@@ -280,7 +282,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             programmeCriteria.setDiffusionRestreinte(false);
             LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
-        return programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
+        Page<Programme> programmes = programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
+        programmePlannerHelper.computeSuiviHabitatOfProgramme(programmes);
+
+        return programmes;
     }
 
     @Override
@@ -504,19 +509,22 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
         ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
         ficheSuiviProgrammeDataModel.setIllustration(fileiImgIllustration);
-        AgapeoSuiviHabitat ash = agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds());
-        if (ash == null) {
-            ash = new AgapeoSuiviHabitat();
+
+        if (programmeEntity.getNumAds() != null) { // traiter le cas où le nusAds ne retourne rien
+
+            AgapeoSuiviHabitat agapeoSuiviHabitat = agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds());
+            if (agapeoSuiviHabitat != null) ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(agapeoSuiviHabitat);
+
+            PermisConstruireSuiviHabitat permisConstruireSuiviHabitat = permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds());
+            if (permisConstruireSuiviHabitat != null) ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireSuiviHabitat);
+
+            List<AgapeoEntity> agapeos = agapeoDao.findAllByNumAds(programmeEntity.getNumAds());
+            if (agapeos != null) ficheSuiviProgrammeDataModel.setAgapeos(agapeos);
+
+            List<PermisConstruireEntity> permis = permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds());
+            if (permis != null) ficheSuiviProgrammeDataModel.setPermis(permis);
         }
 
-        ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(ash);
-        PermisConstruireSuiviHabitat pcsh = permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds());
-        if (pcsh == null) {
-            pcsh = new PermisConstruireSuiviHabitat();
-        }
-        ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(pcsh);
-        ficheSuiviProgrammeDataModel.setAgapeos(agapeoDao.findAllByNumAds(programmeEntity.getNumAds()));
-        ficheSuiviProgrammeDataModel.setPermis(permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds()));
         ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));
         ficheSuiviProgrammeDataModel.setProgrammeTiers(programmeTiersDao.findByProgrammeId(programmeEntity.getId()));
 

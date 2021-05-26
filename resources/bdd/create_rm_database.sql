@@ -277,6 +277,31 @@ CREATE TABLE urba_foncier.negociateurfoncier_secteur
     );
 
 
+CREATE TABLE urba_foncier.oa_limite_intervention
+(
+    objectid integer NOT NULL,
+    nomopa character varying(200) COLLATE pg_catalog."default",
+    shape geometry,
+    id_tabou integer,
+    nature character varying(22) COLLATE pg_catalog."default",
+    etape character varying(12) COLLATE pg_catalog."default",
+    archive boolean DEFAULT false,
+    observation text COLLATE pg_catalog."default",
+    datesig character varying(15) COLLATE pg_catalog."default",
+    date_modif timestamp without time zone,
+    perimetre_geo numeric(15,2) DEFAULT 0,
+    aire_geo numeric(15,2) DEFAULT 0,
+    CONSTRAINT pk_oa_limite_intervention_objectid PRIMARY KEY (objectid),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948),
+    CONSTRAINT enforce_dims_shape CHECK (st_ndims(shape) = 2),
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'MULTIPOLYGON'::text OR geometrytype(shape) = 'POLYGON'::text),
+    CONSTRAINT nature_dom CHECK (nature::text = ANY ('{Autre,PC/DP,"Espace naturel",Equipement,"Mobilité espace public",Activité,Habitat,NULL}'::text[])),
+    CONSTRAINT etape_dom CHECK (etape::text = ANY ('{Annulé," En projet",Clôturé,Opérationnel,"En étude",NULL}'::text[]))
+)
+    WITH (
+        OIDS = FALSE
+    );
+
 ALTER TABLE limite_admin.quartier  OWNER TO sig_user;
 ALTER TABLE limite_admin.comite_sect_tab  OWNER TO sig_user;
 ALTER TABLE urba_foncier.plui_zone_urba  OWNER TO sig_user;
@@ -286,6 +311,7 @@ ALTER TABLE urba_foncier.oa_secteur  OWNER TO sig_user;
 ALTER TABLE urba_foncier.instructeur_secteur  OWNER TO sig_user;
 ALTER TABLE urba_foncier.chargedoperation_secteur  OWNER TO sig_user;
 ALTER TABLE urba_foncier.negociateurfoncier_secteur  OWNER TO sig_user;
+ALTER TABLE urba_foncier.oa_limite_intervention  OWNER TO sig_user;
 ALTER TABLE economie.za  OWNER TO sig_user;
 ALTER TABLE demographie.iris  OWNER TO sig_user;
 ALTER TABLE limite_admin.commune_emprise  OWNER TO sig_user;
@@ -320,3 +346,5 @@ BEGIN
     return ;
 END;
 $$;
+
+

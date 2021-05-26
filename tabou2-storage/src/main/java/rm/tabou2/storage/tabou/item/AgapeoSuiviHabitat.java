@@ -18,13 +18,16 @@ public class AgapeoSuiviHabitat {
     public AgapeoSuiviHabitat() {
 
     }
-    public AgapeoSuiviHabitat(long logementsLocatifAide, long logementsAccessAide,
-                              long logementsLocatifRegulePrive, long logementsLocatifReguleHlm,
-                              long logementsAccessMaitrise) {
-        this.logementsLocatifAide = Math.toIntExact(logementsLocatifAide);
-        this.logementsAccessAide = Math.toIntExact(logementsAccessAide);
-        this.logementsLocatifRegulePrive = Math.toIntExact(logementsLocatifRegulePrive);
-        this.logementsLocatifReguleHlm = Math.toIntExact(logementsLocatifReguleHlm);
-        this.logementsAccessMaitrise = Math.toIntExact(logementsAccessMaitrise);
+    public AgapeoSuiviHabitat(Long logementsLocatifAide, Long logementsAccessAide,
+                              Long logementsLocatifRegulePrive, Long logementsLocatifReguleHlm,
+                              Long logementsAccessMaitrise) {
+
+
+        this.logementsLocatifAide = logementsLocatifAide != null ? Math.toIntExact(logementsLocatifAide) : 0;
+        this.logementsAccessAide = logementsAccessAide != null ? Math.toIntExact(logementsAccessAide) : 0;
+        this.logementsLocatifRegulePrive = logementsLocatifRegulePrive != null ? Math.toIntExact(logementsLocatifRegulePrive) : 0;
+        this.logementsLocatifReguleHlm = logementsLocatifReguleHlm != null ? Math.toIntExact(logementsLocatifReguleHlm) : 0;
+        this.logementsAccessMaitrise = logementsAccessMaitrise != null ? Math.toIntExact(logementsAccessMaitrise) : 0;
+
     }
 }
