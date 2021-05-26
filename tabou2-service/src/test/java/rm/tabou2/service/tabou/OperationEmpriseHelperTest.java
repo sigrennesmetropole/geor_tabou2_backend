@@ -54,8 +54,8 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
         secteurDao.save(secteurEntity1);
         secteurDao.save(secteurEntity2);
 
-        Assertions.assertEquals(1, operationEmpriseHelper.getAvailableEmprises("En diffus", true).size());
-        Assertions.assertEquals(0, operationEmpriseHelper.getAvailableEmprises("ZA", false).size());
+        Assertions.assertEquals(1, operationEmpriseHelper.getAvailableEmprises(3L, true).size());
+        Assertions.assertEquals(0, operationEmpriseHelper.getAvailableEmprises(2L, false).size());
 
         ZacEntity zacEntity1 = new ZacEntity();
         zacEntity1.setId(1);
@@ -66,7 +66,7 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
         zacDao.save(zacEntity1);
         zacDao.save(zacEntity2);
 
-        Assertions.assertEquals(2, operationEmpriseHelper.getAvailableEmprises("ZAC", false).size());
+        Assertions.assertEquals(2, operationEmpriseHelper.getAvailableEmprises(1L, false).size());
 
         ZaEntity zaEntity1 = new ZaEntity();
         zaEntity1.setId(1);
@@ -86,7 +86,7 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
         zaDao.save(zaEntity3);
         zaDao.save(zaEntity4);
 
-        Assertions.assertEquals(3, operationEmpriseHelper.getAvailableEmprises("ZA", false).size());
+        Assertions.assertEquals(3, operationEmpriseHelper.getAvailableEmprises(2L, false).size());
 
     }
 }

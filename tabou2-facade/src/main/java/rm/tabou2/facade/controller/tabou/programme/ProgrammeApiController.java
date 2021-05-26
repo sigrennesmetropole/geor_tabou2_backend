@@ -224,7 +224,8 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
     @Override
     public ResponseEntity<Programme> deleteEvenementByProgrammeId(Long evenementId, Long programmeId) throws Exception {
-        return null;
+        evenementProgrammeService.deleteEvenementByProgrammeId(evenementId, programmeId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
