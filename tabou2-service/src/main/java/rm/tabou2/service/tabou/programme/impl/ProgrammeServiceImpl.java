@@ -496,19 +496,14 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AppServiceException("Erreur lors de la récupération du template", e);
         }
 
-        try {
-            // TODO: récupérer l'image avec alfresco
-            fileiImgIllustration = new ClassPathResource("img/default_img.jpg").getFile();
-        } catch (IOException e) {
-            throw new AppServiceException("Erreur lors de la récupération de l'illustration", e);
-        }
+
 
         FicheSuiviProgrammeDataModel ficheSuiviProgrammeDataModel = new FicheSuiviProgrammeDataModel();
         ficheSuiviProgrammeDataModel.setProgramme(programmeEntity);
         ficheSuiviProgrammeDataModel.setOperation(programmeEntity.getOperation());
         ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
         ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
-        ficheSuiviProgrammeDataModel.setIllustration(fileiImgIllustration);
+        ficheSuiviProgrammeDataModel.setIllustration(documentGenerator.generatedImgForTemplate());
 
         if (programmeEntity.getNumAds() != null) { // traiter le cas où le nusAds ne retourne rien
 
