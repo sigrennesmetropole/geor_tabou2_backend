@@ -27,12 +27,14 @@ import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -112,7 +114,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
     @Override
     @Transactional
-    public Page<TiersAmenagement> searchOperationTiers(TiersAmenagementCriteria criteria, Pageable pageable) throws AppServiceException {
+    public Page<AssociationTiersTypeTiers> searchOperationTiers(TiersAmenagementCriteria criteria, Pageable pageable) throws AppServiceException {
 
         Optional<OperationEntity> optional = operationDao.findById(criteria.getOperationId());
 
@@ -124,7 +126,18 @@ public class OperationTiersServiceImpl implements OperationTiersService {
             return new PageImpl<>(new ArrayList<>(), pageable, 0); // On retourne une page vide
         }
 
-         return operationTiersMapper.entitiesToDto(operationTiersCustomDao.searchOperationTiers(criteria, pageable),pageable);
+        Page<OperationTiersEntity> tiersAmenagements = operationTiersCustomDao.searchOperationTiers(criteria, pageable);
+
+        //Transformation en Page d'associationTiersTypeTiers
+        List<AssociationTiersTypeTiers> associationTiersTypeTiers = new ArrayList<>();
+        for (OperationTiersEntity operationTiers: tiersAmenagements.getContent()) {
+            associationTiersTypeTiers.add(getAssociationById(operationTiers.getId()));
+        }
+
+        Page<AssociationTiersTypeTiers> pageResult = new PageImpl<>(associationTiersTypeTiers, pageable, tiersAmenagements.getTotalElements());
+
+
+        return pageResult;
 
     }
 

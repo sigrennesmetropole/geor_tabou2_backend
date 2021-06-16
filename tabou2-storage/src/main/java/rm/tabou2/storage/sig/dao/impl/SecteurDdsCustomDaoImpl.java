@@ -1,8 +1,6 @@
 package rm.tabou2.storage.sig.dao.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -40,10 +38,10 @@ public class SecteurDdsCustomDaoImpl extends AbstractCustomDaoImpl implements Se
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         //Requête pour compter le nombre de résultats total
-        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class).distinct(true);
         Root<SecteurDdsEntity> countRoot = countQuery.from(SecteurDdsEntity.class);
         buildQuery(secteur, builder, countQuery, countRoot);
-        countQuery.select(builder.countDistinct(countRoot));
+        countQuery.select(builder.countDistinct(countRoot.get("secteur")));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
         //Si aucun résultat
@@ -55,12 +53,13 @@ public class SecteurDdsCustomDaoImpl extends AbstractCustomDaoImpl implements Se
         CriteriaQuery<SecteurDdsEntity> searchQuery = builder.createQuery(SecteurDdsEntity.class).distinct(true);
         Root<SecteurDdsEntity> searchRoot = searchQuery.from(SecteurDdsEntity.class);
         buildQuery(secteur, builder, searchQuery, searchRoot);
-
+        searchQuery.multiselect(builder.literal(0), searchRoot.get("secteur"));
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
 
         TypedQuery<SecteurDdsEntity> typedQuery = entityManager.createQuery(searchQuery);
         List<SecteurDdsEntity> secteurDdsEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
         return new PageImpl<>(secteurDdsEntities, pageable, totalCount.intValue());
+
     }
 
     private void buildQuery(String secteur, CriteriaBuilder builder,
