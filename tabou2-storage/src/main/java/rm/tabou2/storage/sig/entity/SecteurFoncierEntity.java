@@ -18,4 +18,13 @@ public class SecteurFoncierEntity {
     @Column(name = "negociateur")
     private String negociateur;
 
+    public SecteurFoncierEntity() {
+
+    }
+
+    public SecteurFoncierEntity(Long id, String negociateur) {
+        this.id = id;
+        this.negociateur = negociateur;
+    }
+
 }
