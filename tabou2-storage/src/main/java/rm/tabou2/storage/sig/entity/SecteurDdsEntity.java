@@ -18,5 +18,15 @@ public class SecteurDdsEntity {
     @Column(name = "secteur")
     private String secteur;
 
+    public SecteurDdsEntity() {
+
+    }
+
+    public SecteurDdsEntity(int id, String secteur) {
+        this.id = id;
+        this.secteur = secteur;
+    }
+
+
 
 }

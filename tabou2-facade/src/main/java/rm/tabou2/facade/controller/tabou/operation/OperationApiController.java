@@ -128,7 +128,7 @@ public class OperationApiController implements OperationsApi {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, criteria.getOrderBy(), criteria.isAsc(), OperationTiersEntity.class);
 
-        Page<TiersAmenagement> page = operationTiersService.searchOperationTiers(criteria, pageable);
+        Page<AssociationTiersTypeTiers> page = operationTiersService.searchOperationTiers(criteria, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 

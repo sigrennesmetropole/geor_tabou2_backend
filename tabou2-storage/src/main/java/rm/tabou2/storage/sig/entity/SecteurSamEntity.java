@@ -18,4 +18,13 @@ public class SecteurSamEntity {
     @Column(name = "nom_secteur")
     private String nomSecteur;
 
+    public SecteurSamEntity() {
+
+    }
+
+    public SecteurSamEntity(int id, String nomSecteur) {
+        this.id = id;
+        this.nomSecteur = nomSecteur;
+    }
+
 }

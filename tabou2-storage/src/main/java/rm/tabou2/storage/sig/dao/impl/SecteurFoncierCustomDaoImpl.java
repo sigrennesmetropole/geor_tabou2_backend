@@ -1,8 +1,6 @@
 package rm.tabou2.storage.sig.dao.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -39,10 +37,10 @@ public class SecteurFoncierCustomDaoImpl extends AbstractCustomDaoImpl implement
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         //Requête pour compter le nombre de résultats total
-        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class).distinct(true);
         Root<SecteurFoncierEntity> countRoot = countQuery.from(SecteurFoncierEntity.class);
         buildQuery(negociateur, builder, countQuery, countRoot);
-        countQuery.select(builder.countDistinct(countRoot));
+        countQuery.select(builder.countDistinct(countRoot.get("negociateur")));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
         //Si aucun résultat
@@ -54,7 +52,7 @@ public class SecteurFoncierCustomDaoImpl extends AbstractCustomDaoImpl implement
         CriteriaQuery<SecteurFoncierEntity> searchQuery = builder.createQuery(SecteurFoncierEntity.class).distinct(true);
         Root<SecteurFoncierEntity> searchRoot = searchQuery.from(SecteurFoncierEntity.class);
         buildQuery(negociateur, builder, searchQuery, searchRoot);
-
+        searchQuery.multiselect(builder.literal(0L), countRoot.get("negociateur"));
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
 
         TypedQuery<SecteurFoncierEntity> typedQuery = entityManager.createQuery(searchQuery);

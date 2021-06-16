@@ -202,6 +202,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         //mise à jour de l'id de l'emprise dans la table des programme RM
         programmeRm.setIdTabou(programmeSaved.getId().intValue());
+        programmeRmDao.save(programmeRm);
 
         return programmeSaved;
 

@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.constant.NatureLibelle;
 import rm.tabou2.service.dto.Emprise;
-import rm.tabou2.service.dto.Nature;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.storage.sig.dao.EnDiffusDao;
 import rm.tabou2.storage.sig.dao.SecteurDao;
@@ -21,6 +20,7 @@ import rm.tabou2.storage.sig.entity.ZacEntity;
 import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -47,20 +47,20 @@ public class OperationEmpriseHelper {
 
     public void saveEmprise(Operation operationToSave, Long idEmprise) {
 
-        Nature nature = operationToSave.getNature();
+        NatureEntity nature = natureDao.findById(operationToSave.getNature().getId()).orElseThrow(() -> new EntityNotFoundException("Le nature id={0} n'existe pas"));
         if (BooleanUtils.isTrue(operationToSave.isSecteur())) {
             SecteurEntity secteurEntity = secteurDao.findOneById(idEmprise.intValue());
             secteurEntity.setIdTabou(operationToSave.getId().intValue());
             secteurDao.save(secteurEntity);
-        } else if (NatureLibelle.ZAC.equals(nature.getLibelle())) {
+        } else if (NatureLibelle.ZAC.equalsIgnoreCase(nature.getLibelle())) {
             ZacEntity zacEntity = zacDao.findOneById(idEmprise.intValue());
             zacEntity.setIdTabou(operationToSave.getId().intValue());
             zacDao.save(zacEntity);
-        } else if (NatureLibelle.ZA.equals(nature.getLibelle())) {
+        } else if (NatureLibelle.ZA.equalsIgnoreCase(nature.getLibelle())) {
             ZaEntity zaEntity = zaDao.findOneById(idEmprise.intValue());
             zaEntity.setIdTabou(operationToSave.getId().intValue());
             zaDao.save(zaEntity);
-        } else if (NatureLibelle.EN_DIFFUS.equals(nature.getLibelle())) {
+        } else if (NatureLibelle.EN_DIFFUS.equalsIgnoreCase(nature.getLibelle())) {
             EnDiffusEntity enDiffusEntity = enDiffusDao.findOneById(idEmprise.intValue());
             enDiffusEntity.setIdTabou(operationToSave.getId().intValue());
             enDiffusDao.save(enDiffusEntity);
