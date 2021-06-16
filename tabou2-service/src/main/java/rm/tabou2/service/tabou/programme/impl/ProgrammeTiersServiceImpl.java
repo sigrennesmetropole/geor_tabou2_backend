@@ -8,12 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
-import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.service.mapper.tabou.operation.ProgrammeTiersMapper;
+import rm.tabou2.service.mapper.tabou.programme.ProgrammeTiersMapper;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
 import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
@@ -23,7 +21,6 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
-import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
@@ -33,6 +30,7 @@ import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -114,7 +112,7 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
 
     @Override
     @Transactional
-    public Page<TiersAmenagement> searchProgrammeTiers(TiersAmenagementCriteria criteria, Pageable pageable) {
+    public Page<AssociationTiersTypeTiers> searchProgrammeTiers(TiersAmenagementCriteria criteria, Pageable pageable) {
 
         Optional<ProgrammeEntity> optional = programmeDao.findById(criteria.getProgrammeId());
 
@@ -126,8 +124,17 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
             return new PageImpl<>(new ArrayList<>(), pageable, 0); // On retourne une page vide
         }
 
+        Page<ProgrammeTiersEntity> tiersAmenagements = programmeTiersCustomDao.searchProgrammesTiers(criteria, pageable);
 
-        return programmeTiersMapper.entitiesToDto(programmeTiersCustomDao.searchProgrammesTiers(criteria, pageable),pageable);
+        //Transformation en Page d'associationTiersTypeTiers
+        List<AssociationTiersTypeTiers> associationTiersTypeTiers = new ArrayList<>();
+        for (ProgrammeTiersEntity programmeTiers: tiersAmenagements.getContent()) {
+            associationTiersTypeTiers.add(getAssociationById(programmeTiers.getId()));
+        }
+
+        Page<AssociationTiersTypeTiers> pageResult = new PageImpl<>(associationTiersTypeTiers, pageable, tiersAmenagements.getTotalElements());
+
+        return pageResult;
 
     }
 

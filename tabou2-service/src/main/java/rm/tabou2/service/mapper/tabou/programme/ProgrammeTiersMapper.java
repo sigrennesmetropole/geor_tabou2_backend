@@ -1,4 +1,4 @@
-package rm.tabou2.service.mapper.tabou.operation;
+package rm.tabou2.service.mapper.tabou.programme;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

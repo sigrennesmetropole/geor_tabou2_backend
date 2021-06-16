@@ -22,6 +22,7 @@ import rm.tabou2.service.constant.DecisionCode;
 import rm.tabou2.service.constant.MaitriseOuvrageCode;
 import rm.tabou2.service.constant.ModeAmenagementCode;
 import rm.tabou2.service.constant.VocationCode;
+import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
@@ -143,7 +144,7 @@ public class OperationTiersServiceTest {
         criteria.setAsc(true);
         criteria.setOrderBy("nom");
 
-        Page<TiersAmenagement> page = null;
+        Page<AssociationTiersTypeTiers> page = null;
         try {
             page = operationTiersService.searchOperationTiers(criteria, pageable);
         } catch (AppServiceException e) {
@@ -152,8 +153,8 @@ public class OperationTiersServiceTest {
 
 
         Assertions.assertEquals(1, page.getTotalElements());
-        Assertions.assertEquals(NOM_TIERS, page.getContent().get(0).getNom());
-        Assertions.assertEquals(LIBELLE_TYPE_TIERS, page.getContent().get(0).getLibelle());
+        Assertions.assertEquals(NOM_TIERS, page.getContent().get(0).getTiers().getNom());
+        Assertions.assertEquals(LIBELLE_TYPE_TIERS, page.getContent().get(0).getTypeTiers().getLibelle());
 
     }
 
@@ -206,7 +207,7 @@ public class OperationTiersServiceTest {
         criteria.setOrderBy("libelle");
 
 
-        Page<TiersAmenagement> page = null;
+        Page<AssociationTiersTypeTiers> page = null;
         try {
             // l'utilisateur n'as pas le role referent
             Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(false);
@@ -229,8 +230,8 @@ public class OperationTiersServiceTest {
             e.printStackTrace();
         }
         Assertions.assertEquals(1, page.getTotalElements());
-        Assertions.assertEquals(NOM_TIERS, page.getContent().get(0).getNom());
-        Assertions.assertEquals(LIBELLE_TYPE_TIERS, page.getContent().get(0).getLibelle());
+        Assertions.assertEquals(NOM_TIERS, page.getContent().get(0).getTiers().getNom());
+        Assertions.assertEquals(LIBELLE_TYPE_TIERS, page.getContent().get(0).getTypeTiers().getLibelle());
     }
 
 }

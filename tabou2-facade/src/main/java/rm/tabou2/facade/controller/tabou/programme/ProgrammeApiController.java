@@ -196,7 +196,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, criteria.getOrderBy(), criteria.isAsc(), OperationTiersEntity.class);
 
-        Page<TiersAmenagement> page = programmeTiersService.searchProgrammeTiers(criteria, pageable);
+        Page<AssociationTiersTypeTiers> page = programmeTiersService.searchProgrammeTiers(criteria, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
