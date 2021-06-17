@@ -29,7 +29,7 @@ public interface OperationTiersService {
      * @param pageable paramètres de pagination
      * @return Tiers correspondants à la recherche
      */
-    Page<TiersAmenagement> searchOperationTiers(TiersAmenagementCriteria criteria, Pageable pageable) throws AppServiceException;
+    Page<AssociationTiersTypeTiers> searchOperationTiers(TiersAmenagementCriteria criteria, Pageable pageable) throws AppServiceException;
 
     /**
      * Mise à jour de l'association operation-tiers

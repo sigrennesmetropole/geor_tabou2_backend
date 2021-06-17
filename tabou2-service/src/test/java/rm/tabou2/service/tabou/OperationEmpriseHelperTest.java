@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
@@ -35,6 +38,8 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
     @Autowired
     private ZaDao zaDao;
 
+    private Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "id"));
+
     @AfterEach
     public void afterTest() {
         secteurDao.deleteAll();
@@ -54,8 +59,8 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
         secteurDao.save(secteurEntity1);
         secteurDao.save(secteurEntity2);
 
-        Assertions.assertEquals(1, operationEmpriseHelper.getAvailableEmprises(3L, true).size());
-        Assertions.assertEquals(0, operationEmpriseHelper.getAvailableEmprises(2L, false).size());
+        Assertions.assertEquals(1, operationEmpriseHelper.getAvailableEmprises(3L, true, pageable).getTotalElements());
+        Assertions.assertEquals(0, operationEmpriseHelper.getAvailableEmprises(2L, false, pageable).getTotalElements());
 
         ZacEntity zacEntity1 = new ZacEntity();
         zacEntity1.setId(1);
@@ -66,7 +71,7 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
         zacDao.save(zacEntity1);
         zacDao.save(zacEntity2);
 
-        Assertions.assertEquals(2, operationEmpriseHelper.getAvailableEmprises(1L, false).size());
+        Assertions.assertEquals(2, operationEmpriseHelper.getAvailableEmprises(1L, false, pageable).getTotalElements());
 
         ZaEntity zaEntity1 = new ZaEntity();
         zaEntity1.setId(1);
@@ -86,7 +91,7 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
         zaDao.save(zaEntity3);
         zaDao.save(zaEntity4);
 
-        Assertions.assertEquals(3, operationEmpriseHelper.getAvailableEmprises(2L, false).size());
+        Assertions.assertEquals(3, operationEmpriseHelper.getAvailableEmprises(2L, false, pageable).getTotalElements());
 
     }
 }
