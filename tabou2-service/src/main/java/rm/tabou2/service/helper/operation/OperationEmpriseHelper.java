@@ -2,10 +2,12 @@ package rm.tabou2.service.helper.operation;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.constant.NatureLibelle;
 import rm.tabou2.service.dto.Emprise;
-import rm.tabou2.service.dto.Nature;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.storage.sig.dao.EnDiffusDao;
 import rm.tabou2.storage.sig.dao.SecteurDao;
@@ -19,7 +21,7 @@ import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -65,8 +67,10 @@ public class OperationEmpriseHelper {
         }
     }
 
-    public List<Emprise> getAvailableEmprises(Long natureId, Boolean estSecteur) {
+    public Page<Emprise> getAvailableEmprises(Long natureId, Boolean estSecteur, Pageable pageable) {
 
+        List<Emprise> result = new ArrayList<>();
+        int totalResultsNumber = 0;
 
         Optional<NatureEntity> natureEntityOpt = natureDao.findById(natureId);
 
@@ -77,39 +81,43 @@ public class OperationEmpriseHelper {
         String libelleNature = natureEntityOpt.get().getLibelle();
 
         if (BooleanUtils.isTrue(estSecteur)) {
-            List<SecteurEntity> secteurEntities = secteurDao.findAllByIdTabouIsNull();
-            return secteurEntities.stream().map(secteurEntity -> {
+            List<SecteurEntity> secteurEntities = secteurDao.findAllByIdTabouIsNull(pageable);
+            totalResultsNumber = secteurDao.countAllByIdTabouIsNull();
+            result = secteurEntities.stream().map(secteurEntity -> {
                 Emprise emprise = new Emprise();
                 emprise.setId(secteurEntity.getId().longValue());
                 emprise.setNom(secteurEntity.getSecteur());
                 return emprise;
             }).collect(Collectors.toList());
         } else if (NatureLibelle.ZAC.equalsIgnoreCase(libelleNature)) {
-            List<ZacEntity> zacEntities = zacDao.findAllByIdTabouIsNull();
-            return zacEntities.stream().map(zacEntity -> {
+            List<ZacEntity> zacEntities = zacDao.findAllByIdTabouIsNull(pageable);
+            totalResultsNumber = zacDao.countAllByIdTabouIsNull();
+            result = zacEntities.stream().map(zacEntity -> {
                 Emprise emprise = new Emprise();
                 emprise.setId(zacEntity.getId().longValue());
                 emprise.setNom(zacEntity.getNomZac());
                 return emprise;
             }).collect(Collectors.toList());
         } else if (NatureLibelle.ZA.equalsIgnoreCase(libelleNature)) {
-            List<ZaEntity> zaEntities = zaDao.findAllByIdTabouIsNull();
-            return zaEntities.stream().map(zaEntity -> {
+            List<ZaEntity> zaEntities = zaDao.findAllByIdTabouIsNull(pageable);
+            totalResultsNumber = zaDao.countAllByIdTabouIsNull();
+            result = zaEntities.stream().map(zaEntity -> {
                 Emprise emprise = new Emprise();
                 emprise.setId(zaEntity.getId().longValue());
                 emprise.setNom(zaEntity.getNomZa());
                 return emprise;
             }).collect(Collectors.toList());
         } else if (NatureLibelle.EN_DIFFUS.equalsIgnoreCase(libelleNature)) {
-            List<EnDiffusEntity> enDiffusEntities = enDiffusDao.findAllByIdTabouIsNull();
-            return enDiffusEntities.stream().map(zaEntity -> {
+            List<EnDiffusEntity> enDiffusEntities = enDiffusDao.findAllByIdTabouIsNull(pageable);
+            totalResultsNumber = enDiffusDao.countAllByIdTabouIsNull();
+            result = enDiffusEntities.stream().map(zaEntity -> {
                 Emprise emprise = new Emprise();
                 emprise.setId(zaEntity.getId().longValue());
                 emprise.setNom(zaEntity.getNom());
                 return emprise;
             }).collect(Collectors.toList());
-
         }
-        return Collections.emptyList();
+
+        return new PageImpl<>(result, pageable, totalResultsNumber);
     }
 }
