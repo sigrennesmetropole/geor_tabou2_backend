@@ -8,9 +8,11 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import org.apache.directory.api.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.exception.AppServiceException;
@@ -21,8 +23,11 @@ import rm.tabou2.service.st.generator.model.FieldMetadataTypeEnum;
 import rm.tabou2.service.st.generator.model.GenerationModel;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 @Component
@@ -55,14 +60,17 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
 
     /**
      * Génération d'un document pdf
-     * @param generationModel       modèle d'export
-     * @return                      document
-     * @throws AppServiceException  erreur lors de l'export
+     *
+     * @param generationModel modèle d'export
+     * @return document
+     * @throws AppServiceException erreur lors de l'export
      */
     private DocumentContent generatePDFDocument(GenerationModel generationModel) throws AppServiceException {
         File generateFile;
+
         try {
             generateFile = File.createTempFile("tmp", "." + MediaType.APPLICATION_PDF.getSubtype(), new File(temporaryDirectory));
+
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Temporary generation file:{}", generateFile);
             }
@@ -79,10 +87,11 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
 
     /**
      * Génération d'un document vers un fichier
-     * @param generationModel       modèle d'export
-     * @param outputFile            fichier output
-     * @param options               options d'export
-     * @throws AppServiceException  erreur lors de l'export
+     *
+     * @param generationModel modèle d'export
+     * @param outputFile      fichier output
+     * @param options         options d'export
+     * @throws AppServiceException erreur lors de l'export
      */
     protected void generateDocumentIntoFile(GenerationModel generationModel, File outputFile, Options options) throws AppServiceException {
 
@@ -110,11 +119,42 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
         }
     }
 
+
+    @Override
+    public File generatedImgForTemplate() throws AppServiceException {
+
+        // on s'assure que le répertoire temporaire existe
+        ensureTargetDirectoryFile();
+
+        File generateFile;
+        try {
+            generateFile = File.createTempFile("tmp", "." + MediaType.IMAGE_JPEG.getSubtype(), new File(temporaryDirectory));
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Temporary generation file:{}", generateFile);
+            }
+        } catch (IOException e) {
+            throw new AppServiceException("Erreur lors de la génération de l'image", e);
+        }
+
+
+        try (OutputStream outputStream = new FileOutputStream(generateFile)) {
+            InputStream fileiImgIllustration = new ClassPathResource("img/default_img.jpg").getInputStream();
+            IOUtils.copy(fileiImgIllustration, outputStream);
+        } catch (FileNotFoundException e) {
+            throw new AppServiceException("Erreur lors de la génération de l'image", e);
+        } catch (IOException e) {
+            throw new AppServiceException("Erreur lors de la génération de l'image", e);
+        }
+
+        return generateFile;
+
+    }
+
     /**
-     *
      * Construit les métadonnées xdocreport liées au données du document
-     * @param contextFieldMetadatas     model métadonnées
-     * @return                          métadonnées xdocreport
+     *
+     * @param contextFieldMetadatas model métadonnées
+     * @return métadonnées xdocreport
      */
     private FieldsMetadata buildFieldsMetadata(Map<String, FieldMetadataTypeEnum> contextFieldMetadatas) {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
@@ -122,8 +162,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
         contextFieldMetadatas.forEach((key, value) -> {
             if (value.equals(FieldMetadataTypeEnum.LIST)) {
                 fieldsMetadata.addFieldAsList(key);
-            }
-            else if (value.equals(FieldMetadataTypeEnum.IMAGE)) {
+            } else if (value.equals(FieldMetadataTypeEnum.IMAGE)) {
                 fieldsMetadata.addFieldAsImage(key);
             }
         });
@@ -133,6 +172,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
 
     /**
      * Permet de vérifier que le répertoire temporaire existe, sinon on le crée
+     *
      * @throws AppServiceException Erreur lors de la création du répertoire temporaire
      */
     private void ensureTargetDirectoryFile() throws AppServiceException {

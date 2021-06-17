@@ -1,8 +1,6 @@
 package rm.tabou2.storage.sig.dao.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -40,10 +38,10 @@ public class SecteurSamCustomDaoImpl extends AbstractCustomDaoImpl implements Se
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         //Requête pour compter le nombre de résultats total
-        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
+        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class).distinct(true);
         Root<SecteurSamEntity> countRoot = countQuery.from(SecteurSamEntity.class);
         buildQuery(secteur, builder, countQuery, countRoot);
-        countQuery.select(builder.countDistinct(countRoot));
+        countQuery.select(builder.countDistinct(countRoot.get("nomSecteur")));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
         //Si aucun résultat
@@ -55,7 +53,7 @@ public class SecteurSamCustomDaoImpl extends AbstractCustomDaoImpl implements Se
         CriteriaQuery<SecteurSamEntity> searchQuery = builder.createQuery(SecteurSamEntity.class).distinct(true);
         Root<SecteurSamEntity> searchRoot = searchQuery.from(SecteurSamEntity.class);
         buildQuery(secteur, builder, searchQuery, searchRoot);
-
+        searchQuery.multiselect(builder.literal(0), countRoot.get("nomSecteur"));
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
 
         TypedQuery<SecteurSamEntity> typedQuery = entityManager.createQuery(searchQuery);
