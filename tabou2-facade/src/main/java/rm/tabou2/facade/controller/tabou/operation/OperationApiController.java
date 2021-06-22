@@ -17,7 +17,6 @@ import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.ProgrammeLight;
 import rm.tabou2.service.dto.TiersTypeTiers;
-import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.tabou.evenement.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
@@ -43,7 +42,7 @@ import java.util.List;
 
 
 @Controller
-public class OperationApiController implements OperationsApi {
+public  class OperationApiController implements OperationsApi {
 
     @Autowired
     private OperationService operationService;
