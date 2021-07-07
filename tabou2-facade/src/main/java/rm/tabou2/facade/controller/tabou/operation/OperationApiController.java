@@ -17,7 +17,6 @@ import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.ProgrammeLight;
 import rm.tabou2.service.dto.TiersTypeTiers;
-import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.tabou.evenement.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
@@ -96,11 +95,11 @@ public class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<PageResult> getAvailableEmprises(@NotNull @Valid Long natureId, @NotNull @Valid Boolean estSecteur, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getAvailableEmprises(@NotNull @Valid Long natureId, @NotNull @Valid Boolean estSecteur, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationTiersEntity.class);
 
-        Page<Emprise> page = operationEmpriseHelper.getAvailableEmprises(natureId, estSecteur, pageable);
+        Page<Emprise> page = operationEmpriseHelper.getAvailableEmprises(natureId, estSecteur, pageable, nom);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }

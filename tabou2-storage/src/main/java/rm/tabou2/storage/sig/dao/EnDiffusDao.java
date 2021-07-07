@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface EnDiffusDao extends CustomCrudRepository<EnDiffusEntity, Integer>, JpaRepository<EnDiffusEntity, Integer> {
 
-    List<EnDiffusEntity> findAllByIdTabouIsNull(Pageable pageable);
+    List<EnDiffusEntity> findAllByIdTabouIsNullAndNomIsLikeIgnoreCase(String nom, Pageable pageable);
 
-    int countAllByIdTabouIsNull();
+    int countAllByIdTabouIsNullAndNomIsLikeIgnoreCase(String nom);
 
 }

@@ -52,15 +52,17 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
         SecteurEntity secteurEntity1 = new SecteurEntity();
         secteurEntity1.setId(1);
         secteurEntity1.setIdTabou(1);
+        secteurEntity1.setSecteur("");
 
         SecteurEntity secteurEntity2 = new SecteurEntity();
         secteurEntity2.setId(1);
+        secteurEntity2.setSecteur("");
 
         secteurDao.save(secteurEntity1);
         secteurDao.save(secteurEntity2);
 
-        Assertions.assertEquals(1, operationEmpriseHelper.getAvailableEmprises(3L, true, pageable).getTotalElements());
-        Assertions.assertEquals(0, operationEmpriseHelper.getAvailableEmprises(2L, false, pageable).getTotalElements());
+        Assertions.assertEquals(1, operationEmpriseHelper.getAvailableEmprises(3L, true, pageable, "*").getTotalElements());
+        Assertions.assertEquals(0, operationEmpriseHelper.getAvailableEmprises(2L, false, pageable, "*").getTotalElements());
 
         ZacEntity zacEntity1 = new ZacEntity();
         zacEntity1.setId(1);
@@ -71,7 +73,7 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
         zacDao.save(zacEntity1);
         zacDao.save(zacEntity2);
 
-        Assertions.assertEquals(2, operationEmpriseHelper.getAvailableEmprises(1L, false, pageable).getTotalElements());
+        Assertions.assertEquals(2, operationEmpriseHelper.getAvailableEmprises(1L, false, pageable, "*").getTotalElements());
 
         ZaEntity zaEntity1 = new ZaEntity();
         zaEntity1.setId(1);
@@ -91,7 +93,7 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
         zaDao.save(zaEntity3);
         zaDao.save(zaEntity4);
 
-        Assertions.assertEquals(3, operationEmpriseHelper.getAvailableEmprises(2L, false, pageable).getTotalElements());
+        Assertions.assertEquals(3, operationEmpriseHelper.getAvailableEmprises(2L, false, pageable, "*").getTotalElements());
 
     }
 }

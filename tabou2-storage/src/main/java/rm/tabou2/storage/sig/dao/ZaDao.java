@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface ZaDao extends CustomCrudRepository<ZaEntity, Integer>, JpaRepository<ZaEntity, Integer> {
 
-    List<ZaEntity> findAllByIdTabouIsNull(Pageable pageable);
+    List<ZaEntity> findAllByIdTabouIsNullAndNomZaIsLikeIgnoreCase(String nom, Pageable pageable);
 
-    int countAllByIdTabouIsNull();
+    int countAllByIdTabouIsNullAndNomZaIsLikeIgnoreCase(String nom);
 
 }
