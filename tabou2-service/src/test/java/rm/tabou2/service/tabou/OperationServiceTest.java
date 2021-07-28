@@ -26,11 +26,13 @@ import rm.tabou2.service.constant.MaitriseOuvrageCode;
 import rm.tabou2.service.constant.ModeAmenagementCode;
 import rm.tabou2.service.constant.NatureLibelle;
 import rm.tabou2.service.constant.VocationCode;
+import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.ConsommationEspaceMapper;
 import rm.tabou2.service.mapper.tabou.operation.DecisionMapper;
+import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.MaitriseOuvrageMapper;
 import rm.tabou2.service.mapper.tabou.operation.ModeAmenagementMapper;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
@@ -93,6 +95,9 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
 
     @Autowired
     private NatureMapper natureMapper;
+
+    @Autowired
+    private EtapeOperationMapper etapeMapper;
 
     @Autowired
     private DecisionMapper decisionMapper;
@@ -184,7 +189,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         );
 
         testConstraintViolationException(constraintViolationException, List.of("nom", "code", "nature",
-                "idEmprise", "secteur"));
+                "idEmprise", "secteur", "etape"));
 
     }
 
@@ -222,6 +227,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.COMMUNAUTAIRE);
         ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagementCode.REGIE);
         ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspaceCode.EXTENSION);
+        EtapeOperationEntity etape = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
 
         Operation operation = new Operation();
         operation.setNom("nom4");
@@ -229,6 +235,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         operation.setCode("code4");
         operation.setNumAds("numads4");
         operation.setSecteur(true);
+        operation.setEtape(etapeMapper.entityToDto(etape));
         operation.setNature(natureMapper.entityToDto(natureEntityZAC));
         operation.setDecision(decisionMapper.entityToDto(decisionEntity));
         operation.setVocation(vocationMapper.entityToDto(vocationEntity));

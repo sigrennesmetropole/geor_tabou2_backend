@@ -14,6 +14,11 @@ public class ValidOperationCreationValidator implements CustomConstraintValidato
         // désactivation du message par défaut
         constraintValidatorContext.disableDefaultConstraintViolation();
 
+        boolean etapeValidation = operation.getEtape() != null && operation.getEtape().getId() > 0;
+        if (!etapeValidation) {
+            addConstraintErrorProperty(constraintValidatorContext, "L'étape de l'opération est invalide", "etape");
+        }
+
         boolean natureValidation = operation.getNature() != null;
         if (!natureValidation) {
             addConstraintErrorProperty(constraintValidatorContext, "La nature de l'opération est invalide", "nature");
@@ -29,6 +34,6 @@ public class ValidOperationCreationValidator implements CustomConstraintValidato
             addConstraintErrorProperty(constraintValidatorContext, "La propriété 'secteur' de l'opération est invalide", "secteur");
         }
 
-        return natureValidation && empriseValidation && estSecteurValidation;
+        return etapeValidation && natureValidation && empriseValidation && estSecteurValidation;
     }
 }

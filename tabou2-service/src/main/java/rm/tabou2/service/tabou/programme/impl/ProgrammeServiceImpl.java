@@ -162,27 +162,29 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Transactional
     public Programme createProgramme(Programme programme) {
 
-        // Ajout des valeurs par défaut
-        setProgrammeDefaultValues(programme);
 
         // Vérification des droits utilisateur
         if (!programmeRightsHelper.checkCanCreateProgramme(programme)) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de création du programme " + programme.getNom());
         }
 
-        // Ajout de l'état initial
-        String code = BooleanUtils.isTrue(programme.isDiffusionRestreinte()) ? "EN_PROJET_OFF" : "EN_PROJET_PUBLIC";
 
-        EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findByTypeAndCode(Etape.TypeEnum.START.toString(), code);
-        if (etapeProgrammeEntity == null) {
-            throw new NoSuchElementException("Aucune étape initiale de type " + Etape.TypeEnum.START.toString() + " n'a été " +
-                    "défini pour les programmes avec diffusion restreinte = " + programme.isDiffusionRestreinte());
-        }
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
-        programmeEntity.setEtapeProgramme(etapeProgrammeEntity);
+
+        EtapeProgrammeEntity etapProgramme = etapeProgrammeDao.findById(programme.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape id= " + programme.getId() + " n'a été trouvée pour les programmes"));
+
+        //Vérification des autorisation sur l'étape
+        if (etapProgramme.getCode().equals(Etape.ModeEnum.OFF.toString()) && !authentificationHelper.hasRestreintAccess()) {
+            LOGGER.warn("L'utilisateur n'ayant pas au moins le rôle référent ne peut pas créer un programme avec une etape en diffusion restreinte");
+            //TODO : throw new AppServiceException()
+
+        } else {
+            programmeEntity.setDiffusionRestreinte(etapProgramme.getMode().equals(Etape.ModeEnum.OFF.toString()));
+            programmeEntity.setEtapeProgramme(etapProgramme);
+        }
 
         // ajout d'un événement système de changement d'état
-        programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
+        programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapProgramme.getLibelle()));
 
         // Ajout de l'opération associée
         programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
@@ -497,7 +499,6 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
 
-
         FicheSuiviProgrammeDataModel ficheSuiviProgrammeDataModel = new FicheSuiviProgrammeDataModel();
         ficheSuiviProgrammeDataModel.setProgramme(programmeEntity);
         ficheSuiviProgrammeDataModel.setOperation(programmeEntity.getOperation());
@@ -511,7 +512,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             if (agapeoSuiviHabitat != null) ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(agapeoSuiviHabitat);
 
             PermisConstruireSuiviHabitat permisConstruireSuiviHabitat = permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds());
-            if (permisConstruireSuiviHabitat != null) ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireSuiviHabitat);
+            if (permisConstruireSuiviHabitat != null)
+                ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireSuiviHabitat);
 
             List<AgapeoEntity> agapeos = agapeoDao.findAllByNumAds(programmeEntity.getNumAds());
             if (agapeos != null) ficheSuiviProgrammeDataModel.setAgapeos(agapeos);
@@ -538,15 +540,5 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     }
 
-    /**
-     * Ajout des valeurs par défaut d'un programme
-     *
-     * @param programme programme
-     */
-    private void setProgrammeDefaultValues(Programme programme) {
-        if (programme.isDiffusionRestreinte() == null) {
-            programme.setDiffusionRestreinte(true);
-        }
-    }
 
 }
