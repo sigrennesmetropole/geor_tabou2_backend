@@ -65,7 +65,6 @@ import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -477,7 +476,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public Page<Emprise> getEmprisesAvailables(Pageable pageable) {
+    public Page<Emprise> getEmprisesAvailables(String nom, Long operationId, Pageable pageable) {
 
         if (!authentificationHelper.hasAdministratorRole() && !authentificationHelper.hasContributeurRole()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de consultation des programmes");
@@ -492,7 +491,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
 
         InputStream templateFileInputStream;
-        File fileiImgIllustration;
+
         try {
             templateFileInputStream = new ClassPathResource("template/template_fiche_suivi.odt").getInputStream();
         } catch (IOException e) {
