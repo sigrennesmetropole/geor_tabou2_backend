@@ -86,8 +86,14 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl implements P
             nom = "%";
         }
 
+        String baseQuery = "FROM urba_foncier.oa_secteur zs " +
+                "          LEFT JOIN urba_foncier.oa_programme zp ON ST_Intersects(zp.shape, zs.shape) " +
+                "          WHERE zs.id_tabou = :idOperationParam " +
+                "          AND lower(zp.programme) like lower(:nomParam) " +
+                "          AND zp.id_tabou is not null";
+
         //Requête pour compter le nombre de résultats
-        final String countQuery = "select count(*) from urba_foncier.programmes_of_operation(:idOperationParam,:nomParam)";
+        final String countQuery = "select count(*) " + baseQuery;
         BigInteger totalCount = (BigInteger) entityManager.createNativeQuery(countQuery)
                 .setParameter("idOperationParam", programmeCriteria.getOperationId())
                 .setParameter("nomParam", nom)
@@ -98,11 +104,11 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl implements P
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
 
-        String sort = pageable.getSort().toString().replace(":", "");
 
-        final String query = "select * from urba_foncier.programmes_of_operation(:idOperationParam,:nomParam) ORDER BY " + sort;
 
-        List<ProgrammeRmEntity> results = entityManager.createNativeQuery(query, ProgrammeRmEntity.class)
+        String sqlQuery = "SELECT zp.objectid, zp.programme, zp.id_tabou " + baseQuery;
+
+        List<ProgrammeRmEntity> results = entityManager.createNativeQuery(sqlQuery, ProgrammeRmEntity.class)
                 .setParameter("idOperationParam", programmeCriteria.getOperationId())
                 .setParameter("nomParam", nom)
                 .setFirstResult((int) pageable.getOffset())
