@@ -9,10 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
-import rm.tabou2.service.dto.AssociationTiersTypeTiers;
-import rm.tabou2.service.dto.TiersTypeTiers;
-import rm.tabou2.service.tabou.ddc.PermisConstruireService;
 import rm.tabou2.service.dto.Agapeo;
+import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.EtapeRestricted;
@@ -20,10 +18,11 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.dto.TiersAmenagement;
+import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
-import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
+import rm.tabou2.service.tabou.ddc.PermisConstruireService;
 import rm.tabou2.service.tabou.evenement.EvenementProgrammeService;
+import rm.tabou2.service.tabou.programme.EtapeProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.service.utils.PaginationUtils;
@@ -164,11 +163,11 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<PageResult> getAvailableEmprises(@Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getAvailableEmprises(@Valid String nom, @Valid Long operationId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeRmEntity.class);
 
-        Page<Emprise> page = programmeService.getEmprisesAvailables(pageable);
+        Page<Emprise> page = programmeService.getEmprisesAvailables(nom, operationId, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 

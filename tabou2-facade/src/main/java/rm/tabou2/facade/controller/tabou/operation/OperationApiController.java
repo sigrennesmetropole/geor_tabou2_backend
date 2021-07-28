@@ -42,7 +42,7 @@ import java.util.List;
 
 
 @Controller
-public class OperationApiController implements OperationsApi {
+public  class OperationApiController implements OperationsApi {
 
     @Autowired
     private OperationService operationService;

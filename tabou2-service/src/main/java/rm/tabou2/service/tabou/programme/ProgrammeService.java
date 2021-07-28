@@ -112,8 +112,10 @@ public interface ProgrammeService {
     /**
      * Retourne la liste des emprises des programmes non suivies.
      *
+     * @param nom nom du programme
+     * @param operationId identifiant de l'opération
      * @param pageable paramètres de la pagination
      * @return Listes des programmes sans suivi d'emprise
      */
-    Page<Emprise> getEmprisesAvailables(Pageable pageable);
+    Page<Emprise> getEmprisesAvailables(String nom, Long operationId, Pageable pageable);
 }
