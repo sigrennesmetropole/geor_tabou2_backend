@@ -179,7 +179,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             //TODO : throw new AppServiceException()
 
         } else {
-            programmeEntity.setDiffusionRestreinte(etapProgramme.getCode().equals(Etape.ModeEnum.OFF.toString()) ? true : false);
+            programmeEntity.setDiffusionRestreinte(etapProgramme.getMode().equals(Etape.ModeEnum.OFF.toString()));
             programmeEntity.setEtapeProgramme(etapProgramme);
         }
 
