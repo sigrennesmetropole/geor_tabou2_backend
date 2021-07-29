@@ -343,6 +343,13 @@
             "type": "boolean"
           },
           {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom de l'opération",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "start",
             "in": "query",
             "required": false,
@@ -1933,6 +1940,21 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "name": "nom",
+            "in": "query",
+            "required": false,
+            "description": "Recherche par nom du programme",
+            "type": "string"
+          },
+          {
+            "name": "operationId",
+            "in": "query",
+            "required": false,
+            "description": "Identifiant de l'opération",
+            "type": "integer",
+            "format": "int64"
+          },
           {
             "name": "start",
             "in": "query",

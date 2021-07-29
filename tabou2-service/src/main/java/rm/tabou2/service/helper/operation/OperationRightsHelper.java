@@ -63,7 +63,7 @@ public class OperationRightsHelper {
             return false;
         }
 
-        if (operation.getNature() != null && operation.getNature() != actualOperation.getNature()) {
+        if (operation.getNature() != null && operation.getNature().getId() != actualOperation.getNature().getId()) {
             LOGGER.warn("La nature d'une opération ne doit pas être modifiée");
             return false;
         }
