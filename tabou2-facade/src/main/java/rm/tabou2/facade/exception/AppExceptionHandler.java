@@ -15,10 +15,8 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.List;
+import java.security.InvalidParameterException;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -53,10 +51,10 @@ public class AppExceptionHandler {
 
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler({ConstraintViolationException.class, InvalidParameterException.class})
     protected ResponseEntity<Object> handleValidationException(final Exception ex, final WebRequest request) {
         LOGGER.error("L'objet passé en paramètre contient des données invalides");
-        return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
 
     }
 
@@ -82,9 +80,8 @@ public class AppExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "ConstraintViolationException : la requête ne peut être exécutée", error);
 
-        return  new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+        return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
     }
-
 
 
     @ExceptionHandler(Exception.class)

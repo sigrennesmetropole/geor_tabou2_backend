@@ -54,7 +54,7 @@ public class ProgrammeEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "attribution_fonciere_annee")
-    private int attributionFonciereAnnee;
+    private Integer attributionFonciereAnnee;
 
     @Basic
     @Column(name = "attribution_date")

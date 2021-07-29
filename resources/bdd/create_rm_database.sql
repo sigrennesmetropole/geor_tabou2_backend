@@ -340,6 +340,8 @@ BEGIN
             zs.id_tabou = idOperationParam
          AND
             lower(zp.programme) like lower(nomParam)
+        AND
+            zp.id_tabou is not null
         LOOP
             return next programme;
         END LOOP;

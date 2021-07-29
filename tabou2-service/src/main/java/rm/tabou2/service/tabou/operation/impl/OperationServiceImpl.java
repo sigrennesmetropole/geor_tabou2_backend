@@ -109,20 +109,23 @@ public class OperationServiceImpl implements OperationService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de création de l'operation " + operation.getNom());
         }
 
-        // Ajout de l'état initial
-        String code = BooleanUtils.isTrue(operation.isDiffusionRestreinte()) ? "EN_PROJET_OFF" : "EN_PROJET_PUBLIC";
+        OperationEntity operationEntity = operationMapper.dtoToEntity(operation);
 
-        EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findByTypeAndCode(Etape.TypeEnum.START.toString(), code);
-        if (etapeOperationEntity == null) {
-            throw new NoSuchElementException("Aucune étape initiale de type " + Etape.TypeEnum.START.toString() + " n'a été " +
-                    "défini pour les opérations avec diffusion restreinte = " + operation.isDiffusionRestreinte());
+        EtapeOperationEntity etapeOperation = etapeOperationDao.findById(operation.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape d'opération id=" + operation.getId() + " n'a été trouvée pour les opérations avec diffusion restreinte"));
+
+        //Vérification des autorisation sur l'étape
+        if (etapeOperation.getCode().equals(Etape.ModeEnum.OFF.toString()) && !authentificationHelper.hasRestreintAccess()) {
+            LOGGER.warn("L'utilisateur n'ayant pas au moins le rôle référent ne peut pas créer une opération avec une etape en diffusion restreinte");
+            //TODO : throw new AppServiceException()
+
+        } else {
+            operationEntity.setDiffusionRestreinte(etapeOperation.getCode().equals(Etape.ModeEnum.OFF.toString()) ? true : false);
+            operationEntity.setEtapeOperation(etapeOperation);
         }
 
-        OperationEntity operationEntity = operationMapper.dtoToEntity(operation);
-        operationEntity.setEtapeOperation(etapeOperationEntity);
 
         // ajout d'un événement système de changement d'état
-        operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperationEntity.getLibelle()));
+        operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperation.getLibelle()));
 
         operationDao.save(operationEntity);
         Operation operationSaved = operationMapper.entityToDto(operationEntity);
@@ -186,7 +189,7 @@ public class OperationServiceImpl implements OperationService {
             operationsCriteria.setDiffusionRestreinte(false);
             LOGGER.warn("Accès non autorisé à des opérations d'accès restreint");
         }
-        return operationMapper.entitiesToDto(operationCustomDao.searchOperations(operationsCriteria, pageable),pageable);
+        return operationMapper.entitiesToDto(operationCustomDao.searchOperations(operationsCriteria, pageable), pageable);
     }
 
 
@@ -209,9 +212,10 @@ public class OperationServiceImpl implements OperationService {
 
     /**
      * Construction d'un évenement opération système
-     * @param code                      code du type d'événement
-     * @param evenementDescription      description de l'événement
-     * @return                          evenement crée
+     *
+     * @param code                 code du type d'événement
+     * @param evenementDescription description de l'événement
+     * @return evenement crée
      */
     private EvenementOperationEntity buildEvenementOperationSysteme(String code, String evenementDescription) {
 
@@ -231,8 +235,9 @@ public class OperationServiceImpl implements OperationService {
 
     /**
      * Construction d'un évenement opération système après changement d'étape
-     * @param libelleEtape      libelle de l'étape
-     * @return                  evenement crée
+     *
+     * @param libelleEtape libelle de l'étape
+     * @return evenement crée
      */
     private EvenementOperationEntity buildEvenementOperationEtapeUpdated(String libelleEtape) {
         return this.buildEvenementOperationSysteme(etapeUpdatedCode, formatEtapeUpdatedMessage(libelleEtape));
@@ -326,13 +331,12 @@ public class OperationServiceImpl implements OperationService {
     }
 
     /**
-     * Ajout des valeurs par défaut pour une opération
+     * Ajout des valeurs par défaut pour une opération.
+     *
      * @param operation opération
      */
     private void setOperationDefaultValue(Operation operation) {
-        if (operation.isDiffusionRestreinte() == null) {
-            operation.setDiffusionRestreinte(true);
-        }
+
         if (operation.isSecteur() == null) {
             operation.setSecteur(false);
         }
