@@ -82,7 +82,7 @@ public class OperationEmpriseHelper {
         if (StringUtils.isEmpty(nom)) {
             nom = "%";
         } else if (StringUtils.endsWith(nom, "*")) {
-            nom.replaceAll("*","%");
+            nom = nom.replaceAll("\\*","%");
         }
 
         String libelleNature = natureEntityOpt.get().getLibelle();

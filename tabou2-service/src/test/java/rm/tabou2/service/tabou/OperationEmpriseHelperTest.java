@@ -66,9 +66,11 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
 
         ZacEntity zacEntity1 = new ZacEntity();
         zacEntity1.setId(1);
+        zacEntity1.setNomZac("");
 
         ZacEntity zacEntity2 = new ZacEntity();
         zacEntity2.setId(2);
+        zacEntity2.setNomZac("");
 
         zacDao.save(zacEntity1);
         zacDao.save(zacEntity2);
@@ -77,16 +79,20 @@ class OperationEmpriseHelperTest extends DatabaseInitializerTest {
 
         ZaEntity zaEntity1 = new ZaEntity();
         zaEntity1.setId(1);
+        zaEntity1.setNomZa("");
 
         ZaEntity zaEntity2 = new ZaEntity();
         zaEntity2.setId(2);
+        zaEntity2.setNomZa("");
 
         ZaEntity zaEntity3 = new ZaEntity();
         zaEntity3.setId(3);
+        zaEntity3.setNomZa("");
 
         ZaEntity zaEntity4 = new ZaEntity();
         zaEntity4.setId(4);
         zaEntity4.setIdTabou(4);
+        zaEntity4.setNomZa("");
 
         zaDao.save(zaEntity1);
         zaDao.save(zaEntity2);
