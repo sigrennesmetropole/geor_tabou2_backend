@@ -95,11 +95,11 @@ public  class OperationApiController implements OperationsApi {
     }
 
     @Override
-    public ResponseEntity<PageResult> getAvailableEmprises(@NotNull @Valid Long natureId, @NotNull @Valid Boolean estSecteur, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getAvailableEmprises(@NotNull @Valid Long natureId, @NotNull @Valid Boolean estSecteur, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationTiersEntity.class);
 
-        Page<Emprise> page = operationEmpriseHelper.getAvailableEmprises(natureId, estSecteur, pageable);
+        Page<Emprise> page = operationEmpriseHelper.getAvailableEmprises(natureId, estSecteur, pageable, nom);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }

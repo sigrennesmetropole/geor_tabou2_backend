@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface SecteurDao extends CustomCrudRepository<SecteurEntity, Integer>, JpaRepository<SecteurEntity, Integer> {
 
-    List<SecteurEntity> findAllByIdTabouIsNull(Pageable pageable);
+    List<SecteurEntity> findAllByIdTabouIsNullAndSecteurIsLikeIgnoreCase(String secteur, Pageable pageable);
 
-    int countAllByIdTabouIsNull();
+    int countAllByIdTabouIsNullAndSecteurIsLikeIgnoreCase(String secteur);
 
 }

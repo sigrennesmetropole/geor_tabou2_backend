@@ -343,6 +343,13 @@
             "type": "boolean"
           },
           {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom de l'opération",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "start",
             "in": "query",
             "required": false,

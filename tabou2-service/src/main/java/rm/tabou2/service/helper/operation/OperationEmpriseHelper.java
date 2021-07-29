@@ -1,6 +1,7 @@
 package rm.tabou2.service.helper.operation;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -67,7 +68,7 @@ public class OperationEmpriseHelper {
         }
     }
 
-    public Page<Emprise> getAvailableEmprises(Long natureId, Boolean estSecteur, Pageable pageable) {
+    public Page<Emprise> getAvailableEmprises(Long natureId, Boolean estSecteur, Pageable pageable, String nom) {
 
         List<Emprise> result = new ArrayList<>();
         int totalResultsNumber = 0;
@@ -78,11 +79,17 @@ public class OperationEmpriseHelper {
             throw new NoSuchElementException("La nature id=" + natureId + " n'existe pas");
         }
 
+        if (StringUtils.isEmpty(nom)) {
+            nom = "%";
+        } else if (StringUtils.endsWith(nom, "*")) {
+            nom = nom.replaceAll("\\*","%");
+        }
+
         String libelleNature = natureEntityOpt.get().getLibelle();
 
         if (BooleanUtils.isTrue(estSecteur)) {
-            List<SecteurEntity> secteurEntities = secteurDao.findAllByIdTabouIsNull(pageable);
-            totalResultsNumber = secteurDao.countAllByIdTabouIsNull();
+            List<SecteurEntity> secteurEntities = secteurDao.findAllByIdTabouIsNullAndSecteurIsLikeIgnoreCase(nom, pageable);
+            totalResultsNumber = secteurDao.countAllByIdTabouIsNullAndSecteurIsLikeIgnoreCase(nom);
             result = secteurEntities.stream().map(secteurEntity -> {
                 Emprise emprise = new Emprise();
                 emprise.setId(secteurEntity.getId().longValue());
@@ -90,8 +97,8 @@ public class OperationEmpriseHelper {
                 return emprise;
             }).collect(Collectors.toList());
         } else if (NatureLibelle.ZAC.equalsIgnoreCase(libelleNature)) {
-            List<ZacEntity> zacEntities = zacDao.findAllByIdTabouIsNull(pageable);
-            totalResultsNumber = zacDao.countAllByIdTabouIsNull();
+            List<ZacEntity> zacEntities = zacDao.findAllByIdTabouIsNullAndNomZacIsLikeIgnoreCase(nom, pageable);
+            totalResultsNumber = zacDao.countAllByIdTabouIsNullAndNomZacIsLikeIgnoreCase(nom);
             result = zacEntities.stream().map(zacEntity -> {
                 Emprise emprise = new Emprise();
                 emprise.setId(zacEntity.getId().longValue());
@@ -99,8 +106,8 @@ public class OperationEmpriseHelper {
                 return emprise;
             }).collect(Collectors.toList());
         } else if (NatureLibelle.ZA.equalsIgnoreCase(libelleNature)) {
-            List<ZaEntity> zaEntities = zaDao.findAllByIdTabouIsNull(pageable);
-            totalResultsNumber = zaDao.countAllByIdTabouIsNull();
+            List<ZaEntity> zaEntities = zaDao.findAllByIdTabouIsNullAndNomZaIsLikeIgnoreCase(nom, pageable);
+            totalResultsNumber = zaDao.countAllByIdTabouIsNullAndNomZaIsLikeIgnoreCase(nom);
             result = zaEntities.stream().map(zaEntity -> {
                 Emprise emprise = new Emprise();
                 emprise.setId(zaEntity.getId().longValue());
@@ -108,8 +115,8 @@ public class OperationEmpriseHelper {
                 return emprise;
             }).collect(Collectors.toList());
         } else if (NatureLibelle.EN_DIFFUS.equalsIgnoreCase(libelleNature)) {
-            List<EnDiffusEntity> enDiffusEntities = enDiffusDao.findAllByIdTabouIsNull(pageable);
-            totalResultsNumber = enDiffusDao.countAllByIdTabouIsNull();
+            List<EnDiffusEntity> enDiffusEntities = enDiffusDao.findAllByIdTabouIsNullAndNomIsLikeIgnoreCase(nom, pageable);
+            totalResultsNumber = enDiffusDao.countAllByIdTabouIsNullAndNomIsLikeIgnoreCase(nom);
             result = enDiffusEntities.stream().map(zaEntity -> {
                 Emprise emprise = new Emprise();
                 emprise.setId(zaEntity.getId().longValue());
