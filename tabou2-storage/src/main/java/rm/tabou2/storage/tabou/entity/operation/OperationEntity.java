@@ -73,7 +73,7 @@ public class OperationEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "surface_totale")
-    private Integer surfaceTotale;
+    private Double surfaceTotale;
 
     @Basic
     @Column(name = "nb_logement_prevu")
