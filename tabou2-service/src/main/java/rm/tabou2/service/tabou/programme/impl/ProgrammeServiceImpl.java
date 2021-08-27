@@ -470,7 +470,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         GenerationModel generationModel = buildGenerationModelByProgrammeId(programmeEntity);
 
         DocumentContent documentContent = documentGenerator.generateDocument(generationModel);
-        documentContent.setFileName("fiche_suivi_" + programmeEntity.getCode() + "_" + System.nanoTime());
+        //FicheSuivi_[id_Tabou][code][Nom_Operation]_[fin actuelle].pdf
+        documentContent.setFileName("FicheSuivi_" + programmeEntity.getId() + programmeEntity.getCode() + "_" + System.nanoTime());
 
         return documentContent;
     }
@@ -505,6 +506,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
         ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
         ficheSuiviProgrammeDataModel.setIllustration(documentGenerator.generatedImgForTemplate());
+        ficheSuiviProgrammeDataModel.setNomFichier("toto");
 
         if (programmeEntity.getNumAds() != null) { // traiter le cas où le nusAds ne retourne rien
 
