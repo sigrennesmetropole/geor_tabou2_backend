@@ -15,11 +15,13 @@ public interface ProgrammeRmCustomDao {
     /**
      * Recherche des emprises de programme non suives.
      *
+     * @param operationId identifiant de l'operation
+     * @param
      * @param pageable paramètres de la pagination
      * @return emprises correspondant aux paramètres de recherche
      */
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    Page<ProgrammeRmEntity> searchEmprisesNonSuivies(Pageable pageable);
+    Page<ProgrammeRmEntity> searchEmprisesNonSuivies(Long operationId,  String nom, Pageable pageable);
 
     Page<ProgrammeRmEntity> searchProgrammesWithinOperation(ProgrammeCriteria programmeCriteria, Pageable pageable);
 

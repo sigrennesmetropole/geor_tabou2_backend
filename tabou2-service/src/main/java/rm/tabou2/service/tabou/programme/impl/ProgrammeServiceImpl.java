@@ -482,7 +482,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de consultation des programmes");
         }
 
-        Page<ProgrammeRmEntity> programmeRmEntities = programmeRmCustomDao.searchEmprisesNonSuivies(pageable);
+        Page<ProgrammeRmEntity> programmeRmEntities = programmeRmCustomDao.searchEmprisesNonSuivies(operationId, nom, pageable);
 
         return programmeRmMapper.entitiesToDto(programmeRmEntities, pageable);
 
