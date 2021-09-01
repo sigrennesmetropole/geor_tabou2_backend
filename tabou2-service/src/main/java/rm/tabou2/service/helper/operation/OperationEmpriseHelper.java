@@ -115,7 +115,7 @@ public class OperationEmpriseHelper {
                 return emprise;
             }).collect(Collectors.toList());
         } else if (NatureLibelle.EN_DIFFUS.equalsIgnoreCase(libelleNature)) {
-            List<EnDiffusEntity> enDiffusEntities = enDiffusDao.findAllByIdTabouIsNullAndNomIsLikeIgnoreCase(nom, pageable);
+            List<EnDiffusEntity> enDiffusEntities = enDiffusDao.findAllByName(nom, pageable);
             totalResultsNumber = enDiffusDao.countAllByIdTabouIsNullAndNomIsLikeIgnoreCase(nom);
             result = enDiffusEntities.stream().map(zaEntity -> {
                 Emprise emprise = new Emprise();
