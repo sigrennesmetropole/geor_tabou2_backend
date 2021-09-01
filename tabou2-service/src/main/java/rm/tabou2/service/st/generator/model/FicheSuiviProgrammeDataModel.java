@@ -27,6 +27,7 @@ public class FicheSuiviProgrammeDataModel extends DataModel {
         this.setPermis(new ArrayList<>());
         this.setAgapeoSuiviHabitat(new AgapeoSuiviHabitat());
         this.setPermisSuiviHabitat(new PermisConstruireSuiviHabitat());
+        this.setNomFichier("");
     }
 
     public void setProgramme(ProgrammeEntity programme) {
@@ -92,5 +93,9 @@ public class FicheSuiviProgrammeDataModel extends DataModel {
         IImageProvider illustration = new FileImageProvider(imageFile);
         addContextData("illustration", illustration);
         addContextFieldImage("illustration");
+    }
+
+    public void setNomFichier(String nomFichier) {
+        addContextData("nomFichier",nomFichier);
     }
 }

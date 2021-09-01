@@ -470,7 +470,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         GenerationModel generationModel = buildGenerationModelByProgrammeId(programmeEntity);
 
         DocumentContent documentContent = documentGenerator.generateDocument(generationModel);
-        documentContent.setFileName("fiche_suivi_" + programmeEntity.getCode() + "_" + System.nanoTime());
+        documentContent.setFileName(buildRapportFileName(programmeEntity));
 
         return documentContent;
     }
@@ -505,6 +505,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
         ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
         ficheSuiviProgrammeDataModel.setIllustration(documentGenerator.generatedImgForTemplate());
+        ficheSuiviProgrammeDataModel.setNomFichier(buildRapportFileName(programmeEntity));
 
         if (programmeEntity.getNumAds() != null) { // traiter le cas où le nusAds ne retourne rien
 
@@ -537,6 +538,21 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         return programmeEntity;
+
+    }
+
+    private String buildRapportFileName(ProgrammeEntity programme) {
+
+        StringBuilder fileName = new StringBuilder("FicheSuivi_");
+        fileName.append(programme.getId());
+        fileName.append("_");
+        fileName.append(programme.getCode());
+        fileName.append("_");
+        fileName.append(programme.getNom());
+        fileName.append("_");
+        fileName.append(System.nanoTime());
+
+        return fileName.toString();
 
     }
 
