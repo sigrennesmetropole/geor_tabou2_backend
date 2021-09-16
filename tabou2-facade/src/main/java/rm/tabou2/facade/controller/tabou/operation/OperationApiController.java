@@ -7,8 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.OperationsApi;
-
+import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
+import rm.tabou2.service.dto.Document;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.EtapeRestricted;
@@ -24,9 +25,8 @@ import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.utils.PaginationUtils;
-
-import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
+import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
@@ -42,7 +42,7 @@ import java.util.List;
 
 
 @Controller
-public  class OperationApiController implements OperationsApi {
+public class OperationApiController extends AbstractExportDocumentApi implements OperationsApi {
 
     @Autowired
     private OperationService operationService;
@@ -235,6 +235,12 @@ public  class OperationApiController implements OperationsApi {
     @Override
     public ResponseEntity<AssociationTiersTypeTiers> associateTiersToOperation(Long operationId, @Valid TiersTypeTiers tiersTypeTiers) throws Exception {
         return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationId, tiersTypeTiers.getTiersId(), tiersTypeTiers.getTypeTiersId()), HttpStatus.OK);
+    }
+
+
+    @Override
+    public ResponseEntity<Document> getDocumentMetadata(Long operationId, String documentId) throws Exception {
+        return new ResponseEntity<>(operationService.getDocumentMetadata(operationId, documentId), HttpStatus.OK);
     }
 
 

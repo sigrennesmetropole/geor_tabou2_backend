@@ -2,6 +2,7 @@ package rm.tabou2.service.tabou.operation;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import rm.tabou2.service.dto.Document;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
@@ -18,6 +19,7 @@ public interface OperationService {
 
     /**
      * Création d'une opération
+     *
      * @param operation opération à créer
      * @return opération crée
      */
@@ -25,6 +27,7 @@ public interface OperationService {
 
     /**
      * Mise à jour d'une opération
+     *
      * @param operation opération à modifier
      * @return opération modifiée
      */
@@ -32,6 +35,7 @@ public interface OperationService {
 
     /**
      * Récupération d'une opération
+     *
      * @param operationId identifiant de l'opération
      * @return opération
      */
@@ -39,45 +43,59 @@ public interface OperationService {
 
     /**
      * Modification de l'étape d'une opération
+     *
      * @param operationId Identifiant de l'opération
-     * @param etapeId identifiant de l'étape
+     * @param etapeId     identifiant de l'étape
      * @return opération modifiée
      * @throws AppServiceException Erreur lors de la mise à jour d'une opération
      */
-    Operation updateEtapeOfOperationId (long operationId, long etapeId) throws AppServiceException;
+    Operation updateEtapeOfOperationId(long operationId, long etapeId) throws AppServiceException;
 
     /**
      * Recherche des opérations à partir des paramètres.
      *
      * @param operationsCriteria paramètres des opérations
-     * @param pageable paramètre lié à la pagination
+     * @param pageable           paramètre lié à la pagination
      * @return Liste des opérations correspondantes à la recherche
      */
     Page<Operation> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable);
 
     /**
      * Récupération de la liste des évènements d'une opération
-     * @param operationId               identifiant de l'opération
-     * @return                          liste des évènements
-     * @throws AppServiceException      erreur lors de la récupération des évènements
+     *
+     * @param operationId identifiant de l'opération
+     * @return liste des évènements
+     * @throws AppServiceException erreur lors de la récupération des évènements
      */
     List<Evenement> getEvenementsByOperationId(Long operationId);
 
     /**
      * Ajout d'un évènement pour une opération
-     * @param operationId           identifiant de l'opération
-     * @param evenement             evenement
-     * @return                      evenement crée
-     * @throws AppServiceException  erreur lors de l'enregistrement de l'opération
+     *
+     * @param operationId identifiant de l'opération
+     * @param evenement   evenement
+     * @return evenement crée
+     * @throws AppServiceException erreur lors de l'enregistrement de l'opération
      */
     Evenement addEvenementByOperationId(Long operationId, @ValidEvenementCreation Evenement evenement) throws AppServiceException;
 
     /**
      * Modification d'un événement d'une opération
-     * @param idOperation           identifiant de l'opération
-     * @param evenement             événement à modifier
-     * @return                      événement modifié
-     * @throws AppServiceException  erreur lors de la mise à jour de l'événement
+     *
+     * @param idOperation identifiant de l'opération
+     * @param evenement   événement à modifier
+     * @return événement modifié
+     * @throws AppServiceException erreur lors de la mise à jour de l'événement
      */
     Evenement updateEvenementByOperationId(long idOperation, @ValidEvenementUpdate Evenement evenement) throws AppServiceException;
+
+    /**
+     * Récupération des métadonnées d'un document Alfresco d'une opération.
+     *
+     * @param operationId identifiant de l'opération
+     * @param documentId  identifiant du document
+     * @return document
+     */
+    Document getDocumentMetadata(long operationId, String documentId) throws AppServiceException ;
+
 }
