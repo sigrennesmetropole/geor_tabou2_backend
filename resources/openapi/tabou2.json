@@ -4534,11 +4534,26 @@
       "properties": {
         "id": {
           "description": "Identifiant unique du document",
-          "type": "integer",
-          "format": "int64"
+          "type": "string"
+        },
+        "nom": {
+          "description": "Nom du document",
+          "type": "string"
         },
         "libelle": {
-          "description": "Description du document",
+          "description": "Libellé du type de document",
+          "type": "string"
+        },
+        "typeMime": {
+          "description": "Type MIME du document",
+          "type": "string"
+        },
+        "modifUser": {
+          "description": "Utilisateur ayant effectué la dernière modification du document",
+          "type": "string"
+        },
+        "modifDate": {
+          "description": "Date de dernière modification du document",
           "type": "string"
         }
       }
