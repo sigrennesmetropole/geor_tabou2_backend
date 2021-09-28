@@ -334,7 +334,11 @@ public class OperationServiceImpl implements OperationService {
     public Document getDocumentMetadata(long operationId, String documentId) throws AppServiceException {
 
         //On vérifie que l'opération existe et que l'utilisateur a bien les droits de consultation dessus
-        getOperationEntityById(operationId);
+        OperationEntity operation = getOperationEntityById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operation))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de consulter l'opération id = " + operationId);
+        }
 
         try {
             //Récupération du document Dans alfresco
