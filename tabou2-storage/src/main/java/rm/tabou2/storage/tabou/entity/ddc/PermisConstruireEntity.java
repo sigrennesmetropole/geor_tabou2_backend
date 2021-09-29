@@ -21,6 +21,18 @@ public class PermisConstruireEntity {
     private String numAds;
 
     @Basic
+    @Column(name = "demandeur")
+    private String demandeur = null;
+
+    @Basic
+    @Column(name = "parcelles")
+    private String parcelles = null;
+
+    @Basic
+    @Column(name = "decision")
+    private String decision = null;
+
+    @Basic
     @Column(name = "date_depot_dossier")
     private Date dateDepotDossier;
 
@@ -37,8 +49,20 @@ public class PermisConstruireEntity {
     private Date docDate;
 
     @Basic
-    @Column(name = "dat_date")
+    @Column(name = "daact_date")
     private Date datDate;
+
+    @Basic
+    @Column(name = "nbre_logement")
+    private Integer nbreLogement = null;
+
+    @Basic
+    @Column(name = "surf_plancher_max")
+    private Double surfPlancherMax = null;
+
+    @Basic
+    @Column(name = "surf_habitat")
+    private Double surfHabitat = null;
 
     @Basic
     @Column(name = "surf_bureaux")
@@ -59,6 +83,5 @@ public class PermisConstruireEntity {
     @Basic
     @Column(name = "surf_autre")
     private Double surfAutre = null;
-
 
 }
