@@ -2,6 +2,7 @@ package rm.tabou2.service.tabou.ddc.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.PermisConstruire;
@@ -9,10 +10,11 @@ import rm.tabou2.service.mapper.ddc.PermisConstuireMapper;
 import rm.tabou2.service.tabou.ddc.PermisConstruireService;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireCustomDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
-import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -50,7 +52,9 @@ public class PermisConstruireServiceImpl implements PermisConstruireService {
         if (programmeEntity == null) {
             throw new IllegalArgumentException("L'identifiant du programme est invalide: aucun programme trouvé pour l'id = " + programmeId);
         }
-
+        if (programmeEntity.getNumAds() == null) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
         return permisConstuireMapper.entitiesToDto(permisConstruireCustomDao.searchPermisConstruire(programmeEntity.getNumAds(), pageable), pageable);
     }
 
