@@ -147,7 +147,7 @@ create table tabou_operation (
                            operationnel_date timestamp,
                            cloture_date timestamp,
                            num_ads varchar(255),
-                           surface_totale integer,
+                           surface_totale numeric(15,2),
                            nb_logement_prevu integer,
                            plhlogement_prevu integer,
                            plhlogement_livre integer,
@@ -289,20 +289,26 @@ create table tabou_type_financement (
 
 -- Création de la table des permis de construire : nécessaire seulement pour environnement de dev et intégration continue
 -- En réalité ce sera une Oracle_fdw, mais transparent pour nous
-create table if not exists tabou_pc_ddc (
-                                          id bigserial,
-                                          num_ads varchar(255),
-                                          date_depot_dossier timestamp,
-                                          date_completude_dossier timestamp,
-                                          ads_date timestamp,
-                                          doc_date timestamp,
-                                          dat_date timestamp,
-                                          surf_autre float,
-                                          surf_bureaux float,
-                                          surf_commerces float,
-                                          surf_equip_pub float,
-                                          surf_industries float,
-                                          primary key (id)
+create table if not exists tabou_pc_ddc(
+                                           id                      bigserial,
+                                           num_ads                 varchar(255),
+                                           demandeur               varchar(602),
+                                           parcelles               varchar(1000),
+                                           decision                varchar(100),
+                                           date_depot_dossier      timestamp,
+                                           date_completude_dossier timestamp,
+                                           ads_date                timestamp,
+                                           doc_date                timestamp,
+                                           daact_date              timestamp,
+                                           nbre_logement           integer,
+                                           surf_plancher_max       float,
+                                           surf_habitat            float,
+                                           surf_autre              float,
+                                           surf_bureaux            float,
+                                           surf_commerces          float,
+                                           surf_equip_pub          float,
+                                           surf_industries         float,
+                                           primary key (id)
 );
 
 

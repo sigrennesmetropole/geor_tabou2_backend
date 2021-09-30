@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
@@ -73,7 +74,7 @@ public class OperationEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "surface_totale")
-    private Integer surfaceTotale;
+    private BigDecimal surfaceTotale;
 
     @Basic
     @Column(name = "nb_logement_prevu")

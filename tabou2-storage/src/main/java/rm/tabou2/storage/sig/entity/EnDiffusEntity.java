@@ -24,4 +24,8 @@ public class EnDiffusEntity {
     @Basic
     @Column(name = "nomOpa")
     private String nom;
+
+    @Basic
+    @Column(name = "nature")
+    private String nature;
 }
