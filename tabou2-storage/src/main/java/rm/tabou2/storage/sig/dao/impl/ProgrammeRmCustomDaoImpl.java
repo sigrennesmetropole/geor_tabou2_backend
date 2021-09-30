@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.sig.dao.ProgrammeRmCustomDao;
@@ -15,6 +16,7 @@ import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -36,35 +38,71 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl implements P
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<ProgrammeRmEntity> searchEmprisesNonSuivies(Pageable pageable) {
+    public Page<ProgrammeRmEntity> searchEmprisesNonSuivies(Long operationId, String nom, Pageable pageable) {
 
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        boolean hasOperationIdParam = (operationId != null && operationId > 0)  ? true : false;
+        boolean hasNomParam = nom != null && !nom.equals("") ? true : false;
 
-        //Requête pour compter le nombre de résultats total
-        CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-        Root<ProgrammeRmEntity> countRoot = countQuery.from(ProgrammeRmEntity.class);
-        buildQuery(builder, countQuery, countRoot);
-        countQuery.select(builder.countDistinct(countRoot));
-        Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
+        String baseQuery =
+                "FROM " +
+                    "urba_foncier.oa_programme PA " +
+                    "INNER JOIN (" +
+                        "SELECT " +
+                            "OAe.shape " +
+                        "FROM (" +
+                            "SELECT zac.id_Tabou, zac.shape " +
+                            "FROM urba_foncier.zac zac " +
+                        "UNION ALL " +
+                            "SELECT za.id_Tabou, za.shape " +
+                            "FROM economie.za za " +
+                        "UNION ALL " +
+                            "SELECT oa_1.id_Tabou, oa_1.shape " +
+                            "FROM urba_foncier.oa_limite_intervention oa_1) OAe " ;
+                if (hasOperationIdParam) {
+                    baseQuery = baseQuery + "WHERE OAe.id_Tabou = :idTabou";
+                }
+                baseQuery = baseQuery + ") OA " +
+                        "ON st_intersects(PA.shape, OA.shape) " +
+                "WHERE PA.id_tabou is null";
+
+                if (hasNomParam) {
+                    baseQuery = baseQuery + " AND PA.programme = :nomProgramme";
+                }
+
+        //Requête pour compter le nombre de résultats
+        final String countQuery = "select count(*) " + baseQuery;
+
+        Query totalCountQuery =  entityManager.createNativeQuery(countQuery);
+        if (hasOperationIdParam) {
+            totalCountQuery.setParameter("idTabou", operationId);
+        }
+        if (hasNomParam) {
+            totalCountQuery.setParameter("nomProgramme", nom);
+        }
+        BigInteger totalCount = (BigInteger)totalCountQuery.getSingleResult();
 
         //Si aucun résultat
-        if (totalCount == 0) {
+        if (totalCount.intValue() == 0) {
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
 
-        //Requête de recherche
-        CriteriaQuery<ProgrammeRmEntity> searchQuery = builder.createQuery(ProgrammeRmEntity.class);
-        Root<ProgrammeRmEntity> searchRoot = searchQuery.from(ProgrammeRmEntity.class);
-        buildQuery(builder, searchQuery, searchRoot);
+        String sqlQuery = "SELECT PA.objectid, PA.programme " + baseQuery;
 
-        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
+        Query resultsQuery = entityManager.createNativeQuery(sqlQuery, ProgrammeRmEntity.class);
+        if (hasOperationIdParam) {
+            resultsQuery.setParameter("idTabou", operationId);
+        }
+        if (hasNomParam) {
+            resultsQuery.setParameter("nomProgramme", nom);
+        }
+        List<ProgrammeRmEntity> results = resultsQuery
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize()).getResultList();
 
-        TypedQuery<ProgrammeRmEntity> typedQuery = entityManager.createQuery(searchQuery);
-        List<ProgrammeRmEntity> tiersEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
-        return new PageImpl<>(tiersEntities, pageable, totalCount.intValue());
-
+        return new PageImpl<>(results, pageable, totalCount.intValue());
 
     }
+
 
 
     /**

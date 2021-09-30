@@ -13,12 +13,21 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
         DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, ConsommationEspaceMapper.class})
 public interface OperationMapper extends AbstractMapper<OperationEntity, Operation> {
 
+    @Mapping(source = "nbLogementsPrevu", target= "nbLogementPrevu")
+    @Mapping(source = "plhLogementsPrevus", target= "plhLogementPrevu")
+    @Mapping(source = "plhLogementsLivres", target= "plhlogementLivre")
     @Mapping(source = "etape", target = "etapeOperation")
     OperationEntity dtoToEntity(Operation dto);
 
+    @Mapping(source = "nbLogementPrevu", target = "nbLogementsPrevu")
+    @Mapping(source = "plhLogementPrevu", target = "plhLogementsPrevus")
+    @Mapping(source = "plhlogementLivre", target = "plhLogementsLivres")
     @Mapping(source = "etapeOperation", target = "etape")
     Operation entityToDto(OperationEntity operationEntity);
 
+    @Mapping(source = "nbLogementsPrevu", target= "nbLogementPrevu")
+    @Mapping(source = "plhLogementsPrevus", target= "plhLogementPrevu")
+    @Mapping(source = "plhLogementsLivres", target= "plhlogementLivre")
     @Mapping(source = "etape", target = "etapeOperation", qualifiedByName = "dtoToNewEtapeOperationEntity")
     @Mapping(target = "nature", qualifiedByName = "dtoToNewNatureEntity",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
