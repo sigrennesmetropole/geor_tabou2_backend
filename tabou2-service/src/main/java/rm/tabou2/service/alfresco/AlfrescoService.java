@@ -11,6 +11,6 @@ public interface AlfrescoService {
      * @param documentId
      * @return document
      */
-    AlfrescoDocument getDocument(String documentId);
+    AlfrescoDocument getDocumentMetadata(String documentId);
 
 }

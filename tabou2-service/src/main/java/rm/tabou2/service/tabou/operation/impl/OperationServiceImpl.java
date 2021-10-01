@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClientResponseException.NotFound;
 import rm.tabou2.service.alfresco.AlfrescoService;
-import rm.tabou2.service.dto.Document;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
@@ -331,7 +331,7 @@ public class OperationServiceImpl implements OperationService {
 
 
     @Override
-    public Document getDocumentMetadata(long operationId, String documentId) throws AppServiceException {
+    public DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException {
 
         //On vérifie que l'opération existe et que l'utilisateur a bien les droits de consultation dessus
         OperationEntity operation = getOperationEntityById(operationId);
@@ -342,7 +342,7 @@ public class OperationServiceImpl implements OperationService {
 
         try {
             //Récupération du document Dans alfresco
-            return documentMapper.entityToDto(alfrescoService.getDocument(documentId));
+            return documentMapper.entityToDto(alfrescoService.getDocumentMetadata(documentId));
 
         } catch (NotFound e) {
             throw new NoSuchElementException("Impossible de récupérer les métadonnées du document " + documentId);

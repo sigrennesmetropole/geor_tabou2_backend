@@ -2,7 +2,7 @@ package rm.tabou2.service.tabou.operation;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import rm.tabou2.service.dto.Document;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
@@ -96,6 +96,6 @@ public interface OperationService {
      * @param documentId  identifiant du document
      * @return document
      */
-    Document getDocumentMetadata(long operationId, String documentId) throws AppServiceException ;
+    DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException ;
 
 }

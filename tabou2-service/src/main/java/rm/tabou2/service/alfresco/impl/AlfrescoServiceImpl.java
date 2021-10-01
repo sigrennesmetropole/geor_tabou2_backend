@@ -2,6 +2,7 @@ package rm.tabou2.service.alfresco.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 import rm.tabou2.service.alfresco.AlfrescoService;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
 import rm.tabou2.service.alfresco.helper.AlfrescoAuthenticationHelper;
@@ -17,14 +18,15 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     private AlfrescoAuthenticationHelper alfrescoAuthenticationHelper;
 
     @Override
-    public AlfrescoDocument getDocument(String documentId) {
+    public AlfrescoDocument getDocumentMetadata(String documentId) {
 
         //Construction de l'uri du document
-        String documentUri = DOCUMENT_START_URI + documentId;
-
+        UriComponentsBuilder documentUri = UriComponentsBuilder
+                .fromUriString(DOCUMENT_START_URI)
+                .path(documentId);
 
         return alfrescoAuthenticationHelper.getAlfrescoWebClient().get()
-                .uri(documentUri)
+                .uri(documentUri.toUriString())
                 .header(AUTHORIZATION, "Basic " + alfrescoAuthenticationHelper.getAuthenticationTicket())
                 .retrieve().bodyToMono(AlfrescoDocument.class).block();
 

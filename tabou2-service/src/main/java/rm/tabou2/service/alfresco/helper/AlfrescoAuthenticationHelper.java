@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import rm.tabou2.service.alfresco.dto.AlfrescoTicket;
 import rm.tabou2.service.alfresco.dto.AlfrescoUser;
 
+import javax.annotation.PostConstruct;
 import java.util.Base64;
 
 @Component
@@ -25,12 +26,27 @@ public class AlfrescoAuthenticationHelper {
     @Value("${alfresco.base.url}")
     private String alfrescoBaseUrl;
 
+    private String authenticationTicket;
+
     public final static String ALFRESCO_TICKET_URL = "authentication/versions/1/tickets";
 
     @Autowired
     private WebClient alfrescoWebClient;
 
+    @PostConstruct
+    public void initAuthenticationTicket() {
+        authenticationTicket = generateAuthenticationTicket();
+    }
+
+    public void resetAuhenticationTicket() {
+        authenticationTicket = generateAuthenticationTicket();
+    }
+
     public String getAuthenticationTicket() {
+        return authenticationTicket;
+    }
+
+    private String generateAuthenticationTicket() {
 
         //Création de l'utilisateur Alfresco
         AlfrescoUser alfrescoUser = new AlfrescoUser(alfrescoUsername, alfrescoPassword);

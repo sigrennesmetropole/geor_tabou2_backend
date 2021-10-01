@@ -347,7 +347,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Document"
+              "$ref": "#/definitions/DocumentMetadata"
             }
           },
           "404": {
@@ -4529,7 +4529,7 @@
         }
       }
     },
-    "Document": {
+    "DocumentMetadata": {
       "type": "object",
       "properties": {
         "id": {

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import rm.tabou2.facade.api.OperationsApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
-import rm.tabou2.service.dto.Document;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.EtapeRestricted;
@@ -239,7 +239,7 @@ public class OperationApiController extends AbstractExportDocumentApi implements
 
 
     @Override
-    public ResponseEntity<Document> getDocumentMetadata(Long operationId, String documentId) throws Exception {
+    public ResponseEntity<DocumentMetadata> getDocumentMetadata(Long operationId, String documentId) throws Exception {
         return new ResponseEntity<>(operationService.getDocumentMetadata(operationId, documentId), HttpStatus.OK);
     }
 
