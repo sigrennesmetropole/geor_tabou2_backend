@@ -4679,14 +4679,56 @@
           "description": "Numero du permis de constuire",
           "type": "string"
         },
+        "demandeur": {
+          "description": "Demandeur du permis de construire",
+          "type": "string"
+        },
+        "parcelles": {
+          "description": "Parcelles du permis de construire",
+          "type": "string"
+        },
+        "decisionDossier": {
+          "description": "Décision du dossier",
+          "type": "string"
+        },
         "depotDossier": {
           "description": "Date de dépot du permis de constuire",
           "type": "string",
           "format": "date"
         },
-        "decisionDossier": {
-          "description": "Décision du dossier",
-          "type": "string"
+        "dateCompletudeDossier": {
+          "description": "Date de complétion du dossier de permis de construire",
+          "type": "string",
+          "format": "date"
+        },
+        "adsDate": {
+          "description": "Date du permis de construire",
+          "type": "string",
+          "format": "date"
+        },
+        "docDate": {
+          "description": "Date d'ouverture du chantier",
+          "type": "string",
+          "format": "date"
+        },
+        "datDate": {
+          "description": "Date d'achèvement des travaux",
+          "type": "string",
+          "format": "date"
+        },
+        "nbreLogement": {
+          "description": "Nombre de logements",
+          "type": "integer"
+        },
+        "surfPlancherMax": {
+          "description": "M² de surface de placher",
+          "type": "number",
+          "format": "double"
+        },
+        "surfHabitat": {
+          "description": "M² de surface de plancer dédié à l'activité habitat",
+          "type": "number",
+          "format": "double"
         },
         "surfBureaux": {
           "description": "M² de surface de plancher dédié à l'activité bureaux",

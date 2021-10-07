@@ -17,10 +17,10 @@ import java.util.Base64;
 @Component
 public class AlfrescoAuthenticationHelper {
 
-    @Value("${alfresco.rm.user}")
+    @Value("${alfresco.authenticate.user}")
     private String alfrescoUsername;
 
-    @Value("${alfresco.rm.password}")
+    @Value("${alfresco.authenticate.password}")
     private String alfrescoPassword;
 
     @Value("${alfresco.base.url}")

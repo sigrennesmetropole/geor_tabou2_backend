@@ -43,6 +43,9 @@ public class StorageTabouBeanConfiguration {
     @Value("${spring.tabou2.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
+    @Value("${spring.tabou2.datasource.hibernate.hbm2ddl.extra_physical_table_types}")
+    private String hibernateHbm2ddlExtraTable;
+
     @Bean(name = "tabouDataSource")
     @Primary
     @ConfigurationProperties(prefix = "spring.tabou2.datasource")
@@ -85,7 +88,7 @@ public class StorageTabouBeanConfiguration {
         hibernateProperties.put("hibernate.show_sql", hibernateFormatSql);
         hibernateProperties.put("hibernate.format_sql", hibernateShowSql);
         hibernateProperties.put("hibernate.hbm2ddl.auto", hibernateHbm2ddlAuto);
-
+        hibernateProperties.put("hibernate.hbm2ddl.extra_physical_table_types", hibernateHbm2ddlExtraTable);
 
         return hibernateProperties;
     }
