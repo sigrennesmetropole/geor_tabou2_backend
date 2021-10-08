@@ -18,6 +18,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import rm.tabou2.service.alfresco.AlfrescoService;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
@@ -29,6 +32,7 @@ import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.sig.ProgrammeRmMapper;
+import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeLightMapper;
@@ -157,6 +161,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
+
+    @Autowired
+    private AlfrescoService alfrescoService;
+
+    @Autowired
+    private DocumentMapper documentMapper;
 
     @Override
     @Transactional
@@ -553,6 +563,28 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         fileName.append(System.nanoTime());
 
         return fileName.toString();
+
+    }
+
+    @Override
+    public DocumentMetadata getDocumentMetadata(long programmeId, String documentId) throws AppServiceException {
+
+        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        Programme programme = getProgrammeById(programmeId);
+
+        if (!programmeRightsHelper.checkCanGetProgramme(programme)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de création du programme " + programme.getNom());
+        }
+
+        try {
+            //Récupération du document Dans alfresco
+            return documentMapper.entityToDto(alfrescoService.getDocumentMetadata(documentId));
+
+        } catch (WebClientResponseException.NotFound e) {
+            throw new NoSuchElementException("Impossible de récupérer les métadonnées du document " + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException("Impossible de récupérer les métadonnées du document " + documentId, e);
+        }
 
     }
 

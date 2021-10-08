@@ -2034,6 +2034,43 @@
         }
       }
     },
+    "/programmes/{programmeId}/documents/{documentId}": {
+      "get": {
+        "summary": "Récupération des métadonnées d'un document d'un programme",
+        "operationId": "getDocumentMetadata",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "documentId",
+            "description": "Identifiant du document",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/communes": {
       "get": {
         "summary": "Recherche d'une commune",
