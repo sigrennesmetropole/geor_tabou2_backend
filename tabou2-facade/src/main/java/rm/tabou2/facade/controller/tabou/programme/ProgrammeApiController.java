@@ -254,4 +254,9 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
         return new ResponseEntity<>(programmeService.getDocumentMetadata(programmeId, documentId), HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<Resource> getDocumentContent(Long programmeId, String documentId) throws Exception {
+        return downloadDocument(programmeService.downloadDocument(programmeId, documentId));
+    }
+
 }

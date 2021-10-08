@@ -85,7 +85,11 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class ProgrammeServiceImpl implements ProgrammeService {
 
+    //Logger
     private static final Logger LOGGER = LoggerFactory.getLogger(ProgrammeServiceImpl.class);
+
+    public static final String ERROR_RETRIEVE_METADATA_DOCUMENT = "Impossible de récupérer les métadonnées du document ";
+    public static final String ERROR_RETRIEVE_DOCUMENT_CONTENT = "Impossible de télécharger le contenu du document ";
 
     @Autowired
     private ProgrammeDao programmeDao;
@@ -498,6 +502,28 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     }
 
+    @Override
+    public DocumentContent downloadDocument(long programmeId, String documentId) throws AppServiceException {
+
+        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        Programme programme = getProgrammeById(programmeId);
+
+        if (!programmeRightsHelper.checkCanGetProgramme(programme)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le programme id = " + programmeId);
+        }
+
+        try {
+            return alfrescoService.downloadDocument(documentId);
+
+        } catch (WebClientResponseException.NotFound e) {
+            throw new NoSuchElementException(ERROR_RETRIEVE_DOCUMENT_CONTENT + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException(ERROR_RETRIEVE_DOCUMENT_CONTENT + documentId, e);
+        }
+
+
+    }
+
     private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
 
         InputStream templateFileInputStream;
@@ -581,9 +607,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             return documentMapper.entityToDto(alfrescoService.getDocumentMetadata(documentId));
 
         } catch (WebClientResponseException.NotFound e) {
-            throw new NoSuchElementException("Impossible de récupérer les métadonnées du document " + documentId);
+            throw new NoSuchElementException(ERROR_RETRIEVE_METADATA_DOCUMENT + documentId);
         } catch (Exception e) {
-            throw new AppServiceException("Impossible de récupérer les métadonnées du document " + documentId, e);
+            throw new AppServiceException(ERROR_RETRIEVE_METADATA_DOCUMENT + documentId, e);
         }
 
     }
