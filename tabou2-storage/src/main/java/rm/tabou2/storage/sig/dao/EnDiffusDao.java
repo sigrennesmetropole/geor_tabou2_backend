@@ -3,6 +3,7 @@ package rm.tabou2.storage.sig.dao;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import rm.tabou2.storage.common.CustomCrudRepository;
 import rm.tabou2.storage.sig.entity.EnDiffusEntity;
 
@@ -16,7 +17,7 @@ public interface EnDiffusDao extends CustomCrudRepository<EnDiffusEntity, Intege
             "e.nature is NOT NULL AND " +
             "e.nature NOT LIKE '' AND " +
             "UPPER(e.nom) LIKE UPPER(:nom)")
-    List<EnDiffusEntity> findAllByName(String nom, Pageable pageable);
+    List<EnDiffusEntity> findAllByName(@Param("nom") String nom, Pageable pageable);
 
     int countAllByIdTabouIsNullAndNomIsLikeIgnoreCase(String nom);
 
