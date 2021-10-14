@@ -4,20 +4,18 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
-import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.sig.dao.ProgrammeRmCustomDao;
+import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
+import rm.tabou2.storage.tabou.dao.constants.FieldsConstants;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -40,8 +38,8 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl implements P
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page<ProgrammeRmEntity> searchEmprisesNonSuivies(Long operationId, String nom, Pageable pageable) {
 
-        boolean hasOperationIdParam = (operationId != null && operationId > 0)  ? true : false;
-        boolean hasNomParam = nom != null && !nom.equals("") ? true : false;
+        boolean hasOperationIdParam = (operationId != null && operationId > 0) ;
+        boolean hasNomParam = nom != null && !nom.equals("");
 
         String baseQuery =
                 "FROM " +
@@ -74,7 +72,7 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl implements P
 
         Query totalCountQuery =  entityManager.createNativeQuery(countQuery);
         if (hasOperationIdParam) {
-            totalCountQuery.setParameter("idTabou", operationId);
+            totalCountQuery.setParameter(FieldsConstants.FIELD_ID_TABOU, operationId);
         }
         if (hasNomParam) {
             totalCountQuery.setParameter("nomProgramme", nom);
@@ -86,11 +84,11 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl implements P
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
 
-        String sqlQuery = "SELECT PA.objectid, PA.programme " + baseQuery;
+        String sqlQuery = "SELECT PA.objectid, PA.programme, PA.id_tabou " + baseQuery;
 
         Query resultsQuery = entityManager.createNativeQuery(sqlQuery, ProgrammeRmEntity.class);
         if (hasOperationIdParam) {
-            resultsQuery.setParameter("idTabou", operationId);
+            resultsQuery.setParameter(FieldsConstants.FIELD_ID_TABOU, operationId);
         }
         if (hasNomParam) {
             resultsQuery.setParameter("nomProgramme", nom);
@@ -162,7 +160,7 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl implements P
         List<Predicate> predicates = new ArrayList<>();
 
         //Id tabou null
-        predicateCriteriaNullOrNot(true, "idTabou", predicates, builder, root);
+        predicateCriteriaNullOrNot(true, FieldsConstants.FIELD_ID_TABOU, predicates, builder, root);
 
         //Définition de la clause Where
         if (CollectionUtils.isNotEmpty(predicates)) {

@@ -49,6 +49,7 @@ public class FieldsConstants {
     public static final String FIELD_CCOM = "ccom";
     public static final String FIELD_CODE_IRIS = "codeIris";
     public static final String FIELD_NOM_IRIS = "nmiris";
+    public static final String FIELD_ID_TABOU = "idTabou";
 
 
 
