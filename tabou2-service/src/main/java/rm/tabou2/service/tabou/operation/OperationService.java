@@ -89,13 +89,5 @@ public interface OperationService {
      */
     Evenement updateEvenementByOperationId(long idOperation, @ValidEvenementUpdate Evenement evenement) throws AppServiceException;
 
-    /**
-     * Récupération des métadonnées d'un document Alfresco d'une opération.
-     *
-     * @param operationId identifiant de l'opération
-     * @param documentId  identifiant du document
-     * @return document
-     */
-    DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException ;
 
 }
