@@ -319,43 +319,6 @@
         }
       }
     },
-    "/operations/{operationId}/documents/{documentId}": {
-      "get": {
-        "summary": "Récupération des métadonnées d'un document d'une opération",
-        "operationId": "getDocumentMetadata",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "operationId",
-            "description": "Identifiant de l'opération",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "path",
-            "name": "documentId",
-            "description": "Identifiant du document",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/DocumentMetadata"
-            }
-          },
-          "404": {
-            "description": "La resource demandée n'existe pas"
-          }
-        }
-      }
-    },
     "/operations/emprises": {
       "get": {
         "summary": "Récupération de la liste des emprises des opérations non suivies dans Tabou",

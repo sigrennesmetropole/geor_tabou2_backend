@@ -238,10 +238,4 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     }
 
 
-    @Override
-    public ResponseEntity<DocumentMetadata> getDocumentMetadata(Long operationId, String documentId) throws Exception {
-        return new ResponseEntity<>(operationService.getDocumentMetadata(operationId, documentId), HttpStatus.OK);
-    }
-
-
 }

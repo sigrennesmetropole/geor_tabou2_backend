@@ -15,9 +15,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.reactive.function.client.WebClientResponseException.NotFound;
-import rm.tabou2.service.alfresco.AlfrescoService;
-import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
@@ -26,7 +23,6 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
-import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
@@ -93,9 +89,6 @@ public class OperationServiceImpl implements OperationService {
     private EvenementOperationMapper evenementOperationMapper;
 
     @Autowired
-    private DocumentMapper documentMapper;
-
-    @Autowired
     private OperationService me;
 
     @Value("${typeevenement.changementetape.code}")
@@ -103,9 +96,6 @@ public class OperationServiceImpl implements OperationService {
 
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
-
-    @Autowired
-    private AlfrescoService alfrescoService;
 
     @Override
     @Transactional
@@ -327,29 +317,6 @@ public class OperationServiceImpl implements OperationService {
         }
 
         return evenementOperationMapper.entityToDto(evenementOperationEntity);
-    }
-
-
-    @Override
-    public DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException {
-
-        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de consultation dessus
-        OperationEntity operation = getOperationEntityById(operationId);
-
-        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operation))) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de consulter l'opération id = " + operationId);
-        }
-
-        try {
-            //Récupération du document Dans alfresco
-            return documentMapper.entityToDto(alfrescoService.getDocumentMetadata(documentId));
-
-        } catch (NotFound e) {
-            throw new NoSuchElementException("Impossible de récupérer les métadonnées du document " + documentId);
-        } catch (Exception e) {
-            throw new AppServiceException("Impossible de récupérer les métadonnées du document " + documentId, e);
-        }
-
     }
 
     private OperationEntity getOperationEntityById(long operationId) {
