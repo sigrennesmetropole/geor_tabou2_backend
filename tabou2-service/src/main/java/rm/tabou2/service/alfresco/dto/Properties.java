@@ -12,5 +12,9 @@ public class Properties {
     public String cmDescription;
     @JsonProperty("app:icon")
     public String appIcon;
+    @JsonProperty("tabou2:id")
+    public Long tabouId;
+    @JsonProperty("tabou2:objet")
+    public String objetTabou;
 
 }

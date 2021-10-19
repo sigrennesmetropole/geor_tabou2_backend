@@ -4,15 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import org.springframework.web.util.UriComponentsBuilder;
 import rm.tabou2.service.alfresco.AlfrescoService;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
+import rm.tabou2.service.alfresco.dto.AlfrescoTabouObjet;
 import rm.tabou2.service.alfresco.helper.AlfrescoAuthenticationHelper;
+import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -47,9 +54,15 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
 
     @Override
-    public DocumentContent downloadDocument(String documentId) {
+    public DocumentContent downloadDocument(AlfrescoTabouObjet objet, long objetId, String documentId) throws AppServiceException {
 
         AlfrescoDocument document = getDocumentMetadata(documentId);
+
+        //Vérification de la cohérence
+        if (!objet.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
+         document.getEntry().getProperties().getTabouId() != objetId) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le document id=" + documentId);
+        }
 
         String uriForDownload = DOCUMENT_START_URI + documentId + DOWNLOAD_URI_END;
 
@@ -61,12 +74,15 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .retrieve()
                 .bodyToFlux(DataBuffer.class);
 
+        try {
+            File tempFile = File.createTempFile(document.getEntry().getName(), "", new File(temporaryDirectory));
+            final Path path = FileSystems.getDefault().getPath(tempFile.getPath());
+            DataBufferUtils.write(dataBufferFlux, path, StandardOpenOption.CREATE).block();
 
-        final Path path = FileSystems.getDefault().getPath(temporaryDirectory + document.getEntry().getName());
-        DataBufferUtils.write(dataBufferFlux, path, StandardOpenOption.CREATE).block();
-
-        return new DocumentContent(document.getEntry().getName(), document.getEntry().getContent().getMimeType(), path.toFile());
-
+            return new DocumentContent(document.getEntry().getName(), document.getEntry().getContent().getMimeType(), path.toFile());
+        } catch (IOException e) {
+            throw new AppServiceException("erreur lors de la génération du fichier temporaire", e);
+        }
 
     }
 
