@@ -121,6 +121,17 @@ public interface ProgrammeService {
     Page<Emprise> getEmprisesAvailables(String nom, Long operationId, Pageable pageable);
 
     /**
+     * Téléchargement du contenu du document.
+     *
+     * @param programmeId identifiant du programme
+     * @param documentId identifiant du document
+     * @return
+     * @throws AppServiceException
+     */
+
+    DocumentContent downloadDocument(long programmeId, String documentId) throws AppServiceException;
+
+    /**
      * Récupération des métadonnées d'un document.
      *
      * @param programmeId identifiant du programme
