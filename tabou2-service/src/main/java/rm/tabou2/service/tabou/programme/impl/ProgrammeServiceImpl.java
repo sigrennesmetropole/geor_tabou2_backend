@@ -89,8 +89,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     //Logger
     private static final Logger LOGGER = LoggerFactory.getLogger(ProgrammeServiceImpl.class);
 
+    //Message d'erreur
     public static final String ERROR_RETRIEVE_METADATA_DOCUMENT = "Impossible de récupérer les métadonnées du document ";
     public static final String ERROR_RETRIEVE_DOCUMENT_CONTENT = "Impossible de télécharger le contenu du document ";
+    public static final String ERROR_DELETE_DOCUMENT = "Impossible de supprimer le document ";
 
     @Autowired
     private ProgrammeDao programmeDao;
@@ -611,6 +613,29 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new NoSuchElementException(ERROR_RETRIEVE_METADATA_DOCUMENT + documentId);
         } catch (Exception e) {
             throw new AppServiceException(ERROR_RETRIEVE_METADATA_DOCUMENT + documentId, e);
+        }
+
+    }
+
+    @Override
+    public void deleteDocument(long programmeId, String documentId) throws AppServiceException {
+
+        //On vérifie que le programme existe
+        Programme programmeToDelete = getProgrammeById(programmeId);
+
+        // Vérification des droits utilisateur
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, programmeToDelete.isDiffusionRestreinte())) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programmeToDelete.getNom());
+        }
+
+        try {
+            //Suppression du document Dans alfresco
+           alfrescoService.deleteDocument(documentId);
+
+        } catch (WebClientResponseException.NotFound e) {
+            throw new NoSuchElementException(ERROR_DELETE_DOCUMENT + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException(ERROR_DELETE_DOCUMENT + documentId, e);
         }
 
     }

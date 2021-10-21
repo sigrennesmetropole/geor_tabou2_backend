@@ -259,4 +259,10 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
         return downloadDocument(programmeService.downloadDocument(programmeId, documentId));
     }
 
+    @Override
+    public ResponseEntity<Void> deleteDocument(Long programmeId, String documentId) throws Exception {
+        programmeService.deleteDocument(programmeId, documentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
