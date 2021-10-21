@@ -630,7 +630,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         try {
             //Suppression du document Dans alfresco
-           alfrescoService.deleteDocument(documentId);
+           alfrescoService.deleteDocument(AlfrescoTabouType.PROGRAMME, programmeId, documentId);
 
         } catch (WebClientResponseException.NotFound e) {
             throw new NoSuchElementException(ERROR_DELETE_DOCUMENT + documentId);

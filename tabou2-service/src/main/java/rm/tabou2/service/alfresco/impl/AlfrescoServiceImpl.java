@@ -87,10 +87,18 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     }
 
     @Override
-    public void deleteDocument(String documentId) {
+    public void deleteDocument(AlfrescoTabouType objectType, long objectId, String documentId) {
+
+        AlfrescoDocument document = getDocumentMetadata(documentId);
 
         //Construction de l'uri du document
         String documentUri = DOCUMENT_START_URI + documentId + DELETE_URI_END;
+
+        //Vérification de la cohérence
+        if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
+                document.getEntry().getProperties().getTabouId() != objectId) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le document id=" + documentId);
+        }
 
         alfrescoAuthenticationHelper.getAlfrescoWebClient().delete()
                 .uri(documentUri)

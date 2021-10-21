@@ -30,8 +30,10 @@ public interface AlfrescoService {
     /**
      * Suppresion d'un document dans Alfresco.
      *
+     * @param objectType type de l'objet tabou
+     * @param objectId identifiant de l'objet tabou
      * @param documentId identifiant du document
      */
-    void deleteDocument(String documentId);
+    void deleteDocument(AlfrescoTabouType objectType, long objectId, String documentId);
 
 }
