@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import rm.tabou2.service.alfresco.AlfrescoService;
-import rm.tabou2.service.alfresco.dto.AlfrescoTabouObjet;
+import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
@@ -514,7 +514,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         try {
-            return alfrescoService.downloadDocument(AlfrescoTabouObjet.PROGRAMME, programmeId, documentId);
+            return alfrescoService.downloadDocument(AlfrescoTabouType.PROGRAMME, programmeId, documentId);
 
         } catch (WebClientResponseException.NotFound e) {
             throw new NoSuchElementException(ERROR_RETRIEVE_DOCUMENT_CONTENT + documentId);

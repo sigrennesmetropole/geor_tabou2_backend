@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -12,10 +11,9 @@ import reactor.core.publisher.Flux;
 import org.springframework.web.util.UriComponentsBuilder;
 import rm.tabou2.service.alfresco.AlfrescoService;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
-import rm.tabou2.service.alfresco.dto.AlfrescoTabouObjet;
+import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.alfresco.helper.AlfrescoAuthenticationHelper;
 import rm.tabou2.service.exception.AppServiceException;
-import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 
 import java.io.File;
@@ -54,13 +52,13 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
 
     @Override
-    public DocumentContent downloadDocument(AlfrescoTabouObjet objet, long objetId, String documentId) throws AppServiceException {
+    public DocumentContent downloadDocument(AlfrescoTabouType objectType, long objectId, String documentId) throws AppServiceException {
 
         AlfrescoDocument document = getDocumentMetadata(documentId);
 
         //Vérification de la cohérence
-        if (!objet.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
-         document.getEntry().getProperties().getTabouId() != objetId) {
+        if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
+         document.getEntry().getProperties().getTabouId() != objectId) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le document id=" + documentId);
         }
 
