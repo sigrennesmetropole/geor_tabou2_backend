@@ -356,6 +356,43 @@
         }
       }
     },
+    "/operations/{operationId}/documents/{documentId}/content": {
+      "get": {
+        "summary": "Récupération du contenu d'un document d'une opération",
+        "operationId": "getDocumentContent",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "documentId",
+            "description": "Identifiant du document",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/operations/emprises": {
       "get": {
         "summary": "Récupération de la liste des emprises des opérations non suivies dans Tabou",
@@ -4591,6 +4628,10 @@
           "description": "Identifiant unique du type de document",
           "type": "integer",
           "format": "int64"
+        },
+        "nom": {
+          "description": "Nom du document",
+          "type": "string"
         },
         "libelle": {
           "description": "Libellé du type document",
