@@ -26,8 +26,10 @@ import java.nio.file.StandardOpenOption;
 public class AlfrescoServiceImpl implements AlfrescoService {
 
     private static final String AUTHORIZATION = "Authorization";
+    private static final String BASIC_AUTHENTIFICATION = "Basic ";
     private static final String DOCUMENT_START_URI = "alfresco/versions/1/nodes/";
     public static final String DOWNLOAD_URI_END = "/content?attachment=true";
+    public static final String DELETE_URI_END = "?permanent=false";
 
     @Autowired
     private AlfrescoAuthenticationHelper alfrescoAuthenticationHelper;
@@ -45,7 +47,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
         return alfrescoAuthenticationHelper.getAlfrescoWebClient().get()
                 .uri(documentUri.toUriString())
-                .header(AUTHORIZATION, "Basic " + alfrescoAuthenticationHelper.getAuthenticationTicket())
+                .header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket())
                 .retrieve().bodyToMono(AlfrescoDocument.class).block();
 
     }
@@ -68,7 +70,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .get()
                 .uri(uriForDownload)
                 .accept(MediaType.APPLICATION_OCTET_STREAM, MediaType.ALL)
-                .header(AUTHORIZATION, "Basic " + alfrescoAuthenticationHelper.getAuthenticationTicket())
+                .header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket())
                 .retrieve()
                 .bodyToFlux(DataBuffer.class);
 
@@ -81,6 +83,27 @@ public class AlfrescoServiceImpl implements AlfrescoService {
         } catch (IOException e) {
             throw new AppServiceException("erreur lors de la génération du fichier temporaire", e);
         }
+
+    }
+
+    @Override
+    public void deleteDocument(AlfrescoTabouType objectType, long objectId, String documentId) {
+
+        AlfrescoDocument document = getDocumentMetadata(documentId);
+
+        //Construction de l'uri du document
+        String documentUri = DOCUMENT_START_URI + documentId + DELETE_URI_END;
+
+        //Vérification de la cohérence
+        if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
+                document.getEntry().getProperties().getTabouId() != objectId) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le document id=" + documentId);
+        }
+
+        alfrescoAuthenticationHelper.getAlfrescoWebClient().delete()
+                .uri(documentUri)
+                .header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket())
+                .retrieve().bodyToMono(Void.class).block();
 
     }
 

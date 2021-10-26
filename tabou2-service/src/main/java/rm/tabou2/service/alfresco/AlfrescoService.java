@@ -26,4 +26,14 @@ public interface AlfrescoService {
      * @throws AppServiceException
      */
     DocumentContent downloadDocument(AlfrescoTabouType objectType, long objectId, String documentId) throws AppServiceException;
+
+    /**
+     * Suppresion d'un document dans Alfresco.
+     *
+     * @param objectType type de l'objet tabou
+     * @param objectId identifiant de l'objet tabou
+     * @param documentId identifiant du document
+     */
+    void deleteDocument(AlfrescoTabouType objectType, long objectId, String documentId);
+
 }

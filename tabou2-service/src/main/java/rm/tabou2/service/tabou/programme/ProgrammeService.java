@@ -140,4 +140,14 @@ public interface ProgrammeService {
      * @throws AppServiceException
      */
     DocumentMetadata getDocumentMetadata(long programmeId, String documentId) throws AppServiceException;
+
+    /**
+     * Suppresion d'un document dans Alfresco.
+     *
+     * @param programmeId identifiant du programme
+     * @param documentId  identifiant du document
+     * @throws AppServiceException
+     */
+    void deleteDocument(long programmeId, String documentId) throws AppServiceException;
+
 }
