@@ -249,5 +249,10 @@ public class OperationApiController extends AbstractExportDocumentApi implements
         return downloadDocument(operationService.downloadDocument(operationId, documentId));
     }
 
+    @Override
+    public ResponseEntity<Void> deleteDocument(Long operationId, String documentId) throws Exception {
+        operationService.deleteDocument(operationId, documentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

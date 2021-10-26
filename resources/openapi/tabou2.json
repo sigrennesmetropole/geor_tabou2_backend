@@ -354,7 +354,40 @@
             "description": "La resource demandée n'existe pas"
           }
         }
+      },
+      "delete": {
+        "summary": "Suppression d'un document d'une opération",
+        "operationId": "deleteDocument",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "documentId",
+            "description": "Identifiant du document",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
       }
+
     },
     "/operations/{operationId}/documents/{documentId}/content": {
       "get": {
