@@ -3,6 +3,7 @@ package rm.tabou2.service.tabou.programme;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
@@ -112,10 +113,41 @@ public interface ProgrammeService {
     /**
      * Retourne la liste des emprises des programmes non suivies.
      *
-     * @param nom nom du programme
+     * @param nom         nom du programme
      * @param operationId identifiant de l'opération
-     * @param pageable paramètres de la pagination
+     * @param pageable    paramètres de la pagination
      * @return Listes des programmes sans suivi d'emprise
      */
     Page<Emprise> getEmprisesAvailables(String nom, Long operationId, Pageable pageable);
+
+    /**
+     * Téléchargement du contenu du document.
+     *
+     * @param programmeId identifiant du programme
+     * @param documentId identifiant du document
+     * @return
+     * @throws AppServiceException
+     */
+
+    DocumentContent downloadDocument(long programmeId, String documentId) throws AppServiceException;
+
+    /**
+     * Récupération des métadonnées d'un document.
+     *
+     * @param programmeId identifiant du programme
+     * @param documentId  identifiant du document
+     * @return DocumentMetadata
+     * @throws AppServiceException
+     */
+    DocumentMetadata getDocumentMetadata(long programmeId, String documentId) throws AppServiceException;
+
+    /**
+     * Suppresion d'un document dans Alfresco.
+     *
+     * @param programmeId identifiant du programme
+     * @param documentId  identifiant du document
+     * @throws AppServiceException
+     */
+    void deleteDocument(long programmeId, String documentId) throws AppServiceException;
+
 }

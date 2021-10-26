@@ -1,6 +1,7 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -237,5 +238,21 @@ public class OperationApiController extends AbstractExportDocumentApi implements
         return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationId, tiersTypeTiers.getTiersId(), tiersTypeTiers.getTypeTiersId()), HttpStatus.OK);
     }
 
+
+    @Override
+    public ResponseEntity<DocumentMetadata> getDocumentMetadata(Long operationId, String documentId) throws Exception {
+        return new ResponseEntity<>(operationService.getDocumentMetadata(operationId, documentId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Resource> getDocumentContent(Long operationId, String documentId) throws Exception {
+        return downloadDocument(operationService.downloadDocument(operationId, documentId));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteDocument(Long operationId, String documentId) throws Exception {
+        operationService.deleteDocument(operationId, documentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

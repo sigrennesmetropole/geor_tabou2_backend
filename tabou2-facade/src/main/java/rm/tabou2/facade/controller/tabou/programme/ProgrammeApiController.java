@@ -11,6 +11,7 @@ import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.Agapeo;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.EtapeRestricted;
@@ -246,6 +247,22 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     @Override
     public ResponseEntity<AssociationTiersTypeTiers> associateTiersToProgramme(Long programmeId, @NotNull @Valid Long tiersId, @NotNull @Valid Long typeTiersId) throws Exception {
         return new ResponseEntity<>(programmeTiersService.associateTiersToProgramme(programmeId, tiersId, typeTiersId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<DocumentMetadata> getDocumentMetadata(Long programmeId, String documentId) throws Exception {
+        return new ResponseEntity<>(programmeService.getDocumentMetadata(programmeId, documentId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Resource> getDocumentContent(Long programmeId, String documentId) throws Exception {
+        return downloadDocument(programmeService.downloadDocument(programmeId, documentId));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteDocument(Long programmeId, String documentId) throws Exception {
+        programmeService.deleteDocument(programmeId, documentId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

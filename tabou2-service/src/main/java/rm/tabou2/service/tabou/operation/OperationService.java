@@ -6,6 +6,7 @@ import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.validator.evenement.ValidEvenementCreation;
 import rm.tabou2.service.validator.evenement.ValidEvenementUpdate;
 import rm.tabou2.service.validator.operation.ValidOperationCreation;
@@ -89,5 +90,32 @@ public interface OperationService {
      */
     Evenement updateEvenementByOperationId(long idOperation, @ValidEvenementUpdate Evenement evenement) throws AppServiceException;
 
+    /**
+     * Récupération des métadonnées d'un document Alfresco d'une opération.
+     *
+     * @param operationId identifiant de l'opération
+     * @param documentId  identifiant du document
+     * @return document
+     */
+    DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException ;
+
+    /**
+     * Télécharge le contenu d'un document d'une opération.
+     *
+     * @param operationId identifiant de l'opération
+     * @param documentId identifiant du document
+     * @return
+     * @throws AppServiceException
+     */
+    DocumentContent downloadDocument(long operationId, String documentId) throws AppServiceException;
+
+    /**
+     * Suppression d'un document d'une opération.
+     *
+     * @param operationId identifiant de l'opération
+     * @param documentId identifiant du document
+     * @throws AppServiceException
+     */
+    void deleteDocument(long operationId, String documentId) throws AppServiceException;
 
 }
