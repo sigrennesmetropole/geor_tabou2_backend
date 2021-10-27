@@ -2,6 +2,7 @@ package rm.tabou2.service.alfresco;
 
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 
@@ -35,5 +36,15 @@ public interface AlfrescoService {
      * @param documentId identifiant du document
      */
     void deleteDocument(AlfrescoTabouType objectType, long objectId, String documentId);
+
+    /**
+     * Mise à jour des métadonnées d'un document.
+     *
+     * @param documentId identifiant du document
+     * @param documentMetadata metadonnées d'un document
+     * @return
+     */
+    AlfrescoDocument updateDocumentMetadata(String documentId, DocumentMetadata documentMetadata);
+
 
 }

@@ -641,4 +641,19 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
 
+    @Override
+    public DocumentMetadata updateDocumentMetadata(long programmeId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException {
+
+        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        Programme programme = getProgrammeById(programmeId);
+
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programme.isDiffusionRestreinte())) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+        }
+
+        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(documentId, documentMetadata));
+
+    }
+
+
 }

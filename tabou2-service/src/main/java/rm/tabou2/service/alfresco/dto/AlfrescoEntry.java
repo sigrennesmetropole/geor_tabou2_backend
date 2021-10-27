@@ -18,7 +18,7 @@ public class AlfrescoEntry {
     private String name;
     private String id;
     private String nodeType;
-    private Properties properties;
+    private AlfrescoProperties properties;
     private AlfrescoContent content;
     private String parentId;
 

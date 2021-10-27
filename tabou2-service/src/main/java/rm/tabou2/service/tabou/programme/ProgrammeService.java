@@ -150,4 +150,16 @@ public interface ProgrammeService {
      */
     void deleteDocument(long programmeId, String documentId) throws AppServiceException;
 
+    /**
+     * Mise à jour des métadonnées d'un document d'un projet.
+     *
+     * @param programmeId      identifiant du programme
+     * @param documentId       identifiant du document
+     * @param documentMetadata métadonnées du document
+     * @return métadonnées
+     * @throws AppServiceException
+     */
+    DocumentMetadata updateDocumentMetadata(long programmeId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException;
+
+
 }
