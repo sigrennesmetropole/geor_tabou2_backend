@@ -97,15 +97,26 @@ public interface OperationService {
      * @param documentId  identifiant du document
      * @return document
      */
-    DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException ;
+    DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException;
 
     /**
      * Télécharge le contenu d'un document d'une opération.
      *
      * @param operationId identifiant de l'opération
-     * @param documentId identifiant du document
-     * @return
-     * @throws AppServiceException
+     * @param documentId  identifiant du document
+     * @return Contenu du document
+     * @throws AppServiceException epxception si erreur lors du téléchargement du contenu du document
      */
     DocumentContent downloadDocument(long operationId, String documentId) throws AppServiceException;
+
+    /**
+     * Recherche de document.
+     *
+     * @param operationId   identifiant de l'opération
+     * @param nom           nom du document
+     * @param libelle       libellé du type de document
+     * @param typeMime      libellé du type MIME du document
+     * @param pageable      paramètres de pagination
+     */
+    void searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable);
 }

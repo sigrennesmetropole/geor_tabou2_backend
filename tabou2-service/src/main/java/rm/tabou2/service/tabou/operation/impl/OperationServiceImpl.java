@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.reactive.function.client.WebClientResponseException.NotFound;
 import rm.tabou2.service.alfresco.AlfrescoService;
+import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Etape;
@@ -378,6 +379,20 @@ public class OperationServiceImpl implements OperationService {
         }
 
 
+    }
+
+    @Override
+    public void searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable){
+
+        OperationEntity operationEntity = operationDao.findOneById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operationEntity))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.OPERATION, operationId, nom, libelle, typeMime, pageable);
+
+        //TODO : appeler mapper
     }
 
     private OperationEntity getOperationEntityById(long operationId) {
