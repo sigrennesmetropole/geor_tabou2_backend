@@ -101,6 +101,18 @@ public interface OperationService {
     DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException ;
 
     /**
+     * Mise à jour des métadonnées d'un document.
+     *
+     * @param operationId identifiant de l'opération
+     * @param documentId identifiant du document
+     * @param documentMetadata métadonnées d'un document
+     * @return
+     * @throws AppServiceException
+     */
+    DocumentMetadata updateDocumentMetadata(long operationId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException;
+
+
+    /**
      * Télécharge le contenu d'un document d'une opération.
      *
      * @param operationId identifiant de l'opération
