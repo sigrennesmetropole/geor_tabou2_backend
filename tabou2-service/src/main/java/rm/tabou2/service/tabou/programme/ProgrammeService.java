@@ -3,6 +3,7 @@ package rm.tabou2.service.tabou.programme;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Evenement;
@@ -161,5 +162,13 @@ public interface ProgrammeService {
      */
     DocumentMetadata updateDocumentMetadata(long programmeId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException;
 
-
+    /**
+     * Mise à jour du contenu d'un document.
+     *
+     * @param programmeId identifiant d'un programme
+     * @param documentId identifiant du document
+     * @param file fichier à mettre à jour
+     * @throws AppServiceException
+     */
+    void updateDocumentContent(long programmeId, String documentId, MultipartFile file) throws AppServiceException;
 }
