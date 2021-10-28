@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import rm.tabou2.service.alfresco.AlfrescoService;
-import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
-import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
-import rm.tabou2.service.alfresco.dto.AlfrescoPagination;
-import rm.tabou2.service.alfresco.dto.AlfrescoSearchQuery;
-import rm.tabou2.service.alfresco.dto.AlfrescoSearchRoot;
-import rm.tabou2.service.alfresco.dto.AlfrescoSort;
-import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
+import rm.tabou2.service.alfresco.dto.*;
 import rm.tabou2.service.alfresco.helper.AlfrescoAuthenticationHelper;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.st.generator.model.DocumentContent;
@@ -30,6 +25,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class AlfrescoServiceImpl implements AlfrescoService {
@@ -42,9 +39,10 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     public static final String SEARCH_URI = "search/versions/1/search";
 
     public static final String SEARCH_PARAM_PROPERTIES = "properties";
-    public static final String SEARCH_PARAM_ID = "tabou2:id:";
-    public static final String SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT = "tabou2:libelleTypeDocument:";
-    public static final String SEARCH_PARAM_OBJET = "tabou2:objet:";
+    public static final String SEARCH_PARAM_ID = "=tabou2:id:";
+    public static final String SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT = "=tabou2:libelleTypeDocument:";
+    public static final String SEARCH_PARAM_OBJET = "=tabou2:objet:";
+    public static final String ALFRESCO_SEARCH_CRITERIA_TYPE = "FIELD";
 
     @Autowired
     private AlfrescoAuthenticationHelper alfrescoAuthenticationHelper;
@@ -111,15 +109,24 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
         AlfrescoSearchRoot searchRoot = new AlfrescoSearchRoot();
         AlfrescoSearchQuery searchQuery = new AlfrescoSearchQuery();
-        if (!StringUtils.isEmpty(nom)) {
-            searchQuery.setQuery(SEARCH_PARAM_ID + objectId);
-        }
-        if (objectId > 0) {
-            searchQuery.setQuery(SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT + libelle);
-        }
 
         //Dans tous les cas, on filtre sur le type d'objet
-        searchQuery.setQuery(SEARCH_PARAM_OBJET + objectType);
+        StringBuilder query = new StringBuilder();
+        query.append(SEARCH_PARAM_OBJET).append("\"" + objectType + "\"");
+        if (!StringUtils.isEmpty(nom)) {
+            query.append(" AND ");
+            query.append("\"" + nom + "\"");
+        }
+        if (objectId > 0) {
+            query.append(" AND ");
+            query.append(SEARCH_PARAM_ID).append(objectId);
+        }
+        if (!StringUtils.isEmpty(libelle)) {
+            query.append(" AND ");
+            query.append(SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT).append("\"" + libelle + "\"");
+        }
+        searchQuery.setQuery(query.toString());
+        searchRoot.setQuery(searchQuery);
 
         //On veut que la requête nous retourne les properties
         ArrayList<String> includes = new ArrayList<>();
@@ -127,19 +134,24 @@ public class AlfrescoServiceImpl implements AlfrescoService {
         searchRoot.setInclude(includes);
 
         //Paging
-        AlfrescoPagination paging = new AlfrescoPagination();
-        paging.setMaxItems(paging.getMaxItems());
+        AlfrescoPaging paging = new AlfrescoPaging();
+        paging.setMaxItems(pageable.getPageSize());
         paging.setSkipCount(pageable.getPageSize() * pageable.getPageNumber());
-        //searchRoot.setPaging(paging); //TODO : à réactiver
+        searchRoot.setPaging(paging);
 
         //Sort
-        AlfrescoSort sort = new AlfrescoSort();
-        sort.setAscending(Boolean.TRUE.toString());
-        sort.setField(pageable.getSort().stream().iterator().next().getProperty());
-        sort.setType("FIELD"); //TODO : constante
+        Iterator<Sort.Order> iterator = pageable.getSort().stream().iterator();
+        List<AlfrescoSort> sortList = new ArrayList<>();
+        while (iterator.hasNext()) {
+            Sort.Order sortCriteria = iterator.next();
+            AlfrescoSort sort = new AlfrescoSort();
+            sort.setAscending(String.valueOf(sortCriteria.isAscending()));
+            sort.setField(sortCriteria.getProperty());
+            sort.setType(ALFRESCO_SEARCH_CRITERIA_TYPE);
+            sortList.add(sort);
+        }
+        searchRoot.setSort(sortList);
 
-
-        searchRoot.setQuery(searchQuery);
 
         return alfrescoAuthenticationHelper.getAlfrescoWebClient().post()
                 .uri(searchUri.toUriString())
@@ -147,7 +159,6 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .body(BodyInserters.fromValue(searchRoot))
                 .header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket())
                 .retrieve().bodyToMono(AlfrescoDocumentRoot.class).block();
-
 
     }
 

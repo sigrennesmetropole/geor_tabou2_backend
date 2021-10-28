@@ -9,6 +9,7 @@ public class AlfrescoSearchRoot {
 
     private AlfrescoSearchQuery query;
     private List<String> include;
-    private AlfrescoPagination paging;
+    private AlfrescoPaging paging;
+    private List<AlfrescoSort> sort;
 
 }

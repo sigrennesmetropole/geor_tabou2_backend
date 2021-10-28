@@ -112,11 +112,12 @@ public interface OperationService {
     /**
      * Recherche de document.
      *
-     * @param operationId   identifiant de l'opération
-     * @param nom           nom du document
-     * @param libelle       libellé du type de document
-     * @param typeMime      libellé du type MIME du document
-     * @param pageable      paramètres de pagination
+     * @param operationId identifiant de l'opération
+     * @param nom         nom du document
+     * @param libelle     libellé du type de document
+     * @param typeMime    libellé du type MIME du document
+     * @param pageable    paramètres de pagination
+     * @return
      */
-    void searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable);
+    Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable);
 }

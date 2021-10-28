@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -47,10 +48,7 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.text.MessageFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -382,7 +380,7 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public void searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable){
+    public Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable) {
 
         OperationEntity operationEntity = operationDao.findOneById(operationId);
 
@@ -392,7 +390,9 @@ public class OperationServiceImpl implements OperationService {
 
         AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.OPERATION, operationId, nom, libelle, typeMime, pageable);
 
-        //TODO : appeler mapper
+        List<DocumentMetadata> results = documentMapper.entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
+
+        return new PageImpl<>(results, pageable, documentRoot.getList().getPagination().getTotalItems());
     }
 
     private OperationEntity getOperationEntityById(long operationId) {
