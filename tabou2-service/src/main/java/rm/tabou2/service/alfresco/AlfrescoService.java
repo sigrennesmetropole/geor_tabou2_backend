@@ -40,11 +40,13 @@ public interface AlfrescoService {
     /**
      * Mise à jour des métadonnées d'un document.
      *
+     * @param objectType type de l'objet tabou
+     * @param objectId identifiant de l'objet tabou
      * @param documentId identifiant du document
      * @param documentMetadata metadonnées d'un document
      * @return
      */
-    AlfrescoDocument updateDocumentMetadata(String documentId, DocumentMetadata documentMetadata);
+    AlfrescoDocument updateDocumentMetadata(AlfrescoTabouType objectType, long objectId, String documentId, DocumentMetadata documentMetadata);
 
 
 }

@@ -112,7 +112,15 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     }
 
     @Override
-    public AlfrescoDocument updateDocumentMetadata(String documentId, DocumentMetadata documentMetadata) {
+    public AlfrescoDocument updateDocumentMetadata(AlfrescoTabouType objectType, long objectId, String documentId, DocumentMetadata documentMetadata) {
+
+        AlfrescoDocument document = getDocumentMetadata(documentId);
+
+        //Vérification de la cohérence
+        if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
+                document.getEntry().getProperties().getTabouId() != objectId) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le document id=" + documentId);
+        }
 
         //Construction de l'uri du document
         UriComponentsBuilder documentUri = UriComponentsBuilder

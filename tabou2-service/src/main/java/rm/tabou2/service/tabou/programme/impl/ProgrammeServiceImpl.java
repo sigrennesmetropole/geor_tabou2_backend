@@ -651,7 +651,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
         }
 
-        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(documentId, documentMetadata));
+        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.PROGRAMME, programmeId, documentId, documentMetadata));
 
     }
 
