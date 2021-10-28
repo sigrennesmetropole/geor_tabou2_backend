@@ -1,5 +1,6 @@
 package rm.tabou2.service.alfresco;
 
+import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.dto.DocumentMetadata;
@@ -12,8 +13,8 @@ public interface AlfrescoService {
     /**
      * Récupération d'un document à partir de son identifiant.
      *
-     * @param documentId
-     * @return document
+     * @param documentId identifiant du document
+     * @return document alfresco document
      */
     AlfrescoDocument getDocumentMetadata(String documentId);
 
@@ -24,9 +25,18 @@ public interface AlfrescoService {
      * @param objectId identifiant de l'objet tabou associé au document
      * @param documentId  identifiant du document
      * @return document
-     * @throws AppServiceException
+     * @throws AppServiceException exception
      */
     DocumentContent downloadDocument(AlfrescoTabouType objectType, long objectId, String documentId) throws AppServiceException;
+
+    /**
+     * Mise à jour du contenu d'un document.
+     *
+     * @param documentId identifiant du document
+     * @param file fichier
+     * @throws AppServiceException
+     */
+    void updateDocumentContent(AlfrescoTabouType objectType, long objectId, String documentId, MultipartFile file) throws AppServiceException;
 
     /**
      * Suppresion d'un document dans Alfresco.
