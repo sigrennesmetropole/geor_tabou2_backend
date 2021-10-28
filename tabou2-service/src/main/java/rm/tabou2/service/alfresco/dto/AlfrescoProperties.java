@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class Properties {
+public class AlfrescoProperties {
 
     @JsonProperty("cm:title")
     public String cmTitle;
@@ -16,5 +16,7 @@ public class Properties {
     public Long tabouId;
     @JsonProperty("tabou2:objet")
     public String objetTabou;
+    @JsonProperty("tabou2:libelleTypeDocument")
+    public String libelleTypeDocument;
 
 }

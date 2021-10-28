@@ -2180,6 +2180,50 @@
             "description": "La resource demandée n'existe pas"
           }
         }
+      },
+      "put": {
+        "summary": "Mise à jour des métadonnées d'un document d'un programme",
+        "operationId": "updateDocumentMetadata",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "documentId",
+            "description": "Identifiant du document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "documentMetadata",
+            "description": "Metadonnées du document",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
       }
     },
     "/programmes/{programmeId}/documents/{documentId}/content": {

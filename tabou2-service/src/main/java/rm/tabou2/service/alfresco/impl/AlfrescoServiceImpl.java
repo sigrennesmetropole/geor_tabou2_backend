@@ -11,12 +11,17 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Flux;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import rm.tabou2.service.alfresco.AlfrescoService;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
+import rm.tabou2.service.alfresco.dto.AlfrescoMetadata;
+import rm.tabou2.service.alfresco.dto.AlfrescoProperties;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.alfresco.helper.AlfrescoAuthenticationHelper;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 
@@ -157,6 +162,43 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .retrieve().bodyToMono(Void.class).block();
 
     }
+
+    @Override
+    public AlfrescoDocument updateDocumentMetadata(AlfrescoTabouType objectType, long objectId, String documentId, DocumentMetadata documentMetadata) {
+
+        AlfrescoDocument document = getDocumentMetadata(documentId);
+
+        //Vérification de la cohérence
+        if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
+                document.getEntry().getProperties().getTabouId() != objectId) {
+            throw new AccessDeniedException(ACCESS_RIGHTS_EXCEPTION + documentId);
+        }
+
+        //Construction de l'uri du document
+        UriComponentsBuilder documentUri = UriComponentsBuilder
+                .fromUriString(DOCUMENT_START_URI)
+                .path(documentId);
+
+
+        AlfrescoProperties properties = new AlfrescoProperties();
+        properties.setCmTitle(documentMetadata.getNom());
+        properties.setLibelleTypeDocument(documentMetadata.getLibelle());
+        //ID : on ne peut pas
+        //Type MIME : déterminé par le contenu
+        //User et date : automatique
+        AlfrescoMetadata alfrescoMetadata = new AlfrescoMetadata();
+        alfrescoMetadata.setProperties(properties);
+
+
+        return alfrescoAuthenticationHelper.getAlfrescoWebClient().put()
+                .uri(documentUri.toUriString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(alfrescoMetadata))
+                .header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket())
+                .retrieve().bodyToMono(AlfrescoDocument.class).block();
+
+    }
+
 
 
 }
