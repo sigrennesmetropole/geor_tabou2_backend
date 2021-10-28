@@ -69,7 +69,7 @@ public class AppExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     protected ResponseEntity<Object> handleNoSuchElementException(final Exception ex, final WebRequest request) {
         LOGGER.error("L'élement demandé n'existe pas", ex);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("L'élement demandé n'existe pas", HttpStatus.NOT_FOUND);
 
     }
 

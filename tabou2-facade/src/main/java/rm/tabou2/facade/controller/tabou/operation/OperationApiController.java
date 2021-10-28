@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.facade.api.OperationsApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
@@ -249,5 +250,12 @@ public class OperationApiController extends AbstractExportDocumentApi implements
         return downloadDocument(operationService.downloadDocument(operationId, documentId));
     }
 
+    @Override
+    public ResponseEntity<DocumentMetadata> updateDocumentContent(Long operationId, String documentId, @Valid MultipartFile fileToUpload) throws Exception {
+
+        operationService.updateDocumentContent(operationId, documentId, fileToUpload);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
