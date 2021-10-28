@@ -171,7 +171,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
         //Vérification de la cohérence
         if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
                 document.getEntry().getProperties().getTabouId() != objectId) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le document id=" + documentId);
+            throw new AccessDeniedException(ACCESS_RIGHTS_EXCEPTION + documentId);
         }
 
         //Construction de l'uri du document
