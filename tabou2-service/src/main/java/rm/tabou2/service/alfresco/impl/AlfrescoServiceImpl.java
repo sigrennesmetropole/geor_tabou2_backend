@@ -2,13 +2,17 @@ package rm.tabou2.service.alfresco.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Flux;
 import rm.tabou2.service.alfresco.AlfrescoService;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
@@ -28,8 +32,11 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_AUTHENTIFICATION = "Basic ";
     private static final String DOCUMENT_START_URI = "alfresco/versions/1/nodes/";
-    public static final String DOWNLOAD_URI_END = "/content?attachment=true";
-    public static final String DELETE_URI_END = "?permanent=false";
+    private static final String DOWNLOAD_URI_END = "/content?attachment=true";
+    private static final String DELETE_URI_END = "?permanent=false";
+    private static final String CONTENT_URI = "/content";
+
+    private static final String ACCESS_RIGHTS_EXCEPTION = "L'utilisateur n'a pas les droits de récupérer le document id=";
 
     @Autowired
     private AlfrescoAuthenticationHelper alfrescoAuthenticationHelper;
@@ -52,6 +59,50 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
     }
 
+    @Override
+    public void updateDocumentContent(AlfrescoTabouType objectType, long objectId, String documentId, MultipartFile file) throws AppServiceException {
+
+        AlfrescoDocument document = getDocumentMetadata(documentId);
+
+        //Vérification de la cohérence
+        if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
+                document.getEntry().getProperties().getTabouId() != objectId) {
+            throw new AccessDeniedException(ACCESS_RIGHTS_EXCEPTION + documentId);
+        }
+
+        //Construction de l'uri du document
+        UriComponentsBuilder documentUri = UriComponentsBuilder
+                .fromUriString(DOCUMENT_START_URI)
+                .path(documentId).path(CONTENT_URI);
+
+
+        alfrescoAuthenticationHelper.getAlfrescoWebClient().put()
+                .uri(documentUri.toUriString())
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromResource(getResourceFromFile(file)))
+                .header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket())
+                .retrieve().bodyToMono(AlfrescoDocument.class).block();
+
+    }
+
+
+    /**
+     * Création d'une resource à partir d'un multipart file.
+     *
+     * @param file fichier
+     * @return resource
+     * @throws AppServiceException exception levée si erreur lors de la lecture du fichier
+     */
+    private Resource getResourceFromFile(MultipartFile file) throws AppServiceException {
+
+        try {
+            return new ByteArrayResource(file.getBytes());
+        } catch (IOException e) {
+            throw new AppServiceException(e.getMessage(), e);
+        }
+    }
+
 
     @Override
     public DocumentContent downloadDocument(AlfrescoTabouType objectType, long objectId, String documentId) throws AppServiceException {
@@ -60,8 +111,8 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
         //Vérification de la cohérence
         if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
-         document.getEntry().getProperties().getTabouId() != objectId) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le document id=" + documentId);
+                document.getEntry().getProperties().getTabouId() != objectId) {
+            throw new AccessDeniedException(ACCESS_RIGHTS_EXCEPTION + documentId);
         }
 
         String uriForDownload = DOCUMENT_START_URI + documentId + DOWNLOAD_URI_END;
@@ -81,7 +132,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
             return new DocumentContent(document.getEntry().getName(), document.getEntry().getContent().getMimeType(), path.toFile());
         } catch (IOException e) {
-            throw new AppServiceException("erreur lors de la génération du fichier temporaire", e);
+            throw new AppServiceException("Erreur lors de la génération du fichier temporaire", e);
         }
 
     }
@@ -97,7 +148,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
         //Vérification de la cohérence
         if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
                 document.getEntry().getProperties().getTabouId() != objectId) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le document id=" + documentId);
+            throw new AccessDeniedException(ACCESS_RIGHTS_EXCEPTION + documentId);
         }
 
         alfrescoAuthenticationHelper.getAlfrescoWebClient().delete()
