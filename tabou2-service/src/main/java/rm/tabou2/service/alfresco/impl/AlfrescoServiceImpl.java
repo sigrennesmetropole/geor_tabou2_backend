@@ -42,7 +42,10 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     public static final String SEARCH_PARAM_ID = "=tabou2:id:";
     public static final String SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT = "=tabou2:libelleTypeDocument:";
     public static final String SEARCH_PARAM_OBJET = "=tabou2:objet:";
+    public static final String SEARCH_PARAM_MIME_TYPE = "=cm:content.mimetype:";
+    public static final String SEARCH_PARAM_NAME = "=cm:name:";
     public static final String ALFRESCO_SEARCH_CRITERIA_TYPE = "FIELD";
+    public static final String AND = " AND ";
 
     @Autowired
     private AlfrescoAuthenticationHelper alfrescoAuthenticationHelper;
@@ -112,18 +115,22 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
         //Dans tous les cas, on filtre sur le type d'objet
         StringBuilder query = new StringBuilder();
-        query.append(SEARCH_PARAM_OBJET).append("\"" + objectType + "\"");
+        query.append(SEARCH_PARAM_OBJET).append(objectType);
         if (!StringUtils.isEmpty(nom)) {
-            query.append(" AND ");
-            query.append("\"" + nom + "\"");
+            query.append(AND);
+            query.append(SEARCH_PARAM_NAME).append("\"").append(nom).append("\"");
         }
         if (objectId > 0) {
-            query.append(" AND ");
+            query.append(AND);
             query.append(SEARCH_PARAM_ID).append(objectId);
         }
         if (!StringUtils.isEmpty(libelle)) {
-            query.append(" AND ");
-            query.append(SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT).append("\"" + libelle + "\"");
+            query.append(AND);
+            query.append(SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT).append(libelle);
+        }
+        if (!StringUtils.isEmpty(typeMime)) {
+            query.append(AND);
+            query.append(SEARCH_PARAM_MIME_TYPE).append(typeMime);
         }
         searchQuery.setQuery(query.toString());
         searchRoot.setQuery(searchQuery);
@@ -159,7 +166,6 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .body(BodyInserters.fromValue(searchRoot))
                 .header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket())
                 .retrieve().bodyToMono(AlfrescoDocumentRoot.class).block();
-
     }
 
     @Override
