@@ -280,5 +280,11 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<DocumentMetadata> addDocument(@NotNull @Valid Long programmeId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload) throws Exception {
+        return new ResponseEntity<>(programmeService.addDocument(programmeId, nom, libelle, fileToUpload), HttpStatus.OK);
+
+    }
+
 
 }

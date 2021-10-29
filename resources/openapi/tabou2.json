@@ -2164,6 +2164,57 @@
         }
       }
     },
+    "/programmes/{programmeId}/documents": {
+      "post": {
+        "summary": "Ajout d'un document à un programme",
+        "operationId": "addDocument",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Libellé du type de document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "formData",
+            "name": "fileToUpload",
+            "description": "Document à ajouter",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/programmes/{programmeId}/documents/{documentId}": {
       "get": {
         "summary": "Récupération des métadonnées d'un document d'un programme",
