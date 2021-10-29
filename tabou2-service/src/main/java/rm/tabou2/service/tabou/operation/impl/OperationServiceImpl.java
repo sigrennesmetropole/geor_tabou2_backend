@@ -360,6 +360,21 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
+    public DocumentMetadata updateDocumentMetadata(long operationId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException {
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de consultation dessus
+        OperationEntity operation = getOperationEntityById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operation))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de consulter l'opération id = " + operationId);
+        }
+
+        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.OPERATION, operationId, documentId, documentMetadata));
+
+    }
+
+
+    @Override
     public DocumentContent downloadDocument(long operationId, String documentId) throws AppServiceException {
 
         //On vérifie que l'opération existe et que l'utilisateur a bien les droits de suppression dessus
