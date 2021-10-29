@@ -48,15 +48,29 @@ public interface AlfrescoService {
     void deleteDocument(AlfrescoTabouType objectType, long objectId, String documentId);
 
     /**
+     * Ajout d'un document dans Alfresco.
+     *
+     * @param nom nom du document
+     * @param libelle libellé du type de document
+     * @param objectType type de l'objet tabou
+     * @param objectId identifiant de l'objet tabou
+     * @param file fichier
+     * @return document
+     * @throws AppServiceException erreur lors de l'ajout d'un document dans tabou
+     */
+    AlfrescoDocument addDocument(String nom, String libelle, AlfrescoTabouType objectType, long objectId, MultipartFile file) throws AppServiceException;
+
+    /**
      * Mise à jour des métadonnées d'un document.
      *
      * @param objectType type de l'objet tabou
      * @param objectId identifiant de l'objet tabou
      * @param documentId identifiant du document
      * @param documentMetadata metadonnées d'un document
-     * @return
+     * @param isNewDocument true si le document est nouveau, false sinon
+     * @return document
      */
-    AlfrescoDocument updateDocumentMetadata(AlfrescoTabouType objectType, long objectId, String documentId, DocumentMetadata documentMetadata);
+    AlfrescoDocument updateDocumentMetadata(AlfrescoTabouType objectType, long objectId, String documentId, DocumentMetadata documentMetadata, boolean isNewDocument);
 
 
 }
