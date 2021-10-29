@@ -18,6 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import rm.tabou2.service.alfresco.AlfrescoService;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
@@ -618,6 +619,21 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
+    public DocumentMetadata addDocument(long programmeId, String nom, String libelle, MultipartFile file) throws AppServiceException{
+
+        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        Programme programme = getProgrammeById(programmeId);
+
+        if (!programmeRightsHelper.checkCanGetProgramme(programme)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+        }
+
+        //Récupération du document Dans alfresco
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelle, AlfrescoTabouType.PROGRAMME, programmeId, file));
+
+    }
+
+    @Override
     public void deleteDocument(long programmeId, String documentId) throws AppServiceException {
 
         //On vérifie que le programme existe
@@ -637,6 +653,36 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         } catch (Exception e) {
             throw new AppServiceException(ERROR_DELETE_DOCUMENT + documentId, e);
         }
+
+    }
+
+
+    @Override
+    public DocumentMetadata updateDocumentMetadata(long programmeId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException {
+
+        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        Programme programme = getProgrammeById(programmeId);
+
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programme.isDiffusionRestreinte())) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+        }
+
+        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.PROGRAMME, programmeId, documentId, documentMetadata, false));
+
+    }
+
+
+    @Override
+    public void updateDocumentContent(long programmeId, String documentId, MultipartFile file) throws AppServiceException {
+
+        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        Programme programme = getProgrammeById(programmeId);
+
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programme.isDiffusionRestreinte())) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+        }
+
+        alfrescoService.updateDocumentContent(AlfrescoTabouType.PROGRAMME, programmeId, documentId, file);
 
     }
 

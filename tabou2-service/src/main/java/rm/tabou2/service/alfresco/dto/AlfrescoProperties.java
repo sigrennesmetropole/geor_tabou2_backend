@@ -1,10 +1,12 @@
 package rm.tabou2.service.alfresco.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class Properties {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AlfrescoProperties {
 
     @JsonProperty("cm:title")
     public String cmTitle;
@@ -16,5 +18,7 @@ public class Properties {
     public Long tabouId;
     @JsonProperty("tabou2:objet")
     public String objetTabou;
+    @JsonProperty("tabou2:libelleTypeDocument")
+    public String libelleTypeDocument;
 
 }

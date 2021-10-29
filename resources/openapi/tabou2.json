@@ -399,6 +399,55 @@
             "description": "La resource demandée n'existe pas"
           }
         }
+      },
+      "post": {
+        "summary": "Ajout d'un document à une opération",
+        "operationId": "addDocument",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Libellé du type de document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "formData",
+            "name": "fileToUpload",
+            "description": "Document à ajouter",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
       }
     },
     "/operations/{operationId}/documents/{documentId}": {
@@ -423,6 +472,50 @@
             "description": "Identifiant du document",
             "required": true,
             "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mise à jour des métadonnées d'un document d'une opération",
+        "operationId": "updateDocumentMetadata",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant d'une opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "documentId",
+            "description": "Identifiant du document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "documentMetadata",
+            "description": "Metadonnées du document",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
           }
         ],
         "responses": {
@@ -467,6 +560,48 @@
             "description": "OK",
             "schema": {
               "type": "file"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mise à jour du contenu d'un document d'une opération",
+        "operationId": "updateDocumentContent",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "documentId",
+            "description": "Identifiant du document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "formData",
+            "name": "fileToUpload",
+            "description": "Document à mettre à jour",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
             }
           },
           "404": {
@@ -2153,6 +2288,57 @@
         }
       }
     },
+    "/programmes/{programmeId}/documents": {
+      "post": {
+        "summary": "Ajout d'un document à un programme",
+        "operationId": "addDocument",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Libellé du type de document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "formData",
+            "name": "fileToUpload",
+            "description": "Document à ajouter",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/programmes/{programmeId}/documents/{documentId}": {
       "get": {
         "summary": "Récupération des métadonnées d'un document d'un programme",
@@ -2220,6 +2406,50 @@
             "description": "La resource demandée n'existe pas"
           }
         }
+      },
+      "put": {
+        "summary": "Mise à jour des métadonnées d'un document d'un programme",
+        "operationId": "updateDocumentMetadata",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "documentId",
+            "description": "Identifiant du document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "documentMetadata",
+            "description": "Metadonnées du document",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
       }
     },
     "/programmes/{programmeId}/documents/{documentId}/content": {
@@ -2251,6 +2481,48 @@
             "description": "OK",
             "schema": {
               "type": "file"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mise à jour du contenu d'un document d'un programme",
+        "operationId": "updateDocumentContent",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "documentId",
+            "description": "Identifiant du document",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "formData",
+            "name": "fileToUpload",
+            "description": "Document à mettre à jour",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DocumentMetadata"
             }
           },
           "404": {
