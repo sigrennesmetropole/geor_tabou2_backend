@@ -369,7 +369,7 @@ public class OperationServiceImpl implements OperationService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de consulter l'opération id = " + operationId);
         }
 
-        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.OPERATION, operationId, documentId, documentMetadata));
+        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.OPERATION, operationId, documentId, documentMetadata, false));
 
     }
 
