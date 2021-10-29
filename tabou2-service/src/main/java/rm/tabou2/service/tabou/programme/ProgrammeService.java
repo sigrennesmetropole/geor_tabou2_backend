@@ -143,6 +143,18 @@ public interface ProgrammeService {
     DocumentMetadata getDocumentMetadata(long programmeId, String documentId) throws AppServiceException;
 
     /**
+     * Ajout d'un document à un programme
+     *
+     * @param programmeId identifiant du programme
+     * @param nom nom du document
+     * @param libelle libellé du type de document
+     * @param file document à ajouter
+     * @return métadonnées du document
+     * @throws AppServiceException erreur lors de l'ajout d'un document
+     */
+    DocumentMetadata addDocument(long programmeId, String nom, String libelle, MultipartFile file) throws AppServiceException;
+
+    /**
      * Suppresion d'un document dans Alfresco.
      *
      * @param programmeId identifiant du programme

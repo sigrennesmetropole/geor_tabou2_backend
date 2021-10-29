@@ -189,12 +189,12 @@ public class AlfrescoServiceImpl implements AlfrescoService {
         documentMetadata.setLibelle(libelle);
 
         //Mise à jour des métadonnées
-        AlfrescoDocument updatedDocument = updateDocumentMetadata(objectType, objectId, document.getEntry().getId(), documentMetadata, true);
+        updateDocumentMetadata(objectType, objectId, document.getEntry().getId(), documentMetadata, true);
 
         //Mise à jour du contenu
         updateDocumentContent(objectType, objectId, document.getEntry().getId(), file);
 
-        return updatedDocument;
+        return getDocumentMetadata(document.getEntry().getId());
 
 
     }
