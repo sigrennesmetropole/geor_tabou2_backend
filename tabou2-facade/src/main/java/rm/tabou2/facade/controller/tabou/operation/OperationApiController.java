@@ -225,6 +225,11 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
+    public ResponseEntity<DocumentMetadata> addDocument(@NotNull @Valid Long operationId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload) throws Exception {
+        return new ResponseEntity<>(operationService.addDocument(operationId, nom, libelle, fileToUpload), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<Evenement> addEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
         return new ResponseEntity<>(operationService.addEvenementByOperationId(operationId, evenement), HttpStatus.OK);
     }

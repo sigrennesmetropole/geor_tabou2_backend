@@ -11,12 +11,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Flux;
 import rm.tabou2.service.alfresco.AlfrescoService;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
+import rm.tabou2.service.alfresco.dto.AlfrescoEmptyNode;
 import rm.tabou2.service.alfresco.dto.AlfrescoMetadata;
 import rm.tabou2.service.alfresco.dto.AlfrescoProperties;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
@@ -36,10 +35,15 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_AUTHENTIFICATION = "Basic ";
+    private static final String CONTENT_TYPE = "cm:content";
     private static final String DOCUMENT_START_URI = "alfresco/versions/1/nodes/";
     private static final String DOWNLOAD_URI_END = "/content?attachment=true";
     private static final String DELETE_URI_END = "?permanent=false";
     private static final String CONTENT_URI = "/content";
+    private static final String CHILDREN_URI = "/children";
+
+    @Value("${alfresco.tabou.folder.node.id}")
+    private String tabouNodeId;
 
     private static final String ACCESS_RIGHTS_EXCEPTION = "L'utilisateur n'a pas les droits de récupérer le document id=";
 
@@ -164,14 +168,54 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     }
 
     @Override
-    public AlfrescoDocument updateDocumentMetadata(AlfrescoTabouType objectType, long objectId, String documentId, DocumentMetadata documentMetadata) {
+    public AlfrescoDocument addDocument(String nom, String libelle, AlfrescoTabouType objectType, long objectId, MultipartFile file) throws AppServiceException {
+
+        //Construction de l'uri du document
+        String documentUri = DOCUMENT_START_URI + tabouNodeId + CHILDREN_URI;
+
+
+        //Création du noeud tabou
+        AlfrescoEmptyNode emptyNode = new AlfrescoEmptyNode();
+        emptyNode.setName(nom);
+        emptyNode.setNodeType(CONTENT_TYPE);
+
+        AlfrescoDocument document = alfrescoAuthenticationHelper.getAlfrescoWebClient().post()
+                .uri(documentUri)
+                .body(BodyInserters.fromValue(emptyNode))
+                .header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket())
+                .retrieve().bodyToMono(AlfrescoDocument.class).block();
+
+        DocumentMetadata documentMetadata = new DocumentMetadata();
+        documentMetadata.setLibelle(libelle);
+
+        //Mise à jour des métadonnées
+        AlfrescoDocument updatedDocument = updateDocumentMetadata(objectType, objectId, document.getEntry().getId(), documentMetadata, true);
+
+        //Mise à jour du contenu
+        updateDocumentContent(objectType, objectId, document.getEntry().getId(), file);
+
+        return updatedDocument;
+
+
+    }
+
+    @Override
+    public AlfrescoDocument updateDocumentMetadata(AlfrescoTabouType objectType, long objectId, String documentId, DocumentMetadata documentMetadata, boolean isNewDocument) {
 
         AlfrescoDocument document = getDocumentMetadata(documentId);
 
-        //Vérification de la cohérence
-        if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
-                document.getEntry().getProperties().getTabouId() != objectId) {
-            throw new AccessDeniedException(ACCESS_RIGHTS_EXCEPTION + documentId);
+        AlfrescoProperties properties = new AlfrescoProperties();
+
+        //Si le document est nouveau, on lui ajoute l'id tabou et son type
+        if (isNewDocument) {
+            properties.setTabouId(objectId);
+            properties.setObjetTabou(objectType.toString());
+        } else {
+            //Vérification de la cohérence
+            if (!objectType.toString().equals(document.getEntry().getProperties().getObjetTabou()) ||
+                    document.getEntry().getProperties().getTabouId() != objectId) {
+                throw new AccessDeniedException(ACCESS_RIGHTS_EXCEPTION + documentId);
+            }
         }
 
         //Construction de l'uri du document
@@ -179,13 +223,8 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .fromUriString(DOCUMENT_START_URI)
                 .path(documentId);
 
-
-        AlfrescoProperties properties = new AlfrescoProperties();
         properties.setCmTitle(documentMetadata.getNom());
         properties.setLibelleTypeDocument(documentMetadata.getLibelle());
-        //ID : on ne peut pas
-        //Type MIME : déterminé par le contenu
-        //User et date : automatique
         AlfrescoMetadata alfrescoMetadata = new AlfrescoMetadata();
         alfrescoMetadata.setProperties(properties);
 

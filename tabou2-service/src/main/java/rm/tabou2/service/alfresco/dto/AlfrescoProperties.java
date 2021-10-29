@@ -1,9 +1,11 @@
 package rm.tabou2.service.alfresco.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AlfrescoProperties {
 
     @JsonProperty("cm:title")

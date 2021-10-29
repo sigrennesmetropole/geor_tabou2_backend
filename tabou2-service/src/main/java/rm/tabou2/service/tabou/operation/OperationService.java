@@ -105,8 +105,8 @@ public interface OperationService {
      *
      * @param operationId identifiant de l'opération
      * @param documentId identifiant du document
-     * @return
-     * @throws AppServiceException
+     * @return contenu du document
+     * @throws AppServiceException erreur lors de la récupération du contenu d'un document
      */
     DocumentContent downloadDocument(long operationId, String documentId) throws AppServiceException;
 
@@ -116,8 +116,19 @@ public interface OperationService {
      * @param operationId identifiant d'une opération
      * @param documentId identifiant du document
      * @param file fichier à mettre à jour
-     * @throws AppServiceException
+     * @throws AppServiceException erreur lors de la mise à jour du contenu d'un document
      */
     void updateDocumentContent(long operationId, String documentId, MultipartFile file) throws AppServiceException;
 
+    /**
+     * Ajout d'un document.
+     *
+     * @param operationId identifiant de l'opération
+     * @param nom nom du document
+     * @param libelle libellé du type de document
+     * @param file document à ajouter
+     * @return métadonnées du document
+     * @throws AppServiceException erreur lors de l'ajout d'un document
+     */
+    DocumentMetadata addDocument(long operationId, String nom, String libelle, MultipartFile file) throws AppServiceException;
 }
