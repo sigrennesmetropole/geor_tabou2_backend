@@ -183,4 +183,18 @@ public interface ProgrammeService {
      * @throws AppServiceException
      */
     void updateDocumentContent(long programmeId, String documentId, MultipartFile file) throws AppServiceException;
+
+    /**
+     * Recherche des documents d'un programme.
+     *
+     * @param programmeId identifiant d'un programme
+     * @param nom nom du document
+     * @param libelle libellé du type de document
+     * @param typeMime typeMime d'un document
+     * @param pageable paramètres de pagination
+     * @return liste des documents
+     */
+    Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelle, String typeMime, Pageable pageable);
+
+
 }

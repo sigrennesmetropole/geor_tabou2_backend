@@ -286,5 +286,15 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
     }
 
+    @Override
+    public ResponseEntity<PageResult> searchDocuments(Long programmeId, @Valid String nom, @Valid String libelle, @Valid String typeMime, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageableForAlfresco(start, resultsNumber, orderBy, asc);
+
+        Page<DocumentMetadata> page = programmeService.searchDocuments(programmeId, nom, libelle, typeMime, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+    }
+
 
 }
