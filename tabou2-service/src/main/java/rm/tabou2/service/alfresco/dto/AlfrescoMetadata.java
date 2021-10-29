@@ -6,5 +6,6 @@ import lombok.Data;
 public class AlfrescoMetadata {
 
     private AlfrescoProperties properties;
+    private String name;
 
 }

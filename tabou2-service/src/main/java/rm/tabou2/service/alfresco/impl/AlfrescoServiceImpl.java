@@ -258,7 +258,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     public AlfrescoDocument addDocument(String nom, String libelle, AlfrescoTabouType objectType, long objectId, MultipartFile file) throws AppServiceException {
 
         //Construction de l'uri du document
-        String documentUri = DOCUMENT_START_URI + tabouNodeId + CHILDREN_URI;
+        String documentUri = DOCUMENT_START_URI + tabouNodeId + CHILDREN_URI + "?autoRename=true";
 
 
         //Création du noeud tabou
@@ -310,10 +310,10 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .fromUriString(DOCUMENT_START_URI)
                 .path(documentId);
 
-        properties.setCmTitle(documentMetadata.getNom());
         properties.setLibelleTypeDocument(documentMetadata.getLibelle());
         AlfrescoMetadata alfrescoMetadata = new AlfrescoMetadata();
         alfrescoMetadata.setProperties(properties);
+        alfrescoMetadata.setName(documentMetadata.getNom());
 
 
         return alfrescoAuthenticationHelper.getAlfrescoWebClient().put()

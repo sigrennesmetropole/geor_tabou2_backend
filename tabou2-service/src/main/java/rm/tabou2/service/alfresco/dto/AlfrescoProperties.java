@@ -8,8 +8,6 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AlfrescoProperties {
 
-    @JsonProperty("cm:title")
-    public String cmTitle;
     @JsonProperty("cm:description")
     public String cmDescription;
     @JsonProperty("app:icon")
