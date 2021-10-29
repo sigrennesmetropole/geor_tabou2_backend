@@ -98,16 +98,16 @@ public interface OperationService {
      * @param documentId  identifiant du document
      * @return document
      */
-    DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException ;
+    DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException;
 
     /**
      * Mise à jour des métadonnées d'un document.
      *
      * @param operationId identifiant de l'opération
-     * @param documentId identifiant du document
+     * @param documentId  identifiant du document
      * @param documentMetadata métadonnées d'un document
-     * @return
-     * @throws AppServiceException
+     * @return Contenu du document
+     * @throws AppServiceException exception si erreur lors du téléchargement du contenu du document
      */
     DocumentMetadata updateDocumentMetadata(long operationId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException;
 
@@ -121,6 +121,18 @@ public interface OperationService {
      * @throws AppServiceException erreur lors de la récupération du contenu d'un document
      */
     DocumentContent downloadDocument(long operationId, String documentId) throws AppServiceException;
+
+    /**
+     * Recherche de document.
+     *
+     * @param operationId identifiant de l'opération
+     * @param nom         nom du document
+     * @param libelle     libellé du type de document
+     * @param typeMime    libellé du type MIME du document
+     * @param pageable    paramètres de pagination
+     * @return
+     */
+    Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable);
 
     /**
      * Mise à jour du contenu d'un document.

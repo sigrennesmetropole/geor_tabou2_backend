@@ -267,5 +267,15 @@ public class OperationApiController extends AbstractExportDocumentApi implements
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @Override
+    public ResponseEntity<PageResult> searchDocuments(Long operationId, String nom, String libelle, String typeMime, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageableForAlfresco(start, resultsNumber, orderBy, asc);
+
+        Page<rm.tabou2.service.dto.DocumentMetadata> page = operationService.searchDocuments(operationId, nom, libelle, typeMime, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+    }
+
 
 }

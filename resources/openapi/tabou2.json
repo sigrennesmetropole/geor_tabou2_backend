@@ -320,6 +320,86 @@
       }
     },
     "/operations/{operationId}/documents": {
+      "get": {
+        "summary": "Recherche des documents d'une opération",
+        "operationId": "searchDocuments",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du document",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Libellé du type de document",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "typeMime",
+            "description": "Type MIME du document",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
       "post": {
         "summary": "Ajout d'un document à une opération",
         "operationId": "addDocument",
@@ -2251,6 +2331,86 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/DocumentMetadata"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      },
+      "get": {
+        "summary": "Recherche des documents d'un programme",
+        "operationId": "searchDocuments",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "programmeId",
+            "description": "Identifiant du programme",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Nom du document",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Libellé du type de document",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "typeMime",
+            "description": "Type MIME du document",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
             }
           },
           "404": {

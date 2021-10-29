@@ -21,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import rm.tabou2.service.alfresco.AlfrescoService;
+import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
@@ -683,6 +684,25 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         alfrescoService.updateDocumentContent(AlfrescoTabouType.PROGRAMME, programmeId, documentId, file);
+
+    }
+
+    @Override
+    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelle, String typeMime, Pageable pageable){
+
+        //On vérifie que le programme existe
+        Programme programmeToDelete = getProgrammeById(programmeId);
+
+        // Vérification des droits utilisateur
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, programmeToDelete.isDiffusionRestreinte())) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programmeToDelete.getNom());
+        }
+
+        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.PROGRAMME, programmeId, nom, libelle, typeMime, pageable);
+
+        List<DocumentMetadata> results = documentMapper.entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
+
+        return new PageImpl<>(results, pageable, documentRoot.getList().getPagination().getTotalItems());
 
     }
 

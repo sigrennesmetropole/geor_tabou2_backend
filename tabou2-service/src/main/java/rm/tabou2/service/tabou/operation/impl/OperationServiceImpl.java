@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.reactive.function.client.WebClientResponseException.NotFound;
 import rm.tabou2.service.alfresco.AlfrescoService;
+import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Etape;
@@ -47,10 +49,7 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.text.MessageFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -424,6 +423,22 @@ public class OperationServiceImpl implements OperationService {
 
     }
 
+
+    @Override
+    public Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable) {
+
+        OperationEntity operationEntity = operationDao.findOneById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operationEntity))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.OPERATION, operationId, nom, libelle, typeMime, pageable);
+
+        List<DocumentMetadata> results = documentMapper.entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
+
+        return new PageImpl<>(results, pageable, documentRoot.getList().getPagination().getTotalItems());
+    }
 
     private OperationEntity getOperationEntityById(long operationId) {
 

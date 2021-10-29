@@ -1,7 +1,9 @@
 package rm.tabou2.service.alfresco;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
+import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.exception.AppServiceException;
@@ -25,7 +27,7 @@ public interface AlfrescoService {
      * @param objectId identifiant de l'objet tabou associé au document
      * @param documentId  identifiant du document
      * @return document
-     * @throws AppServiceException exception
+     * @throws AppServiceException exception si erreur lors du téléchargement du document
      */
     DocumentContent downloadDocument(AlfrescoTabouType objectType, long objectId, String documentId) throws AppServiceException;
 
@@ -73,4 +75,16 @@ public interface AlfrescoService {
     AlfrescoDocument updateDocumentMetadata(AlfrescoTabouType objectType, long objectId, String documentId, DocumentMetadata documentMetadata, boolean isNewDocument);
 
 
+
+    /**
+     * Recherche de documents.
+     *
+     * @param objectType type de l'objet tabou
+     * @param objectId identifant de l'objet tabou
+     * @param nom nom du document
+     * @param libelle libellé du type de document
+     * @param typeMime type MIME du document
+     * @param pageable paramètres de pagination
+     */
+    AlfrescoDocumentRoot searchDocuments(AlfrescoTabouType objectType, long objectId, String nom, String libelle, String typeMime, Pageable pageable);
 }
