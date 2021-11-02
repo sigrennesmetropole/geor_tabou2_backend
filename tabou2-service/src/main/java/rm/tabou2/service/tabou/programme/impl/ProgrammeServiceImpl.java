@@ -53,12 +53,7 @@ import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
-import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
-import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
-import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
-import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
-import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
-import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
+import rm.tabou2.storage.tabou.dao.programme.*;
 import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
@@ -75,11 +70,7 @@ import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -545,7 +536,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setOperation(programmeEntity.getOperation());
         ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
         ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
-        ficheSuiviProgrammeDataModel.setIllustration(documentGenerator.generatedImgForTemplate());
+        ficheSuiviProgrammeDataModel.setIllustration(documentGenerator.generatedImgForTemplate(AlfrescoTabouType.PROGRAMME, programmeEntity.getId()));
         ficheSuiviProgrammeDataModel.setNomFichier(buildRapportFileName(programmeEntity));
 
         if (programmeEntity.getNumAds() != null) { // traiter le cas où le nusAds ne retourne rien

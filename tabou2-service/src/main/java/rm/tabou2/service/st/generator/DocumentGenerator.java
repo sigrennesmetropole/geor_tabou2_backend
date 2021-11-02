@@ -1,6 +1,7 @@
 package rm.tabou2.service.st.generator;
 
 
+import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.st.generator.model.GenerationModel;
@@ -23,5 +24,5 @@ public interface DocumentGenerator {
      * @return Image
      * @throws AppServiceException erreur lors de la génération
      */
-    File generatedImgForTemplate() throws AppServiceException;
+    File generatedImgForTemplate(AlfrescoTabouType tabouType, long objectId) throws AppServiceException;
 }
