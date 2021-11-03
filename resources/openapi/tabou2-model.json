@@ -740,6 +740,24 @@
         }
       }
     },
+    "FonctionContacts": {
+      "type": "object",
+      "properties": {
+        "id" : {
+          "description": "Identificateur unique. Clé primaire",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code" : {
+          "description": "Référence unique de la fonction",
+          "type": "string"
+        },
+        "libelle" : {
+          "description": "Libellé de la fonction",
+          "type": "string"
+        }
+      }
+    },
     "SecteurDds": {
       "type": "object",
       "properties": {

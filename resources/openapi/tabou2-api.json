@@ -3272,6 +3272,63 @@
         }
       }
     },
+    "/fonction-contacts": {
+      "get": {
+        "summary": "Recherche les fonctions de contacts",
+        "operationId": "searchFonctionsContacts",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libellé de la fonction du contact",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
     "/types-evenements": {
       "get": {
         "summary": "Recherche les types d'évènements",
