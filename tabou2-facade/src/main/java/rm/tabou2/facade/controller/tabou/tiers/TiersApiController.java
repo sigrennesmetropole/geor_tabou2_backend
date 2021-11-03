@@ -25,17 +25,33 @@ public class TiersApiController implements TiersApi {
 
     @Override
     public ResponseEntity<Tiers> createTiers(@Valid Tiers tiers) throws Exception {
-
+        tiers.setAdresse(null);
         return new ResponseEntity<>(tiersService.createTiers(tiers), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<Tiers> createTiers2(@Valid Tiers tiers) throws Exception {
+        tiers.setAdresseRue(null);
+        tiers.setAdresseNum(null);
+        tiers.setContact(null);
+        return new ResponseEntity<>(tiersService.createTiers(tiers), HttpStatus.OK);
     }
 
 
     @Override
     public ResponseEntity<Tiers> updateTiers(@Valid Tiers tiers) throws Exception {
+        tiers.setAdresse(null);
+        return new ResponseEntity<>(tiersService.updateTiers(tiers), HttpStatus.OK);
 
-        return new ResponseEntity<>(tiersService.createTiers(tiers), HttpStatus.OK);
+    }
 
+    @Override
+    public ResponseEntity<Tiers> updateTiers2(@Valid Tiers tiers) throws Exception {
+        tiers.setAdresseRue(null);
+        tiers.setAdresseNum(null);
+        tiers.setContact(null);
+        return new ResponseEntity<>(tiersService.updateTiers(tiers), HttpStatus.OK);
     }
 
     @Override
@@ -57,8 +73,34 @@ public class TiersApiController implements TiersApi {
     }
 
     @Override
+    public ResponseEntity<PageResult> searchTiers2(@Valid String nom, @Valid Boolean tiersPrive, @Valid String adresseVille, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+        TiersCriteria tiersCriteria = new TiersCriteria();
+        tiersCriteria.setNom(nom);
+        tiersCriteria.setTiersPrive(tiersPrive);
+        tiersCriteria.setAdresseVille(adresseVille);
+        tiersCriteria.setInactif(inactif);
+
+        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TiersEntity.class);
+
+        Page<Tiers> page = tiersService.searchTiers2(tiersCriteria, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<Tiers> getTiersById(Long tiersId) throws Exception {
-        return new ResponseEntity<>(tiersService.getTiersById(tiersId), HttpStatus.OK);
+        Tiers tiers = tiersService.getTiersById(tiersId);
+        tiers.setAdresse(null);
+        return new ResponseEntity<>(tiers, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Tiers> getTiersById2(Long tiersId) throws Exception {
+        Tiers tiers = tiersService.getTiersById(tiersId);
+        tiers.setAdresseNum(null);
+        tiers.setAdresseRue(null);
+        tiers.setContact(null);
+        return new ResponseEntity<>(tiers, HttpStatus.OK);
     }
 
 

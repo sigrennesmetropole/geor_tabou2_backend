@@ -18,4 +18,5 @@ public interface TiersService {
 
     Page<Tiers> searchTiers(TiersCriteria tiersCriteria, Pageable pageable);
 
+    Page<Tiers> searchTiers2(TiersCriteria tiersCriteria, Pageable pageable);
 }

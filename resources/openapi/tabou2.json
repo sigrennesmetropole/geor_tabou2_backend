@@ -3215,6 +3215,169 @@
         }
       }
     },
+    "/tiers/v2": {
+      "get": {
+        "summary": "Recherche des tiers V2",
+        "operationId": "searchTiers2",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom du tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "tiersPrive",
+            "description": "Recherche par tiers privé si true, false si société",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "adresseVille",
+            "description": "Recherche par adresse / ville du tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par tiers inactif",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un tiers",
+        "operationId": "createTiers2",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Nouveau tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un tiers",
+        "operationId": "updateTiers2",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Tiers à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/v2/{tiersId}": {
+      "put": {
+        "summary": "Récupération d'un tiers",
+        "operationId": "getTiersById2",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
     "/types-tiers": {
       "get": {
         "summary": "Recherche un type de tiers",
@@ -5117,6 +5280,10 @@
         },
         "adresseRue": {
           "description": "Nom de la rue de l'adresse du tiers",
+          "type": "string"
+        },
+        "adresse": {
+          "description": "Adresse du tiers",
           "type": "string"
         },
         "adresseCp": {

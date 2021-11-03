@@ -35,14 +35,16 @@ public class TiersEntity extends GenericAuditableEntity {
     private Boolean estPrive;
 
     @Basic
+    @Column(name = "adresse")
+    private String adresse;
+
+    @Basic
     @Column(name = "adresse_num")
     private String adresseNum;
-
-
+    
     @Basic
     @Column(name = "adresse_rue")
     private String adresseRue;
-
 
     @Basic
     @Column(name = "adresse_cp")
