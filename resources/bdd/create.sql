@@ -286,6 +286,14 @@ create table tabou_type_financement (
 );
 
 
+create table tabou_fonction_contact (
+    id_fonction_contact bigserial,
+    code varchar(255) NOT NULL UNIQUE,
+    libelle varchar(255) NOT NULL,
+    PRIMARY KEY (id_fonction_contact)
+);
+
+
 -- Création de la table des permis de construire : nécessaire seulement pour environnement de dev et intégration continue
 -- En réalité ce sera une Oracle_fdw, mais transparent pour nous
 create table if not exists tabou_pc_ddc(
