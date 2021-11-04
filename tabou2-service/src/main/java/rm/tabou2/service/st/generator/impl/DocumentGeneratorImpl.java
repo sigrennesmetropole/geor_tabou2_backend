@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.alfresco.impl.AlfrescoServiceImpl;
 import rm.tabou2.service.exception.AppServiceException;
@@ -25,20 +25,29 @@ import rm.tabou2.service.st.generator.model.DataModel;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.st.generator.model.FieldMetadataTypeEnum;
 import rm.tabou2.service.st.generator.model.GenerationModel;
+import rm.tabou2.service.utils.PaginationUtils;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class DocumentGeneratorImpl implements DocumentGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DocumentGeneratorImpl.class);
+    private static final String[] ALLOWED_ILLUSTRATION_MIME_TYPE = {"image/jpeg", "image/png"};
 
     @Value("${temporary.directory}")
     private String temporaryDirectory;
+
+    @Value("${Fiche_PA_type_illustration}")
+    private String libelleIllustration;
+
+    @Value("${Fiche_PA_illustration_defaut}")
+    private String defaultIllustration;
 
     @Autowired
     private AlfrescoServiceImpl alfrescoService;
@@ -143,15 +152,26 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
 
         List<String> ids = new ArrayList<>();
         InputStream fileiImgIllustration = null;
-        //TODO : Recherche de l'id de l'illustration : Si inextistant, alors utiliser l'illustration par défaut
+
+        Pageable pageable = PaginationUtils.buildPageableForAlfresco(0, 1, null, true);
         try {
-            fileiImgIllustration = new ClassPathResource("img/default_img.jpg").getInputStream();
+            ids = alfrescoService.searchDocuments(tabouType, objectId, null,
+                            libelleIllustration, null, pageable)
+                    .getList()
+                    .getEntries()
+                    .stream()
+                    .filter(x -> Arrays.asList(ALLOWED_ILLUSTRATION_MIME_TYPE).contains(x.getEntry().getContent().getMimeType()))
+                    .map(x -> x.getEntry().getId())
+                    .collect(Collectors.toList());
+        }catch(Exception e){
+            LOGGER.warn("Alfresco is unreachable, uses default image", e);
+        }
+        try {
+            fileiImgIllustration = new ClassPathResource(defaultIllustration).getInputStream();
             if (!ids.isEmpty()) {
                 fileiImgIllustration = alfrescoService.downloadDocument(tabouType, objectId, ids.get(0)).getFileStream();
             }
-        } catch (WebClientResponseException e) { //TODO : Vérifier la nature de l'excpetion levée
-            LOGGER.warn("Alfresco unreachable, uses the default image");
-        } catch (IOException e) {
+        }catch (IOException e) {
             throw new AppServiceException("Erreur lors de la génération de l'image", e);
         }
 
