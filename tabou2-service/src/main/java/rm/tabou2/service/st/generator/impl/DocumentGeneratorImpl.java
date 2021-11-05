@@ -166,19 +166,28 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
         }catch(Exception e){
             LOGGER.warn("Alfresco is unreachable, uses default image", e);
         }
-        try {
-            fileiImgIllustration = new ClassPathResource(defaultIllustration).getInputStream();
-            if (!ids.isEmpty()) {
+
+        if (!ids.isEmpty()) {
+            try {
                 fileiImgIllustration = alfrescoService.downloadDocument(tabouType, objectId, ids.get(0)).getFileStream();
+            } catch (IOException e) {
+                LOGGER.warn("Alfresco is unreachable, uses default image", e);
             }
-        }catch (IOException e) {
-            throw new AppServiceException("Erreur lors de la génération de l'image", e);
         }
+
+        if(fileiImgIllustration == null){
+            try{
+                fileiImgIllustration = new ClassPathResource(defaultIllustration).getInputStream();
+            } catch(IOException e){
+                throw new AppServiceException("Erreur lors de la récupération de l'image par défaut", e);
+            }
+        }
+
 
         try (OutputStream outputStream = new FileOutputStream(generateFile);) {
             IOUtils.copy(fileiImgIllustration, outputStream);
         } catch (IOException e) {
-            LOGGER.warn(Arrays.toString(e.getStackTrace()));
+            throw new AppServiceException("Erreur lors de la génération de l'image", e);
         }
 
         return generateFile;
