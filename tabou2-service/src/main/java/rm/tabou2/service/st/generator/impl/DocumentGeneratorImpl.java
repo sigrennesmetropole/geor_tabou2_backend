@@ -9,6 +9,7 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,12 @@ import rm.tabou2.service.st.generator.model.FieldMetadataTypeEnum;
 import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.utils.PaginationUtils;
 
-import java.io.*;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,16 +44,18 @@ import java.util.stream.Collectors;
 public class DocumentGeneratorImpl implements DocumentGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DocumentGeneratorImpl.class);
-    private static final String[] ALLOWED_ILLUSTRATION_MIME_TYPE = {"image/jpeg", "image/png"};
 
     @Value("${temporary.directory}")
     private String temporaryDirectory;
 
-    @Value("${Fiche_PA_type_illustration}")
+    @Value("${fiche.illustration.libelle}")
     private String libelleIllustration;
 
-    @Value("${Fiche_PA_illustration_defaut}")
+    @Value("${fiche.illustration.default}")
     private String defaultIllustration;
+
+    @Value("${fiche.illustration.typesmime}")
+    private  String[] allowedMimeTypes;
 
     @Autowired
     private AlfrescoServiceImpl alfrescoService;
@@ -160,25 +168,27 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
                     .getList()
                     .getEntries()
                     .stream()
-                    .filter(x -> Arrays.asList(ALLOWED_ILLUSTRATION_MIME_TYPE).contains(x.getEntry().getContent().getMimeType()))
+                    .filter(x -> Arrays.asList(allowedMimeTypes).contains(x.getEntry().getContent().getMimeType()))
                     .map(x -> x.getEntry().getId())
                     .collect(Collectors.toList());
-        }catch(Exception e){
-            LOGGER.warn("Alfresco is unreachable, uses default image", e);
+        } catch (Exception e) {
+            LOGGER.warn("Alfresco innaccessible, utilisation de l'image par défaut", e);
         }
 
-        if (!ids.isEmpty()) {
+        if (!CollectionUtils.isEmpty(ids)) {
             try {
                 fileiImgIllustration = alfrescoService.downloadDocument(tabouType, objectId, ids.get(0)).getFileStream();
-            } catch (IOException e) {
-                LOGGER.warn("Alfresco is unreachable, uses default image", e);
+            } catch (Exception e) {
+                LOGGER.warn("Alfresco innaccessible, ou l'image d'id={} est innaccessible", ids.get(0), e);
             }
         }
 
-        if(fileiImgIllustration == null){
-            try{
+        if (fileiImgIllustration == null) {
+            String type = tabouType.name();
+            LOGGER.warn("Aucune image disponible pour {} id = {}", type, objectId);
+            try {
                 fileiImgIllustration = new ClassPathResource(defaultIllustration).getInputStream();
-            } catch(IOException e){
+            } catch (IOException e) {
                 throw new AppServiceException("Erreur lors de la récupération de l'image par défaut", e);
             }
         }
@@ -187,7 +197,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
         try (OutputStream outputStream = new FileOutputStream(generateFile);) {
             IOUtils.copy(fileiImgIllustration, outputStream);
         } catch (IOException e) {
-            throw new AppServiceException("Erreur lors de la génération de l'image", e);
+            throw new AppServiceException(String.format("Erreur lors de la génération de l'image pour %s id = %s", tabouType.name(), objectId), e);
         }
 
         return generateFile;

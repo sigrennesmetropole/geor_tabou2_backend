@@ -53,7 +53,12 @@ import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
-import rm.tabou2.storage.tabou.dao.programme.*;
+import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
+import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
 import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
@@ -70,7 +75,11 @@ import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -611,7 +620,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long programmeId, String nom, String libelle, MultipartFile file) throws AppServiceException{
+    public DocumentMetadata addDocument(long programmeId, String nom, String libelle, MultipartFile file) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
@@ -638,7 +647,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         try {
             //Suppression du document Dans alfresco
-           alfrescoService.deleteDocument(AlfrescoTabouType.PROGRAMME, programmeId, documentId);
+            alfrescoService.deleteDocument(AlfrescoTabouType.PROGRAMME, programmeId, documentId);
 
         } catch (WebClientResponseException.NotFound e) {
             throw new NoSuchElementException(ERROR_DELETE_DOCUMENT + documentId);
@@ -679,7 +688,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelle, String typeMime, Pageable pageable){
+    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelle, String typeMime, Pageable pageable) {
 
         //On vérifie que le programme existe
         Programme programmeToDelete = getProgrammeById(programmeId);
