@@ -3,6 +3,7 @@ package rm.tabou2.service.tabou.programme;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Evenement;
@@ -142,6 +143,18 @@ public interface ProgrammeService {
     DocumentMetadata getDocumentMetadata(long programmeId, String documentId) throws AppServiceException;
 
     /**
+     * Ajout d'un document à un programme
+     *
+     * @param programmeId identifiant du programme
+     * @param nom nom du document
+     * @param libelle libellé du type de document
+     * @param file document à ajouter
+     * @return métadonnées du document
+     * @throws AppServiceException erreur lors de l'ajout d'un document
+     */
+    DocumentMetadata addDocument(long programmeId, String nom, String libelle, MultipartFile file) throws AppServiceException;
+
+    /**
      * Suppresion d'un document dans Alfresco.
      *
      * @param programmeId identifiant du programme
@@ -149,5 +162,39 @@ public interface ProgrammeService {
      * @throws AppServiceException
      */
     void deleteDocument(long programmeId, String documentId) throws AppServiceException;
+
+    /**
+     * Mise à jour des métadonnées d'un document d'un projet.
+     *
+     * @param programmeId      identifiant du programme
+     * @param documentId       identifiant du document
+     * @param documentMetadata métadonnées du document
+     * @return métadonnées
+     * @throws AppServiceException
+     */
+    DocumentMetadata updateDocumentMetadata(long programmeId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException;
+
+    /**
+     * Mise à jour du contenu d'un document.
+     *
+     * @param programmeId identifiant d'un programme
+     * @param documentId identifiant du document
+     * @param file fichier à mettre à jour
+     * @throws AppServiceException
+     */
+    void updateDocumentContent(long programmeId, String documentId, MultipartFile file) throws AppServiceException;
+
+    /**
+     * Recherche des documents d'un programme.
+     *
+     * @param programmeId identifiant d'un programme
+     * @param nom nom du document
+     * @param libelle libellé du type de document
+     * @param typeMime typeMime d'un document
+     * @param pageable paramètres de pagination
+     * @return liste des documents
+     */
+    Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelle, String typeMime, Pageable pageable);
+
 
 }

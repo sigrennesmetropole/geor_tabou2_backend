@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class PaginationUtils {
 
     private static final Integer DEFAULT_START = 0;
+    public static final String ALFRESCO_DEFAULT_SORT_BY_ID = "id";
 
     private static int maxResultsStatic;
 
@@ -45,6 +46,38 @@ public class PaginationUtils {
                     orderBy = f.getName();
                 }
             }
+        }
+
+        return PageRequest.of(start, resultsNumber, Sort.by(direction, orderBy));
+
+    }
+
+    /**
+     * Construiction de la pagination pour Alfresco.
+     *
+     * @param start numéro du premier élément à retourner
+     * @param resultsNumber nombre de résulats par page
+     * @param orderBy colonne de tri
+     * @param asc true si ascendant, false sino
+     * @return
+     */
+    public static Pageable buildPageableForAlfresco(Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
+
+        if (null == start) {
+            start = DEFAULT_START;
+        }
+        if (null == resultsNumber) {
+            resultsNumber = maxResultsStatic;
+        }
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (Boolean.FALSE.equals(asc) || null == asc) {
+            direction = Sort.Direction.DESC;
+        }
+
+        if (null == orderBy) {
+           //Par défaut, on tri par id
+            orderBy = ALFRESCO_DEFAULT_SORT_BY_ID;
         }
 
         return PageRequest.of(start, resultsNumber, Sort.by(direction, orderBy));

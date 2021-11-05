@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.Agapeo;
@@ -202,6 +203,8 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
     }
 
+
+
     @Override
     public ResponseEntity<Evenement> updateEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
         return new ResponseEntity<>(programmeService.updateEvenementByProgrammeId(programmeId, evenement), HttpStatus.OK);
@@ -264,5 +267,34 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
         programmeService.deleteDocument(programmeId, documentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<DocumentMetadata> updateDocumentMetadata(Long programmeId, String documentId, @Valid DocumentMetadata documentMetadata) throws Exception {
+        return new ResponseEntity<>(programmeService.updateDocumentMetadata(programmeId, documentId, documentMetadata), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<DocumentMetadata> updateDocumentContent(Long programmeId, String documentId, @Valid MultipartFile fileToUpload) throws Exception {
+        programmeService.updateDocumentContent(programmeId, documentId, fileToUpload);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<DocumentMetadata> addDocument(@NotNull @Valid Long programmeId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload) throws Exception {
+        return new ResponseEntity<>(programmeService.addDocument(programmeId, nom, libelle, fileToUpload), HttpStatus.OK);
+
+    }
+
+    @Override
+    public ResponseEntity<PageResult> searchDocuments(Long programmeId, @Valid String nom, @Valid String libelle, @Valid String typeMime, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageableForAlfresco(start, resultsNumber, orderBy, asc);
+
+        Page<DocumentMetadata> page = programmeService.searchDocuments(programmeId, nom, libelle, typeMime, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+    }
+
 
 }
