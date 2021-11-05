@@ -61,6 +61,7 @@ public class OperationServiceImpl implements OperationService {
 
     public static final String ERROR_RETRIEVE_METADATA_DOCUMENT = "Impossible de récupérer les métadonnées du document ";
     public static final String ERROR_RETRIEVE_DOCUMENT_CONTENT = "Impossible de télécharger le contenu du document ";
+    public static final String ERROR_DELETE_DOCUMENT = "Impossible de supprimer le document ";
 
     @Autowired
     private OperationDao operationDao;
@@ -438,6 +439,29 @@ public class OperationServiceImpl implements OperationService {
         List<DocumentMetadata> results = documentMapper.entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
 
         return new PageImpl<>(results, pageable, documentRoot.getList().getPagination().getTotalItems());
+    }
+
+    @Override
+    public void deleteDocument(long operationId, String documentId) throws AppServiceException {
+
+        //On vérifie que l'opération existe
+        Operation operationToDelete = getOperationById(operationId);
+
+        // Vérification des droits utilisateur
+        if (!operationRightsHelper.checkCanUpdateOperation(operationToDelete, operationToDelete)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de suppression de l'opération " + operationToDelete.getNom());
+        }
+
+        try {
+            //Suppression du document Dans alfresco
+            alfrescoService.deleteDocument(AlfrescoTabouType.OPERATION, operationId, documentId);
+
+        } catch (WebClientResponseException.NotFound e) {
+            throw new NoSuchElementException(ERROR_DELETE_DOCUMENT + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException(ERROR_DELETE_DOCUMENT + documentId, e);
+        }
+
     }
 
     private OperationEntity getOperationEntityById(long operationId) {

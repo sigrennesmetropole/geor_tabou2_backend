@@ -155,4 +155,15 @@ public interface OperationService {
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
     DocumentMetadata addDocument(long operationId, String nom, String libelle, MultipartFile file) throws AppServiceException;
+
+
+    /**
+     * Suppression d'un document d'une opération.
+     *
+     * @param operationId identifiant de l'opération
+     * @param documentId identifiant du document
+     * @throws AppServiceException
+     */
+    void deleteDocument(long operationId, String documentId) throws AppServiceException;
+
 }
