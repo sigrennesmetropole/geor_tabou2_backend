@@ -10,11 +10,19 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClientResponseException.NotFound;
+import rm.tabou2.service.alfresco.AlfrescoService;
+import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
+import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Operation;
@@ -23,9 +31,11 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
+import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
+import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
@@ -39,10 +49,7 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.text.MessageFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -51,6 +58,10 @@ import java.util.Optional;
 public class OperationServiceImpl implements OperationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationServiceImpl.class);
+
+    public static final String ERROR_RETRIEVE_METADATA_DOCUMENT = "Impossible de récupérer les métadonnées du document ";
+    public static final String ERROR_RETRIEVE_DOCUMENT_CONTENT = "Impossible de télécharger le contenu du document ";
+    public static final String ERROR_DELETE_DOCUMENT = "Impossible de supprimer le document ";
 
     @Autowired
     private OperationDao operationDao;
@@ -89,6 +100,9 @@ public class OperationServiceImpl implements OperationService {
     private EvenementOperationMapper evenementOperationMapper;
 
     @Autowired
+    private DocumentMapper documentMapper;
+
+    @Autowired
     private OperationService me;
 
     @Value("${typeevenement.changementetape.code}")
@@ -96,6 +110,9 @@ public class OperationServiceImpl implements OperationService {
 
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
+
+    @Autowired
+    private AlfrescoService alfrescoService;
 
     @Override
     @Transactional
@@ -317,6 +334,134 @@ public class OperationServiceImpl implements OperationService {
         }
 
         return evenementOperationMapper.entityToDto(evenementOperationEntity);
+    }
+
+
+    @Override
+    public DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException {
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de consultation dessus
+        OperationEntity operation = getOperationEntityById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operation))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de consulter l'opération id = " + operationId);
+        }
+
+        try {
+            //Récupération du document Dans alfresco
+            return documentMapper.entityToDto(alfrescoService.getDocumentMetadata(documentId));
+
+        } catch (NotFound e) {
+            throw new NoSuchElementException(ERROR_RETRIEVE_METADATA_DOCUMENT + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException(ERROR_RETRIEVE_METADATA_DOCUMENT + documentId, e);
+        }
+
+    }
+
+    @Override
+    public DocumentMetadata updateDocumentMetadata(long operationId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException {
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de consultation dessus
+        OperationEntity operation = getOperationEntityById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operation))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de consulter l'opération id = " + operationId);
+        }
+
+        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.OPERATION, operationId, documentId, documentMetadata, false));
+
+    }
+
+
+    @Override
+    public DocumentContent downloadDocument(long operationId, String documentId) throws AppServiceException {
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de suppression dessus
+        Operation operation = getOperationById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operation)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        try {
+            return alfrescoService.downloadDocument(AlfrescoTabouType.OPERATION, operationId, documentId);
+
+        } catch (WebClientResponseException.NotFound e) {
+            throw new NoSuchElementException(ERROR_RETRIEVE_DOCUMENT_CONTENT + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException(ERROR_RETRIEVE_DOCUMENT_CONTENT + documentId, e);
+        }
+
+
+    }
+    @Override
+    public void updateDocumentContent(long operationId, String documentId, MultipartFile file) throws AppServiceException{
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de suppression dessus
+        Operation operation = getOperationById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operation)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        alfrescoService.updateDocumentContent(AlfrescoTabouType.OPERATION, operationId, documentId, file);
+
+    }
+
+    @Override
+    public DocumentMetadata addDocument(long operationId, String nom, String libelle, MultipartFile file) throws AppServiceException{
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits d'ajout sur le document
+        Operation operation = getOperationById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operation)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        //Récupération du document Dans alfresco
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelle, AlfrescoTabouType.OPERATION, operationId, file));
+
+    }
+
+
+    @Override
+    public Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable) {
+
+        OperationEntity operationEntity = operationDao.findOneById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operationEntity))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.OPERATION, operationId, nom, libelle, typeMime, pageable);
+
+        List<DocumentMetadata> results = documentMapper.entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
+
+        return new PageImpl<>(results, pageable, documentRoot.getList().getPagination().getTotalItems());
+    }
+
+    @Override
+    public void deleteDocument(long operationId, String documentId) throws AppServiceException {
+
+        //On vérifie que l'opération existe
+        Operation operationToDelete = getOperationById(operationId);
+
+        // Vérification des droits utilisateur
+        if (!operationRightsHelper.checkCanUpdateOperation(operationToDelete, operationToDelete)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de suppression de l'opération " + operationToDelete.getNom());
+        }
+
+        try {
+            //Suppression du document Dans alfresco
+            alfrescoService.deleteDocument(AlfrescoTabouType.OPERATION, operationId, documentId);
+
+        } catch (WebClientResponseException.NotFound e) {
+            throw new NoSuchElementException(ERROR_DELETE_DOCUMENT + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException(ERROR_DELETE_DOCUMENT + documentId, e);
+        }
+
     }
 
     private OperationEntity getOperationEntityById(long operationId) {

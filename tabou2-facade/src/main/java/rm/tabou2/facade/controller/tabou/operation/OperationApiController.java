@@ -1,11 +1,13 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.facade.api.OperationsApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
@@ -223,6 +225,11 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
+    public ResponseEntity<DocumentMetadata> addDocument(@NotNull @Valid Long operationId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload) throws Exception {
+        return new ResponseEntity<>(operationService.addDocument(operationId, nom, libelle, fileToUpload), HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<Evenement> addEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
         return new ResponseEntity<>(operationService.addEvenementByOperationId(operationId, evenement), HttpStatus.OK);
     }
@@ -235,6 +242,46 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     @Override
     public ResponseEntity<AssociationTiersTypeTiers> associateTiersToOperation(Long operationId, @Valid TiersTypeTiers tiersTypeTiers) throws Exception {
         return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationId, tiersTypeTiers.getTiersId(), tiersTypeTiers.getTypeTiersId()), HttpStatus.OK);
+    }
+
+
+    @Override
+    public ResponseEntity<DocumentMetadata> getDocumentMetadata(Long operationId, String documentId) throws Exception {
+        return new ResponseEntity<>(operationService.getDocumentMetadata(operationId, documentId), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<DocumentMetadata> updateDocumentMetadata(Long operationId, String documentId, @Valid DocumentMetadata documentMetadata) throws Exception {
+        return new ResponseEntity<>(operationService.updateDocumentMetadata(operationId, documentId, documentMetadata), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Resource> getDocumentContent(Long operationId, String documentId) throws Exception {
+        return downloadDocument(operationService.downloadDocument(operationId, documentId));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteDocument(Long operationId, String documentId) throws Exception {
+        operationService.deleteDocument(operationId, documentId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<DocumentMetadata> updateDocumentContent(Long operationId, String documentId, @Valid MultipartFile fileToUpload) throws Exception {
+
+        operationService.updateDocumentContent(operationId, documentId, fileToUpload);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PageResult> searchDocuments(Long operationId, String nom, String libelle, String typeMime, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        Pageable pageable = PaginationUtils.buildPageableForAlfresco(start, resultsNumber, orderBy, asc);
+
+        Page<rm.tabou2.service.dto.DocumentMetadata> page = operationService.searchDocuments(operationId, nom, libelle, typeMime, pageable);
+
+        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }
 
 
