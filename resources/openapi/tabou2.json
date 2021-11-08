@@ -3156,7 +3156,7 @@
       }
     },
     "/tiers/{tiersId}": {
-      "put": {
+      "get": {
         "summary": "Récupération d'un tiers",
         "operationId": "getTiersById",
         "produces": [
