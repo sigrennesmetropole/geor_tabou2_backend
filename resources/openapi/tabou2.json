@@ -3112,7 +3112,7 @@
             "description": "Nouveau tiers",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Tiers"
+              "$ref": "#/definitions/TiersV1"
             }
           }
         ],
@@ -3120,7 +3120,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Tiers"
+              "$ref": "#/definitions/TiersV1"
             }
           }
         }
@@ -3138,7 +3138,7 @@
             "description": "Tiers à modifier",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Tiers"
+              "$ref": "#/definitions/TiersV1"
             }
           }
         ],
@@ -3146,7 +3146,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Tiers"
+              "$ref": "#/definitions/TiersV1"
             }
           },
           "404": {
@@ -3176,7 +3176,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Tiers"
+              "$ref": "#/definitions/TiersV1"
             }
           },
           "404": {
@@ -3206,7 +3206,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Tiers"
+              "$ref": "#/definitions/TiersV1"
             }
           },
           "404": {
@@ -3349,9 +3349,39 @@
       }
     },
     "/tiers/v2/{tiersId}": {
-      "put": {
+      "get": {
         "summary": "Récupération d'un tiers",
         "operationId": "getTiersById2",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/v2/{tiersId}/inactivate": {
+      "put": {
+        "summary": "Rends un tiers inactif",
+        "operationId": "inactivateTiers2",
         "produces": [
           "application/json"
         ],
@@ -5274,16 +5304,63 @@
           "description": "Nom du tiers (raison sociale)",
           "type": "string"
         },
+        "adresse": {
+          "description": "Adresse du tiers",
+          "type": "string"
+        },
+        "adresseCp": {
+          "description": "Code postal de l'adresse du tiers",
+          "type": "string"
+        },
+        "adresseVille": {
+          "description": "Ville du tiers",
+          "type": "string"
+        },
+        "telephone": {
+          "description": "Numéro de téléphone du tiers",
+          "type": "string"
+        },
+        "telecopie": {
+          "description": "Numéro de télécopie du tiers",
+          "type": "string"
+        },
+        "email": {
+          "description": "Adresse email du tiers",
+          "type": "string"
+        },
+        "siteWeb": {
+          "description": "Site Web du tiers",
+          "type": "string"
+        },
+        "estPrive": {
+          "description": "True si le tiers est un privé, false si société",
+          "type": "boolean"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du tiers",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "TiersV1": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identificateur unique. Clé primaire",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nom": {
+          "description": "Nom du tiers (raison sociale)",
+          "type": "string"
+        },
         "adresseNum": {
           "description": "Numéro de rue de l'adresse du tiers",
           "type": "string"
         },
         "adresseRue": {
           "description": "Nom de la rue de l'adresse du tiers",
-          "type": "string"
-        },
-        "adresse": {
-          "description": "Adresse du tiers",
           "type": "string"
         },
         "adresseCp": {

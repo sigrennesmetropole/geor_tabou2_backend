@@ -39,14 +39,6 @@ public class TiersEntity extends GenericAuditableEntity {
     private String adresse;
 
     @Basic
-    @Column(name = "adresse_num")
-    private String adresseNum;
-    
-    @Basic
-    @Column(name = "adresse_rue")
-    private String adresseRue;
-
-    @Basic
     @Column(name = "adresse_cp")
     private String adresseCp;
 
@@ -69,10 +61,6 @@ public class TiersEntity extends GenericAuditableEntity {
     @Basic
     @Column(name = "site_web")
     private String siteWeb;
-
-    @Basic
-    @Column(name = "contact")
-    private String contact;
 
     @Basic
     @Column(name = "date_inactif")

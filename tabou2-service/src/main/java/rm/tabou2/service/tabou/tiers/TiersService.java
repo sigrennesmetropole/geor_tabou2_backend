@@ -17,6 +17,4 @@ public interface TiersService {
     Tiers inactivateTiers(long tiersId) throws AppServiceException;
 
     Page<Tiers> searchTiers(TiersCriteria tiersCriteria, Pageable pageable);
-
-    Page<Tiers> searchTiers2(TiersCriteria tiersCriteria, Pageable pageable);
 }

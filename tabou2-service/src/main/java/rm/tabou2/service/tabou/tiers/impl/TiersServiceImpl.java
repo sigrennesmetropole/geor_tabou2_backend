@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.tiers.TiersRightsHelper;
-import rm.tabou2.service.mapper.tabou.tiers.Tiers2Mapper;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
 import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.storage.tabou.dao.tiers.TiersCustomDao;
@@ -28,9 +27,6 @@ public class TiersServiceImpl implements TiersService {
 
     @Autowired
     private TiersMapper tiersMapper;
-
-    @Autowired
-    private Tiers2Mapper tiers2Mapper;
 
     @Autowired
     private TiersCustomDao tiersCustomDao;
@@ -112,16 +108,6 @@ public class TiersServiceImpl implements TiersService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de chercher un tiers");
         }
         return tiersMapper.entitiesToDto(tiersCustomDao.searchTiers(tiersCriteria, pageable), pageable);
-
-    }
-
-
-    @Override
-    public Page<Tiers> searchTiers2(TiersCriteria tiersCriteria, Pageable pageable) {
-        if (!tiersRightsHelper.checkCanGetTiers()) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de chercher un tiers");
-        }
-        return tiers2Mapper.entitiesToDto(tiersCustomDao.searchTiers(tiersCriteria, pageable), pageable);
 
     }
 
