@@ -15,10 +15,11 @@ public class TiersRightsHelper {
 
     /**
      * Vérifie si l'utilisateur est autorisé à créer un Tiers
+     *
      * @return L'utilisateur peut créer un Tiers
      */
-    public boolean checkCanCreateTiers(){
-        if(!authentificationHelper.hasEditAccess() || authentificationHelper.hasReferentRole()){
+    public boolean checkCanCreateTiers() {
+        if (!authentificationHelper.hasEditAccess() && !authentificationHelper.hasReferentRole()) {
             LOGGER.warn("L'utilisateur n'ayant pas les droits d'édition ne peut pas créer un tiers");
             return false;
         }
@@ -27,10 +28,11 @@ public class TiersRightsHelper {
 
     /**
      * Vérifie si l'utilisateur est autorisé à mettre à jour un Tiers
+     *
      * @return L'utilisateur peut mettre à jour un Tiers
      */
-    public boolean checkCanUpdateTiers(){
-        if(!authentificationHelper.hasEditAccess() || authentificationHelper.hasReferentRole()){
+    public boolean checkCanUpdateTiers() {
+        if (!authentificationHelper.hasEditAccess() && !authentificationHelper.hasReferentRole()) {
             LOGGER.warn("L'utilisateur n'ayant pas les droits d'édition ne peut pas éditer un tiers");
             return false;
         }
@@ -39,10 +41,11 @@ public class TiersRightsHelper {
 
     /**
      * Vérifie si l'utilisateur est autorisé à accéder à un Tiers
+     *
      * @return L'utilisateur peut accéder à un Tiers
      */
-    public boolean checkCanGetTiers(){
-        if(!authentificationHelper.hasConsultationRole()){
+    public boolean checkCanGetTiers() {
+        if (!authentificationHelper.hasConsultationRole()) {
             LOGGER.warn("L'utilisateur n'ayant pas les droits de consultation ne peut pas accéder à un tiers");
             return false;
         }

@@ -38,7 +38,7 @@ public class TiersServiceImpl implements TiersService {
     public Tiers getTiersById(Long tiersId) {
         Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersId);
 
-        if (!tiersRightsHelper.checkCanGetTiers()){
+        if (!tiersRightsHelper.checkCanGetTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits d'accéder un tiers");
         }
         if (tiersEntityOpt.isEmpty()) {
@@ -51,7 +51,7 @@ public class TiersServiceImpl implements TiersService {
     @Override
     public Tiers createTiers(Tiers tiers) {
 
-        if (!tiersRightsHelper.checkCanCreateTiers()){
+        if (!tiersRightsHelper.checkCanCreateTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un tiers");
         }
         TiersEntity tiersEntity = tiersMapper.dtoToEntity(tiers);
@@ -65,8 +65,11 @@ public class TiersServiceImpl implements TiersService {
     @Override
     public Tiers updateTiers(Tiers tiers) {
 
-        if(!tiersRightsHelper.checkCanUpdateTiers()){
+        if (!tiersRightsHelper.checkCanUpdateTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits d'éditer un tiers");
+        }
+        if (tiersDao.findById(tiers.getId()).isEmpty()) {
+            throw new NoSuchElementException("Le tiers d'id=" + tiers.getId() + " n'existe pas.");
         }
         TiersEntity tiersEntity = tiersMapper.dtoToEntity(tiers);
 
@@ -78,7 +81,7 @@ public class TiersServiceImpl implements TiersService {
 
     @Override
     public Tiers inactivateTiers(long tiersId) throws AppServiceException {
-        if(!tiersRightsHelper.checkCanUpdateTiers()){
+        if (!tiersRightsHelper.checkCanUpdateTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits d'éditer un tiers");
         }
 
