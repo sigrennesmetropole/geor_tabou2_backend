@@ -6,7 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import rm.tabou2.facade.api.TiersApi;
+import rm.tabou2.facade.api.V1Api;
+import rm.tabou2.facade.api.V2Api;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.dto.TiersV1;
@@ -19,7 +20,7 @@ import rm.tabou2.storage.tabou.item.TiersCriteria;
 import javax.validation.Valid;
 
 @Controller
-public class TiersApiController implements TiersApi {
+public class TiersApiController implements V2Api, V1Api {
 
     @Autowired
     private TiersService tiersService;

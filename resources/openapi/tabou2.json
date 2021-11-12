@@ -18,6 +18,12 @@
   "schemes": [
     "http"
   ],
+  "tags": [
+    {
+      "name": "tiers",
+      "description": "API de gestion des tiers"
+    }
+  ],
   "paths": {
     "/configuration/{id}": {
       "get": {
@@ -3022,10 +3028,13 @@
         }
       }
     },
-    "/tiers": {
+    "/v1/tiers": {
       "get": {
         "summary": "Recherche des tiers",
         "operationId": "searchTiers",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
@@ -3102,6 +3111,9 @@
       "post": {
         "summary": "Ajout d'un tiers",
         "operationId": "createTiers",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
@@ -3128,6 +3140,9 @@
       "put": {
         "summary": "Modification d'un tiers",
         "operationId": "updateTiers",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
@@ -3155,10 +3170,13 @@
         }
       }
     },
-    "/tiers/{tiersId}": {
+    "/v1/tiers/{tiersId}": {
       "get": {
         "summary": "Récupération d'un tiers",
         "operationId": "getTiersById",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
@@ -3185,10 +3203,13 @@
         }
       }
     },
-    "/tiers/{tiersId}/inactivate": {
+    "/v1/tiers/{tiersId}/inactivate": {
       "put": {
         "summary": "Rends un tiers inactif",
         "operationId": "inactivateTiers",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
@@ -3215,10 +3236,13 @@
         }
       }
     },
-    "/tiers/v2": {
+    "/v2/tiers": {
       "get": {
         "summary": "Recherche des tiers V2",
         "operationId": "searchTiers2",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
@@ -3295,6 +3319,9 @@
       "post": {
         "summary": "Ajout d'un tiers",
         "operationId": "createTiers2",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
@@ -3321,6 +3348,9 @@
       "put": {
         "summary": "Modification d'un tiers",
         "operationId": "updateTiers2",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
@@ -3348,10 +3378,13 @@
         }
       }
     },
-    "/tiers/v2/{tiersId}": {
+    "/v2/tiers/{tiersId}": {
       "get": {
         "summary": "Récupération d'un tiers",
         "operationId": "getTiersById2",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
@@ -3378,10 +3411,13 @@
         }
       }
     },
-    "/tiers/v2/{tiersId}/inactivate": {
+    "/v2/tiers/{tiersId}/inactivate": {
       "put": {
         "summary": "Rends un tiers inactif",
         "operationId": "inactivateTiers2",
+        "tags": [
+          "tiers"
+        ],
         "produces": [
           "application/json"
         ],
