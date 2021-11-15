@@ -1,0 +1,222 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+    "version": "0.0.1",
+    "title": "tabou2",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "%host%",
+  "basePath": "/tabou2",
+  "schemes": [
+    "http"
+  ],
+  "tags": [
+    {
+      "name": "tiers",
+      "description": "API de gestion des tiers"
+    }
+  ],
+  "paths": {
+    "/tiers": {
+      "get": {
+        "summary": "Recherche des tiers V2",
+        "operationId": "searchTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom du tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "tiersPrive",
+            "description": "Recherche par tiers privé si true, false si société",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "adresseVille",
+            "description": "Recherche par adresse / ville du tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par tiers inactif",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un tiers",
+        "operationId": "createTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Nouveau tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un tiers",
+        "operationId": "updateTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Tiers à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}": {
+      "get": {
+        "summary": "Récupération d'un tiers",
+        "operationId": "getTiersById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}/inactivate": {
+      "put": {
+        "summary": "Rends un tiers inactif",
+        "operationId": "inactivateTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    }
+  }
+}
