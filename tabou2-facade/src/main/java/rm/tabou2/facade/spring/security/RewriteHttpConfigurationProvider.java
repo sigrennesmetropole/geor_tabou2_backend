@@ -39,7 +39,6 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 				.addRule(Join.path("/v1/" + TABOU2_TIERS_PATH).to("/v1" +  TABOU2_TIERS_PATH))
 				// V1/** -> c'est l'officiel 
 				.addRule(Join.path("/v1/{path}").to("{path}"))
-				.addRule(Join.path("/v1/{path}").to(TABOU2_TIERS))
 				// /tiers -> l'officiel c'est V1
 				.addRule(Join.path(TABOU2_TIERS).to("/v1/" + TABOU2_TIERS))
 				.addRule(Join.path(TABOU2_TIERS_PATH).to("/v1/" + TABOU2_TIERS_PATH))
