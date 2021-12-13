@@ -545,7 +545,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setOperation(programmeEntity.getOperation());
         ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
         ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
-        ficheSuiviProgrammeDataModel.setIllustration(documentGenerator.generatedImgForTemplate());
+        ficheSuiviProgrammeDataModel.setIllustration(documentGenerator.generatedImgForTemplate(AlfrescoTabouType.PROGRAMME, programmeEntity.getId()));
         ficheSuiviProgrammeDataModel.setNomFichier(buildRapportFileName(programmeEntity));
 
         if (programmeEntity.getNumAds() != null) { // traiter le cas où le nusAds ne retourne rien
@@ -620,7 +620,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long programmeId, String nom, String libelle, MultipartFile file) throws AppServiceException{
+    public DocumentMetadata addDocument(long programmeId, String nom, String libelle, MultipartFile file) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
@@ -647,7 +647,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         try {
             //Suppression du document Dans alfresco
-           alfrescoService.deleteDocument(AlfrescoTabouType.PROGRAMME, programmeId, documentId);
+            alfrescoService.deleteDocument(AlfrescoTabouType.PROGRAMME, programmeId, documentId);
 
         } catch (WebClientResponseException.NotFound e) {
             throw new NoSuchElementException(ERROR_DELETE_DOCUMENT + documentId);
@@ -688,7 +688,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelle, String typeMime, Pageable pageable){
+    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelle, String typeMime, Pageable pageable) {
 
         //On vérifie que le programme existe
         Programme programmeToDelete = getProgrammeById(programmeId);
