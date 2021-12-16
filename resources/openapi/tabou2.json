@@ -1812,20 +1812,13 @@
             "format": "int64"
           },
           {
-            "in": "query",
-            "name": "tiersId",
-            "description": "Identifiant du tiers",
+            "in": "body",
+            "name": "associationTiers",
+            "description": "Association entre le tiers, le type tiers",
             "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "in": "query",
-            "name": "typeTiersId",
-            "description": "Identifiant du type de tiers",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
+            "schema": {
+              "$ref": "#/definitions/TiersTypeTiers"
+            }
           }
         ],
         "responses": {

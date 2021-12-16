@@ -248,8 +248,8 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<AssociationTiersTypeTiers> associateTiersToProgramme(Long programmeId, @NotNull @Valid Long tiersId, @NotNull @Valid Long typeTiersId) throws Exception {
-        return new ResponseEntity<>(programmeTiersService.associateTiersToProgramme(programmeId, tiersId, typeTiersId), HttpStatus.OK);
+    public ResponseEntity<AssociationTiersTypeTiers> associateTiersToProgramme(Long programmeId, @NotNull @Valid TiersTypeTiers tiersTypeTiers) throws Exception {
+        return new ResponseEntity<>(programmeTiersService.associateTiersToProgramme(programmeId, tiersTypeTiers.getTiersId(), tiersTypeTiers.getTypeTiersId()), HttpStatus.OK);
     }
 
     @Override
