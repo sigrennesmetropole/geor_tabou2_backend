@@ -29,7 +29,7 @@ public class FonctionContactsCustomDaoImpl extends AbstractCustomDaoImpl impleme
     private static final String FIELD_LIBELLE = "libelle";
 
     @Override
-    public Page<FonctionContactsEntity> searchTiers(FonctionContactsCriteria fonctionContactsCriteria, Pageable pageable) {
+    public Page<FonctionContactsEntity> searchFonctionsContacts(FonctionContactsCriteria fonctionContactsCriteria, Pageable pageable) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         //Requête pour compter le nombre de résultats total

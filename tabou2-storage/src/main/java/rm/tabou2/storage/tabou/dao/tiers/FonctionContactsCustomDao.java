@@ -13,5 +13,5 @@ public interface FonctionContactsCustomDao {
      * @param pageable paramètres de pagination
      * @return FonctionContacts correspondants à la recherche
      */
-    Page<FonctionContactsEntity> searchTiers(FonctionContactsCriteria fonctionContactsCriteria, Pageable pageable);
+    Page<FonctionContactsEntity> searchFonctionsContacts(FonctionContactsCriteria fonctionContactsCriteria, Pageable pageable);
 }

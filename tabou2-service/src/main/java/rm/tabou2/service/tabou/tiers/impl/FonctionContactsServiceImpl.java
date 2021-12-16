@@ -22,6 +22,6 @@ public class FonctionContactsServiceImpl implements FonctionContactsService {
     @Override
     public Page<FonctionContacts> searchFonctionContacts(FonctionContactsCriteria criteria, Pageable pageable) {
 
-        return fonctionContactsMapper.entitiesToDto(fonctionContactsCustomDao.searchTiers(criteria, pageable), pageable);
+        return fonctionContactsMapper.entitiesToDto(fonctionContactsCustomDao.searchFonctionsContacts(criteria, pageable), pageable);
     }
 }

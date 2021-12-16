@@ -11,15 +11,15 @@ public class FonctionContactsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_fonction_contact")
+    @Column(name = "id_fonction_contact", nullable = false)
     private long id;
 
     @OrderBy
     @Basic
-    @Column(name = "libelle")
+    @Column(name = "libelle", length = 255, nullable = false)
     private String libelle;
 
     @Basic
-    @Column(name = "code")
+    @Column(name = "code", length = 255, nullable = false)
     private String code;
 }
