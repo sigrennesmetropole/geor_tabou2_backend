@@ -758,6 +758,85 @@
         }
       }
     },
+    "ContactTiers": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant unique du contact",
+          "type": "integer",
+          "format": "int64"
+        },
+        "idTiers": {
+          "description": "Identifiant du tiers auquel est rattaché le contact",
+          "type": "integer",
+          "format": "int64"
+        },
+        "fonctionContact": {
+          "description": "Fonction du contact",
+          "type" : "object",
+          "$ref": "#/definitions/FonctionContacts"
+        },
+        "nom": {
+          "description": "Nom du contact",
+          "type": "string"
+        },
+        "prenom": {
+          "description": "Prénom du contact",
+          "type": "string"
+        },
+        "service": {
+          "description": "Service du contact",
+          "type": "string"
+        },
+        "adresse": {
+          "description": "Adresse du contact",
+          "type": "string"
+        },
+        "adresseCp": {
+          "description": "Code postal de l'adresse du contact",
+          "type": "string"
+        },
+        "adresseVille": {
+          "description": "Ville de l'adresse du contact",
+          "type": "string"
+        },
+        "telecopie": {
+          "description": "Numéro de télécopie du contact",
+          "type": "string"
+        },
+        "telephone": {
+          "description": "Numéro de téléphone du contact",
+          "type": "string"
+        },
+        "email": {
+          "description": "Email du contact",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date d'inactivité du contact",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le contact",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date création du contact",
+          "type": "string",
+          "format": "date"
+        },
+        "modifUser": {
+          "description": "Dernier utilisateur ayant modifié le contact",
+          "type": "string"
+        },
+        "modifDate": {
+          "description": "Date de dernière modification du contact",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
     "SecteurDds": {
       "type": "object",
       "properties": {

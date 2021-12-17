@@ -294,6 +294,31 @@ create table tabou_fonction_contact (
 );
 
 
+create table tabou_contact_tiers
+(
+    id_contact_tiers    bigserial,
+    id_tiers            bigserial NOT NULL,
+    id_fonction_contact bigserial NOT NULL,
+    nom                 varchar(255) NOT NULL,
+    prenom              varchar(255),
+    service             varchar(255),
+    adresse             varchar(255),
+    adresse_cp          varchar(255),
+    adresse_ville       varchar(255),
+    telecopie           varchar(255),
+    telephone           varchar(255),
+    email               varchar(255),
+    date_inactif        timestamp,
+    create_date         timestamp,
+    create_user         varchar(255),
+    modif_date          timestamp,
+    modif_user          varchar(255),
+    primary key (id_contact_tiers),
+    CONSTRAINT fk_tabou_contact_tiers_tabou_tiers FOREIGN KEY (id_tiers) REFERENCES tabou_tiers(id_tiers),
+    CONSTRAINT fk_tabou_contact_tiers_tabou_fonction_contact FOREIGN KEY (id_fonction_contact) REFERENCES tabou_fonction_contact(id_fonction_contact)
+);
+
+
 -- Création de la table des permis de construire : nécessaire seulement pour environnement de dev et intégration continue
 -- En réalité ce sera une Oracle_fdw, mais transparent pour nous
 create table if not exists tabou_pc_ddc(
