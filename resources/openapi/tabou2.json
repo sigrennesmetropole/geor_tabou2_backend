@@ -562,7 +562,6 @@
           }
         }
       }
-
     },
     "/operations/{operationId}/documents/{documentId}/content": {
       "get": {
@@ -883,7 +882,7 @@
           "200": {
             "description": "OK",
             "schema": {
-                "$ref": "#/definitions/PageResult"
+              "$ref": "#/definitions/PageResult"
             }
           },
           "404": {
@@ -4355,6 +4354,64 @@
           }
         }
       }
+    },
+    "/entites-rm": {
+      "get": {
+        "summary": "Liste des entités Rennes Métropole",
+        "description": "Ensemble des entités Rennes Métropole suivant le critère de recherche",
+        "operationId": "searchEntitesRM",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "code",
+            "description": "Recherche par code des entités Rennes Métropole",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -4446,7 +4503,7 @@
           "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)",
           "type": "string"
         },
-        "idEmprise":{
+        "idEmprise": {
           "description": "Identifiant de l'emprise de l'opération",
           "type": "integer",
           "format": "int64"
@@ -4595,7 +4652,7 @@
           "description": "Description du programme pour des besoins de la communication (par ex: Panorama des ZAC)",
           "type": "string"
         },
-        "idEmprise":{
+        "idEmprise": {
           "description": "Identifiant de l'emprise du programme",
           "type": "integer",
           "format": "int32"
@@ -4838,7 +4895,7 @@
           "type": "string",
           "format": "date"
         },
-        "code":  {
+        "code": {
           "description": "Code unique d'un type de document",
           "type": "string"
         },
@@ -5099,14 +5156,18 @@
               "description": "Indicateur permettant de savoir s'il s'agit de l'étape initiale, finale ou intermédiaire",
               "type": "string",
               "enum": [
-                "START", "NORMAL", "END"
+                "START",
+                "NORMAL",
+                "END"
               ]
             },
             "mode": {
               "description": "Indicateur permettant de savoir si l'étape est visible en mode off ou publique",
               "type": "string",
               "enum": [
-                "OFF", "PUBLIC", "NONE"
+                "OFF",
+                "PUBLIC",
+                "NONE"
               ]
             }
           }
@@ -5477,6 +5538,24 @@
         },
         "nom": {
           "description": "Nom de l'emprise",
+          "type": "string"
+        }
+      }
+    },
+    "EntiteRM": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de l'entité Rennes Métropole",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Référence de l'entité Rennes Métropole",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle de l'entité Rennes Métropole",
           "type": "string"
         }
       }
