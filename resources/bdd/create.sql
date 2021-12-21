@@ -311,11 +311,14 @@ create table if not exists tabou_pc_ddc(
                                            primary key (id)
 );
 
-create table if not exists tabou_entites_rm(
-    id_entite_rm bigserial,
-    code varchar(255) not null,
-    libelle varchar(255) not null,
-    primary key(id_entite_rm)
+create table if not exists tabou_entite_referente(
+    id_entite_referente bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    date_inactif timestamp,
+    create_date timestamp,
+    create_user varchar(20),
+    primary key(id_entite_referente)
 );
 
 -- Ajout des clés étrangères

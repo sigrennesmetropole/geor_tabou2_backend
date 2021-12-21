@@ -4355,19 +4355,19 @@
         }
       }
     },
-    "/entites-rm": {
+    "/entites-referentes": {
       "get": {
-        "summary": "Liste des entités Rennes Métropole",
-        "description": "Ensemble des entités Rennes Métropole suivant le critère de recherche",
-        "operationId": "searchEntitesRM",
+        "summary": "Liste des entités référentes",
+        "description": "Ensemble des entités référentes suivant le critère de recherche",
+        "operationId": "searchEntitesReferentes",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "code",
-            "description": "Recherche par code des entités Rennes Métropole",
+            "name": "libelle",
+            "description": "Recherche par libelle des Entités Référentes",
             "required": false,
             "type": "string"
           },
@@ -5542,7 +5542,7 @@
         }
       }
     },
-    "EntiteRM": {
+    "EntiteReferente": {
       "type": "object",
       "properties": {
         "id": {
@@ -5557,6 +5557,20 @@
         "libelle": {
           "description": "Libelle de l'entité Rennes Métropole",
           "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité de l'entité Rennes Métropole",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé l'entité",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout de l'entité",
+          "type": "string",
+          "format": "date"
         }
       }
     }
