@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
-import rm.tabou2.storage.tabou.dao.operation.EntiteRMCustomDao;
-import rm.tabou2.storage.tabou.entity.operation.EntiteRMEntity;
-import rm.tabou2.storage.tabou.item.EntiteRMCriteria;
+import rm.tabou2.storage.tabou.dao.operation.EntiteReferenteCustomDao;
+import rm.tabou2.storage.tabou.entity.operation.EntiteReferenteEntity;
+import rm.tabou2.storage.tabou.item.EntiteReferenteCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class EntiteRMCustomDaoImpl extends AbstractCustomDaoImpl implements EntiteRMCustomDao {
+public class EntiteReferenteCustomDaoImpl extends AbstractCustomDaoImpl implements EntiteReferenteCustomDao {
     private static final String FIELD_LIBELLE = "libelle";
     private static final String FIELD_CODE = "code";
 
@@ -31,11 +31,11 @@ public class EntiteRMCustomDaoImpl extends AbstractCustomDaoImpl implements Enti
     private EntityManager entityManager;
 
     @Override
-    public Page<EntiteRMEntity> searchEntitesRM(EntiteRMCriteria criteria, Pageable pageable) {
+    public Page<EntiteReferenteEntity> searchEntitesReferentes(EntiteReferenteCriteria criteria, Pageable pageable) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-        Root<EntiteRMEntity> countRoot = countQuery.from(EntiteRMEntity.class);
+        Root<EntiteReferenteEntity> countRoot = countQuery.from(EntiteReferenteEntity.class);
         buildQuery(criteria, builder, countQuery, countRoot);
         countQuery.select(builder.countDistinct(countRoot));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
@@ -46,27 +46,27 @@ public class EntiteRMCustomDaoImpl extends AbstractCustomDaoImpl implements Enti
         }
 
         //Requête de recherche
-        CriteriaQuery<EntiteRMEntity> searchQuery = builder.createQuery(EntiteRMEntity.class);
-        Root<EntiteRMEntity> searchRoot = searchQuery.from(EntiteRMEntity.class);
+        CriteriaQuery<EntiteReferenteEntity> searchQuery = builder.createQuery(EntiteReferenteEntity.class);
+        Root<EntiteReferenteEntity> searchRoot = searchQuery.from(EntiteReferenteEntity.class);
         buildQuery(criteria, builder, searchQuery, searchRoot);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
 
-        TypedQuery<EntiteRMEntity> typedQuery = entityManager.createQuery(searchQuery);
-        List<EntiteRMEntity> operationEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
+        TypedQuery<EntiteReferenteEntity> typedQuery = entityManager.createQuery(searchQuery);
+        List<EntiteReferenteEntity> operationEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
         return new PageImpl<>(operationEntities, pageable, totalCount.intValue());
 
     }
 
     /**
-     * Constructeur de la query de recherche des entités RM
+     * Constructeur de la query de recherche des entités référentes
      * @param criteria Critères de recherche
      * @param builder Criteria build
      * @param criteriaQuery Criteria Query
      * @param root Root
      */
-    private void buildQuery(EntiteRMCriteria criteria, CriteriaBuilder builder,
-                            CriteriaQuery<?> criteriaQuery, Root<EntiteRMEntity> root) {
+    private void buildQuery(EntiteReferenteCriteria criteria, CriteriaBuilder builder,
+                            CriteriaQuery<?> criteriaQuery, Root<EntiteReferenteEntity> root) {
 
         if(criteria != null){
             List<Predicate> predicates = new ArrayList<>();
