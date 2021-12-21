@@ -313,8 +313,11 @@ create table if not exists tabou_pc_ddc(
 
 create table if not exists tabou_type_occupation(
     id_type_occupation bigserial,
-    code varchar(20) not null,
-    libelle varchar(120) not null,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    date_inactif timestamp,
+    create_date timestamp,
+    create_user varchar(20),
     primary key(id_type_occupation)
 );
 

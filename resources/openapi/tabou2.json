@@ -5615,7 +5615,22 @@
         "libelle": {
           "description": "Libelle du type d'occupation",
           "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type d'occupation",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type d'occupation",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du type d'occupation",
+          "type": "string",
+          "format": "date"
         }
+
       }
     },
     "EntiteReferente": {
