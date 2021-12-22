@@ -14,7 +14,7 @@ public class OutilsFonciersRightsHelper {
     private AuthentificationHelper authentificationHelper;
 
     public boolean checkCanSearchOutilsFonciers(){
-        if(authentificationHelper.hasConsultationRole()){
+        if(!authentificationHelper.hasConsultationRole()){
             LOGGER.warn("L'utilisateur n'ayant pas les droits de consultation ne peut pas rechercher les outils fonciers");
             return false;
         }

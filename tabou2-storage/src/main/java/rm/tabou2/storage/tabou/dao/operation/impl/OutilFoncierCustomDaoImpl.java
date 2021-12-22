@@ -24,6 +24,7 @@ import java.util.List;
 @Repository
 public class OutilFoncierCustomDaoImpl extends AbstractCustomDaoImpl implements OutilFoncierCustomDao {
     private static final String FIELD_LIBELLE = "libelle";
+    private static final String FIELD_INACTIF = "dateInactif";
 
     @PersistenceContext(unitName = "tabouPU")
     EntityManager entityManager;
@@ -61,6 +62,11 @@ public class OutilFoncierCustomDaoImpl extends AbstractCustomDaoImpl implements 
 
             if (!StringUtils.isEmpty(criteria.getLibelle())) {
                 predicateStringCriteria(criteria.getLibelle(), FIELD_LIBELLE, predicates, builder, root);
+            }
+
+            //inactif
+            if (criteria.getInactif() != null) {
+                predicateCriteriaNullOrNot(!criteria.getInactif(), FIELD_INACTIF, predicates, builder, root);
             }
 
             if (CollectionUtils.isNotEmpty(predicates)) {

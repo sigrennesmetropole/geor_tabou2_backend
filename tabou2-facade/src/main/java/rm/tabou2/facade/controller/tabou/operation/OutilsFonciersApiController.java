@@ -21,9 +21,10 @@ public class OutilsFonciersApiController implements OutilsFonciersApi {
     OutilsFonciersService outilsFonciersService;
 
     @Override
-    public ResponseEntity<PageResult> searchOutilsFonciers(String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchOutilsFonciers(String libelle, Boolean inactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
         OutilFoncierCriteria criteria = new OutilFoncierCriteria();
         criteria.setLibelle(libelle);
+        criteria.setInactif(inactif);
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OutilFoncierEntity.class);
 

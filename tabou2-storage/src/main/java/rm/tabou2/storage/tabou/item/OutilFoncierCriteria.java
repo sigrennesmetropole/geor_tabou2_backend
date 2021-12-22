@@ -6,4 +6,6 @@ import lombok.Data;
 public class OutilFoncierCriteria {
 
     private String libelle;
+
+    private Boolean inactif;
 }

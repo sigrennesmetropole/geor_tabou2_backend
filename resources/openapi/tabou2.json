@@ -4431,6 +4431,13 @@
           },
           {
             "in": "query",
+            "name": "inactif",
+            "description": "Recherche par type d'évènement inactif",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
             "name": "start",
             "description": "Index de début - démarre à 0",
             "required": false,
