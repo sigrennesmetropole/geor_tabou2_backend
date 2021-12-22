@@ -12,10 +12,10 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.tiers.FonctionContactsEntity;
 import rm.tabou2.storage.tabou.item.FonctionContactsCriteria;
 import rm.tabou2.service.dto.FonctionContacts;
-import rm.tabou2.facade.api.FonctionContactsApi;
+import rm.tabou2.facade.api.FonctionsContactsApi;
 
 @Controller
-public class FonctionContactsController implements FonctionContactsApi {
+public class FonctionContactsController implements FonctionsContactsApi {
 
     @Autowired
     private FonctionContactsService fonctionContactsService;

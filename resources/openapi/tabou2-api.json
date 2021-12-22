@@ -3215,7 +3215,7 @@
         }
       }
     },
-    "/fonction-contacts": {
+    "/fonctions-contacts": {
       "get": {
         "summary": "Recherche les fonctions de contacts",
         "operationId": "searchFonctionsContacts",

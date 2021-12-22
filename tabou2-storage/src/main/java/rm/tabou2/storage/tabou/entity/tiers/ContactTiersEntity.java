@@ -28,39 +28,39 @@ public class ContactTiersEntity extends GenericAuditableEntity {
     public FonctionContactsEntity fonctionContact;
 
     @Basic
-    @Column(name = "nom", nullable = false)
+    @Column(name = "nom", nullable = false, length = 50)
     private String nom;
 
     @Basic
-    @Column(name = "prenom")
+    @Column(name = "prenom", length = 50)
     private String prenom;
 
     @Basic
-    @Column(name = "service")
+    @Column(name = "service", length = 50)
     private String service;
 
     @Basic
-    @Column(name = "adresse")
+    @Column(name = "adresse", length = 100)
     private String adresse;
 
     @Basic
-    @Column(name = "adresse_cp")
+    @Column(name = "adresse_cp", length = 20)
     private String adresseCp;
 
     @Basic
-    @Column(name = "adresse_ville")
+    @Column(name = "adresse_ville", length = 50)
     private String adresseVille;
 
     @Basic
-    @Column(name = "telecopie")
+    @Column(name = "telecopie", length = 50)
     private String telecopie;
 
     @Basic
-    @Column(name = "telephone")
+    @Column(name = "telephone", length = 50)
     private String telephone;
 
     @Basic
-    @Column(name = "email")
+    @Column(name = "email", length = 100)
     private String email;
 
     @Basic
