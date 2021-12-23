@@ -12,23 +12,23 @@ import org.springframework.util.StringUtils;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.tiers.ContactTiersCustomDao;
 import rm.tabou2.storage.tabou.entity.tiers.ContactTiersEntity;
+import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.item.ContactTiersCriteria;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
 public class ContactTiersCustomDaoImpl extends AbstractCustomDaoImpl implements ContactTiersCustomDao {
     private static final String FIELD_NOM = "nom";
     private static final String FIELD_INACTIF = "inactif";
-    private static final String FIELD_TIERS = "idTiers";
+    private static final String FIELD_TIERS = "id";
 
 
     @PersistenceContext(unitName = "tabouPU")
@@ -40,8 +40,9 @@ public class ContactTiersCustomDaoImpl extends AbstractCustomDaoImpl implements 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-        Root<ContactTiersEntity> countRoot = countQuery.from(ContactTiersEntity.class);
-        buildQuery(contactTiersCriteria, builder, countQuery, countRoot);
+        Root<TiersEntity> countRoot = countQuery.from(TiersEntity.class);
+        Join<TiersEntity, ContactTiersEntity> joinContactTiers = countRoot.join("contacts", JoinType.INNER);
+        buildQuery(contactTiersCriteria, builder, countQuery, countRoot, joinContactTiers);
         countQuery.select(builder.countDistinct(countRoot));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
@@ -52,9 +53,11 @@ public class ContactTiersCustomDaoImpl extends AbstractCustomDaoImpl implements 
 
         //Recherche
         CriteriaQuery<ContactTiersEntity> searchQuery = builder.createQuery(ContactTiersEntity.class);
-        Root<ContactTiersEntity> searchRoot = searchQuery.from(ContactTiersEntity.class);
-        buildQuery(contactTiersCriteria, builder, searchQuery, searchRoot);
+        Root<TiersEntity> searchRoot = searchQuery.from(TiersEntity.class);
+        Join<TiersEntity, ContactTiersEntity> searchJoinContactTiers = searchRoot.join("contacts", JoinType.INNER);
+        buildQuery(contactTiersCriteria, builder, searchQuery, searchRoot, searchJoinContactTiers);
 
+        searchQuery.select(searchJoinContactTiers);
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
         TypedQuery<ContactTiersEntity> typedQuery = entityManager.createQuery(searchQuery);
 
@@ -63,18 +66,18 @@ public class ContactTiersCustomDaoImpl extends AbstractCustomDaoImpl implements 
     }
 
     private void buildQuery(ContactTiersCriteria contactTiersCriteria, CriteriaBuilder builder,
-                            CriteriaQuery<?> criteriaQuery, Root<ContactTiersEntity> root
+                            CriteriaQuery<?> criteriaQuery, Root<TiersEntity> root, Join<TiersEntity, ContactTiersEntity> joinContactsTiers
     ) {
 
         if (contactTiersCriteria != null) {
             List<Predicate> predicates = new ArrayList<>();
 
             if (!StringUtils.isEmpty(contactTiersCriteria.getNom())){
-                predicateStringCriteria(contactTiersCriteria.getNom(), FIELD_NOM, predicates, builder, root);
+                predicateStringCriteriaForJoin(contactTiersCriteria.getNom(), FIELD_NOM, predicates, builder, joinContactsTiers);
             }
             //inactif
             if (contactTiersCriteria.getInactif() != null) {
-                predicateCriteriaNullOrNot(!contactTiersCriteria.getInactif(), FIELD_INACTIF, predicates, builder, root);
+                predicateCriteriaNullOrNot(!contactTiersCriteria.getInactif(), FIELD_INACTIF, predicates, builder, joinContactsTiers);
             }
             if (contactTiersCriteria.getIdTiers() != null){
                 predicateLongCriteria(contactTiersCriteria.getIdTiers(), FIELD_TIERS, predicates, builder, root);

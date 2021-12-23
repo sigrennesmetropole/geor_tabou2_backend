@@ -766,11 +766,6 @@
           "type": "integer",
           "format": "int64"
         },
-        "idTiers": {
-          "description": "Identifiant du tiers auquel est rattaché le contact",
-          "type": "integer",
-          "format": "int64"
-        },
         "fonctionContact": {
           "description": "Fonction du contact",
           "type" : "object",

@@ -68,14 +68,17 @@ public class TiersServiceImpl implements TiersService {
         if (!tiersRightsHelper.checkCanUpdateTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits d'éditer un tiers");
         }
-        if (tiersDao.findById(tiers.getId()).isEmpty()) {
+
+        Optional<TiersEntity> tiersEntity = tiersDao.findById(tiers.getId());
+        if (tiersEntity.isEmpty()) {
             throw new NoSuchElementException("Le tiers d'id=" + tiers.getId() + " n'existe pas.");
         }
-        TiersEntity tiersEntity = tiersMapper.dtoToEntity(tiers);
+        TiersEntity entity = tiersEntity.get();
+        tiersMapper.dtoToEntity(tiers, entity);
 
-        tiersEntity = tiersDao.save(tiersEntity);
+        entity = tiersDao.save(entity);
 
-        return tiersMapper.entityToDto(tiersEntity);
+        return tiersMapper.entityToDto(entity);
 
     }
 

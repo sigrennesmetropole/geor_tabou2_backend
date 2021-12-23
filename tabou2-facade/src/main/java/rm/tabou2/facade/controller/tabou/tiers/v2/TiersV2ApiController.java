@@ -11,7 +11,6 @@ import rm.tabou2.facade.api.v2.TiersApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.dto.ContactTiers;
-import rm.tabou2.service.mapper.tabou.tiers.TiersV1Mapper;
 import rm.tabou2.service.tabou.tiers.ContactTiersService;
 import rm.tabou2.service.tabou.tiers.TiersService;
 import rm.tabou2.service.utils.PaginationUtils;
@@ -27,9 +26,6 @@ public class TiersV2ApiController implements TiersApi {
 
 	@Autowired
 	private TiersService tiersService;
-
-	@Autowired
-	private TiersV1Mapper tiersV1Mapper;
 
 	@Override
 	public ResponseEntity<Tiers> createTiers(@Valid Tiers tiers) throws Exception {
@@ -101,7 +97,7 @@ public class TiersV2ApiController implements TiersApi {
 	}
 
 	@Override
-	public ResponseEntity<ContactTiers> updateContactTiers(Long tiersId, ContactTiers contactTiers) throws Exception {
+	public ResponseEntity<ContactTiers> updateContactTiers(Long tiersId, @Valid ContactTiers contactTiers) throws Exception {
 		return new ResponseEntity<>(contactTiersService.updateContactTiers(tiersId, contactTiers), HttpStatus.OK);
 	}
 

@@ -1,7 +1,9 @@
 package rm.tabou2.storage.tabou.entity.tiers;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 
 import javax.persistence.*;
@@ -11,6 +13,8 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "tabou_contact_tiers")
+@NoArgsConstructor
+@AllArgsConstructor
 public class ContactTiersEntity extends GenericAuditableEntity {
 
     @Id
@@ -18,10 +22,6 @@ public class ContactTiersEntity extends GenericAuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_contact_tiers", nullable = false)
     private long id;
-
-    @Basic()
-    @Column(name = "id_tiers", nullable = false)
-    private long idTiers;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_fonction_contact", nullable = false)
