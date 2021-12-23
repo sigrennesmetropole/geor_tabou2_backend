@@ -1292,6 +1292,103 @@
           "type": "string"
         }
       }
+    },
+    "TypeOccupation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant du type d'occupation",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code du type d'occupation",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle du type d'occupation",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type d'occupation",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type d'occupation",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du type d'occupation",
+          "type": "string",
+          "format": "date"
+        }
+
+      }
+    },
+    "EntiteReferente": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de l'entité Rennes Métropole",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Référence de l'entité Rennes Métropole",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle de l'entité Rennes Métropole",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité de l'entité Rennes Métropole",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé l'entité",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout de l'entité",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "OutilFoncier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de l'outil foncier",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code du type de l'outil foncier",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle du type de l'outil foncier",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type de l'outil foncier",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type de l'outil foncier",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout de l'outil foncier",
+          "type": "string",
+          "format": "date"
+        }
+      }
     }
   }
 }
