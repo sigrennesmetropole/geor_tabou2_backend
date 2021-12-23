@@ -331,6 +331,16 @@ create table if not exists tabou_entite_referente(
     primary key(id_entite_referente)
 );
 
+create table if not exists tabou_outil_foncier(
+    id_outil_foncier bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    date_inactif timestamp,
+    create_date timestamp,
+    create_user varchar(20),
+    primary key(id_outil_foncier)
+    );
+
 -- Ajout des clés étrangères
 
 alter table if exists tabou_programme

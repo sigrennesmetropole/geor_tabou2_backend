@@ -4470,6 +4470,71 @@
           }
         }
       }
+    },
+    "/outils-fonciers": {
+      "get": {
+        "summary": "Liste des outils fonciers",
+        "description": "Ensemble des outils fonciers suivant le critère de recherche",
+        "operationId": "searchOutilsFonciers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libelle des outils fonciers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par type d'évènement inactif",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -5660,6 +5725,38 @@
         },
         "createDate": {
           "description": "Date d'ajout de l'entité",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "OutilFoncier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de l'outil foncier",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code du type de l'outil foncier",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle du type de l'outil foncier",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type de l'outil foncier",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type de l'outil foncier",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout de l'outil foncier",
           "type": "string",
           "format": "date"
         }
