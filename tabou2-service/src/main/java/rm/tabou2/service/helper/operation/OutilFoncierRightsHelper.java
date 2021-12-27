@@ -4,5 +4,5 @@ import org.springframework.stereotype.Component;
 import rm.tabou2.service.helper.AbstractRightsHelper;
 
 @Component
-public class TypeOccupationRightsHelper extends AbstractRightsHelper {
+public class OutilFoncierRightsHelper extends AbstractRightsHelper {
 }

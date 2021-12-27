@@ -4,6 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
@@ -21,10 +22,11 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_INACTIF;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
+
 @Repository
 public class OutilFoncierCustomDaoImpl extends AbstractCustomDaoImpl implements OutilFoncierCustomDao {
-    private static final String FIELD_LIBELLE = "libelle";
-    private static final String FIELD_INACTIF = "dateInactif";
 
     @PersistenceContext(unitName = "tabouPU")
     EntityManager entityManager;
@@ -49,6 +51,7 @@ public class OutilFoncierCustomDaoImpl extends AbstractCustomDaoImpl implements 
         CriteriaQuery<OutilFoncierEntity> searchQuery = builder.createQuery(OutilFoncierEntity.class);
         Root<OutilFoncierEntity> searchRoot = searchQuery.from(OutilFoncierEntity.class);
         buildQuery(criteria, builder, searchQuery, searchRoot);
+        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
 
         TypedQuery<OutilFoncierEntity> typedQuery = entityManager.createQuery(searchQuery);
         List<OutilFoncierEntity> tiersEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();

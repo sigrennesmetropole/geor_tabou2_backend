@@ -1389,6 +1389,38 @@
           "format": "date"
         }
       }
+    },
+    "TypeAmenageur": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant du type d'aménageur",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code du type d'aménageur",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle du type d'aménageur",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type d'aménageur",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type du type d'aménageur",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du type d'aménageur",
+          "type": "string",
+          "format": "date"
+        }
+      }
     }
   }
 }

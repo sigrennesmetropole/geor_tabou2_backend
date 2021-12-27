@@ -26,7 +26,7 @@ public class TypeOccupationServiceImpl implements TypeOccupationService {
 
     @Override
     public Page<TypeOccupation> searchTypeOccupations(TypeOccupationCriteria criteria, Pageable pageable) {
-        if(!rightsHelper.checkCanSearchTypeOccupation()){
+        if(!rightsHelper.checkCanAccess()){
             throw new AccessDeniedException("L'utilisateur n'a pas les droits pour rechercher un type d'occupation.");
         }
         return mapper.entitiesToDto(typeOccupationCustomDao.searchTypeOccupation(criteria, pageable), pageable);
