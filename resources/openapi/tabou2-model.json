@@ -115,7 +115,7 @@
           "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)",
           "type": "string"
         },
-        "idEmprise":{
+        "idEmprise": {
           "description": "Identifiant de l'emprise de l'opération",
           "type": "integer",
           "format": "int64"
@@ -264,7 +264,7 @@
           "description": "Description du programme pour des besoins de la communication (par ex: Panorama des ZAC)",
           "type": "string"
         },
-        "idEmprise":{
+        "idEmprise": {
           "description": "Identifiant de l'emprise du programme",
           "type": "integer",
           "format": "int32"
@@ -507,7 +507,7 @@
           "type": "string",
           "format": "date"
         },
-        "code":  {
+        "code": {
           "description": "Code unique d'un type de document",
           "type": "string"
         },
@@ -743,16 +743,16 @@
     "FonctionContacts": {
       "type": "object",
       "properties": {
-        "id" : {
+        "id": {
           "description": "Identificateur unique. Clé primaire",
           "type": "integer",
           "format": "int64"
         },
-        "code" : {
+        "code": {
           "description": "Référence unique de la fonction",
           "type": "string"
         },
-        "libelle" : {
+        "libelle": {
           "description": "Libellé de la fonction",
           "type": "string"
         }
@@ -768,7 +768,7 @@
         },
         "fonctionContact": {
           "description": "Fonction du contact",
-          "type" : "object",
+          "type": "object",
           "$ref": "#/definitions/FonctionContacts"
         },
         "nom": {
@@ -911,14 +911,18 @@
               "description": "Indicateur permettant de savoir s'il s'agit de l'étape initiale, finale ou intermédiaire",
               "type": "string",
               "enum": [
-                "START", "NORMAL", "END"
+                "START",
+                "NORMAL",
+                "END"
               ]
             },
             "mode": {
               "description": "Indicateur permettant de savoir si l'étape est visible en mode off ou publique",
               "type": "string",
               "enum": [
-                "OFF", "PUBLIC", "NONE"
+                "OFF",
+                "PUBLIC",
+                "NONE"
               ]
             }
           }
@@ -1323,7 +1327,6 @@
           "type": "string",
           "format": "date"
         }
-
       }
     },
     "EntiteReferente": {
@@ -1417,6 +1420,38 @@
         },
         "createDate": {
           "description": "Date d'ajout du type d'aménageur",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "TypeFinancementOperation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant du type de financement opération",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code du type de financement opération",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle ddu type de financement opération",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type de financement opération",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type du type de financement opération",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du type de financement opération",
           "type": "string",
           "format": "date"
         }
