@@ -26,7 +26,7 @@ public class EntiteReferenteServiceImpl implements EntiteReferenteService {
 
     @Override
     public Page<EntiteReferente> searchEntitesReferentes(EntiteReferenteCriteria criteria, Pageable pageable) {
-        if(!rightsHelper.checkCanSearchEntitesReferentes()){
+        if(!rightsHelper.checkCanAccess()){
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de rechercher une entité Référente.");
         }
         return mapper.entitiesToDto(entiteReferenteCustomDao.searchEntitesReferentes(criteria, pageable), pageable);

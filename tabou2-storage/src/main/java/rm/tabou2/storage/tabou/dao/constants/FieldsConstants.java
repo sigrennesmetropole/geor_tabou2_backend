@@ -15,6 +15,7 @@ public class FieldsConstants {
     public static final String FIELD_CONSOMMATION_ESPACE = "consommationEspace";
     public static final String FIELD_MAITRISE_OUVRAGE = "maitriseOuvrage";
     public static final String FIELD_LIBELLE = "libelle";
+    public static final String FIELD_INACTIF = "inactif";
     public static final String FIELD_MODE = "mode";
     public static final String FIELD_ETAPE_OPERATION = "etapeOperation";
     public static final String FIELD_ETAPE_PROGRAMME = "etapeProgramme";

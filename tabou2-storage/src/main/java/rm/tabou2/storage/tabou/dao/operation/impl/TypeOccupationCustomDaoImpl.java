@@ -4,6 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
@@ -49,6 +50,7 @@ public class TypeOccupationCustomDaoImpl extends AbstractCustomDaoImpl implement
         CriteriaQuery<TypeOccupationEntity> searchQuery = builder.createQuery(TypeOccupationEntity.class);
         Root<TypeOccupationEntity> searchRoot = searchQuery.from(TypeOccupationEntity.class);
         buildQuery(criteria, builder, searchQuery, searchRoot);
+        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
 
         TypedQuery<TypeOccupationEntity> typedQuery = entityManager.createQuery(searchQuery);
         List<TypeOccupationEntity> tiersEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();

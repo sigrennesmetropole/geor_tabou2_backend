@@ -373,6 +373,16 @@ create table if not exists tabou_outil_foncier(
     primary key(id_outil_foncier)
     );
 
+create table if not exists tabou_type_amenageur(
+    id_type_amenageur bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    date_inactif timestamp,
+    create_date timestamp,
+    create_user varchar(20),
+    primary key(id_type_amenageur)
+);
+
 -- Ajout des clés étrangères
 
 alter table if exists tabou_programme
