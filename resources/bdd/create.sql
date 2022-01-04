@@ -223,25 +223,24 @@ create table tabou_programme_tiers (
 );
 
 
-create table tabou_tiers (
-                       id_tiers bigserial,
-                       nom varchar(255),
-                       est_prive boolean,
-                       adresse_cp varchar(255),
-                       adresse_num varchar(255),
-                       adresse_rue varchar(255),
-                       adresse_ville varchar(255),
-                       telecopie varchar(255),
-                       telephone varchar(255),
-                       contact varchar(255),
-                       email varchar(255),
-                       site_web varchar(255),
-                       date_inactif timestamp,
-                       create_date timestamp,
-                       create_user varchar(255),
-                       modif_date timestamp,
-                       modif_user varchar(255),
-                       primary key (id_tiers)
+create table tabou_tiers
+(
+    id_tiers      bigserial,
+    nom           varchar(255),
+    est_prive     boolean,
+    adresse_cp    varchar(255),
+    adresse       varchar(255),
+    adresse_ville varchar(255),
+    telecopie     varchar(255),
+    telephone     varchar(255),
+    email         varchar(255),
+    site_web      varchar(255),
+    date_inactif  timestamp,
+    create_date   timestamp,
+    create_user   varchar(255),
+    modif_date    timestamp,
+    modif_user    varchar(255),
+    primary key (id_tiers)
 );
 
 
@@ -284,6 +283,39 @@ create table tabou_type_financement (
     code varchar(20) unique,
     est_aide boolean,
     primary key (id_type_financement)
+);
+
+
+create table tabou_fonction_contact (
+    id_fonction_contact bigserial,
+    code varchar(255) NOT NULL UNIQUE,
+    libelle varchar(255) NOT NULL,
+    PRIMARY KEY (id_fonction_contact)
+);
+
+
+create table tabou_contact_tiers
+(
+    id_contact_tiers    bigserial,
+    id_tiers            bigserial NOT NULL,
+    id_fonction_contact bigserial NOT NULL,
+    nom                 varchar(50) NOT NULL,
+    prenom              varchar(50),
+    service             varchar(50),
+    adresse             varchar(100),
+    adresse_cp          varchar(20),
+    adresse_ville       varchar(50),
+    telecopie           varchar(50),
+    telephone           varchar(50),
+    email               varchar(100),
+    date_inactif        timestamp,
+    create_date         timestamp,
+    create_user         varchar(50),
+    modif_date          timestamp,
+    modif_user          varchar(50),
+    primary key (id_contact_tiers),
+    CONSTRAINT fk_tabou_contact_tiers_tabou_tiers FOREIGN KEY (id_tiers) REFERENCES tabou_tiers(id_tiers),
+    CONSTRAINT fk_tabou_contact_tiers_tabou_fonction_contact FOREIGN KEY (id_fonction_contact) REFERENCES tabou_fonction_contact(id_fonction_contact)
 );
 
 

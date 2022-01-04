@@ -4,15 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -35,14 +29,8 @@ public class TiersEntity extends GenericAuditableEntity {
     private Boolean estPrive;
 
     @Basic
-    @Column(name = "adresse_num")
-    private String adresseNum;
-
-
-    @Basic
-    @Column(name = "adresse_rue")
-    private String adresseRue;
-
+    @Column(name = "adresse")
+    private String adresse;
 
     @Basic
     @Column(name = "adresse_cp")
@@ -69,11 +57,11 @@ public class TiersEntity extends GenericAuditableEntity {
     private String siteWeb;
 
     @Basic
-    @Column(name = "contact")
-    private String contact;
-
-    @Basic
     @Column(name = "date_inactif")
     private Date dateInactif;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_tiers", nullable = false)
+    private Set<ContactTiersEntity> contacts;
 
 }

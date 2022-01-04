@@ -163,7 +163,7 @@
                         </goals>
                         <configuration>
                             <modelPackage>rm.tabou2.service.dto</modelPackage>
-                            <inputSpec>resources/openapi/tabou2.json</inputSpec>
+                            <inputSpec>resources/openapi/tabou2-model.json</inputSpec>
                             <language>spring</language>
                             <!--<generatorName>spring</generatorName>-->
                             <library>spring-mvc</library>
