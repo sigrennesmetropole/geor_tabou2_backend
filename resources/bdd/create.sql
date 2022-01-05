@@ -383,6 +383,16 @@ create table if not exists tabou_type_amenageur(
     primary key(id_type_amenageur)
 );
 
+create table if not exists tabou_type_financement_operation(
+    id_type_financement_operation bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    date_inactif timestamp,
+    create_date timestamp,
+    create_user varchar(20),
+    primary key(id_type_financement_operation)
+);
+
 -- Ajout des clés étrangères
 
 alter table if exists tabou_programme
