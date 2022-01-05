@@ -223,24 +223,25 @@ create table tabou_programme_tiers (
 );
 
 
-create table tabou_tiers
-(
-    id_tiers      bigserial,
-    nom           varchar(255),
-    est_prive     boolean,
-    adresse_cp    varchar(255),
-    adresse       varchar(255),
-    adresse_ville varchar(255),
-    telecopie     varchar(255),
-    telephone     varchar(255),
-    email         varchar(255),
-    site_web      varchar(255),
-    date_inactif  timestamp,
-    create_date   timestamp,
-    create_user   varchar(255),
-    modif_date    timestamp,
-    modif_user    varchar(255),
-    primary key (id_tiers)
+create table tabou_tiers (
+                       id_tiers bigserial,
+                       nom varchar(255),
+                       est_prive boolean,
+                       adresse_cp varchar(255),
+                       adresse_num varchar(255),
+                       adresse_rue varchar(255),
+                       adresse_ville varchar(255),
+                       telecopie varchar(255),
+                       telephone varchar(255),
+                       contact varchar(255),
+                       email varchar(255),
+                       site_web varchar(255),
+                       date_inactif timestamp,
+                       create_date timestamp,
+                       create_user varchar(255),
+                       modif_date timestamp,
+                       modif_user varchar(255),
+                       primary key (id_tiers)
 );
 
 
@@ -392,6 +393,16 @@ create table if not exists tabou_type_financement_operation(
     create_user varchar(20),
     primary key(id_type_financement_operation)
 );
+
+create table if not exists tabou_vocation_za(
+    id_vocation_za bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    date_inactif timestamp,
+    create_date timestamp,
+    create_user varchar(20),
+    primary key(id_vocation_za)
+    );
 
 -- Ajout des clés étrangères
 

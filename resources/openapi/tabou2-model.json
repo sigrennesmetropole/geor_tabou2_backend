@@ -1456,6 +1456,38 @@
           "format": "date"
         }
       }
+    },
+    "VocationZA": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de la vocation ZA",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code de la vocation ZA",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle de la vocation ZA",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité de la vocation ZA",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type de la vocation ZA",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout de la vocation ZA",
+          "type": "string",
+          "format": "date"
+        }
+      }
     }
   }
 }
