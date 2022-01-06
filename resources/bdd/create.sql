@@ -163,6 +163,142 @@ create table tabou_operation (
                            primary key (id_operation)
 );
 
+create table if not exists tabou_plh(
+    id_plh bigserial,
+    logement_prevu integer,
+    logement_livre integer,
+    date timestamp,
+    description text,
+    primary key (id_plh)
+);
+
+create table if not exists tabou_type_programmation(
+    id_type_programmation bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    create_date timestamp,
+    create_user varchar(50),
+    date_inactif timestamp,
+    primary key (id_type_programmation)
+);
+
+create table if not exists tabou_information_programmation(
+    id_information_programmation bigserial,
+    id_type_programmation bigserial,
+    description text,
+    primary key (id_information_programmation)
+);
+
+create table if not exists tabou_type_contribution(
+    id_type_contribution bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    create_date timestamp,
+    create_user varchar(50),
+    date_inactif timestamp,
+    primary key (id_type_contribution)
+);
+
+create table if not exists tabou_contribution(
+    id_contribution bigserial,
+    id_type_contribution bigserial,
+    description text,
+    primary key (id_contribution)
+);
+
+create table if not exists tabou_type_foncier(
+    id_type_foncier bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    create_date timestamp,
+    create_user varchar(50),
+    date_inactif timestamp,
+    primary key (id_type_foncier)
+);
+
+create table if not exists tabou_description_foncier(
+    id_description_foncier bigserial,
+    id_type_foncier bigserial,
+    description text,
+    taux double,
+    primary key (id_description_foncier)
+);
+
+create table if not exists tabou_type_amenageur(
+    id_type_amenageur bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    create_date timestamp,
+    create_user varchar(50),
+    date_inactif timestamp,
+    primary key(id_type_amenageur)
+);
+
+create table if not exists tabou_amenageur(
+    id_amenageur bigserial,
+    id_type_amenageur bigserial,
+    nom varchar(255),
+    primary key (id_amenageur)
+);
+
+create table if not exists tabou_description_concertation(
+    id_description_concertation bigserial,
+    date_debut timestamp,
+    date_fin timestamp,
+    primary key(id_description_concertation)
+);
+
+create table if not exists tabou_type_financement_operation(
+    id_type_financement_operation bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    create_date timestamp,
+    create_user varchar(50),
+    date_inactif timestamp,
+    primary key(id_type_financement_operation)
+);
+
+create table if not exists tabou_description_financement_operation(
+    id_description_financement_operation bigserial,
+    id_type_financement_operation bigserial,
+    description text,
+    primary key(id_description_financement_operation)
+);
+
+create table if not exists tabou_type_action_operation(
+    id_type_action_operation bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    create_date timestamp,
+    create_user varchar(50),
+    date_inactif timestamp,
+    primary key(id_type_action_operation)
+);
+
+create table if not exists tabou_action_operation(
+    id_action_operation bigserial,
+    id_type_action_operation bigserial,
+    description text,
+    primary key (id_action_operation)
+);
+
+create table if not exists tabou_type_acteur(
+    id_type_acteur bigserial,
+    code varchar(20) unique not null,
+    libelle varchar(50) not null,
+    create_date timestamp,
+    create_user varchar(50),
+    date_inactif timestamp,
+    primary key(id_type_acteur)
+);
+
+create table if not exists tabou_acteur(
+    id_acteur bigserial,
+    id_type_acteur bigserial,
+    description text,
+    primary key (id_acteur)
+);
+
 create table tabou_operation_tiers (
                                  id_operation_tiers bigserial,
                                  create_date timestamp,
@@ -475,12 +611,10 @@ alter table if exists tabou_operation_tiers
         foreign key (id_operation)
             references tabou_operation;
 
-
 alter table if exists tabou_operation_tiers
     add constraint fk_tabou_operation_tiers_tabou_tiers
         foreign key (id_tiers)
             references tabou_tiers;
-
 
 alter table if exists tabou_operation_tiers
     add constraint fk_tabou_operation_tiers_tabou_type_tiers
@@ -536,6 +670,38 @@ alter table if exists tabou_etape_operation_workflow
 alter table if exists tabou_etape_operation_workflow
     add constraint fk_etape_operation_workflow_etape_operation_next
         foreign key (id_etape_operation_next) references tabou_etape_operation;
+
+alter table if exists tabou_information_programmation
+    add constraint fk_information_programmation_type_programmation
+        foreign key (id_type_programmation) references tabou_type_programmation;
+
+alter table if exists tabou_contribution
+    add constraint fk_contribution_type_contribution
+        foreign key (id_type_contribution) references tabou_type_contribution;
+
+alter table if exists tabou_description_foncier
+    add constraint fk_description_foncier_type_foncier
+        foreign key (id_type_foncier) references tabou_type_foncier;
+
+alter table if exists tabou_amenageur
+    add constraint fk_tabou_amenageur_tabou_type_amenageur
+        foreign key (id_type_amenageur)
+            references tabou_type_amenageur;
+
+alter table if exists tabou_description_financement_operation
+    add constraint fk_tabou_description_financement_operation_tabou_type_financement_operation
+        foreign key (id_type_financement_operation)
+            references tabou_type_financement_operation;
+
+alter table if exists tabou_action_operation
+    add constraint fk_tabou_action_operation_tabou_type_action_operation
+        foreign key (id_type_action_operation)
+            references tabou_type_action_operation;
+
+alter table if exists tabou_acteur
+    add constraint fk_tabou_acteur_tabou_type_acteur
+        foreign key (id_type_acteur)
+            references tabou_type_acteur;
 
 CREATE INDEX "idx_tabou_programme_id_operation_fk" on tabou_programme(id_operation);
 CREATE INDEX "idx_tabou_programme_id_etape_programme_fk" on tabou_programme(id_etape_programme);

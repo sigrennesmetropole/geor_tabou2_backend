@@ -1393,6 +1393,221 @@
         }
       }
     },
+    "VocationZA": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de la vocation ZA",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code de la vocation ZA",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle de la vocation ZA",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité de la vocation ZA",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type de la vocation ZA",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout de la vocation ZA",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "Plh": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant du plh",
+          "type": "integer",
+          "format": "int64"
+        },
+        "logementsPrevus": {
+          "description": "Nombre de logements prévus du plh",
+          "type": "string"
+        },
+        "logementsLivres": {
+          "description": "Nombre de logements livrés du plh",
+          "type": "string"
+        },
+        "date": {
+          "description": "Date du plh",
+          "type": "string",
+          "format": "date"
+        },
+        "description": {
+          "description": "Description du plh",
+          "type": "string"
+        }
+      }
+    },
+    "TypeProgrammation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant du type de programmation",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code du type de programmation",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle du type de programmation",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type de programmation",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type du type de programmation",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du type de programmation",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "InformationProgrammation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de l'information de programmation",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeProgrammation": {
+          "type": "object",
+          "$ref": "#/definitions/TypeProgrammation"
+        },
+        "description": {
+          "description": "Description du type de programmation",
+          "type": "string"
+        }
+      }
+    },
+    "TypeContribution": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant du type de contribution",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code du type de contribution",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle du type de contribution",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type de contribution",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type du type de contribution",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du type de contribution",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "Contribution": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de la contribution",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeContribution": {
+          "description": "Type de contribution",
+          "type": "object",
+          "$ref": "#/definitions/TypeContribution"
+        },
+        "description": {
+          "description": "Description de la contribution",
+          "type": "string"
+        }
+      }
+    },
+    "TypeFoncier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant du type de foncier",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code du type de foncier",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle du type de foncier",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type de foncier",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type du type de foncier",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du type de foncier",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "DescriptionFoncier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de la description du foncier",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeFoncier": {
+          "description": "Type de foncier",
+          "type": "object",
+          "$ref": "#/definitions/TypeFoncier"
+        },
+        "description": {
+          "description": "Description du foncier",
+          "type": "string"
+        },
+        "taux": {
+          "description": "Taux du foncier",
+          "type": "integer"
+        }
+      }
+    },
     "TypeAmenageur": {
       "type": "object",
       "properties": {
@@ -1420,6 +1635,43 @@
         },
         "createDate": {
           "description": "Date d'ajout du type d'aménageur",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "Amenageur": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de l'aménageur",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeAmenageur": {
+          "description": "Type d'aménageur",
+          "type": "object",
+          "$ref": "#/definitions/TypeAmenageur"
+        },
+        "nom": {
+          "description": "Nom de l'aménageur",
+          "type": "string"
+        }
+      }
+    },
+    "DescriptionConcertation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de la concertation",
+          "type": "integer",
+          "format": "int64"
+        },
+        "dateDebut": {
+          "type": "string",
+          "format": "date"
+        },
+        "dateFin": {
           "type": "string",
           "format": "date"
         }
@@ -1457,35 +1709,124 @@
         }
       }
     },
-    "VocationZA": {
+    "DescriptionFinancementOperation": {
       "type": "object",
       "properties": {
         "id": {
-          "description": "Identifiant de la vocation ZA",
+          "description": "Identifiant de la description de financement",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeFinancement": {
+          "description": "Type de financement",
+          "type": "object",
+          "$ref": "#/definitions/TypeFinancementOperation"
+        },
+        "description": {
+          "description": "Description du financement",
+          "type": "string"
+        }
+      }
+    },
+    "TypeActionOperation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant du type d'action opérateration",
           "type": "integer",
           "format": "int64"
         },
         "code": {
-          "description": "Code de la vocation ZA",
+          "description": "Code du type d'action opérateration",
           "type": "string"
         },
         "libelle": {
-          "description": "Libelle de la vocation ZA",
+          "description": "Libelle du type d'action opérateration",
           "type": "string"
         },
         "dateInactif": {
-          "description": "Date de mise en inactivité de la vocation ZA",
+          "description": "Date de mise en inactivité du type d'action opérateration",
           "type": "string",
           "format": "date"
         },
         "createUser": {
-          "description": "Utilisateur qui a créé le type de la vocation ZA",
+          "description": "Utilisateur qui a créé le type d'action opérateration",
           "type": "string"
         },
         "createDate": {
-          "description": "Date d'ajout de la vocation ZA",
+          "description": "Date d'ajout du type d'action opérateration",
           "type": "string",
           "format": "date"
+        }
+      }
+    },
+    "ActionOperation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de l'action d'opération",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeAction": {
+          "description": "Type d'action d'opération",
+          "type": "object",
+          "$ref": "#/definitions/TypeActionOperation"
+        },
+        "description": {
+          "description": "Description de l'action d'opération",
+          "type": "string"
+        }
+      }
+    },
+    "TypeActeur": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant du type d'acteur",
+          "type": "integer",
+          "format": "int64"
+        },
+        "code": {
+          "description": "Code du type d'acteur",
+          "type": "string"
+        },
+        "libelle": {
+          "description": "Libelle du type d'acteur",
+          "type": "string"
+        },
+        "dateInactif": {
+          "description": "Date de mise en inactivité du type d'acteur",
+          "type": "string",
+          "format": "date"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé le type du type d'acteur",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout du type d'acteur",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "Acteur": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant de l'acteur",
+          "type": "integer",
+          "format": "int64"
+        },
+        "typeActeur": {
+          "description": "Type d'acteur",
+          "type": "object",
+          "$ref": "#/definitions/TypeActeur"
+        },
+        "description": {
+          "description": "Description de l'acteur",
+          "type": "string"
         }
       }
     }

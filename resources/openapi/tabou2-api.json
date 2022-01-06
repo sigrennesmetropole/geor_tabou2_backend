@@ -4556,7 +4556,332 @@
           {
             "in": "query",
             "name": "inactif",
-            "description": "Recherche par libelle des vocations ZA",
+            "description": "Recherche par inactivité des vocations ZA",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/types-programmations": {
+      "get": {
+        "summary": "Liste des types de programmations",
+        "description": "Ensemble des types de programmations suivant le critère de recherche",
+        "operationId": "searchTypesProgrammations",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libelle des types de programmations",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par inactivité des types de programmations",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/types-contributions": {
+      "get": {
+        "summary": "Liste des types de contributions",
+        "description": "Ensemble des types de contributions suivant le critère de recherche",
+        "operationId": "searchTypesContributions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libelle des types de contributions",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par inactivité des types de contributions",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/types-fonciers": {
+      "get": {
+        "summary": "Liste des types de fonciers",
+        "description": "Ensemble des types de fonciers suivant le critère de recherche",
+        "operationId": "searchTypesFonciers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libelle des types de fonciers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par inactivité des types de fonciers",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/types-actions-operations": {
+      "get": {
+        "summary": "Liste des types d'actions opérations",
+        "description": "Ensemble des types d'actions opérations suivant le critère de recherche",
+        "operationId": "searchTypesActionsOperations",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libelle des types d'actions opérations",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par inactivité des types d'actions opérations",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "start",
+            "description": "Index de début - démarre à 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "resultsNumber",
+            "description": "Nombre de résultats à remonter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Nom du champ sur lequel trier les résultats",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asc",
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "required": false,
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      }
+    },
+    "/types-acteurs": {
+      "get": {
+        "summary": "Liste des types d'acteurs",
+        "description": "Ensemble des types d'acteurs  suivant le critère de recherche",
+        "operationId": "searchTypesActeurs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "libelle",
+            "description": "Recherche par libelle des types d'acteurs",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par inactivité des types d'acteurs",
             "required": false,
             "type": "boolean"
           },
