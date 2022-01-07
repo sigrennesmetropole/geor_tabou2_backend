@@ -30,13 +30,7 @@ import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
-import rm.tabou2.service.mapper.tabou.operation.ConsommationEspaceMapper;
-import rm.tabou2.service.mapper.tabou.operation.DecisionMapper;
-import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
-import rm.tabou2.service.mapper.tabou.operation.MaitriseOuvrageMapper;
-import rm.tabou2.service.mapper.tabou.operation.ModeAmenagementMapper;
-import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
-import rm.tabou2.service.mapper.tabou.operation.VocationMapper;
+import rm.tabou2.service.mapper.tabou.operation.*;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.storage.sig.dao.SecteurDao;
 import rm.tabou2.storage.sig.entity.SecteurEntity;
@@ -123,7 +117,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
     @BeforeEach
     public void initTest() {
         Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(OperationEntity.class))).thenReturn(true);
-        Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(Operation.class))).thenReturn(true);
+        Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(OperationIntermediaire.class))).thenReturn(true);
         Mockito.when(operationRightsHelper.checkCanCreateOperation(Mockito.any())).thenReturn(true);
         Mockito.when(operationRightsHelper.checkCanUpdateOperation(Mockito.any(), Mockito.any())).thenReturn(true);
     }
@@ -166,7 +160,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
 
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nom"));
 
-        Page<Operation> page = operationService.searchOperations(operationsCriteria, pageable);
+        Page<OperationIntermediaire> page = operationService.searchOperations(operationsCriteria, pageable);
 
         Assertions.assertNotNull(page.getContent());
         Assertions.assertEquals(1, page.getTotalElements());
@@ -178,7 +172,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
     @Test
     void testCannotCreateOperationWithInvalidParameters() {
 
-        final Operation operation = new Operation();
+        final OperationIntermediaire operation = new OperationIntermediaire();
         operation.setDiffusionRestreinte(true);
         operation.setNumAds("numads4");
 
@@ -198,7 +192,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
     @Test
     void testCannotUpdateOperationWithInvalidParameters() {
 
-        final Operation operation = new Operation();
+        final OperationIntermediaire operation = new OperationIntermediaire();
         operation.setDiffusionRestreinte(true);
         operation.setNumAds("numads4");
         operation.setSecteur(true);
@@ -229,7 +223,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspaceCode.EXTENSION);
         EtapeOperationEntity etape = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
 
-        Operation operation = new Operation();
+        OperationIntermediaire operation = new OperationIntermediaire();
         operation.setNom("nom4");
         operation.setDiffusionRestreinte(true);
         operation.setCode("code4");
@@ -255,7 +249,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
 
         operation = operationService.updateEtapeOfOperationId(operationId, etapeId);
 
-        Assertions.assertFalse(operation.isDiffusionRestreinte());
+        Assertions.assertFalse(operation.getDiffusionRestreinte());
 
     }
 

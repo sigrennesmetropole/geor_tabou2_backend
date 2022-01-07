@@ -21,6 +21,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
+import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.dao.operation.NatureDao;
@@ -74,7 +75,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
     @Test
     void testCanCreateOperation() {
 
-        Operation operation = new Operation();
+        OperationIntermediaire operation = new OperationIntermediaire();
         operation.setNom("nom1");
         operation.setDiffusionRestreinte(false);
         operation.setCode("code1");
@@ -89,7 +90,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
 
         Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
 
-        Operation operation = new Operation();
+        OperationIntermediaire operation = new OperationIntermediaire();
         operation.setNom("nom1");
         operation.setDiffusionRestreinte(true);
         operation.setCode("code1");
@@ -117,7 +118,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
 
         EtapeOperationEntity etapeOperationEntityNonRestreint = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
 
-        Operation operation = new Operation();
+        OperationIntermediaire operation = new OperationIntermediaire();
         operation.setId(operationEntity.getId());
         operation.setNom(operationEntity.getNom());
         operation.setCode(operationEntity.getCode());
@@ -150,7 +151,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
 
         EtapeOperationEntity etapeOperationEntityEtude = etapeOperationDao.findByCode("EN_ETUDE_PUBLIC");
 
-        Operation operation = new Operation();
+        OperationIntermediaire operation = new OperationIntermediaire();
         operation.setId(operationEntity.getId());
         operation.setNom(operationEntity.getNom());
         operation.setCode(operationEntity.getCode());
@@ -180,7 +181,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
 
         EtapeOperationEntity etapeOperationEntityNonRestreint = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
 
-        Operation operation = new Operation();
+        OperationIntermediaire operation = new OperationIntermediaire();
         operation.setId(operationEntity.getId());
         operation.setNom(operationEntity.getNom());
         operation.setCode(operationEntity.getCode());
@@ -213,7 +214,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
         EtapeOperationEntity etapeOperationEntityNonRestreint = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
         NatureEntity natureEntityZA = natureDao.findByLibelle(NatureLibelle.ZA);
 
-        Operation operation = new Operation();
+        OperationIntermediaire operation = new OperationIntermediaire();
         operation.setId(operationEntity.getId());
         operation.setNom(operationEntity.getNom());
         operation.setCode(operationEntity.getCode());
@@ -246,7 +247,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
 
         EtapeOperationEntity etapeOperationEntityNonRestreint = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
 
-        Operation operation = new Operation();
+        OperationIntermediaire operation = new OperationIntermediaire();
         operation.setId(operationEntity.getId());
         operation.setNom(operationEntity.getNom());
         operation.setCode(operationEntity.getCode());
@@ -276,7 +277,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
 
         EtapeOperationEntity etapeOperationEntityEnChantier = etapeOperationDao.findByCode("OPERATIONNEL_PUBLIC");
 
-        Operation operation = new Operation();
+        OperationIntermediaire operation = new OperationIntermediaire();
         operation.setId(operationEntity.getId());
         operation.setNom(operationEntity.getNom());
         operation.setCode(operationEntity.getCode());

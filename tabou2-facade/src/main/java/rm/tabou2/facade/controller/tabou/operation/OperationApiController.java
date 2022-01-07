@@ -11,15 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.facade.api.OperationsApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
-import rm.tabou2.service.dto.DocumentMetadata;
+import rm.tabou2.service.dto.TiersTypeTiers;
+import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.EtapeRestricted;
-import rm.tabou2.service.dto.Evenement;
-import rm.tabou2.service.dto.Operation;
-import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.ProgrammeLight;
-import rm.tabou2.service.dto.TiersTypeTiers;
+import rm.tabou2.service.dto.Evenement;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.tabou.evenement.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
@@ -30,16 +29,13 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
-import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.item.EtapeCriteria;
-import rm.tabou2.storage.tabou.item.OperationsCriteria;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 
 
@@ -65,29 +61,9 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     private OperationEmpriseHelper operationEmpriseHelper;
 
     @Override
-    public ResponseEntity<Operation> createOperation(@Valid Operation operation) throws Exception {
-
-        return new ResponseEntity<>(operationService.createOperation(operation), HttpStatus.OK);
-
-    }
-
-    @Override
-    public ResponseEntity<Operation> deleteEvenementByOperationId(Long evenementId, Long operationId) throws Exception {
-        evenementOperationService.deleteEvenementByOperationId(evenementId, operationId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @Override
     public ResponseEntity<Void> deleteTiersFromOperation(Long operationId, Long associationTiersId) throws Exception {
         operationTiersService.deleteTiersByOperationId(operationId, associationTiersId);
         return new ResponseEntity<>(HttpStatus.OK);
-
-    }
-
-    @Override
-    public ResponseEntity<Operation> updateOperation(@Valid Operation operation) throws Exception {
-
-        return new ResponseEntity<>(operationService.updateOperation(operation), HttpStatus.OK);
 
     }
 
@@ -112,13 +88,6 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<Operation> getOperationById(Long operationId) throws Exception {
-
-        return new ResponseEntity<>(operationService.getOperationById(operationId), HttpStatus.OK);
-
-    }
-
-    @Override
     public ResponseEntity<PageResult> searchTiersByOperationId(Long operationId, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
@@ -133,49 +102,6 @@ public class OperationApiController extends AbstractExportDocumentApi implements
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
-    }
-
-    @Override
-    public ResponseEntity<PageResult> searchOperations(@Valid String nom, @Valid String nature, @Valid String vocation, @Valid String decision,
-                                                       @Valid String modeAmenagement, @Valid String maitriseOuvrage, @Valid String consommationEspace,
-                                                       @Valid String etape, @Valid Boolean diffusionRestreinte, @Valid Boolean estSecteur,
-                                                       @Valid String code, @Valid String numAds, @Valid Date autorisationDateDebut,
-                                                       @Valid Date autorisationDateFin, @Valid Date operationnelDateDebut, @Valid Date operationnelDateFin,
-                                                       @Valid Date clotureDateDebut, @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer start,
-                                                       @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
-
-        OperationsCriteria operationsCriteria = new OperationsCriteria();
-
-        operationsCriteria.setNom(nom);
-        operationsCriteria.setNature(nature);
-        operationsCriteria.setDecision(decision);
-        operationsCriteria.setVocation(vocation);
-        operationsCriteria.setMaitriseOuvrage(maitriseOuvrage);
-        operationsCriteria.setConsommationEspace(consommationEspace);
-        operationsCriteria.setModeAmenagement(modeAmenagement);
-        operationsCriteria.setEtape(etape);
-        operationsCriteria.setCode(code);
-        operationsCriteria.setNumAds(numAds);
-
-        operationsCriteria.setDiffusionRestreinte(diffusionRestreinte);
-        operationsCriteria.setEstSecteur(estSecteur);
-
-        operationsCriteria.setTiers(tiers);
-
-        operationsCriteria.setAutorisationDateDebut(autorisationDateDebut);
-        operationsCriteria.setAutorisationDateFin(autorisationDateFin);
-
-        operationsCriteria.setOperationnelDateDebut(operationnelDateDebut);
-        operationsCriteria.setOperationnelDateFin(operationnelDateFin);
-
-        operationsCriteria.setClotureDateDebut(clotureDateDebut);
-        operationsCriteria.setClotureDateFin(clotureDateFin);
-
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationEntity.class);
-
-        Page<Operation> page = operationService.searchOperations(operationsCriteria, pageable);
-
-        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }
 
     @Override
@@ -206,11 +132,6 @@ public class OperationApiController extends AbstractExportDocumentApi implements
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
-    }
-
-    @Override
-    public ResponseEntity<Operation> updateEtapeByOperationId(Long operationId, @NotNull @Valid Long etapeId) throws Exception {
-        return new ResponseEntity<>(operationService.updateEtapeOfOperationId(operationId, etapeId), HttpStatus.OK);
     }
 
     @Override

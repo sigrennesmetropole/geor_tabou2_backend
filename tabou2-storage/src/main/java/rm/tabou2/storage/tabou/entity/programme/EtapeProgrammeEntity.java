@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -64,6 +65,18 @@ public class EtapeProgrammeEntity {
     )
     private Set<EtapeProgrammeEntity> nextEtapes;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EtapeProgrammeEntity that = (EtapeProgrammeEntity) o;
+        return getId() == that.getId() && Objects.equals(getLibelle(), that.getLibelle()) && getCode().equals(that.getCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getLibelle(), getCode());
+    }
 }
 
 

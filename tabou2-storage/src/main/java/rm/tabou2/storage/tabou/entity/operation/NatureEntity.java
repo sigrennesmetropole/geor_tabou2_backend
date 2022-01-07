@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -29,4 +30,16 @@ public class NatureEntity {
     public Set<OperationEntity> operations;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NatureEntity that = (NatureEntity) o;
+        return getId() == that.getId() && Objects.equals(getLibelle(), that.getLibelle());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getLibelle());
+    }
 }

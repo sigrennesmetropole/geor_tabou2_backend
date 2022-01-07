@@ -1,15 +1,15 @@
 package rm.tabou2.service.validator.operation.impl;
 
 import org.apache.commons.lang.StringUtils;
-import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.operation.ValidOperation;
 
 import javax.validation.ConstraintValidatorContext;
 
-public class ValidOperationValidator implements CustomConstraintValidator<ValidOperation, Operation> {
+public class ValidOperationValidator implements CustomConstraintValidator<ValidOperation, OperationIntermediaire> {
     @Override
-    public boolean isValid(Operation operation, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(OperationIntermediaire operation, ConstraintValidatorContext constraintValidatorContext) {
 
         // désactivation du message par défaut
         constraintValidatorContext.disableDefaultConstraintViolation();
@@ -21,7 +21,7 @@ public class ValidOperationValidator implements CustomConstraintValidator<ValidO
         }
 
         // code validation
-        boolean codeValidation = !StringUtils.isEmpty(operation.getCode()) ;
+        boolean codeValidation = !StringUtils.isEmpty(operation.getCode());
         if (!codeValidation) {
             addConstraintErrorProperty(constraintValidatorContext, "Le code de l'opération est invalide", "code");
         }
