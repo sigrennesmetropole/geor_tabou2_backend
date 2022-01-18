@@ -1,7 +1,6 @@
 package rm.tabou2.storage.tabou.entity.programme;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
@@ -21,7 +20,9 @@ import javax.persistence.Table;
 import java.util.*;
 
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"evenements", "etapeProgramme", "operation"})
 @Entity
 @Table(name = "tabou_programme")
 public class ProgrammeEntity extends GenericAuditableEntity {

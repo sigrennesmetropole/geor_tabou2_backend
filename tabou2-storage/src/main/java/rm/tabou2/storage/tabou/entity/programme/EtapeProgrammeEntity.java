@@ -1,8 +1,6 @@
 package rm.tabou2.storage.tabou.entity.programme;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -18,7 +16,9 @@ import javax.persistence.Table;
 import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"nextEtapes"})
 @Entity
 @Table(name = "tabou_etape_programme")
 @NoArgsConstructor

@@ -139,7 +139,7 @@ public class OperationApiController extends AbstractExportDocumentApi implements
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EvenementOperationEntity.class);
 
-        Page<Evenement> page = evenementOperationService.searchEvenementOperation(operationId, pageable);
+        Page<Evenement> page = evenementOperationService.searchEvenementsOperations(operationId, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 

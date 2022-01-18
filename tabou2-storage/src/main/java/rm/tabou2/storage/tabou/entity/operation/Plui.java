@@ -1,12 +1,15 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
+import lombok.Data;
+
 import javax.persistence.Embeddable;
 
+@Data
 @Embeddable
 public class Plui {
-    public Double densiteOap;
+    private Double densiteOap;
 
-    public String pluiDisposition;
+    private String pluiDisposition;
 
-    public String pluiAdaptation;
+    private String pluiAdaptation;
 }

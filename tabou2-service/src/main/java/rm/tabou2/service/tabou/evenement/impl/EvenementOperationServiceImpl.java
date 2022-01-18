@@ -10,7 +10,7 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
-import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaire;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.service.tabou.evenement.EvenementOperationService;
 import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
@@ -23,6 +23,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class EvenementOperationServiceImpl implements EvenementOperationService {
 
     @Autowired
@@ -44,15 +45,14 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
     private EvenementOperationRightsHelper evenementOperationRigthsHelper;
 
     @Override
-    @Transactional(readOnly = true)
-    public Page<Evenement> searchEvenementOperation(long operationId, Pageable pageable) {
+    public Page<Evenement> searchEvenementsOperations(long operationId, Pageable pageable) {
 
         return evenementOperationMapper.entitiesToDto(evenementOperationCustomDao.searchEvenementsOperation(operationId, pageable), pageable);
 
     }
 
     @Override
-    @Transactional()
+    @Transactional
     public void deleteEvenementByOperationId(long evenementId, long operationId) throws AppServiceException {
 
         Optional<EvenementOperationEntity> evenementOperationOpt = evenementOperationDao.findById(evenementId);

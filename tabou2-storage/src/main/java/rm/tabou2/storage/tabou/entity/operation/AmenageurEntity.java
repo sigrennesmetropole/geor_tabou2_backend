@@ -1,10 +1,15 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"typeAmenageur"})
 @Entity
 @Table(name = "tabou_amenageur")
 public class AmenageurEntity {
@@ -15,15 +20,23 @@ public class AmenageurEntity {
     private long id;
 
     @Basic
-    @Column(name = "nom")
+    @Column(name = "nom", length = 255)
     private String nom;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_type_amenageur")
     private TypeAmenageurEntity typeAmenageur;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_operation")
-    private OperationEntity operation;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AmenageurEntity that = (AmenageurEntity) o;
+        return getId() == that.getId() && Objects.equals(getNom(), that.getNom());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getNom());
+    }
 }

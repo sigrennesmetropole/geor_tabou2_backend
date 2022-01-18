@@ -1,10 +1,15 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"typeFoncier"})
 @Entity
 @Table(name = "tabou_description_foncier")
 public class DescriptionFoncierEntity {
@@ -26,7 +31,16 @@ public class DescriptionFoncierEntity {
     @JoinColumn(name = "id_type_foncier")
     private TypeFoncierEntity typeFoncier;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_operation")
-    private OperationEntity operation;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DescriptionFoncierEntity that = (DescriptionFoncierEntity) o;
+        return getId() == that.getId() && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getTaux(), that.getTaux());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getDescription(), getTaux());
+    }
 }

@@ -1,10 +1,15 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"typeContribution"})
 @Entity
 @Table(name = "tabou_contribution")
 public class ContributionEntity {
@@ -22,8 +27,16 @@ public class ContributionEntity {
     @JoinColumn(name = "id_type_contribution")
     private TypeContributionEntity typeContribution;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_operation")
-    private OperationEntity operation;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ContributionEntity that = (ContributionEntity) o;
+        return getId() == that.getId() && Objects.equals(getDescription(), that.getDescription());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getDescription());
+    }
 }

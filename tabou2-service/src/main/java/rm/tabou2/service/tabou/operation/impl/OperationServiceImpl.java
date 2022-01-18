@@ -33,7 +33,7 @@ import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
-import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaire;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.tabou.operation.OperationService;
@@ -141,7 +141,7 @@ public class OperationServiceImpl implements OperationService {
         }
 
         OperationEntity operationEntity = operationMapper.dtoToEntity(operation);
-        setMultivaluables(operation, operationEntity);
+        assignMultivaluables(operation, operationEntity);
 
         EtapeOperationEntity etape = operationEntity.getEtapeOperation();
 
@@ -190,7 +190,7 @@ public class OperationServiceImpl implements OperationService {
         boolean etapeChanged = operationEntity.getEtapeOperation().getId() != etapeOperationEntity.getId();
 
         operationMapper.dtoToEntity(operation, operationEntity);
-        setMultivaluables(operation, operationEntity);
+        assignMultivaluables(operation, operationEntity);
 
         if (etapeOperationEntity.isRemoveRestriction()) {
             operation.setDiffusionRestreinte(false);
@@ -217,7 +217,7 @@ public class OperationServiceImpl implements OperationService {
         return me.updateOperation(operation);
     }
 
-    private void setMultivaluables(OperationIntermediaire operation, OperationEntity operationEntity){
+    private void assignMultivaluables(OperationIntermediaire operation, OperationEntity operationEntity){
         if(operation.getEtape() != null && operation.getEtape().getId() != null){
             EtapeOperationEntity etapeOperation = etapeOperationDao.findById(operation.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape d'opération id=" + operation.getId() + " n'a été trouvée"));
             operationEntity.setEtapeOperation(etapeOperation);

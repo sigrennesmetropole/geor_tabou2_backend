@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.constant.NatureLibelle;
 import rm.tabou2.service.dto.Emprise;
-import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaire;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.storage.sig.dao.EnDiffusDao;
 import rm.tabou2.storage.sig.dao.SecteurDao;
 import rm.tabou2.storage.sig.dao.ZaDao;

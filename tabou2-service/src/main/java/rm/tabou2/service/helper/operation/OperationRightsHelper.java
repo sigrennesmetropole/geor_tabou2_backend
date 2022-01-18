@@ -5,9 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaire;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 

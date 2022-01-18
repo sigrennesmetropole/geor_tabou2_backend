@@ -153,7 +153,7 @@ create table tabou_operation (
                            plhlogement_livre integer,
                            ql1 varchar(255),
                            scot boolean,
-                           densite_scot,
+                           densite_scot double precision,
                            ql3 varchar(255),
                            nb_entreprise integer,
                            nb_salarie integer,
@@ -161,10 +161,10 @@ create table tabou_operation (
                            id_entite_referente bigserial,
                            objectifs text,
                            id_vocation_za bigserial,
-                           paf_taux double,
+                           paf_taux double precision,
                            id_type_occupation bigserial,
                            id_outil_foncier bigserial,
-                           densite_oap double,
+                           densite_oap double precision,
                            plui_disposition text,
                            plui_adaptation text,
                            outil_amenagement varchar(255),
@@ -176,7 +176,7 @@ create table tabou_operation (
                            usage_actuel varchar(255),
                            avancement_administratif text,
                            environnement text,
-                           surface_realisee double,
+                           surface_realisee double precision,
                            create_date timestamp,
                            create_user varchar(255),
                            modif_date timestamp,
@@ -244,7 +244,7 @@ create table if not exists tabou_description_foncier(
     id_operation bigserial,
     id_type_foncier bigserial,
     description text,
-    taux double,
+    taux double precision,
     primary key (id_description_foncier)
 );
 
@@ -392,8 +392,7 @@ create table tabou_tiers (
                        nom varchar(255),
                        est_prive boolean,
                        adresse_cp varchar(255),
-                       adresse_num varchar(255),
-                       adresse_rue varchar(255),
+                       adresse varchar(255),
                        adresse_ville varchar(255),
                        telecopie varchar(255),
                        telephone varchar(255),
@@ -566,7 +565,7 @@ create table if not exists tabou_vocation_za(
     create_date timestamp,
     create_user varchar(20),
     primary key(id_vocation_za)
-    );
+);
 
 -- Ajout des clés étrangères
 
@@ -637,27 +636,27 @@ alter table if exists tabou_operation
 alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_plh
         foreign key (id_plh)
-            references (tabou_plh);
+            references tabou_plh;
 
 alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_entite_referente
         foreign key (id_entite_referente)
-            references (tabou_entite_referente);
+            references tabou_entite_referente;
 
 alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_vocation_za
         foreign key (id_vocation_za)
-            references (tabou_vocation_za);
+            references tabou_vocation_za;
 
 alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_type_occupation
         foreign key (id_type_occupation)
-            references (tabou_type_occupation);
+            references tabou_type_occupation;
 
 alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_outil_foncier
         foreign key (id_outil_foncier)
-            references (tabou_outil_foncier);
+            references tabou_outil_foncier;
 
 alter table if exists tabou_operation_tiers
     add constraint fk_tabou_operation_tiers_tabou_operation

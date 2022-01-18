@@ -1,7 +1,7 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
@@ -9,8 +9,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
 
-//@EqualsAndHashCode(callSuper = true, exclude = {"programmes"})
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "tabou_operation")
 public class OperationEntity extends GenericAuditableEntity {
@@ -247,5 +247,39 @@ public class OperationEntity extends GenericAuditableEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getCode(), getNom());
+    }
+
+    @Override
+    public String toString() {
+        return "OperationEntity{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", nom='" + nom + '\'' +
+                ", operation='" + operation + '\'' +
+                ", description='" + description + '\'' +
+                ", diffusionRestreinte=" + diffusionRestreinte +
+                ", secteur=" + secteur +
+                ", autorisationDate=" + autorisationDate +
+                ", operationnelDate=" + operationnelDate +
+                ", clotureDate=" + clotureDate +
+                ", surfaceTotale=" + surfaceTotale +
+                ", nbLogementPrevu=" + nbLogementPrevu +
+                ", ql1='" + ql1 + '\'' +
+                ", scot=" + scot +
+                ", densiteScot=" + densiteScot +
+                ", ql3='" + ql3 + '\'' +
+                ", nbEntreprise=" + nbEntreprise +
+                ", nbSalarie=" + nbSalarie +
+                ", numAds='" + numAds + '\'' +
+                ", objectifs='" + objectifs + '\'' +
+                ", pafTaux=" + pafTaux +
+                ", outilAmenagement='" + outilAmenagement + '\'' +
+                ", etude='" + etude + '\'' +
+                ", localisation='" + localisation + '\'' +
+                ", usageActuel='" + usageActuel + '\'' +
+                ", avancementAdministratif='" + avancementAdministratif + '\'' +
+                ", environnement='" + environnement + '\'' +
+                ", surfaceRealisee=" + surfaceRealisee +
+                '}';
     }
 }

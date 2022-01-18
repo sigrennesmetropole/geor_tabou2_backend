@@ -7,7 +7,7 @@ import rm.tabou2.service.exception.AppServiceException;
 
 public interface EvenementOperationService {
 
-    Page<Evenement> searchEvenementOperation(long operationId, Pageable pageable);
+    Page<Evenement> searchEvenementsOperations(long operationId, Pageable pageable);
 
     /**
      * Suppression d'un évènement d'une opération.

@@ -4,7 +4,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Evenement;
-import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaire;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 
 @Component
 public class EvenementOperationRightsHelper {

@@ -1,7 +1,7 @@
 package rm.tabou2.service.validator.operation.impl;
 
 import org.apache.commons.lang.StringUtils;
-import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaire;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.operation.ValidOperation;
 

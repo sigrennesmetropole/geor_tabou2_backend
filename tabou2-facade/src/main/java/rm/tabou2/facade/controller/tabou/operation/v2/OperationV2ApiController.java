@@ -10,7 +10,7 @@ import rm.tabou2.facade.api.v2.OperationsApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.PageResult;
-import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaireToOperationV2Mapper;
+import rm.tabou2.service.mapper.tabou.operation.OperationV2Mapper;
 import rm.tabou2.service.tabou.evenement.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.utils.PaginationUtils;
@@ -31,7 +31,7 @@ public class OperationV2ApiController extends AbstractExportDocumentApi implemen
     private EvenementOperationService evenementOperationService;
 
     @Autowired
-    private OperationIntermediaireToOperationV2Mapper mapper;
+    private OperationV2Mapper mapper;
 
     @Override
     public ResponseEntity<Operation> createOperation(@Valid Operation operation) throws Exception {

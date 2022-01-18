@@ -11,8 +11,8 @@ import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.OperationV1;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
-import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaire;
-import rm.tabou2.service.mapper.tabou.operation.OperationIntermediaireToOperationV1Mapper;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
+import rm.tabou2.service.mapper.tabou.operation.OperationV1Mapper;
 import rm.tabou2.service.tabou.evenement.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
@@ -48,7 +48,7 @@ public class OperationV1ApiController extends AbstractExportDocumentApi implemen
     private OperationEmpriseHelper operationEmpriseHelper;
 
     @Autowired
-    private OperationIntermediaireToOperationV1Mapper mapper;
+    private OperationV1Mapper mapper;
 
     @Override
     public ResponseEntity<OperationV1> createOperation(@Valid OperationV1 operation) throws Exception {
