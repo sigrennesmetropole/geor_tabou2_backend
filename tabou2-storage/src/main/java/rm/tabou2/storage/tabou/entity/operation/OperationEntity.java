@@ -1,32 +1,18 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.*;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @Entity
-@Table(name = "tabou_operation", schema = "tabou2")
+@Table(name = "tabou_operation")
 public class OperationEntity extends GenericAuditableEntity {
 
     @Id
@@ -73,23 +59,23 @@ public class OperationEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "surface_totale")
-    private Integer surfaceTotale;
+    private BigDecimal surfaceTotale;
 
     @Basic
     @Column(name = "nb_logement_prevu")
     private Integer nbLogementPrevu;
 
     @Basic
-    @Column(name = "plhlogement_prevu")
-    private Integer plhLogementPrevu;
-
-    @Basic
     @Column(name = "QL1")
     private String ql1;
 
     @Basic
-    @Column(name = "QL2")
-    private Boolean ql2;
+    @Column(name = "scot")
+    private Boolean scot;
+
+    @Basic
+    @Column(name = "densite_scot")
+    private Double densiteScot;
 
     @Basic
     @Column(name = "QL3")
@@ -104,12 +90,44 @@ public class OperationEntity extends GenericAuditableEntity {
     private Integer nbSalarie;
 
     @Basic
-    @Column(name = "plhlogement_livre")
-    private Integer plhlogementLivre;
-
-    @Basic
     @Column(name = "num_ads")
     private String numAds;
+
+    @Basic
+    @Column(name = "objectifs")
+    private String objectifs;
+
+    @Basic
+    @Column(name = "paf_taux")
+    private Double pafTaux;
+
+    @Basic
+    @Column(name = "outil_amenagement")
+    private String outilAmenagement;
+
+    @Basic
+    @Column(name = "etude")
+    private String etude;
+
+    @Basic
+    @Column(name = "localisation")
+    private String localisation;
+
+    @Basic
+    @Column(name = "usage_actuel")
+    private String usageActuel;
+
+    @Basic
+    @Column(name = "avancement_administratif")
+    private String avancementAdministratif;
+
+    @Basic
+    @Column(name = "environnement")
+    private String environnement;
+
+    @Basic
+    @Column(name = "surface_realisee")
+    private Double surfaceRealisee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_etape_operation")
@@ -150,6 +168,64 @@ public class OperationEntity extends GenericAuditableEntity {
     @JoinColumn(name = "id_operation")
     private Set<ProgrammeEntity> programmes = new HashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_plh")
+    private PlhEntity plh;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_entite_referente")
+    private EntiteReferenteEntity entiteReferente;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_operation")
+    private Set<InformationProgrammationEntity> informationsProgrammation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_vocation_za")
+    private VocationZAEntity vocationZa;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_operation")
+    private Set<ContributionEntity> contributions;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_operation")
+    private Set<DescriptionFoncierEntity> descriptionsFoncier;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_type_occupation")
+    private TypeOccupationEntity typeOccupation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_outil_foncier")
+    private OutilFoncierEntity outilFoncier;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_operation")
+    private Set<AmenageurEntity> amenageurs;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_description_concertation")
+    private DescriptionConcertationEntity concertation;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_operation")
+    private Set<DescriptionFinancementOperationEntity> financements;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_operation")
+    private Set<ActionOperationEntity> actions;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_operation")
+    private Set<ActeurEntity> acteurs;
+
+    @Embedded
+    @AttributeOverride(name = "densiteOap", column = @Column(name = "densite_oap"))
+    @AttributeOverride(name = "pluiDisposition", column = @Column(name = "plui_disposition"))
+    @AttributeOverride(name = "pluiAdaptation", column = @Column(name = "plui_adaptation"))
+    private Plui plui;
+
     public void addEvenementOperation(EvenementOperationEntity evenementOperationEntity) {
         this.evenements.add(evenementOperationEntity);
     }
@@ -160,4 +236,50 @@ public class OperationEntity extends GenericAuditableEntity {
                 .findFirst();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OperationEntity that = (OperationEntity) o;
+        return getId() == that.getId() && getCode().equals(that.getCode()) && getNom().equals(that.getNom());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCode(), getNom());
+    }
+
+    @Override
+    public String toString() {
+        return "OperationEntity{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", nom='" + nom + '\'' +
+                ", operation='" + operation + '\'' +
+                ", description='" + description + '\'' +
+                ", diffusionRestreinte=" + diffusionRestreinte +
+                ", secteur=" + secteur +
+                ", autorisationDate=" + autorisationDate +
+                ", operationnelDate=" + operationnelDate +
+                ", clotureDate=" + clotureDate +
+                ", surfaceTotale=" + surfaceTotale +
+                ", nbLogementPrevu=" + nbLogementPrevu +
+                ", ql1='" + ql1 + '\'' +
+                ", scot=" + scot +
+                ", densiteScot=" + densiteScot +
+                ", ql3='" + ql3 + '\'' +
+                ", nbEntreprise=" + nbEntreprise +
+                ", nbSalarie=" + nbSalarie +
+                ", numAds='" + numAds + '\'' +
+                ", objectifs='" + objectifs + '\'' +
+                ", pafTaux=" + pafTaux +
+                ", outilAmenagement='" + outilAmenagement + '\'' +
+                ", etude='" + etude + '\'' +
+                ", localisation='" + localisation + '\'' +
+                ", usageActuel='" + usageActuel + '\'' +
+                ", avancementAdministratif='" + avancementAdministratif + '\'' +
+                ", environnement='" + environnement + '\'' +
+                ", surfaceRealisee=" + surfaceRealisee +
+                '}';
+    }
 }

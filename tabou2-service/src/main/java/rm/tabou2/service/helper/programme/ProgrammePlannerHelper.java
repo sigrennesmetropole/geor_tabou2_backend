@@ -1,12 +1,13 @@
 package rm.tabou2.service.helper.programme;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Programme;
-import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
-import rm.tabou2.storage.ddc.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.item.AgapeoSuiviHabitat;
+import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
 
 @Component
 public class ProgrammePlannerHelper {
@@ -17,16 +18,27 @@ public class ProgrammePlannerHelper {
     @Autowired
     private PermisConstruireDao permisConstruireDao;
 
+    public void computeSuiviHabitatOfProgramme(Page<Programme> programmes) {
+        for (Programme programme : programmes.getContent()) {
+            computeSuiviHabitatOfProgramme(programme);
+        }
+    }
+
     public void computeSuiviHabitatOfProgramme(Programme programme) {
-        computePermisSuiviHabitatOfProgramme(programme);
-        computeAgapeoSuiviHabitatOfProgramme(programme);
+        if (programme.getNumAds() != null) {
+            computePermisSuiviHabitatOfProgramme(programme);
+            computeAgapeoSuiviHabitatOfProgramme(programme);
+        }
     }
 
     /**
      * Mise à jour des paramètres date agapeo en fonction des données agapeo du programme
+     *
      * @param programme programme
      */
     public void computePermisSuiviHabitatOfProgramme(Programme programme) {
+
+        //Attention, on peut retourner plusieurs lignes , dans ces cas prendre la date la plus récente
         PermisConstruireSuiviHabitat permisConstruireSuiviHabitat = permisConstruireDao.getPermisSuiviHabitatByNumAds(programme.getNumAds());
 
         programme.setDatDate(permisConstruireSuiviHabitat != null && permisConstruireSuiviHabitat.getDatDate() != null
@@ -44,6 +56,7 @@ public class ProgrammePlannerHelper {
 
     /**
      * Mise à jour des paramètres nombre de logements en fonction des permis de constuire du programme
+     *
      * @param programme programme
      */
     public void computeAgapeoSuiviHabitatOfProgramme(Programme programme) {

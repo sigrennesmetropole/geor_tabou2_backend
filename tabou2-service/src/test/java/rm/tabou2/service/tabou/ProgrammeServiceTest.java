@@ -23,7 +23,10 @@ import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
+import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
+import rm.tabou2.storage.sig.dao.ProgrammeRmDao;
+import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
@@ -47,10 +50,16 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
     private ProgrammeDao programmeDao;
 
     @Autowired
+    private ProgrammeRmDao programmeRmDao;
+
+    @Autowired
     private OperationDao operationDao;
 
     @Autowired
     private ProgrammeService programmeService;
+
+    @Autowired
+    private EtapeProgrammeMapper etapeProgrammeMapper;
 
     @MockBean
     private ProgrammeRightsHelper programmeRightsHelper;
@@ -78,26 +87,36 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         operationEntity.setDiffusionRestreinte(true);
         operationEntity = operationDao.save(operationEntity);
 
+        EtapeProgrammeEntity etapePublic = etapeProgrammeDao.findByCode("EN_PROJET_PUBLIC");
+        EtapeProgrammeEntity etapeRestreinte = etapeProgrammeDao.findByCode("EN_PROJET_OFF");
+
+        ProgrammeRmEntity programmeRm = new ProgrammeRmEntity();
+        programmeRm.setId(1);
+        programmeRmDao.save(programmeRm);
+
         Programme programme1 = new Programme();
         programme1.setNom("nom1");
-        programme1.setDiffusionRestreinte(false);
         programme1.setCode("code1");
         programme1.setNumAds("numads1");
         programme1.setOperationId(operationEntity.getId());
+        programme1.setEtape(etapeProgrammeMapper.entityToDto(etapePublic));
+        programme1.setIdEmprise(1);
 
         Programme programme2 = new Programme();
         programme2.setNom("nom2");
-        programme2.setDiffusionRestreinte(true);
         programme2.setCode("code2");
         programme2.setNumAds("numads2");
         programme2.setOperationId(operationEntity.getId());
+        programme2.setEtape(etapeProgrammeMapper.entityToDto(etapeRestreinte));
+        programme2.setIdEmprise(1);
 
         Programme programme3 = new Programme();
         programme3.setNom("nom3");
-        programme3.setDiffusionRestreinte(false);
         programme3.setCode("code3");
         programme3.setNumAds("numads3");
         programme3.setOperationId(operationEntity.getId());
+        programme3.setEtape(etapeProgrammeMapper.entityToDto(etapePublic));
+        programme3.setIdEmprise(1);
 
         programmeService.createProgramme(programme1);
         programmeService.createProgramme(programme2);
@@ -129,7 +148,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
                 () -> programmeService.createProgramme(programme)
         );
 
-        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "operationId"));
+        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "operationId", "etape"));
 
     }
 
@@ -160,15 +179,23 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         operationEntity.setDiffusionRestreinte(true);
         operationEntity = operationDao.save(operationEntity);
 
+        ProgrammeRmEntity programmeRm = new ProgrammeRmEntity();
+        programmeRm.setId(1);
+        programmeRmDao.save(programmeRm);
+
         Operation operation = new Operation();
         operation.setId(operationEntity.getId());
 
+        EtapeProgrammeEntity etapeRestreinte = etapeProgrammeDao.findByCode("EN_PROJET_OFF");
+
         Programme programme = new Programme();
         programme.setNom("nom4");
-        programme.setDiffusionRestreinte(true);
+        programme.setEtape(etapeProgrammeMapper.entityToDto(etapeRestreinte));
         programme.setCode("code4");
         programme.setNumAds("numads4");
         programme.setOperationId(operationEntity.getId());
+        programme.setIdEmprise(programmeRm.getId());
+
 
         programme = programmeService.createProgramme(programme);
 

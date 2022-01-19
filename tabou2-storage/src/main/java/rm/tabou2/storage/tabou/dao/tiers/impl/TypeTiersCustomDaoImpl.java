@@ -13,6 +13,7 @@ import rm.tabou2.storage.tabou.dao.tiers.TypeTiersCustomDao;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -28,8 +29,7 @@ public class TypeTiersCustomDaoImpl extends AbstractCustomDaoImpl implements Typ
     private static final String FIELD_DATE_INACTIF = "dateInactif";
 
 
-    @Qualifier("tabouEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
 
     @Override
@@ -59,11 +59,11 @@ public class TypeTiersCustomDaoImpl extends AbstractCustomDaoImpl implements Typ
     /**
      * Construction de la requête de recherche
      *
-     * @param libelle
-     * @param inactif
-     * @param builder
-     * @param criteriaQuery
-     * @param root
+     * @param libelle libellé du type tiers
+     * @param inactif true si inactif
+     * @param builder criteria build
+     * @param criteriaQuery critria query
+     * @param root root
      */
     private void buildQuery(String libelle, Boolean inactif, CriteriaBuilder builder,
                             CriteriaQuery<TypeTiersEntity> criteriaQuery, Root<TypeTiersEntity> root) {

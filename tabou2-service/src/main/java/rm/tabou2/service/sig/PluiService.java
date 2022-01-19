@@ -1,9 +1,25 @@
 package rm.tabou2.service.sig;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.PluiZonage;
 
-import java.util.List;
-
 public interface PluiService {
-    List<PluiZonage> searchPlui(String keyword, Integer start, Integer resultsNumber, String orderBy, Boolean asc);
+
+    /**
+     * Recherche de zonage Plui.
+     *
+     * @param libelle  libellé du Plui
+     * @param pageable paramètre lié à la pagination
+     * @return liste des zonage Plui correspondants à la recherche
+     */
+    Page<PluiZonage> searchPlui(String libelle, Pageable pageable);
+
+    /**
+     * Récupération d'un Zonage Plui à partir de son identifiant.
+     *
+     * @param pluiId identifiant du zonage Plui
+     * @return Zonage Plui
+     */
+    PluiZonage getPluiById(int pluiId);
 }

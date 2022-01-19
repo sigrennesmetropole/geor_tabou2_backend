@@ -1,6 +1,6 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -15,10 +15,20 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"nextEtapes"})
 @Entity
-@Table(name = "tabou_etape_operation", schema = "tabou2")
+@Table(name = "tabou_etape_operation")
+@NoArgsConstructor
+@AllArgsConstructor
 public class EtapeOperationEntity {
+
+    public EtapeOperationEntity(long id, String code, String libelle) {
+        this.id = id;
+        this.libelle = libelle;
+        this.code = code;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +59,6 @@ public class EtapeOperationEntity {
     @ManyToMany
     @JoinTable(
             name = "tabou_etape_operation_workflow",
-            schema = "tabou2",
             joinColumns = @JoinColumn(name = "id_etape_operation", referencedColumnName = "id_etape_operation"),
             inverseJoinColumns = @JoinColumn(name = "id_etape_operation_next", referencedColumnName = "id_etape_operation")
     )

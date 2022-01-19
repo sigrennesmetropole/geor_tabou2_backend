@@ -1,15 +1,15 @@
 package rm.tabou2.service.validator.operation.impl;
 
-import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.operation.ValidOperationUpdate;
 
 import javax.validation.ConstraintValidatorContext;
 
-public class ValidOperationUpdateValidator implements CustomConstraintValidator<ValidOperationUpdate, Operation> {
+public class ValidOperationUpdateValidator implements CustomConstraintValidator<ValidOperationUpdate, OperationIntermediaire> {
 
     @Override
-    public boolean isValid(Operation operation, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(OperationIntermediaire operation, ConstraintValidatorContext constraintValidatorContext) {
         // désactivation du message par défaut
         constraintValidatorContext.disableDefaultConstraintViolation();
 

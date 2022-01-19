@@ -6,9 +6,8 @@ import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.storage.tabou.item.TiersCriteria;
 
-import java.util.List;
-
 public interface TiersService {
+
     Tiers getTiersById(Long tiersId);
 
     Tiers createTiers(Tiers tiers);
@@ -18,6 +17,4 @@ public interface TiersService {
     Tiers inactivateTiers(long tiersId) throws AppServiceException;
 
     Page<Tiers> searchTiers(TiersCriteria tiersCriteria, Pageable pageable);
-
-    List<Tiers> getTiersByOperationId(Long operationId);
 }

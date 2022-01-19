@@ -1,0 +1,789 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+    "version": "0.0.1",
+    "title": "tabou2",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "%host%",
+  "basePath": "/tabou2",
+  "schemes": [
+    "http"
+  ],
+  "tags": [
+    {
+      "name": "tiers",
+      "description": "API de gestion des tiers"
+    }
+  ],
+  "paths": {
+    "/tiers": {
+      "get": {
+        "summary": "Recherche des tiers V2",
+        "operationId": "searchTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom du tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "tiersPrive",
+            "description": "Recherche par tiers privé si true, false si société",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "adresseVille",
+            "description": "Recherche par adresse / ville du tiers",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par tiers inactif",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un tiers",
+        "operationId": "createTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Nouveau tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un tiers",
+        "operationId": "updateTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "tiers",
+            "description": "Tiers à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}": {
+      "get": {
+        "summary": "Récupération d'un tiers",
+        "operationId": "getTiersById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}/inactivate": {
+      "put": {
+        "summary": "Rends un tiers inactif",
+        "operationId": "inactivateTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}/contacts": {
+      "get": {
+        "summary": "Recherche les contacts tiers",
+        "operationId": "searchContactTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom du contact",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "inactif",
+            "description": "Recherche par contact tiers inactif",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "description": "Nom du champ sur lequel trier les résultats",
+            "type": "string"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'un contact tiers",
+        "operationId": "createContactTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "contactTiers",
+            "description": "Nouveau contact tiers",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ContactTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ContactTiers"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'un contact tiers",
+        "operationId": "updateContactTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "contactTiers",
+            "description": "Contact tiers à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ContactTiers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ContactTiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}/contacts/{contactTiersId}": {
+      "get": {
+        "summary": "Récupération du détail d'un contact tiers",
+        "operationId": "getContactTiersById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "contactTiersId",
+            "description": "Identifiant du contact tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ContactTiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/tiers/{tiersId}/contacts/{contactTiersId}/inactivate": {
+      "put": {
+        "summary": "Rends un contact tiers inactif",
+        "operationId": "inactivateContactTiers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "tiersId",
+            "description": "Identifiant du tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "contactTiersId",
+            "description": "Identifiant du contact tiers",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ContactTiers"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations": {
+      "get": {
+        "summary": "Recherche des operations",
+        "description": "Ensemble des opérations",
+        "operationId": "searchOperations",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nom",
+            "description": "Recherche par nom",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "nature",
+            "description": "Recherche par nature",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "vocation",
+            "description": "Recherche par vocation",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "decision",
+            "description": "Recherche par decision",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "modeAmenagement",
+            "description": "Recherche par mode d'aménagement",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "maitriseOuvrage",
+            "description": "Recherche par maitrise d'ouvrage",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "consommationEspace",
+            "description": "Recherche par consommation d'espace",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "etape",
+            "description": "Recherche par étape",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "diffusionRestreinte",
+            "description": "Indique si les opérations à diffusion restreinte doivent être affichés si les droits le permettent",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "estSecteur",
+            "description": "True si recherche sur les secteur, false si recherche par opération",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "code",
+            "description": "Recherche par code",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "numAds",
+            "description": "Recherche par numéro ADS",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "autorisationDateDebut",
+            "description": "Borne inférieure de recherche par date d'autorisation",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "autorisationDateFin",
+            "description": "Borne supérieure de recherche par date d'autorisation",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "operationnelDateDebut",
+            "description": "Borne inférieure de recherche par date opérationnelle",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "operationnelDateFin",
+            "description": "Borne supérieure de recherche par date opérationnelle",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateDebut",
+            "description": "Borne inférieure de recherche par date de cloture",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "clotureDateFin",
+            "description": "Borne supérieure de recherche par date de cloture",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "tiers",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Recherche par tiers"
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "description": "Index de début - démarre à 0",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "resultsNumber",
+            "in": "query",
+            "required": false,
+            "description": "Nombre de résultats à remonter",
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description": "Nom du champ sur lequel trier les résultats"
+          },
+          {
+            "name": "asc",
+            "in": "query",
+            "required": false,
+            "description": "Indique si le tri doit être fait par ordre ascendant",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/PageResult"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajout d'une opération",
+        "operationId": "createOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "operation",
+            "description": "Nouvelle opération",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Modification d'une opération",
+        "operationId": "updateOperation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "operation",
+            "description": "Opération à modifier",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        }
+      }
+    },
+    "/operations/{operationId}": {
+      "get": {
+        "summary": "Récupération du détail d'une opération d'aménagement",
+        "operationId": "getOperationById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/etapes": {
+      "put": {
+        "summary": "Modification de l'étape d'avancement d'une opération d'aménagement",
+        "operationId": "updateEtapeByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "etapeId",
+            "description": "Identifiant de la nouvelle étape",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    },
+    "/operations/{operationId}/evenements/{evenementId}": {
+      "delete": {
+        "summary": "Suppression d'un évènement d'une opération d'aménagement",
+        "operationId": "deleteEvenementByOperationId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "evenementId",
+            "description": "Evènement à supprimer",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
+          }
+        }
+      }
+    }
+  }
+}

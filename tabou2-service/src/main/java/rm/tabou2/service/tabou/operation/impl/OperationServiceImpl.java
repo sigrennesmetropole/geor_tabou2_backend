@@ -10,39 +10,41 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.WebClientResponseException.NotFound;
+import rm.tabou2.service.alfresco.AlfrescoService;
+import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
+import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
-import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
+import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
+import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
-import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
-import rm.tabou2.storage.tabou.dao.operation.EvenementOperationDao;
-import rm.tabou2.storage.tabou.dao.operation.OperationCustomDao;
-import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.*;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
-import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
-import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
-import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.*;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.text.MessageFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -50,8 +52,10 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class OperationServiceImpl implements OperationService {
 
+    public static final String ERROR_RETRIEVE_METADATA_DOCUMENT = "Impossible de récupérer les métadonnées du document ";
+    public static final String ERROR_RETRIEVE_DOCUMENT_CONTENT = "Impossible de télécharger le contenu du document ";
+    public static final String ERROR_DELETE_DOCUMENT = "Impossible de supprimer le document ";
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationServiceImpl.class);
-
     @Autowired
     private OperationDao operationDao;
 
@@ -66,6 +70,27 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private TypeEvenementDao typeEvenementDao;
+
+    @Autowired
+    private NatureDao natureDao;
+
+    @Autowired
+    private VocationDao vocationDao;
+
+    @Autowired
+    private VocationZADao vocationZADao;
+
+    @Autowired
+    private DecisionDao decisionDao;
+
+    @Autowired
+    private MaitriseOuvrageDao maitriseOuvrageDao;
+
+    @Autowired
+    private ModeAmenagementDao modeAmenagementDao;
+
+    @Autowired
+    private ConsommationEspaceDao consommationEspaceDao;
 
     @Autowired
     private OperationEmpriseHelper operationEmpriseHelper;
@@ -89,6 +114,9 @@ public class OperationServiceImpl implements OperationService {
     private EvenementOperationMapper evenementOperationMapper;
 
     @Autowired
+    private DocumentMapper documentMapper;
+
+    @Autowired
     private OperationService me;
 
     @Value("${typeevenement.changementetape.code}")
@@ -97,9 +125,12 @@ public class OperationServiceImpl implements OperationService {
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
 
+    @Autowired
+    private AlfrescoService alfrescoService;
+
     @Override
     @Transactional
-    public Operation createOperation(Operation operation) {
+    public OperationIntermediaire createOperation(OperationIntermediaire operation) {
 
         // Ajout des valeurs par défaut
         setOperationDefaultValue(operation);
@@ -109,23 +140,25 @@ public class OperationServiceImpl implements OperationService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de création de l'operation " + operation.getNom());
         }
 
-        // Ajout de l'état initial
-        String code = BooleanUtils.isTrue(operation.isDiffusionRestreinte()) ? "EN_PROJET_OFF" : "EN_PROJET_PUBLIC";
+        OperationEntity operationEntity = operationMapper.dtoToEntity(operation);
+        assignMultivaluables(operation, operationEntity);
 
-        EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findByTypeAndCode(Etape.TypeEnum.START.toString(), code);
-        if (etapeOperationEntity == null) {
-            throw new NoSuchElementException("Aucune étape initiale de type " + Etape.TypeEnum.START.toString() + " n'a été " +
-                    "défini pour les opérations avec diffusion restreinte = " + operation.isDiffusionRestreinte());
+        EtapeOperationEntity etape = operationEntity.getEtapeOperation();
+
+        //Vérification des autorisation sur l'étape
+        if (etape.getCode().equals(Etape.ModeEnum.OFF.toString()) && !authentificationHelper.hasRestreintAccess()) {
+            LOGGER.warn("L'utilisateur n'ayant pas au moins le rôle référent ne peut pas créer une opération avec une etape en diffusion restreinte");
+            //TODO : throw new AppServiceException()
+
+        } else {
+            operationEntity.setDiffusionRestreinte(etape.getCode().equals(Etape.ModeEnum.OFF.toString()));
         }
 
-        OperationEntity operationEntity = operationMapper.dtoToEntity(operation);
-        operationEntity.setEtapeOperation(etapeOperationEntity);
-
         // ajout d'un événement système de changement d'état
-        operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperationEntity.getLibelle()));
+        operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etape.getLibelle()));
 
         operationDao.save(operationEntity);
-        Operation operationSaved = operationMapper.entityToDto(operationEntity);
+        OperationIntermediaire operationSaved = operationMapper.entityToDto(operationEntity);
 
         operationEmpriseHelper.saveEmprise(operationSaved, operation.getIdEmprise());
 
@@ -135,7 +168,7 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     @Transactional
-    public Operation updateOperation(Operation operation) {
+    public OperationIntermediaire updateOperation(OperationIntermediaire operation) {
 
         OperationEntity operationEntity = operationDao.findOneById(operation.getId());
 
@@ -157,6 +190,11 @@ public class OperationServiceImpl implements OperationService {
         boolean etapeChanged = operationEntity.getEtapeOperation().getId() != etapeOperationEntity.getId();
 
         operationMapper.dtoToEntity(operation, operationEntity);
+        assignMultivaluables(operation, operationEntity);
+
+        if (etapeOperationEntity.isRemoveRestriction()) {
+            operation.setDiffusionRestreinte(false);
+        }
 
         // Ajout d'un événement système en cas de changement d'étape
         if (etapeChanged) {
@@ -171,27 +209,70 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     @Transactional
-    public Operation updateEtapeOfOperationId(long operationId, long etapeId) {
+    public OperationIntermediaire updateEtapeOfOperationId(long operationId, long etapeId) {
         EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findOneById(etapeId);
 
-        Operation operation = getOperationById(operationId);
+        OperationIntermediaire operation = getOperationById(operationId);
         operation.setEtape(etapeOperationMapper.entityToDto(etapeOperationEntity));
         return me.updateOperation(operation);
     }
 
+    private void assignMultivaluables(OperationIntermediaire operation, OperationEntity operationEntity){
+        if(operation.getEtape() != null && operation.getEtape().getId() != null){
+            EtapeOperationEntity etapeOperation = etapeOperationDao.findById(operation.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape d'opération id=" + operation.getId() + " n'a été trouvée"));
+            operationEntity.setEtapeOperation(etapeOperation);
+        }
+
+        if(operation.getNature() != null && operation.getNature().getId() != null){
+            NatureEntity nature = natureDao.findById(operation.getNature().getId()).orElseThrow(() -> new NoSuchElementException("Aucune nature id = " + operation.getNature().getId() + " n'a été trouvée"));
+            operationEntity.setNature(nature);
+        }
+
+        if(operation.getVocation() != null && operation.getVocation().getId() != null){
+            VocationEntity vocation = vocationDao.findById(operation.getVocation().getId()).orElseThrow(() -> new NoSuchElementException("Aucune vocation id = " + operation.getVocation().getId() + " n'a été trouvée"));
+            operationEntity.setVocation(vocation);
+        }
+
+        if(operation.getVocationZa() != null && operation.getVocationZa().getId() != null){
+            VocationZAEntity vocationZA = vocationZADao.findById(operation.getVocationZa().getId()).orElseThrow(() -> new NoSuchElementException("Aucune vocation id = " + operation.getVocation().getId() + " n'a été trouvée"));
+            operationEntity.setVocationZa(vocationZA);
+        }
+
+        if(operation.getDecision() != null && operation.getDecision().getId() != null){
+            DecisionEntity decision = decisionDao.findById(operation.getDecision().getId()).orElseThrow(() -> new NoSuchElementException("Aucune décision id = " + operation.getDecision().getId() + " n'a été trouvée"));
+            operationEntity.setDecision(decision);
+        }
+
+        if(operation.getMaitriseOuvrage() != null && operation.getMaitriseOuvrage().getId() != null){
+            MaitriseOuvrageEntity maitriseOuvrage = maitriseOuvrageDao.findById(operation.getMaitriseOuvrage().getId()).orElseThrow(() -> new NoSuchElementException("Aucune maitrîse d'ouvrage id = " + operation.getMaitriseOuvrage().getId() + " n'a été trouvée"));
+            operationEntity.setMaitriseOuvrage(maitriseOuvrage);
+        }
+
+        if(operation.getModeAmenagement() != null && operation.getModeAmenagement().getId() != null){
+            ModeAmenagementEntity modeAmenagement = modeAmenagementDao.findById(operation.getModeAmenagement().getId()).orElseThrow(() -> new NoSuchElementException("Aucun mode d'aménagement id = " + operation.getModeAmenagement().getId() + " n'a été trouvé"));
+            operationEntity.setModeAmenagement(modeAmenagement);
+        }
+
+        if(operation.getConsommationEspace() != null && operation.getConsommationEspace().getId() != null){
+            ConsommationEspaceEntity consommationEspace = consommationEspaceDao.findById(operation.getConsommationEspace().getId())
+                    .orElseThrow(() -> new NoSuchElementException("Aucune consommation d'espace id = " + operation.getConsommationEspace().getId() + " n'a été trouvée"));
+            operationEntity.setConsommationEspace(consommationEspace);
+        }
+    }
+
     @Override
-    public Page<Operation> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable) {
+    public Page<OperationIntermediaire> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable) {
         // Si l'utilisateur n'a pas le droit de voir les opérations en diffusion restreinte, on filtre sur false
         if (BooleanUtils.isTrue(operationsCriteria.getDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
             operationsCriteria.setDiffusionRestreinte(false);
             LOGGER.warn("Accès non autorisé à des opérations d'accès restreint");
         }
-        return operationMapper.entitiesToDto(operationCustomDao.searchOperations(operationsCriteria, pageable),pageable);
+        return operationMapper.entitiesToDto(operationCustomDao.searchOperations(operationsCriteria, pageable), pageable);
     }
 
 
     @Override
-    public Operation getOperationById(long operationId) {
+    public OperationIntermediaire getOperationById(long operationId) {
 
         OperationEntity operationEntity = getOperationEntityById(operationId);
 
@@ -209,9 +290,10 @@ public class OperationServiceImpl implements OperationService {
 
     /**
      * Construction d'un évenement opération système
-     * @param code                      code du type d'événement
-     * @param evenementDescription      description de l'événement
-     * @return                          evenement crée
+     *
+     * @param code                 code du type d'événement
+     * @param evenementDescription description de l'événement
+     * @return evenement crée
      */
     private EvenementOperationEntity buildEvenementOperationSysteme(String code, String evenementDescription) {
 
@@ -231,8 +313,9 @@ public class OperationServiceImpl implements OperationService {
 
     /**
      * Construction d'un évenement opération système après changement d'étape
-     * @param libelleEtape      libelle de l'étape
-     * @return                  evenement crée
+     *
+     * @param libelleEtape libelle de l'étape
+     * @return evenement crée
      */
     private EvenementOperationEntity buildEvenementOperationEtapeUpdated(String libelleEtape) {
         return this.buildEvenementOperationSysteme(etapeUpdatedCode, formatEtapeUpdatedMessage(libelleEtape));
@@ -247,13 +330,13 @@ public class OperationServiceImpl implements OperationService {
     public Evenement addEvenementByOperationId(Long operationId, Evenement evenement) throws AppServiceException {
         // Operation
         OperationEntity operationEntity = operationDao.findOneById(operationId);
-        Operation operation = operationMapper.entityToDto(operationEntity);
+        OperationIntermediaire operation = operationMapper.entityToDto(operationEntity);
         if (!operationRightsHelper.checkCanUpdateOperation(operation, operation)) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un évènement pour l'opération id = " + operationId);
         }
 
         //type evenement
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         if (typeEvenementEntity.isSysteme()) {
             throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
         }
@@ -284,7 +367,7 @@ public class OperationServiceImpl implements OperationService {
 
         // Récupération de l'opération et recherche de l'évènement à modifier
         OperationEntity operationEntity = operationDao.findOneById(idOperation);
-        Operation operation = operationMapper.entityToDto(operationEntity);
+        OperationIntermediaire operation = operationMapper.entityToDto(operationEntity);
 
         Optional<EvenementOperationEntity> optionalEvenementOperationEntity = operationEntity.lookupEvenementById(evenement.getId());
         if (optionalEvenementOperationEntity.isEmpty()) {
@@ -298,7 +381,7 @@ public class OperationServiceImpl implements OperationService {
         }
 
         // type evenement
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getIdType());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         evenementOperationEntity.setTypeEvenement(typeEvenementEntity);
 
         evenementOperationMapper.dtoToEntity(evenement, evenementOperationEntity);
@@ -314,6 +397,135 @@ public class OperationServiceImpl implements OperationService {
         return evenementOperationMapper.entityToDto(evenementOperationEntity);
     }
 
+
+    @Override
+    public DocumentMetadata getDocumentMetadata(long operationId, String documentId) throws AppServiceException {
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de consultation dessus
+        OperationEntity operation = getOperationEntityById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operation))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de consulter l'opération id = " + operationId);
+        }
+
+        try {
+            //Récupération du document Dans alfresco
+            return documentMapper.entityToDto(alfrescoService.getDocumentMetadata(documentId));
+
+        } catch (NotFound e) {
+            throw new NoSuchElementException(ERROR_RETRIEVE_METADATA_DOCUMENT + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException(ERROR_RETRIEVE_METADATA_DOCUMENT + documentId, e);
+        }
+
+    }
+
+    @Override
+    public DocumentMetadata updateDocumentMetadata(long operationId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException {
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de consultation dessus
+        OperationEntity operation = getOperationEntityById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operation))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de consulter l'opération id = " + operationId);
+        }
+
+        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.OPERATION, operationId, documentId, documentMetadata, false));
+
+    }
+
+
+    @Override
+    public DocumentContent downloadDocument(long operationId, String documentId) throws AppServiceException {
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de suppression dessus
+        OperationIntermediaire operation = getOperationById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operation)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        try {
+            return alfrescoService.downloadDocument(AlfrescoTabouType.OPERATION, operationId, documentId);
+
+        } catch (WebClientResponseException.NotFound e) {
+            throw new NoSuchElementException(ERROR_RETRIEVE_DOCUMENT_CONTENT + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException(ERROR_RETRIEVE_DOCUMENT_CONTENT + documentId, e);
+        }
+
+
+    }
+
+    @Override
+    public void updateDocumentContent(long operationId, String documentId, MultipartFile file) throws AppServiceException {
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits de suppression dessus
+        OperationIntermediaire operation = getOperationById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operation)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        alfrescoService.updateDocumentContent(AlfrescoTabouType.OPERATION, operationId, documentId, file);
+
+    }
+
+    @Override
+    public DocumentMetadata addDocument(long operationId, String nom, String libelle, MultipartFile file) throws AppServiceException {
+
+        //On vérifie que l'opération existe et que l'utilisateur a bien les droits d'ajout sur le document
+        OperationIntermediaire operation = getOperationById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operation)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        //Récupération du document Dans alfresco
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelle, AlfrescoTabouType.OPERATION, operationId, file));
+
+    }
+
+
+    @Override
+    public Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable) {
+
+        OperationEntity operationEntity = operationDao.findOneById(operationId);
+
+        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operationEntity))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
+        }
+
+        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.OPERATION, operationId, nom, libelle, typeMime, pageable);
+
+        List<DocumentMetadata> results = documentMapper.entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
+
+        return new PageImpl<>(results, pageable, documentRoot.getList().getPagination().getTotalItems());
+    }
+
+    @Override
+    public void deleteDocument(long operationId, String documentId) throws AppServiceException {
+
+        //On vérifie que l'opération existe
+        OperationIntermediaire operationToDelete = getOperationById(operationId);
+
+        // Vérification des droits utilisateur
+        if (!operationRightsHelper.checkCanUpdateOperation(operationToDelete, operationToDelete)) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de suppression de l'opération " + operationToDelete.getNom());
+        }
+
+        try {
+            //Suppression du document Dans alfresco
+            alfrescoService.deleteDocument(AlfrescoTabouType.OPERATION, operationId, documentId);
+
+        } catch (WebClientResponseException.NotFound e) {
+            throw new NoSuchElementException(ERROR_DELETE_DOCUMENT + documentId);
+        } catch (Exception e) {
+            throw new AppServiceException(ERROR_DELETE_DOCUMENT + documentId, e);
+        }
+
+    }
+
     private OperationEntity getOperationEntityById(long operationId) {
 
         OperationEntity operationEntity = operationDao.findOneById(operationId);
@@ -326,14 +538,13 @@ public class OperationServiceImpl implements OperationService {
     }
 
     /**
-     * Ajout des valeurs par défaut pour une opération
+     * Ajout des valeurs par défaut pour une opération.
+     *
      * @param operation opération
      */
-    private void setOperationDefaultValue(Operation operation) {
-        if (operation.isDiffusionRestreinte() == null) {
-            operation.setDiffusionRestreinte(true);
-        }
-        if (operation.isSecteur() == null) {
+    private void setOperationDefaultValue(OperationIntermediaire operation) {
+
+        if (operation.getSecteur() == null) {
             operation.setSecteur(false);
         }
     }

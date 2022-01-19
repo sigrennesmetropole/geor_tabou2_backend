@@ -1,9 +1,6 @@
 package rm.tabou2.storage.common.impl;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.Date;
 import java.util.List;
 
@@ -24,9 +21,9 @@ public abstract class AbstractCustomDaoImpl {
     protected void predicateStringCriteria(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
         if (criteria != null) {
             if (criteria.indexOf('*') == -1) {
-                predicates.add(builder.equal(root.get(type), criteria));
+                predicates.add(builder.equal(builder.lower(root.get(type)), criteria.toLowerCase()));
             } else {
-                predicates.add(builder.like(root.get(type), criteria.replace("*", "%")));
+                predicates.add(builder.like(builder.lower(root.get(type)), criteria.replace("*", "%").toLowerCase()));
             }
         }
     }
@@ -39,6 +36,12 @@ public abstract class AbstractCustomDaoImpl {
                 predicates.add(builder.like(join.get(type), criteria.replace("*", "%")));
             }
         }
+    }
+
+    protected void predicateLongCriteriaForJoin(Long criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Join<?, ?> join) {
+
+        predicates.add(builder.equal(join.get(type), criteria));
+
     }
 
     protected void predicateDateCriteria(Date dateDebut, Date dateFin, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
@@ -56,12 +59,20 @@ public abstract class AbstractCustomDaoImpl {
 
     }
 
-    protected void predicateCriteriaNullOrNot(Boolean criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+    protected void predicateIntegerCriteria(Integer criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+
+        if (criteria != null) {
+            predicates.add(builder.equal(root.get(type), criteria));
+        }
+
+    }
+
+    protected void predicateCriteriaNullOrNot(Boolean criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, From<?, ?> from) {
 
         if (Boolean.TRUE.equals(criteria)) {
-            predicates.add(builder.isNull(root.get(type)));
+            predicates.add(builder.isNull(from.get(type)));
         } else {
-            predicates.add(builder.isNotNull(root.get(type)));
+            predicates.add(builder.isNotNull(from.get(type)));
         }
 
     }
@@ -86,6 +97,15 @@ public abstract class AbstractCustomDaoImpl {
 
     }
 
+    protected void predicateLongCriteria(Long criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+
+        if (criteria != null) {
+            predicates.add(builder.equal(root.get(type), criteria));
+        }
+
+    }
+
+
     private <T extends Comparable<? super T>> void predicateBetweenCriteria(T lower, T upper, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
         if (lower != null && upper != null) {
@@ -102,5 +122,6 @@ public abstract class AbstractCustomDaoImpl {
 
         }
     }
+
 
 }

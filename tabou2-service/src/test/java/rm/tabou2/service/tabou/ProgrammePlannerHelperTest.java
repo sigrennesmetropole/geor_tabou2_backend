@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
-import rm.tabou2.storage.ddc.dao.PermisConstruireDao;
-import rm.tabou2.storage.ddc.entity.PermisConstruireEntity;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 

@@ -15,7 +15,7 @@ public class ValidEvenementCreationValidator implements CustomConstraintValidato
         constraintValidatorContext.disableDefaultConstraintViolation();
 
         // idType validation
-        boolean idTypeValidation = evenement.getIdType() != null && evenement.getIdType() > 0;
+        boolean idTypeValidation = evenement.getTypeEvenement() != null && evenement.getTypeEvenement().getId() != null && evenement.getTypeEvenement().getId() > 0;
         if (!idTypeValidation) {
             addConstraintErrorProperty(constraintValidatorContext, "Le type de l'évenement est invalide", "idType");
         }

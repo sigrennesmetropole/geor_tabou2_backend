@@ -6,7 +6,7 @@
     <parent>
         <artifactId>tabou2</artifactId>
         <groupId>rm</groupId>
-        <version>1.0.2</version>
+        <version>1.2.1</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -40,6 +40,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>commons-lang</groupId>
@@ -157,7 +163,7 @@
                         </goals>
                         <configuration>
                             <modelPackage>rm.tabou2.service.dto</modelPackage>
-                            <inputSpec>resources/openapi/tabou2.json</inputSpec>
+                            <inputSpec>resources/openapi/tabou2-model.json</inputSpec>
                             <language>spring</language>
                             <!--<generatorName>spring</generatorName>-->
                             <library>spring-mvc</library>

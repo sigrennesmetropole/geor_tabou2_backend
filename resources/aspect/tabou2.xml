@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.alfresco.org/model/dictionary/1.0"	name="tabou2:tabou2">
+
+	<description>Tabou2 Model</description>
+	<author>Open-Groupe</author>
+	<version>1.0</version>
+
+	<imports>
+		<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+	</imports>
+	<namespaces>
+		<namespace uri="http://rm.tabou2.service.alfresco/1.0" prefix="tabou2" />
+	</namespaces>
+
+	<aspects>
+		<aspect name="tabou2:document">
+			<title>Document Tabou2</title>
+			<properties>
+				<property name="tabou2:objet">
+					<title>Objet Tabou</title>
+					<description>Programme ou Opération</description>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<index enabled="true">
+						<tokenised>TRUE</tokenised>
+						<facetable>false</facetable>
+					</index>
+				</property>
+				<property name="tabou2:libelleTypeDocument">
+					<title>Libellé du type de document</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+					<index enabled="true">
+						<tokenised>FALSE</tokenised>
+						<facetable>true</facetable>
+					</index>
+				</property>
+				<property name="tabou2:id">
+					<title>Identifiant</title>
+					<description>Identifiant de l'objet tabou</description>
+					<type>d:long</type>
+					<mandatory>false</mandatory>
+					<index enabled="true">
+						<tokenised>TRUE</tokenised>
+					</index>
+				</property>
+			</properties>
+		</aspect>
+	</aspects>
+</model>
