@@ -1,8 +1,6 @@
 package rm.tabou2.storage.tabou.dao.programme.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +20,7 @@ import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -41,7 +40,9 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DAT_DA
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DIFFUSION_RETREINTE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DOC_DATE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_PROGRAMME;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIVRAISON_DATE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_ACCESS_AIDE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_LOCAT_AIDE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NATURE;
@@ -55,8 +56,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_T
 @Repository
 public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements ProgrammeCustomDao {
 
-    @Qualifier("tabouEntityManager")
-    @Autowired
+    @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
 
     @Override
@@ -83,7 +83,7 @@ public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements Pro
         Root<ProgrammeEntity> searchRoot = searchQuery.from(ProgrammeEntity.class);
         buildQuery(programmeCriteria, builder, searchQuery, searchRoot);
 
-        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
+        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
 
         TypedQuery<ProgrammeEntity> typedQuery = entityManager.createQuery(searchQuery);
         List<ProgrammeEntity> programmeEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
@@ -93,82 +93,94 @@ public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements Pro
     private void buildQuery(ProgrammeCriteria programmeCriteria, CriteriaBuilder builder,
                             CriteriaQuery<?> criteriaQuery, Root<ProgrammeEntity> root) {
 
-        if (programmeCriteria != null) {
-            List<Predicate> predicates = new ArrayList<>();
+        if (programmeCriteria == null) {
+            return;
+        }
 
-            //nom
-            predicateStringCriteria(programmeCriteria.getNom(), FIELD_NOM, predicates, builder, root);
+        List<Predicate> predicates = new ArrayList<>();
 
-            //etape
-            Join<ProgrammeEntity, EtapeProgrammeEntity> etapeJoin = root.join(FIELD_ETAPE_PROGRAMME);
-            predicateStringCriteriaForJoin(programmeCriteria.getEtape(), FIELD_LIBELLE, predicates, builder, etapeJoin);
+        //nom
+        predicateStringCriteria(programmeCriteria.getNom(), FIELD_NOM, predicates, builder, root);
 
-            //diffusionRestreinte
-            if (programmeCriteria.getDiffusionRestreinte() != null) {
-                predicateBooleanCriteria(programmeCriteria.getDiffusionRestreinte(), FIELD_DIFFUSION_RETREINTE, predicates, builder, root);
-            } else {
-                predicates.add(builder.isFalse(root.get(FIELD_DIFFUSION_RETREINTE)));
-            }
+        //etape
+        Join<ProgrammeEntity, EtapeProgrammeEntity> etapeJoin = root.join(FIELD_ETAPE_PROGRAMME);
+        predicateStringCriteriaForJoin(programmeCriteria.getEtape(), FIELD_LIBELLE, predicates, builder, etapeJoin);
 
-            //code
-            predicateStringCriteria(programmeCriteria.getCode(), FIELD_CODE, predicates, builder, root);
+        //diffusionRestreinte
+        if (programmeCriteria.getDiffusionRestreinte() != null) {
+            predicateBooleanCriteria(programmeCriteria.getDiffusionRestreinte(), FIELD_DIFFUSION_RETREINTE, predicates, builder, root);
+        } else {
+            predicates.add(builder.isFalse(root.get(FIELD_DIFFUSION_RETREINTE)));
+        }
 
-            //clotureDate
-            predicateDateCriteria(programmeCriteria.getClotureDateDebut(), programmeCriteria.getClotureDateFin(), FIELD_CLOTURE_DATE, predicates, builder, root);
+        //code
+        predicateStringCriteria(programmeCriteria.getCode(), FIELD_CODE, predicates, builder, root);
 
-            //numAds
-            predicateStringCriteria(programmeCriteria.getNumAds(), FIELD_NUM_ADS, predicates, builder, root);
+        //clotureDate
+        predicateDateCriteria(programmeCriteria.getClotureDateDebut(), programmeCriteria.getClotureDateFin(), FIELD_CLOTURE_DATE, predicates, builder, root);
 
-            //tiers
-            if (programmeCriteria.getTiers() != null) {
+        //numAds
+        predicateStringCriteria(programmeCriteria.getNumAds(), FIELD_NUM_ADS, predicates, builder, root);
 
-                Join<ProgrammeEntity, ProgrammeTiersEntity> programmeTiersJoin = root.join(FIELD_PROGRAMME_TIERS);
-                Join<ProgrammeTiersEntity, TypeTiersEntity> typeTiersyJoin = programmeTiersJoin.join(FIELD_TYPE_TIERS);
-                Join<ProgrammeTiersEntity, TiersEntity> tiersJoin = programmeTiersJoin.join(FIELD_TIERS);
+        //tiers
+        if (programmeCriteria.getTiers() != null) {
 
-                predicateStringCriteriaForJoin(programmeCriteria.getTiers(), FIELD_NOM, predicates, builder, tiersJoin);
+            Join<ProgrammeEntity, ProgrammeTiersEntity> programmeTiersJoin = root.join(FIELD_PROGRAMME_TIERS);
+            Join<ProgrammeTiersEntity, TypeTiersEntity> typeTiersyJoin = programmeTiersJoin.join(FIELD_TYPE_TIERS);
+            Join<ProgrammeTiersEntity, TiersEntity> tiersJoin = programmeTiersJoin.join(FIELD_TIERS);
 
-                predicates.add(builder.equal(typeTiersyJoin.get(FIELD_LIBELLE), programmeCriteria.getTiers()));
+            predicateStringCriteriaForJoin(programmeCriteria.getTiers(), FIELD_NOM, predicates, builder, tiersJoin);
 
-            }
-
-            // nom et nature de l'opération
-            if(programmeCriteria.getNomOperation() != null || programmeCriteria.getNatureOperation() != null) {
-                Join<ProgrammeEntity, OperationEntity> operationJoin = root.join(FIELD_OPERATION);
-                if (programmeCriteria.getNomOperation() != null) {
-                    predicateStringCriteriaForJoin(programmeCriteria.getNomOperation(), FIELD_NOM, predicates, builder, operationJoin);
-                }
-                if (programmeCriteria.getNatureOperation() != null) {
-                    Join<OperationEntity, NatureEntity> natureJoin = operationJoin.join(FIELD_NATURE);
-                    predicateStringCriteriaForJoin(programmeCriteria.getNatureOperation(), FIELD_LIBELLE, predicates, builder, natureJoin);
-                }
-            }
-
-            //attributionFonciereAnnee
-            predicateYearCriteria(programmeCriteria.getAttributionFonciereAnneeDebut(), programmeCriteria.getAttributionFonciereAnneeFin(), FIELD_ATTRIBUTION_FONCIERE_ANNEE, predicates, builder, root);
-
-            //attributionDate
-            predicateDateCriteria(programmeCriteria.getAttributionDateDebut(), programmeCriteria.getAttributionDateFin(), FIELD_ATTRIBUTION_DATE, predicates, builder, root);
-
-            //commercialisationDate
-            predicateDateCriteria(programmeCriteria.getCommercialisationDateDebut(), programmeCriteria.getCommercialisationDateFin(), FIELD_COMMERCIALISATION_DATE, predicates, builder, root);
-
-            //ADSDate
-            predicateDateCriteria(programmeCriteria.getAdsDateDebut(), programmeCriteria.getAdsDateFin(), FIELD_ADS_DATE_PREVU, predicates, builder, root);
-
-            //DOCDate
-            predicateDateCriteria(programmeCriteria.getDocDateDebut(), programmeCriteria.getDocDateFin(), FIELD_DOC_DATE_PREVU, predicates, builder, root);
-
-            //DATDate
-            predicateDateCriteria(programmeCriteria.getDatDateDebut(), programmeCriteria.getDatDateFin(), FIELD_DAT_DATE_PREVU, predicates, builder, root);
-
-            //logementsAidés
-            predicateBooleanOrGreaterThanIntegerCriteria(programmeCriteria.isLogementsAides(), 0, List.of(FIELD_LOGEMENTS_LOCAT_AIDE_PREVU, FIELD_LOGEMENTS_ACCESS_AIDE_PREVU), predicates, builder, root);
-
-            if (CollectionUtils.isNotEmpty(predicates)) {
-                criteriaQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
-            }
+            predicates.add(builder.equal(typeTiersyJoin.get(FIELD_LIBELLE), programmeCriteria.getTiers()));
 
         }
+
+        // nom et nature de l'opération
+        Join<ProgrammeEntity, OperationEntity> operationJoin = root.join(FIELD_OPERATION);
+        if (programmeCriteria.getNomOperation() != null) {
+            predicateStringCriteriaForJoin(programmeCriteria.getNomOperation(), FIELD_NOM, predicates, builder, operationJoin);
+        }
+        if (programmeCriteria.getNatureOperation() != null) {
+            Join<OperationEntity, NatureEntity> natureJoin = operationJoin.join(FIELD_NATURE);
+            predicateStringCriteriaForJoin(programmeCriteria.getNatureOperation(), FIELD_LIBELLE, predicates, builder, natureJoin);
+        }
+
+
+        //identifiant de l'opération
+        if (programmeCriteria.getOperationId() > 0) {
+            predicateLongCriteriaForJoin(programmeCriteria.getOperationId(), FIELD_ID, predicates, builder, operationJoin);
+        }
+
+        //attributionFonciereAnnee
+        predicateYearCriteria(programmeCriteria.getAttributionFonciereAnneeDebut(), programmeCriteria.getAttributionFonciereAnneeFin(), FIELD_ATTRIBUTION_FONCIERE_ANNEE, predicates, builder, root);
+
+        //attributionDate
+        predicateDateCriteria(programmeCriteria.getAttributionDateDebut(), programmeCriteria.getAttributionDateFin(), FIELD_ATTRIBUTION_DATE, predicates, builder, root);
+
+        //commercialisationDate
+        predicateDateCriteria(programmeCriteria.getCommercialisationDateDebut(), programmeCriteria.getCommercialisationDateFin(), FIELD_COMMERCIALISATION_DATE, predicates, builder, root);
+
+        //ADSDate
+        predicateDateCriteria(programmeCriteria.getAdsDateDebut(), programmeCriteria.getAdsDateFin(), FIELD_ADS_DATE_PREVU, predicates, builder, root);
+
+        //Date de livraison
+        predicateDateCriteria(programmeCriteria.getLivraisonDateDebut(), programmeCriteria.getLivraisonDateFin(), FIELD_LIVRAISON_DATE, predicates, builder, root);
+
+        //DOCDate
+        predicateDateCriteria(programmeCriteria.getDocDateDebut(), programmeCriteria.getDocDateFin(), FIELD_DOC_DATE_PREVU, predicates, builder, root);
+
+        //DATDate
+        predicateDateCriteria(programmeCriteria.getDatDateDebut(), programmeCriteria.getDatDateFin(), FIELD_DAT_DATE_PREVU, predicates, builder, root);
+
+        //logementsAidés
+        if (programmeCriteria.getLogementsAides() != null) {
+            predicateBooleanOrGreaterThanIntegerCriteria(programmeCriteria.getLogementsAides(), 0, List.of(FIELD_LOGEMENTS_LOCAT_AIDE_PREVU, FIELD_LOGEMENTS_ACCESS_AIDE_PREVU), predicates, builder, root);
+        }
+
+        if (CollectionUtils.isNotEmpty(predicates)) {
+            criteriaQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
+        }
+
     }
 }
+

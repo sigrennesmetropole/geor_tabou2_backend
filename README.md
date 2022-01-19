@@ -125,7 +125,7 @@ Il est à noter que l'application doit être démarrée avec l'option suivante a
 
 ## II - Test de l'application
 
-Pour tester le bon fonctionnement de l'application, il faut accéder à l'URL swagger : http://localhost:8080/v1/swagger-ui.html
+Pour tester le bon fonctionnement de l'application, il faut accéder à l'URL swagger : http://localhost:8080/swagger-ui.html
 
 Afin de pouvoir appeler les URLs d'authentification, installer une extension au navigateur permettant de modifier les headers (ModHeader pour chrome)
 Et ajouter les header suivants :  

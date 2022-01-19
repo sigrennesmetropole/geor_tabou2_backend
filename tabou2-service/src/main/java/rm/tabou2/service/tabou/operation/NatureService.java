@@ -1,17 +1,18 @@
 package rm.tabou2.service.tabou.operation;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.Nature;
-
-import java.util.List;
 
 public interface NatureService {
 
     /**
-     * Retourne la liste des natures
+     * Retourne la liste des natures.
      *
      * @param onlyActive true si doit seulement retourner la liste des natures actives
-     * @return liste des nature
+     * @param pageable   paramètres de pagination
+     * @return liste des natures
      */
-    List<Nature> getAllNatures(Boolean onlyActive);
+    Page<Nature> searchNatures(Boolean onlyActive, Pageable pageable);
 
 }

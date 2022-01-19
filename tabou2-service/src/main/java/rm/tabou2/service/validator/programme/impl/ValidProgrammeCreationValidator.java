@@ -14,12 +14,18 @@ public class ValidProgrammeCreationValidator implements CustomConstraintValidato
         // désactivation du message par défaut
         constraintValidatorContext.disableDefaultConstraintViolation();
 
+        // etape validation
+        boolean etapeValidation = programme.getEtape() != null && programme.getEtape().getId() > 0;
+        if (!etapeValidation) {
+            addConstraintErrorProperty(constraintValidatorContext, "L'étape du programme est invalide", "etape");
+        }
+
         // operation validation
         boolean operationIdValidation = programme.getOperationId() != null;
         if (!operationIdValidation) {
             addConstraintErrorProperty(constraintValidatorContext, "L'opération associée au programme est invalide'", "operationId");
         }
 
-        return operationIdValidation;
+        return etapeValidation && operationIdValidation;
     }
 }

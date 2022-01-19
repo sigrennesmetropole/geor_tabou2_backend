@@ -35,26 +35,9 @@ CREATE EXTENSION fuzzystrmatch;
 CREATE EXTENSION postgis_tiger_geocoder;
 
 
--- Création de la table des permis de construire : nécessaire seulement pour environnement de dev et intégration continue
-
-create table if not exists ddc.pc_ddc (
-    id bigserial,
-    num_ads varchar(255),
-    date_depot_dossier timestamp,
-    date_completude_dossier timestamp,
-    ads_date timestamp,
-    doc_date timestamp,
-    dat_date timestamp,
-    surf_autre float,
-    surf_bureaux float,
-    surf_commerces float,
-    surf_equip_pub float,
-    surf_industries float,
-    primary key (id)
-);
 
 -- Scripts temporaire. A revoir pour intégrer les scripts fournis par denis
-CREATE TABLE if not exists limite_admin.commune_emprise
+CREATE TABLE limite_admin.commune_emprise
 (
     objectid integer NOT NULL,
     code_insee numeric(15,0) NOT NULL,
@@ -62,8 +45,9 @@ CREATE TABLE if not exists limite_admin.commune_emprise
     commune_agglo smallint,
     x_centrbrg numeric(38,8),
     y_centrbrg numeric(38,8),
+    st_area_geom_poly_ numeric(38,8) NOT NULL,
+    st_length_geom_poly_ numeric(38,8) NOT NULL,
     shape geometry,
-    code_postal character varying(30),
     CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'POLYGON'::text OR shape IS NULL),
     CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948)
 )
@@ -180,6 +164,20 @@ CREATE TABLE urba_foncier.oa_secteur
         OIDS=FALSE
     );
 
+CREATE TABLE urba_foncier.oa_programme
+(
+    objectid integer NOT NULL,
+    programme character varying(200),
+    shape geometry,
+    id_tabou integer,
+    CONSTRAINT enforce_dims_shape CHECK (st_ndims(shape) = 2),
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'MULTIPOLYGON'::text OR geometrytype(shape) = 'POLYGON'::text),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948)
+)
+    WITH (
+        OIDS=FALSE
+    );
+
 CREATE TABLE economie.za
 (
     objectid integer NOT NULL,
@@ -229,11 +227,91 @@ CREATE TABLE if not exists limite_admin.quartier
     OIDS=FALSE
 );
 
-ALTER TABLE ddc.pc_ddc  OWNER TO ddc_user;
+CREATE TABLE urba_foncier.instructeur_secteur
+(
+    id integer NOT NULL,
+    nom_com character varying(250),
+    code_insee integer,
+    nuquart integer,
+    instructeur character varying(250),
+    assistant character varying(250),
+    secteur character varying(50),
+    CONSTRAINT pk_instructeur_secteur_id PRIMARY KEY (id)
+) WITH (
+     OIDS=FALSE
+    );
+
+CREATE TABLE urba_foncier.chargedoperation_secteur
+(
+    id integer NOT NULL,
+    geom geometry(MultiPolygon,3948),
+    code_insee double precision,
+    nom_secteur character varying(100),
+    referent character varying(100),
+    CONSTRAINT chargedoperation_secteur_pkey PRIMARY KEY (id)
+) WITH (
+      OIDS=FALSE
+    );
+
+
+CREATE TABLE limite_admin.comite_sect_tab
+(
+    num_secteur integer NOT NULL,
+    nom_secteur character varying(50),
+    CONSTRAINT pk_comite_sect PRIMARY KEY (num_secteur)
+) WITH (
+      OIDS=FALSE
+    );
+
+
+CREATE TABLE urba_foncier.negociateurfoncier_secteur
+(
+    objectid bigint NOT NULL,
+    geom geometry(MultiPolygon,3948),
+    code_insee double precision,
+    nom character varying(50),
+    negociateur character varying(100),
+    CONSTRAINT negociateurfoncier_secteur_pkey PRIMARY KEY (objectid)
+)  WITH (
+       OIDS=FALSE
+    );
+
+
+CREATE TABLE urba_foncier.oa_limite_intervention
+(
+    objectid integer NOT NULL,
+    nomopa character varying(200) COLLATE pg_catalog."default",
+    shape geometry,
+    id_tabou integer,
+    nature character varying(22) COLLATE pg_catalog."default",
+    etape character varying(12) COLLATE pg_catalog."default",
+    archive boolean DEFAULT false,
+    observation text COLLATE pg_catalog."default",
+    datesig character varying(15) COLLATE pg_catalog."default",
+    date_modif timestamp without time zone,
+    perimetre_geo numeric(15,2) DEFAULT 0,
+    aire_geo numeric(15,2) DEFAULT 0,
+    CONSTRAINT pk_oa_limite_intervention_objectid PRIMARY KEY (objectid),
+    CONSTRAINT enforce_srid_shape CHECK (st_srid(shape) = 3948),
+    CONSTRAINT enforce_dims_shape CHECK (st_ndims(shape) = 2),
+    CONSTRAINT enforce_geotype_shape CHECK (geometrytype(shape) = 'MULTIPOLYGON'::text OR geometrytype(shape) = 'POLYGON'::text),
+    CONSTRAINT nature_dom CHECK (nature::text = ANY ('{Autre,PC/DP,"Espace naturel",Equipement,"Mobilité espace public",Activité,Habitat,NULL}'::text[])),
+    CONSTRAINT etape_dom CHECK (etape::text = ANY ('{Annulé," En projet",Clôturé,Opérationnel,"En étude",NULL}'::text[]))
+)
+    WITH (
+        OIDS = FALSE
+    );
+
 ALTER TABLE limite_admin.quartier  OWNER TO sig_user;
+ALTER TABLE limite_admin.comite_sect_tab  OWNER TO sig_user;
 ALTER TABLE urba_foncier.plui_zone_urba  OWNER TO sig_user;
 ALTER TABLE urba_foncier.zac  OWNER TO sig_user;
+ALTER TABLE urba_foncier.oa_programme  OWNER TO sig_user;
 ALTER TABLE urba_foncier.oa_secteur  OWNER TO sig_user;
+ALTER TABLE urba_foncier.instructeur_secteur  OWNER TO sig_user;
+ALTER TABLE urba_foncier.chargedoperation_secteur  OWNER TO sig_user;
+ALTER TABLE urba_foncier.negociateurfoncier_secteur  OWNER TO sig_user;
+ALTER TABLE urba_foncier.oa_limite_intervention  OWNER TO sig_user;
 ALTER TABLE economie.za  OWNER TO sig_user;
 ALTER TABLE demographie.iris  OWNER TO sig_user;
 ALTER TABLE limite_admin.commune_emprise  OWNER TO sig_user;
@@ -244,3 +322,31 @@ GRANT ALL ON SCHEMA limite_admin TO sig_user;
 GRANT ALL ON SCHEMA urba_foncier TO sig_user;
 GRANT ALL ON SCHEMA economie TO sig_user;
 GRANT ALL ON SCHEMA demographie TO sig_user;
+
+-- Création des fonctions
+
+create or replace function urba_foncier.programmes_of_operation(idOperationParam BIGINT, nomParam TEXT) returns SETOF urba_foncier.oa_programme
+    language plpgsql
+as
+$$
+DECLARE
+    programme urba_foncier.oa_programme%ROWTYPE;
+BEGIN
+    FOR programme in SELECT
+            zp.objectid, zp.programme, zp.id_tabou
+         FROM urba_foncier.oa_secteur zs
+            LEFT JOIN urba_foncier.oa_programme zp ON ST_Intersects(zp.shape, zs.shape)
+         WHERE
+            zs.id_tabou = idOperationParam
+         AND
+            lower(zp.programme) like lower(nomParam)
+        AND
+            zp.id_tabou is not null
+        LOOP
+            return next programme;
+        END LOOP;
+    return ;
+END;
+$$;
+
+

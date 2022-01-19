@@ -18,5 +18,13 @@ public class PluiEntity {
     @Column(name = "libelle")
     private String libelle;
 
+    public PluiEntity() {
+    }
+
+    public PluiEntity(Integer id, String libelle) {
+        this.id = id;
+        this.libelle = libelle;
+    }
+
 
 }

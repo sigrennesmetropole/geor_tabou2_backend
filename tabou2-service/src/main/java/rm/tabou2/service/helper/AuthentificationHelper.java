@@ -1,5 +1,6 @@
 package rm.tabou2.service.helper;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -8,10 +9,17 @@ import org.springframework.stereotype.Component;
 public class AuthentificationHelper {
 
 
-    public static final String ROLE_CONSULTATION = "EL_APPLIS_TABOU_CONSULT";
-    public static final String ROLE_CONTRIBUTEUR = "EL_APPLIS_TABOU_CONTRIB";
-    public static final String ROLE_REFERENT = "EL_APPLIS_TABOU_REFERENT";
-    public static final String ROLE_ADMINISTRATEUR = "MAPSTORE_ADMIN";
+    @Value("${role.consultation}")
+    private String roleConsultation;
+
+    @Value("${role.contributeur}")
+    private String roleContributeur;
+
+    @Value("${role.referent}")
+    private String roleReferent;
+
+    @Value("${role.administrateur}")
+    private String roleAdministrateur;
 
     /**
      * Retourne le nom de l'utilisateur connecté.
@@ -55,7 +63,7 @@ public class AuthentificationHelper {
      * @return
      */
     public boolean hasConsultationRole() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(ROLE_CONSULTATION));
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(roleConsultation));
     }
 
     /**
@@ -64,7 +72,7 @@ public class AuthentificationHelper {
      * @return
      */
     public boolean hasContributeurRole() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(ROLE_CONTRIBUTEUR));
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(roleContributeur));
     }
 
     /**
@@ -73,7 +81,7 @@ public class AuthentificationHelper {
      * @return
      */
     public boolean hasReferentRole() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(ROLE_REFERENT));
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(roleReferent));
     }
 
     /**
@@ -82,7 +90,7 @@ public class AuthentificationHelper {
      * @return
      */
     public boolean hasAdministratorRole() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(ROLE_ADMINISTRATEUR));
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(roleAdministrateur));
     }
 
 }

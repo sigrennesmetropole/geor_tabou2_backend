@@ -11,5 +11,4 @@ public interface EtapeOperationMapper extends AbstractMapper<EtapeOperationEntit
 
     @Named("dtoToNewEtapeOperationEntity")
     EtapeOperationEntity dtoToEntity(Etape etape);
-
 }

@@ -5,93 +5,117 @@
     <parent>
         <artifactId>tabou2</artifactId>
         <groupId>rm</groupId>
-        <version>1.0.2</version>
+        <version>1.2.1</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tabou2-facade</artifactId>
-    <packaging>jar</packaging>
+	<artifactId>tabou2-facade</artifactId>
+	<packaging>jar</packaging>
 
 	<properties>
 		<finalName>tabou2</finalName>
 	</properties>
 
-    <build>
+	<build>
 
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 
-        <plugins>
-            <plugin>
-<!--                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>-->
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>${swagger.codegen.version}</version>
-                <configuration>
-                    <!-- Les interfaces sont généres dans la target, c'est normal -->
-                    <apiPackage>rm.tabou2.facade.api</apiPackage>
-                    <modelPackage>rm.tabou2.service.dto</modelPackage>
-                    <inputSpec>./resources/openapi/tabou2.json</inputSpec>
-                    <language>spring</language>
-                   <!-- <generatorName>spring</generatorName>-->
-                    <library>spring-mvc</library>
-                    <generateModelTests>false</generateModelTests>
-                    <generateModelDocumentation>false</generateModelDocumentation>
-                    <generateSupportingFiles>false</generateSupportingFiles>
-                    <generateApiDocumentation>false</generateApiDocumentation>
-                    <generateApis>true</generateApis>
-                    <generateModels>false</generateModels>
-                    <configOptions>
-                        <!-- Activier le 'interfaceOnly' à true pour la compile, sinon conflit,
-                            et à false pour la génération -->
-                        <interfaceOnly>true</interfaceOnly>
-                        <dateLibrary>legacy</dateLibrary>
-                        <!--<skipOverwrite>true</skipOverwrite> -->
-                    </configOptions>
-                    <templateDirectory>${project.basedir}/src/conf/generation/</templateDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+		<plugins>
+			<plugin>
+				<!-- <groupId>org.openapitools</groupId> <artifactId>openapi-generator-maven-plugin</artifactId> -->
+				<groupId>io.swagger</groupId>
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>${swagger.codegen.version}</version>
+				<configuration>
+					<!-- Les interfaces sont généres dans la target, c'est normal -->
+					<modelPackage>rm.tabou2.service.dto</modelPackage>
+					<language>spring</language>
+					<!-- <generatorName>spring</generatorName> -->
+					<library>spring-mvc</library>
+					<generateModelTests>false</generateModelTests>
+					<generateModelDocumentation>false</generateModelDocumentation>
+					<generateSupportingFiles>false</generateSupportingFiles>
+					<generateApiDocumentation>false</generateApiDocumentation>
+					<generateApis>true</generateApis>
+					<generateModels>false</generateModels>
+					<configOptions>
+						<!-- Activier le 'interfaceOnly' à true pour la compile, sinon conflit,
+							et à false pour la génération -->
+						<interfaceOnly>true</interfaceOnly>
+						<dateLibrary>legacy</dateLibrary>
+						<!--<skipOverwrite>true</skipOverwrite> -->
+					</configOptions>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-api</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<apiPackage>rm.tabou2.facade.api</apiPackage>
+							<inputSpec>./resources/openapi/tabou2-api.json</inputSpec>
+							<templateDirectory>${project.basedir}/src/conf/generation/</templateDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-api-v1</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<apiPackage>rm.tabou2.facade.api.v1</apiPackage>
+							<inputSpec>./resources/openapi/tabou2-api-v1.json</inputSpec>
+							<templateDirectory>${project.basedir}/src/conf/generation/version</templateDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate-api-v2</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<apiPackage>rm.tabou2.facade.api.v2</apiPackage>
+							<inputSpec>./resources/openapi/tabou2-api-v2.json</inputSpec>
+							<templateDirectory>${project.basedir}/src/conf/generation</templateDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <delimiters>
-                        <delimiter>@</delimiter>
-                    </delimiters>
-                    <useDefaultDelimiters>false</useDefaultDelimiters>
-                </configuration>
-            </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<configuration>
+					<delimiters>
+						<delimiter>@</delimiter>
+					</delimiters>
+					<useDefaultDelimiters>false</useDefaultDelimiters>
+				</configuration>
+			</plugin>
 
-            <!-- JAR executable Spring Boot -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
+			<!-- JAR executable Spring Boot -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
 					<execution>
 						<id>a-jar</id>
 						<phase>package</phase>
 					</execution>
 				</executions>
-                <configuration>
-                    <executable>true</executable>
-                    <finalName>${project.parent.artifactId}</finalName>
-                </configuration>
-            </plugin>
-            
+				<configuration>
+					<executable>true</executable>
+					<finalName>${project.parent.artifactId}</finalName>
+				</configuration>
+			</plugin>
+
 			<!-- War Spring Boot -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -116,8 +140,8 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin> 
-			
+			</plugin>
+
 			<!-- WAR with final name -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -143,14 +167,14 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>          
+			</plugin>
 
-        </plugins>
-    </build>
-    
-    <profiles>
-    
-    	<profile>
+		</plugins>
+	</build>
+
+	<profiles>
+
+		<profile>
 			<id>docker</id>
 			<properties>
 				<packageDatadirScmVersion>master</packageDatadirScmVersion>
@@ -210,74 +234,82 @@
 				</plugins>
 			</build>
 		</profile>
-    
-    </profiles>
-    <dependencies>
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>tabou2-service</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
+	</profiles>
+	<dependencies>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>tabou2-service</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
 
-        <!-- Server Web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Server Web -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 			<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 				</exclusion>
 			</exclusions>
-        </dependency>
+		</dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
 
-        <!-- Swagger UI dependency -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-        </dependency>
-        <!-- Swagger 2 doc dependency -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-annotations</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+		<!-- Swagger UI dependency -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+		<!-- Swagger 2 doc dependency -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-annotations</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
-        <dependency>
-            <groupId>org.jasig.cas.client</groupId>
-            <artifactId>cas-client-support-springboot</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.jasig.cas.client</groupId>
+			<artifactId>cas-client-support-springboot</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.1</version>
-        </dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+		</dependency>
 
-    </dependencies>
+		<dependency>
+			<groupId>org.ocpsoft.rewrite</groupId>
+			<artifactId>rewrite-servlet</artifactId>
+		</dependency>
 
+		<dependency>
+			<groupId>org.ocpsoft.rewrite</groupId>
+			<artifactId>rewrite-integration-spring</artifactId>
+		</dependency>
+
+	</dependencies>
 
 </project>

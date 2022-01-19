@@ -9,6 +9,5 @@ import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
 @Mapper(componentModel = "spring")
 public interface EvenementOperationMapper extends AbstractMapper<EvenementOperationEntity, Evenement> {
 
-    @Mapping(source = "typeEvenement.id", target = "idType")
-    Evenement entityToDto(EvenementOperationEntity evenementOperationEntity);
+
 }

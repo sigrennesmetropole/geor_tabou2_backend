@@ -22,6 +22,6 @@ public class SwaggerConfig {
     }
 
     protected ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("tabou2").version("1.0").build();
+        return new ApiInfoBuilder().title("tabou2").version("2.0").build();
     }
 }
