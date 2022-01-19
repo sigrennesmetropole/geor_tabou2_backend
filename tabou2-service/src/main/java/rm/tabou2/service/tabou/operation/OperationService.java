@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Evenement;
-import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.validator.evenement.ValidEvenementCreation;
 import rm.tabou2.service.validator.evenement.ValidEvenementUpdate;
@@ -25,7 +25,7 @@ public interface OperationService {
      * @param operation opération à créer
      * @return opération crée
      */
-    Operation createOperation(@ValidOperationCreation Operation operation);
+    OperationIntermediaire createOperation(@ValidOperationCreation OperationIntermediaire operation);
 
     /**
      * Mise à jour d'une opération
@@ -33,7 +33,7 @@ public interface OperationService {
      * @param operation opération à modifier
      * @return opération modifiée
      */
-    Operation updateOperation(@ValidOperationUpdate Operation operation);
+    OperationIntermediaire updateOperation(@ValidOperationUpdate OperationIntermediaire operation);
 
     /**
      * Récupération d'une opération
@@ -41,7 +41,7 @@ public interface OperationService {
      * @param operationId identifiant de l'opération
      * @return opération
      */
-    Operation getOperationById(long operationId);
+    OperationIntermediaire getOperationById(long operationId);
 
     /**
      * Modification de l'étape d'une opération
@@ -51,7 +51,7 @@ public interface OperationService {
      * @return opération modifiée
      * @throws AppServiceException Erreur lors de la mise à jour d'une opération
      */
-    Operation updateEtapeOfOperationId(long operationId, long etapeId) throws AppServiceException;
+    OperationIntermediaire updateEtapeOfOperationId(long operationId, long etapeId) throws AppServiceException;
 
     /**
      * Recherche des opérations à partir des paramètres.
@@ -60,7 +60,7 @@ public interface OperationService {
      * @param pageable           paramètre lié à la pagination
      * @return Liste des opérations correspondantes à la recherche
      */
-    Page<Operation> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable);
+    Page<OperationIntermediaire> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable);
 
     /**
      * Récupération de la liste des évènements d'une opération

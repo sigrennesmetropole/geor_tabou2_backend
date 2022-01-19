@@ -5,43 +5,39 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.mapper.AbstractMapper;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
 @Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class, VocationMapper.class,
         DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, ConsommationEspaceMapper.class})
-public interface OperationMapper extends AbstractMapper<OperationEntity, Operation> {
+public interface OperationMapper extends AbstractMapper<OperationEntity, OperationIntermediaire> {
 
-    @Mapping(source = "nbLogementsPrevu", target= "nbLogementPrevu")
-    @Mapping(source = "plhLogementsPrevus", target= "plhLogementPrevu")
-    @Mapping(source = "plhLogementsLivres", target= "plhlogementLivre")
-    @Mapping(source = "etape", target = "etapeOperation")
-    OperationEntity dtoToEntity(Operation dto);
+    @Mapping(target = "etapeOperation", ignore = true)
+    @Mapping(target = "nature", ignore = true)
+    @Mapping(target = "vocation", ignore = true)
+    @Mapping(target = "vocationZa", ignore = true)
+    @Mapping(target = "decision", ignore = true)
+    @Mapping(target = "maitriseOuvrage", ignore = true)
+    @Mapping(target = "modeAmenagement", ignore = true)
+    @Mapping(target = "consommationEspace", ignore = true)
+    @Override
+    OperationEntity dtoToEntity(OperationIntermediaire dto);
 
-    @Mapping(source = "nbLogementPrevu", target = "nbLogementsPrevu")
-    @Mapping(source = "plhLogementPrevu", target = "plhLogementsPrevus")
-    @Mapping(source = "plhlogementLivre", target = "plhLogementsLivres")
     @Mapping(source = "etapeOperation", target = "etape")
-    Operation entityToDto(OperationEntity operationEntity);
+    @Override
+    OperationIntermediaire entityToDto(OperationEntity operationEntity);
 
-    @Mapping(source = "nbLogementsPrevu", target= "nbLogementPrevu")
-    @Mapping(source = "plhLogementsPrevus", target= "plhLogementPrevu")
-    @Mapping(source = "plhLogementsLivres", target= "plhlogementLivre")
-    @Mapping(source = "etape", target = "etapeOperation", qualifiedByName = "dtoToNewEtapeOperationEntity")
-    @Mapping(target = "nature", qualifiedByName = "dtoToNewNatureEntity",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "vocation", qualifiedByName = "dtoToNewVocationEntity",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "decision", qualifiedByName = "dtoToNewDecisionEntity",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "maitriseOuvrage", qualifiedByName = "dtoToNewMaitriseOuvrageEntity",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "modeAmenagement", qualifiedByName = "dtoToNewModeAmenagementEntity",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "consommationEspace", qualifiedByName = "dtoToNewConsommationEspaceEntity",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "etapeOperation", ignore = true)
+    @Mapping(target = "nature", ignore = true)
+    @Mapping(target = "vocation", ignore = true)
+    @Mapping(target = "vocationZa", ignore = true)
+    @Mapping(target = "decision", ignore = true)
+    @Mapping(target = "maitriseOuvrage", ignore = true)
+    @Mapping(target = "modeAmenagement", ignore = true)
+    @Mapping(target = "consommationEspace", ignore = true)
     @Mapping(target = "secteur",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void dtoToEntity(Operation dto, @MappingTarget OperationEntity operationEntity);
+    @Override
+    void dtoToEntity(OperationIntermediaire dto, @MappingTarget OperationEntity operationEntity);
 }

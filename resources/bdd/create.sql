@@ -152,10 +152,31 @@ create table tabou_operation (
                            plhlogement_prevu integer,
                            plhlogement_livre integer,
                            ql1 varchar(255),
-                           ql2 boolean,
+                           scot boolean,
+                           densite_scot double precision,
                            ql3 varchar(255),
                            nb_entreprise integer,
                            nb_salarie integer,
+                           id_plh bigserial,
+                           id_entite_referente bigserial,
+                           objectifs text,
+                           id_vocation_za bigserial,
+                           paf_taux double precision,
+                           id_type_occupation bigserial,
+                           id_outil_foncier bigserial,
+                           densite_oap double precision,
+                           plui_disposition text,
+                           plui_adaptation text,
+                           outil_amenagement varchar(255),
+                           concertation_existe boolean,
+                           concertation_date_debut timestamp,
+                           concertation_date_fin timestamp,
+                           etude text,
+                           localisation text,
+                           usage_actuel varchar(255),
+                           avancement_administratif text,
+                           environnement text,
+                           surface_realisee double precision,
                            create_date timestamp,
                            create_user varchar(255),
                            modif_date timestamp,
@@ -184,6 +205,7 @@ create table if not exists tabou_type_programmation(
 
 create table if not exists tabou_information_programmation(
     id_information_programmation bigserial,
+    id_operation bigserial,
     id_type_programmation bigserial,
     description text,
     primary key (id_information_programmation)
@@ -201,6 +223,7 @@ create table if not exists tabou_type_contribution(
 
 create table if not exists tabou_contribution(
     id_contribution bigserial,
+    id_operation bigserial,
     id_type_contribution bigserial,
     description text,
     primary key (id_contribution)
@@ -218,9 +241,10 @@ create table if not exists tabou_type_foncier(
 
 create table if not exists tabou_description_foncier(
     id_description_foncier bigserial,
+    id_operation bigserial,
     id_type_foncier bigserial,
     description text,
-    taux double,
+    taux double precision,
     primary key (id_description_foncier)
 );
 
@@ -236,6 +260,7 @@ create table if not exists tabou_type_amenageur(
 
 create table if not exists tabou_amenageur(
     id_amenageur bigserial,
+    id_operation bigserial,
     id_type_amenageur bigserial,
     nom varchar(255),
     primary key (id_amenageur)
@@ -260,6 +285,7 @@ create table if not exists tabou_type_financement_operation(
 
 create table if not exists tabou_description_financement_operation(
     id_description_financement_operation bigserial,
+    id_operation bigserial,
     id_type_financement_operation bigserial,
     description text,
     primary key(id_description_financement_operation)
@@ -277,6 +303,7 @@ create table if not exists tabou_type_action_operation(
 
 create table if not exists tabou_action_operation(
     id_action_operation bigserial,
+    id_operation bigserial,
     id_type_action_operation bigserial,
     description text,
     primary key (id_action_operation)
@@ -294,6 +321,7 @@ create table if not exists tabou_type_acteur(
 
 create table if not exists tabou_acteur(
     id_acteur bigserial,
+    id_operation bigserial,
     id_type_acteur bigserial,
     description text,
     primary key (id_acteur)
@@ -364,8 +392,7 @@ create table tabou_tiers (
                        nom varchar(255),
                        est_prive boolean,
                        adresse_cp varchar(255),
-                       adresse_num varchar(255),
-                       adresse_rue varchar(255),
+                       adresse varchar(255),
                        adresse_ville varchar(255),
                        telecopie varchar(255),
                        telephone varchar(255),
@@ -538,7 +565,7 @@ create table if not exists tabou_vocation_za(
     create_date timestamp,
     create_user varchar(20),
     primary key(id_vocation_za)
-    );
+);
 
 -- Ajout des clés étrangères
 
@@ -605,6 +632,31 @@ alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_etape_operation
         foreign key (id_etape_operation)
             references tabou_etape_operation;
+
+alter table if exists tabou_operation
+    add constraint fk_tabou_operation_tabou_plh
+        foreign key (id_plh)
+            references tabou_plh;
+
+alter table if exists tabou_operation
+    add constraint fk_tabou_operation_tabou_entite_referente
+        foreign key (id_entite_referente)
+            references tabou_entite_referente;
+
+alter table if exists tabou_operation
+    add constraint fk_tabou_operation_tabou_vocation_za
+        foreign key (id_vocation_za)
+            references tabou_vocation_za;
+
+alter table if exists tabou_operation
+    add constraint fk_tabou_operation_tabou_type_occupation
+        foreign key (id_type_occupation)
+            references tabou_type_occupation;
+
+alter table if exists tabou_operation
+    add constraint fk_tabou_operation_tabou_outil_foncier
+        foreign key (id_outil_foncier)
+            references tabou_outil_foncier;
 
 alter table if exists tabou_operation_tiers
     add constraint fk_tabou_operation_tiers_tabou_operation
@@ -675,22 +727,44 @@ alter table if exists tabou_information_programmation
     add constraint fk_information_programmation_type_programmation
         foreign key (id_type_programmation) references tabou_type_programmation;
 
+alter table if exists tabou_information_programmation
+    add constraint fk_information_programmation_tabou_operation
+    foreign key (id_operation) references tabou_operation;
+
 alter table if exists tabou_contribution
     add constraint fk_contribution_type_contribution
         foreign key (id_type_contribution) references tabou_type_contribution;
 
+alter table if exists tabou_contribution
+    add constraint fk_contribution_tabou_operation
+    foreign key (id_operation) references tabou_operation;
+
 alter table if exists tabou_description_foncier
     add constraint fk_description_foncier_type_foncier
         foreign key (id_type_foncier) references tabou_type_foncier;
+
+alter table if exists tabou_description_foncier
+    add constraint fk_description_foncier_tabou_operation
+        foreign key (id_operation) references tabou_operation;
 
 alter table if exists tabou_amenageur
     add constraint fk_tabou_amenageur_tabou_type_amenageur
         foreign key (id_type_amenageur)
             references tabou_type_amenageur;
 
+alter table if exists tabou_amenageur
+    add constraint fk_tabou_amenageur_tabou_operation
+        foreign key (id_operation)
+            references tabou_operation;
+
 alter table if exists tabou_description_financement_operation
     add constraint fk_tabou_description_financement_operation_tabou_type_financement_operation
         foreign key (id_type_financement_operation)
+            references tabou_type_financement_operation;
+
+alter table if exists tabou_description_financement_operation
+    add constraint fk_tabou_description_financement_operation_tabou_operation
+        foreign key (id_operation)
             references tabou_type_financement_operation;
 
 alter table if exists tabou_action_operation
@@ -698,10 +772,20 @@ alter table if exists tabou_action_operation
         foreign key (id_type_action_operation)
             references tabou_type_action_operation;
 
+alter table if exists tabou_action_operation
+    add constraint fk_tabou_action_operation_tabou_operation
+        foreign key (id_operation)
+            references tabou_operation;
+
 alter table if exists tabou_acteur
     add constraint fk_tabou_acteur_tabou_type_acteur
         foreign key (id_type_acteur)
             references tabou_type_acteur;
+
+alter table if exists tabou_acteur
+    add constraint fk_tabou_acteur_tabou_operation
+        foreign key (id_operation)
+            references tabou_operation;
 
 CREATE INDEX "idx_tabou_programme_id_operation_fk" on tabou_programme(id_operation);
 CREATE INDEX "idx_tabou_programme_id_etape_programme_fk" on tabou_programme(id_etape_programme);

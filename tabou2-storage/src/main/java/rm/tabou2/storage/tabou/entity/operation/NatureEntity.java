@@ -1,12 +1,17 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"operations"})
 @Entity
 @Table(name = "tabou_nature")
 public class NatureEntity {
@@ -29,4 +34,16 @@ public class NatureEntity {
     public Set<OperationEntity> operations;
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NatureEntity that = (NatureEntity) o;
+        return getId() == that.getId() && Objects.equals(getLibelle(), that.getLibelle());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getLibelle());
+    }
 }

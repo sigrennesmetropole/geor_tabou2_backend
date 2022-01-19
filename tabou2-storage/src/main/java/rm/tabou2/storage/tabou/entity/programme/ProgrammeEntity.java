@@ -1,7 +1,6 @@
 package rm.tabou2.storage.tabou.entity.programme;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
@@ -18,14 +17,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
+@ToString(exclude = {"evenements", "etapeProgramme", "operation"})
 @Entity
 @Table(name = "tabou_programme")
 public class ProgrammeEntity extends GenericAuditableEntity {
@@ -140,5 +137,18 @@ public class ProgrammeEntity extends GenericAuditableEntity {
         return this.evenements.stream()
                 .filter(ep -> ep.getId() == idEvenementProgramme)
                 .findFirst();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProgrammeEntity that = (ProgrammeEntity) o;
+        return getId() == that.getId() && getCode().equals(that.getCode()) && getNom().equals(that.getNom());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCode(), getNom());
     }
 }

@@ -1,15 +1,15 @@
 package rm.tabou2.service.validator.operation.impl;
 
-import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.operation.ValidOperationCreation;
 
 import javax.validation.ConstraintValidatorContext;
 
-public class ValidOperationCreationValidator implements CustomConstraintValidator<ValidOperationCreation, Operation> {
+public class ValidOperationCreationValidator implements CustomConstraintValidator<ValidOperationCreation, OperationIntermediaire> {
 
     @Override
-    public boolean isValid(Operation operation, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(OperationIntermediaire operation, ConstraintValidatorContext constraintValidatorContext) {
 
         // désactivation du message par défaut
         constraintValidatorContext.disableDefaultConstraintViolation();
@@ -29,7 +29,7 @@ public class ValidOperationCreationValidator implements CustomConstraintValidato
             addConstraintErrorProperty(constraintValidatorContext, "L'identifiant de l'emprise de l'opération est invalide", "idEmprise");
         }
 
-        boolean estSecteurValidation = operation.isSecteur() != null;
+        boolean estSecteurValidation = operation.getSecteur() != null;
         if (!estSecteurValidation) {
             addConstraintErrorProperty(constraintValidatorContext, "La propriété 'secteur' de l'opération est invalide", "secteur");
         }

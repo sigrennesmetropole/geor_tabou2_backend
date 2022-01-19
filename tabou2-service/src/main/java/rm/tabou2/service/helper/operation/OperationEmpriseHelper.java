@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.constant.NatureLibelle;
 import rm.tabou2.service.dto.Emprise;
-import rm.tabou2.service.dto.Operation;
+import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.storage.sig.dao.EnDiffusDao;
 import rm.tabou2.storage.sig.dao.SecteurDao;
 import rm.tabou2.storage.sig.dao.ZaDao;
@@ -46,10 +46,10 @@ public class OperationEmpriseHelper {
     @Autowired
     private EnDiffusDao enDiffusDao;
 
-    public void saveEmprise(Operation operationToSave, Long idEmprise) {
+    public void saveEmprise(OperationIntermediaire operationToSave, Long idEmprise) {
 
         NatureEntity nature = natureDao.findById(operationToSave.getNature().getId()).orElseThrow(() -> new EntityNotFoundException("Le nature id={0} n'existe pas"));
-        if (BooleanUtils.isTrue(operationToSave.isSecteur())) {
+        if (BooleanUtils.isTrue(operationToSave.getSecteur())) {
             SecteurEntity secteurEntity = secteurDao.findOneById(idEmprise.intValue());
             secteurEntity.setIdTabou(operationToSave.getId().intValue());
             secteurDao.save(secteurEntity);
@@ -82,7 +82,7 @@ public class OperationEmpriseHelper {
         if (StringUtils.isEmpty(nom)) {
             nom = "%";
         } else if (StringUtils.endsWith(nom, "*")) {
-            nom = nom.replaceAll("\\*","%");
+            nom = nom.replaceAll("\\*", "%");
         }
 
         String libelleNature = natureEntityOpt.get().getLibelle();

@@ -11,4 +11,6 @@ delete from tabou_maitrise_ouvrage;
 delete from tabou_mode_amenagement;
 delete from tabou_consommation_espace;
 
+delete from tabou_evenement_programme;
+delete from tabou_evenement_operation;
 delete from tabou_type_evenement;

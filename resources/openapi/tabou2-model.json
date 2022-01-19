@@ -46,7 +46,7 @@
         }
       }
     },
-    "Operation": {
+    "OperationV1": {
       "description": "Opération d'amménagement",
       "type": "object",
       "properties": {
@@ -172,6 +172,236 @@
         "nbSalarie": {
           "type": "integer",
           "format": "int64"
+        },
+        "createUser": {
+          "description": "Utilisateur qui a créé l'entité",
+          "type": "string"
+        },
+        "createDate": {
+          "description": "Date d'ajout de l'entité",
+          "type": "string",
+          "format": "date"
+        },
+        "modifUser": {
+          "description": "Dernier utilisateur ayant modifié l'entité",
+          "type": "string"
+        },
+        "modifDate": {
+          "description": "Date de dernière modification de l'entité",
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "Operation": {
+      "description": "Opération d'amménagement",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identificateur unique. Clé primaire",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nature": {
+          "description": "Nature de l'opération : ZAC, ZA ou En diffus",
+          "type": "object",
+          "$ref": "#/definitions/Nature"
+        },
+        "vocation": {
+          "description": "Vocation de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/Vocation"
+        },
+        "decision": {
+          "description": "Décision de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/Decision"
+        },
+        "maitriseOuvrage": {
+          "description": "Maitrise d'ouvrage de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/MaitriseOuvrage"
+        },
+        "modeAmenagement": {
+          "description": "Mode d'aménagement de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/ModeAmenagement"
+        },
+        "consommationEspace": {
+          "description": "Consommation d'espace de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/ConsommationEspace"
+        },
+        "etape": {
+          "description": "Indique l'étape d'avancement de l'opération ou du secteur",
+          "type": "object",
+          "$ref": "#/definitions/Etape"
+        },
+        "secteur": {
+          "description": "Indique que l'opération est un secteur",
+          "type": "boolean"
+        },
+        "diffusionRestreinte": {
+          "description": "Indique si l'opération est en diffusion restreinte (en off)",
+          "type": "boolean",
+          "default": false
+        },
+        "code": {
+          "description": "Code de l'opératin",
+          "type": "string"
+        },
+        "nom": {
+          "description": "Nom de l'opération",
+          "type": "string"
+        },
+        "operation": {
+          "description": "Description textuelle du programme de l'opération (nombre de logement, type habitat…)",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)",
+          "type": "string"
+        },
+        "idEmprise": {
+          "description": "Identifiant de l'emprise de l'opération",
+          "type": "integer",
+          "format": "int64"
+        },
+        "autorisationDate": {
+          "description": "Date d'autorisation (liée à un document d'urbanisme)",
+          "type": "string",
+          "format": "date"
+        },
+        "operationnelDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "clotureDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "numAds": {
+          "description": " numéro d'autorisation des droits des sols",
+          "type": "string"
+        },
+        "surfaceTotale": {
+          "type": "number",
+          "format": "int64"
+        },
+        "nbLogementsPrevu": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "scot": {
+          "description": "Compatible ou non avec le SCOT",
+          "type": "boolean"
+        },
+        "densiteScot": {
+          "type": "number",
+          "format": "double"
+        },
+        "nbEntreprise": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "nbSalarie": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "plh": {
+          "type": "object",
+          "$ref": "#/definitions/Plh"
+        },
+        "entiteReferente": {
+          "type": "object",
+          "$ref": "#/definitions/EntiteReferente"
+        },
+        "objectifs": {
+          "type": "string"
+        },
+        "informationsProgrammation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InformationProgrammation"
+          }
+        },
+        "vocationZa": {
+          "type": "object",
+          "$ref": "#/definitions/VocationZA"
+        },
+        "contributions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Contribution"
+          }
+        },
+        "descriptionsFoncier": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DescriptionFoncier"
+          }
+        },
+        "pafTaux": {
+          "type": "number",
+          "format": "double"
+        },
+        "typeOccupation": {
+          "type": "object",
+          "$ref": "#/definitions/TypeOccupation"
+        },
+        "outilFoncier": {
+          "type": "object",
+          "$ref": "#/definitions/OutilFoncier"
+        },
+        "amenageurs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Amenageur"
+          }
+        },
+        "outilAmenagement": {
+          "type": "string"
+        },
+        "etude": {
+          "type": "string"
+        },
+        "localisation": {
+          "type": "string"
+        },
+        "usageActuel": {
+          "type": "string"
+        },
+        "avancementAdministratif": {
+          "type": "string"
+        },
+        "environnement": {
+          "type": "string"
+        },
+        "surfaceRealisee": {
+          "type": "number",
+          "format": "double"
+        },
+        "concertation": {
+          "type": "object",
+          "$ref": "#/definitions/DescriptionConcertation"
+        },
+        "financements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DescriptionFinancementOperation"
+          }
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActionOperation"
+          }
+        },
+        "acteurs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Acteur"
+          }
         },
         "createUser": {
           "description": "Utilisateur qui a créé l'entité",
@@ -1826,6 +2056,21 @@
         },
         "description": {
           "description": "Description de l'acteur",
+          "type": "string"
+        }
+      }
+    },
+    "Plui": {
+      "type": "object",
+      "properties": {
+        "densiteOap": {
+          "type": "number",
+          "format": "double"
+        },
+        "pluiDisposition": {
+          "type": "string"
+        },
+        "pluiAdaptation": {
           "type": "string"
         }
       }
