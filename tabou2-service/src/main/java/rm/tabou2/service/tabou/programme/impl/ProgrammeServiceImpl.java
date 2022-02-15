@@ -540,7 +540,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         InputStream templateFileInputStream;
 
         try {
-            templateFileInputStream = new ClassPathResource("template/template_fiche_suivi.odt").getInputStream();
+            templateFileInputStream = new ClassPathResource("template/programme/template_fiche_suivi.odt").getInputStream();
         } catch (IOException e) {
             throw new AppServiceException("Erreur lors de la récupération du template", e);
         }

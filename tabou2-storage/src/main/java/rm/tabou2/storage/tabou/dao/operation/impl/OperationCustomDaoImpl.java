@@ -1,8 +1,6 @@
 package rm.tabou2.storage.tabou.dao.operation.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -89,7 +87,46 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
         List<OperationEntity> operationEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
         return new PageImpl<>(operationEntities, pageable, totalCount.intValue());
 
+    }
 
+    @Override
+    public List<String> searchCommunesOfOperation(OperationEntity operation) {
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT com.nom ");
+        if(Boolean.TRUE.equals(operation.getSecteur())){ //L'opération est un secteur
+            query.append("FROM urba_foncier.oa_secteur op ");
+        }else if(operation.getNature().getId() == 1){ //L'opération est une ZAC
+            query.append("FROM urba_foncier.zac op ");
+        }else{ //L'opération est en diffus
+            query.append("FROM urba_foncier.oa_limite_intervention op ");
+        }
+        query.append("JOIN limite_admin.commune_emprise com ON st_intersects(op.shape, com.shape) " +
+                "WHERE op.id_tabou = :idOp");
+
+        return entityManager.createNativeQuery(query.toString())
+                .setParameter("idOp", operation)
+                .getResultList();
+    }
+
+    @Override
+    public OperationEntity searchParentSecteur(OperationEntity secteur) {
+        String query = "SELECT oa.* FROM urba_foncier.oa_secteur sec " +
+                "INNER JOIN (SELECT id_tabou, shape FROM urba_foncier.zac " +
+                "UNION ALL SELECT id_tabou, shape FROM urba_foncier.oa_limite_intervention inter) parent " +
+                "ON st_within(sec.shape, parent.shape) " +
+                "INNER JOIN tabou2.tabou_operation oa ON oa.id_operation = parent.id_tabou " +
+                "WHERE sec.id_tabou = :idSec";
+
+        List<OperationEntity> results = entityManager.createNativeQuery(query, OperationEntity.class)
+                .setParameter("idSec", secteur.getId())
+                .getResultList();
+
+        if(results.size() == 1){
+            return results.get(0);
+        }else {
+            return null;
+        }
     }
 
 

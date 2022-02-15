@@ -5,9 +5,15 @@ import org.springframework.data.domain.Pageable;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
+import java.util.List;
+
 
 public interface OperationCustomDao {
 
     Page<OperationEntity> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable);
+
+    List<String> searchCommunesOfOperation(OperationEntity operation);
+
+    OperationEntity searchParentSecteur(OperationEntity operation);
 
 }

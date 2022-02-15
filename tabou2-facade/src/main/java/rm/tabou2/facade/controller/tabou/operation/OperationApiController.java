@@ -205,5 +205,9 @@ public class OperationApiController extends AbstractExportDocumentApi implements
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<Resource> downloadFicheSuivi(Long operationId) throws Exception {
+        return downloadDocument(operationService.generateFicheSuivi(operationId));
+    }
 
 }
