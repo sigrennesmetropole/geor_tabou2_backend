@@ -53,14 +53,14 @@ public interface AlfrescoService {
      * Ajout d'un document dans Alfresco.
      *
      * @param nom nom du document
-     * @param libelle libellé du type de document
+     * @param libelleTypeDocument libellé du type de document
      * @param objectType type de l'objet tabou
      * @param objectId identifiant de l'objet tabou
      * @param file fichier
      * @return document
      * @throws AppServiceException erreur lors de l'ajout d'un document dans tabou
      */
-    AlfrescoDocument addDocument(String nom, String libelle, AlfrescoTabouType objectType, long objectId, MultipartFile file) throws AppServiceException;
+    AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, MultipartFile file) throws AppServiceException;
 
     /**
      * Mise à jour des métadonnées d'un document.
@@ -82,9 +82,9 @@ public interface AlfrescoService {
      * @param objectType type de l'objet tabou
      * @param objectId identifant de l'objet tabou
      * @param nom nom du document
-     * @param libelle libellé du type de document
+     * @param libelleTypeDocument libellé du type de document
      * @param typeMime type MIME du document
      * @param pageable paramètres de pagination
      */
-    AlfrescoDocumentRoot searchDocuments(AlfrescoTabouType objectType, long objectId, String nom, String libelle, String typeMime, Pageable pageable);
+    AlfrescoDocumentRoot searchDocuments(AlfrescoTabouType objectType, long objectId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable);
 }

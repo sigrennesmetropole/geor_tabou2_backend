@@ -127,12 +127,12 @@ public interface OperationService {
      *
      * @param operationId identifiant de l'opération
      * @param nom         nom du document
-     * @param libelle     libellé du type de document
+     * @param libelleTypeDocument     libellé du type de document
      * @param typeMime    libellé du type MIME du document
      * @param pageable    paramètres de pagination
      * @return
      */
-    Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable);
+    Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable);
 
     /**
      * Mise à jour du contenu d'un document.
@@ -149,12 +149,12 @@ public interface OperationService {
      *
      * @param operationId identifiant de l'opération
      * @param nom nom du document
-     * @param libelle libellé du type de document
+     * @param libelleTypeDocument libellé du type de document
      * @param file document à ajouter
      * @return métadonnées du document
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
-    DocumentMetadata addDocument(long operationId, String nom, String libelle, MultipartFile file) throws AppServiceException;
+    DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException;
 
 
     /**

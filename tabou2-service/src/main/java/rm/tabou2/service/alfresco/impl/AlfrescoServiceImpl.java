@@ -168,7 +168,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     }
 
     @Override
-    public AlfrescoDocumentRoot searchDocuments(AlfrescoTabouType objectType, long objectId, String nom, String libelle, String typeMime, Pageable pageable) {
+    public AlfrescoDocumentRoot searchDocuments(AlfrescoTabouType objectType, long objectId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable) {
 
         //Construction de l'uri du document
         UriComponentsBuilder searchUri = UriComponentsBuilder
@@ -189,9 +189,9 @@ public class AlfrescoServiceImpl implements AlfrescoService {
             query.append(AND);
             query.append(SEARCH_PARAM_ID).append(objectId);
         }
-        if (!StringUtils.isEmpty(libelle)) {
+        if (!StringUtils.isEmpty(libelleTypeDocument)) {
             query.append(AND);
-            query.append(SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT).append(libelle);
+            query.append(SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT).append(libelleTypeDocument);
         }
         if (!StringUtils.isEmpty(typeMime)) {
             query.append(AND);
@@ -255,7 +255,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     }
 
     @Override
-    public AlfrescoDocument addDocument(String nom, String libelle, AlfrescoTabouType objectType, long objectId, MultipartFile file) throws AppServiceException {
+    public AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, MultipartFile file) throws AppServiceException {
 
         //Construction de l'uri du document
         String documentUri = DOCUMENT_START_URI + tabouNodeId + CHILDREN_URI + "?autoRename=true";
@@ -273,7 +273,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .retrieve().bodyToMono(AlfrescoDocument.class).block();
 
         DocumentMetadata documentMetadata = new DocumentMetadata();
-        documentMetadata.setLibelle(libelle);
+        documentMetadata.setLibelleTypeDocument(libelleTypeDocument);
 
         //Mise à jour des métadonnées
         updateDocumentMetadata(objectType, objectId, document.getEntry().getId(), documentMetadata, true);
@@ -310,7 +310,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .fromUriString(DOCUMENT_START_URI)
                 .path(documentId);
 
-        properties.setLibelleTypeDocument(documentMetadata.getLibelle());
+        properties.setLibelleTypeDocument(documentMetadata.getLibelleTypeDocument());
         AlfrescoMetadata alfrescoMetadata = new AlfrescoMetadata();
         alfrescoMetadata.setProperties(properties);
         alfrescoMetadata.setName(documentMetadata.getNom());

@@ -11,7 +11,7 @@ public interface DocumentMapper extends AbstractMapper<AlfrescoDocument, Documen
 
     @Mapping(source = "entry.id", target = "id")
     @Mapping(source = "entry.name", target = "nom")
-    @Mapping(source = "entry.properties.libelleTypeDocument", target = "libelle")
+    @Mapping(source = "entry.properties.libelleTypeDocument", target = "libelleTypeDocument")
     @Mapping(source = "entry.content.mimeType", target = "typeMime")
     @Mapping(source = "entry.modifiedByUser.displayName", target = "modifUser")
     @Mapping(source = "entry.modifiedAt", target = "modifDate")

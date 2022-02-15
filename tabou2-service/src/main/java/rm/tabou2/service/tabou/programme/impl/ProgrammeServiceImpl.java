@@ -620,7 +620,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long programmeId, String nom, String libelle, MultipartFile file) throws AppServiceException {
+    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
@@ -630,7 +630,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         //Récupération du document Dans alfresco
-        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelle, AlfrescoTabouType.PROGRAMME, programmeId, file));
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.PROGRAMME, programmeId, file));
 
     }
 
@@ -688,7 +688,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelle, String typeMime, Pageable pageable) {
+    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable) {
 
         //On vérifie que le programme existe
         Programme programmeToDelete = getProgrammeById(programmeId);
@@ -698,7 +698,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programmeToDelete.getNom());
         }
 
-        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.PROGRAMME, programmeId, nom, libelle, typeMime, pageable);
+        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.PROGRAMME, programmeId, nom, libelleTypeDocument, typeMime, pageable);
 
         List<DocumentMetadata> results = documentMapper.entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
 
