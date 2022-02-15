@@ -14,7 +14,6 @@ import org.ocpsoft.rewrite.servlet.config.Forward;
 import org.ocpsoft.rewrite.servlet.config.HttpConfigurationProvider;
 import org.ocpsoft.rewrite.servlet.config.Path;
 import org.ocpsoft.rewrite.servlet.config.rule.Join;
-import org.ocpsoft.rewrite.servlet.config.rule.JoinPath;
 
 /**
  * @author FNI18300
@@ -44,7 +43,7 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 				//Gestion de la redirection des opérations
 				.addRule(Join.path("/v1/" + TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION))
 				.addRule(Join.path("/v1/" + TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH))
-				// V1/** -> c'est l'officiel 
+				// V1/** -> c'est l'officiel
 				.addRule(Join.path("/v1/{path}").to("{path}"))
 				// /tiers -> l'officiel c'est V1
 				.addRule(Join.path(TABOU2_TIERS).to("/v1/" + TABOU2_TIERS))
