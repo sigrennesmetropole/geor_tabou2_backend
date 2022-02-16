@@ -472,7 +472,7 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long operationId, String nom, String libelle, MultipartFile file) throws AppServiceException {
+    public DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException {
 
         //On vérifie que l'opération existe et que l'utilisateur a bien les droits d'ajout sur le document
         OperationIntermediaire operation = getOperationById(operationId);
@@ -482,13 +482,13 @@ public class OperationServiceImpl implements OperationService {
         }
 
         //Récupération du document Dans alfresco
-        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelle, AlfrescoTabouType.OPERATION, operationId, file));
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.OPERATION, operationId, file));
 
     }
 
 
     @Override
-    public Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelle, String typeMime, Pageable pageable) {
+    public Page<DocumentMetadata> searchDocuments(long operationId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable) {
 
         OperationEntity operationEntity = operationDao.findOneById(operationId);
 
@@ -496,7 +496,7 @@ public class OperationServiceImpl implements OperationService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer l'opération id = " + operationId);
         }
 
-        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.OPERATION, operationId, nom, libelle, typeMime, pageable);
+        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.OPERATION, operationId, nom, libelleTypeDocument, typeMime, pageable);
 
         List<DocumentMetadata> results = documentMapper.entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
 

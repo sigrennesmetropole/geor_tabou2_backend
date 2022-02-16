@@ -78,7 +78,7 @@
           },
           {
             "in": "query",
-            "name": "libelle",
+            "name": "libelleTypeDocument",
             "description": "Libellé du type de document",
             "required": false,
             "type": "string"
@@ -1999,7 +1999,7 @@
           },
           {
             "in": "query",
-            "name": "libelle",
+            "name": "libelleTypeDocument",
             "description": "Libellé du type de document",
             "required": true,
             "type": "string"

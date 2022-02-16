@@ -1193,7 +1193,7 @@
           "description": "Nom du document",
           "type": "string"
         },
-        "libelle": {
+        "libelleTypeDocument": {
           "description": "Libellé du type de document",
           "type": "string"
         },

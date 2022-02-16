@@ -147,12 +147,12 @@ public interface ProgrammeService {
      *
      * @param programmeId identifiant du programme
      * @param nom nom du document
-     * @param libelle libellé du type de document
+     * @param libelleTypeDocument libellé du type de document
      * @param file document à ajouter
      * @return métadonnées du document
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
-    DocumentMetadata addDocument(long programmeId, String nom, String libelle, MultipartFile file) throws AppServiceException;
+    DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException;
 
     /**
      * Suppresion d'un document dans Alfresco.
@@ -189,12 +189,12 @@ public interface ProgrammeService {
      *
      * @param programmeId identifiant d'un programme
      * @param nom nom du document
-     * @param libelle libellé du type de document
+     * @param libelleTypeDocument libellé du type de document
      * @param typeMime typeMime d'un document
      * @param pageable paramètres de pagination
      * @return liste des documents
      */
-    Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelle, String typeMime, Pageable pageable);
+    Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable);
 
 
 }
