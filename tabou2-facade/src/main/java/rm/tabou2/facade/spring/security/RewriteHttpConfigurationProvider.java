@@ -36,21 +36,21 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 		return ConfigurationBuilder.begin()
 				.addRule().when(Direction.isInbound().and(Path.matches("/v2/api-docs"))).perform(Log.message(Level.INFO,"Request swagger").and(Forward.to("/v2/api-docs")))
 				// V2 -> c'est l'officiel
-				.addRule().when(Direction.isInbound().and(Path.matches("/v2/{path}"))).perform(Log.message(Level.INFO,"Request {path}").and(Forward.to("/{path}")))
+				.addRule().when(Direction.isInbound().and(Path.matches("/v2/{path}"))).perform(Forward.to("/{path}")).where("path").matches(".*")
 				// V1/tiers** -> c'est l'officiel pour les tiers
-				.addRule(Join.path("/v1/" + TABOU2_TIERS).to("/v1" +  TABOU2_TIERS))
-				.addRule(Join.path("/v1/" + TABOU2_TIERS_PATH).to("/v1" +  TABOU2_TIERS_PATH))
+				.addRule(Join.path("/v1" + TABOU2_TIERS).to("/v1" +  TABOU2_TIERS))
+				.addRule(Join.path("/v1" + TABOU2_TIERS_PATH).to("/v1" +  TABOU2_TIERS_PATH)).where("path").matches(".*")
 				//Gestion de la redirection des opérations
-				.addRule(Join.path("/v1/" + TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION))
-				.addRule(Join.path("/v1/" + TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH))
+				.addRule(Join.path("/v1" + TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION))
+				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH)).where("path").matches(".*")
 				// V1/** -> c'est l'officiel
-				.addRule(Join.path("/v1/{path}").to("{path}"))
+				.addRule(Join.path("/v1/{path}").to("/{path}")).where("path").matches(".*")
 				// /tiers -> l'officiel c'est V1
-				.addRule(Join.path(TABOU2_TIERS).to("/v1/" + TABOU2_TIERS))
-				.addRule(Join.path(TABOU2_TIERS_PATH).to("/v1/" + TABOU2_TIERS_PATH))
+				.addRule(Join.path(TABOU2_TIERS).to("/v1" + TABOU2_TIERS))
+				.addRule(Join.path(TABOU2_TIERS_PATH).to("/v1" + TABOU2_TIERS_PATH)).where("path").matches(".*")
 				// Redirection des opérations actuelles vers la v1
 				.addRule(Join.path(TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION))
-				.addRule(Join.path(TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH));
+				.addRule(Join.path(TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH)).where("path").matches(".*");
 	}
 
 	@Override

@@ -149,21 +149,19 @@ create table tabou_operation (
                            num_ads varchar(255),
                            surface_totale numeric(15,2),
                            nb_logement_prevu integer,
-                           plhlogement_prevu integer,
-                           plhlogement_livre integer,
                            ql1 varchar(255),
                            scot boolean,
                            densite_scot double precision,
                            ql3 varchar(255),
                            nb_entreprise integer,
                            nb_salarie integer,
-                           id_plh bigserial,
-                           id_entite_referente bigserial,
+                           id_plh bigint,
+                           id_entite_referente bigint,
                            objectifs text,
-                           id_vocation_za bigserial,
+                           id_vocation_za bigint,
                            paf_taux double precision,
-                           id_type_occupation bigserial,
-                           id_outil_foncier bigserial,
+                           id_type_occupation bigint,
+                           id_outil_foncier bigint,
                            densite_oap double precision,
                            plui_disposition text,
                            plui_adaptation text,
@@ -205,8 +203,8 @@ create table if not exists tabou_type_programmation(
 
 create table if not exists tabou_information_programmation(
     id_information_programmation bigserial,
-    id_operation bigserial,
-    id_type_programmation bigserial,
+    id_operation bigint,
+    id_type_programmation bigint,
     description text,
     primary key (id_information_programmation)
 );
@@ -223,8 +221,8 @@ create table if not exists tabou_type_contribution(
 
 create table if not exists tabou_contribution(
     id_contribution bigserial,
-    id_operation bigserial,
-    id_type_contribution bigserial,
+    id_operation bigint,
+    id_type_contribution bigint,
     description text,
     primary key (id_contribution)
 );
@@ -241,8 +239,8 @@ create table if not exists tabou_type_foncier(
 
 create table if not exists tabou_description_foncier(
     id_description_foncier bigserial,
-    id_operation bigserial,
-    id_type_foncier bigserial,
+    id_operation bigint,
+    id_type_foncier bigint,
     description text,
     taux double precision,
     primary key (id_description_foncier)
@@ -260,8 +258,8 @@ create table if not exists tabou_type_amenageur(
 
 create table if not exists tabou_amenageur(
     id_amenageur bigserial,
-    id_operation bigserial,
-    id_type_amenageur bigserial,
+    id_operation bigint,
+    id_type_amenageur bigint,
     nom varchar(255),
     primary key (id_amenageur)
 );
@@ -285,8 +283,8 @@ create table if not exists tabou_type_financement_operation(
 
 create table if not exists tabou_description_financement_operation(
     id_description_financement_operation bigserial,
-    id_operation bigserial,
-    id_type_financement_operation bigserial,
+    id_operation bigint,
+    id_type_financement_operation bigint,
     description text,
     primary key(id_description_financement_operation)
 );
@@ -303,8 +301,8 @@ create table if not exists tabou_type_action_operation(
 
 create table if not exists tabou_action_operation(
     id_action_operation bigserial,
-    id_operation bigserial,
-    id_type_action_operation bigserial,
+    id_operation bigint,
+    id_type_action_operation bigint,
     description text,
     primary key (id_action_operation)
 );
@@ -321,8 +319,8 @@ create table if not exists tabou_type_acteur(
 
 create table if not exists tabou_acteur(
     id_acteur bigserial,
-    id_operation bigserial,
-    id_type_acteur bigserial,
+    id_operation bigint,
+    id_type_acteur bigint,
     description text,
     primary key (id_acteur)
 );
@@ -461,8 +459,8 @@ create table tabou_fonction_contact (
 create table tabou_contact_tiers
 (
     id_contact_tiers    bigserial,
-    id_tiers            bigserial NOT NULL,
-    id_fonction_contact bigserial NOT NULL,
+    id_tiers            bigint NOT NULL,
+    id_fonction_contact bigint NOT NULL,
     nom                 varchar(50) NOT NULL,
     prenom              varchar(50),
     service             varchar(50),

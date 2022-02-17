@@ -51,8 +51,8 @@ create table if not exists tabou_type_programmation(
 
 create table if not exists tabou_information_programmation(
     id_information_programmation bigserial,
-    id_operation bigserial,
-    id_type_programmation bigserial,
+    id_operation bigint,
+    id_type_programmation bigint,
     description text,
     primary key (id_information_programmation)
 );
@@ -69,8 +69,8 @@ create table if not exists tabou_type_contribution(
 
 create table if not exists tabou_contribution(
     id_contribution bigserial,
-    id_operation bigserial,
-    id_type_contribution bigserial,
+    id_operation bigint,
+    id_type_contribution bigint,
     description text,
     primary key (id_contribution)
 );
@@ -87,8 +87,8 @@ create table if not exists tabou_type_foncier(
 
 create table if not exists tabou_description_foncier(
     id_description_foncier bigserial,
-    id_operation bigserial,
-    id_type_foncier bigserial,
+    id_operation bigint,
+    id_type_foncier bigint,
     description text,
     taux double precision,
     primary key (id_description_foncier)
@@ -106,8 +106,8 @@ create table if not exists tabou_type_amenageur(
 
 create table if not exists tabou_amenageur(
     id_amenageur bigserial,
-    id_operation bigserial,
-    id_type_amenageur bigserial,
+    id_operation bigint,
+    id_type_amenageur bigint,
     nom varchar(255),
     primary key (id_amenageur)
 );
@@ -131,8 +131,8 @@ create table if not exists tabou_type_financement_operation(
 
 create table if not exists tabou_description_financement_operation(
     id_description_financement_operation bigserial,
-    id_operation bigserial,
-    id_type_financement_operation bigserial,
+    id_operation bigint,
+    id_type_financement_operation bigint,
     description text,
     primary key(id_description_financement_operation)
 );
@@ -149,8 +149,8 @@ create table if not exists tabou_type_action_operation(
 
 create table if not exists tabou_action_operation(
     id_action_operation bigserial,
-    id_operation bigserial,
-    id_type_action_operation bigserial,
+    id_operation bigint,
+    id_type_action_operation bigint,
     description text,
     primary key (id_action_operation)
 );
@@ -177,8 +177,8 @@ create table if not exists tabou_type_acteur(
 
 create table if not exists tabou_acteur(
     id_acteur bigserial,
-    id_operation bigserial,
-    id_type_acteur bigserial,
+    id_operation bigint,
+    id_type_acteur bigint,
     description text,
     primary key (id_acteur)
 );
@@ -194,8 +194,8 @@ create table if not exists tabou_fonction_contact (
 create table if not exists tabou_contact_tiers
 (
     id_contact_tiers    bigserial,
-    id_tiers            bigserial NOT NULL,
-    id_fonction_contact bigserial NOT NULL,
+    id_tiers            bigint NOT NULL,
+    id_fonction_contact bigint NOT NULL,
     nom                 varchar(50) NOT NULL,
     prenom              varchar(50),
     service             varchar(50),
@@ -229,13 +229,13 @@ END $$;
 
 alter table tabou_operation
 add if not exists densite_scot double precision,
-add if not exists id_plh bigserial,
-add if not exists id_entite_referente bigserial,
+add if not exists id_plh bigint,
+add if not exists id_entite_referente bigint,
 add if not exists objectifs text,
-add if not exists id_vocation_za bigserial,
+add if not exists id_vocation_za bigint,
 add if not exists paf_taux double precision,
-add if not exists id_type_occupation bigserial,
-add if not exists id_outil_foncier bigserial,
+add if not exists id_type_occupation bigint,
+add if not exists id_outil_foncier bigint,
 add if not exists densite_oap double precision,
 add if not exists plui_disposition text,
 add if not exists plui_adaptation text,
@@ -395,4 +395,26 @@ alter table if exists tabou_acteur
     foreign key (id_operation)
     references tabou_operation;
 
+END $$;
+
+-- Reprise données plhlogement_prevu et plhlogement_livre
+DO $$
+DECLARE
+    r record;
+	inserted_plh bigint;
+BEGIN
+
+if exists (select *
+    from information_schema.columns
+    where table_name = 'tabou_operation' and column_name = 'plhlogement_prevu')
+then
+
+FOR r IN
+    SELECT id_operation, plhlogement_prevu, plhlogement_livre FROM tabou_operation
+LOOP
+    INSERT INTO tabou_plh (logement_prevu, logement_livre) VALUES (r.plhlogement_prevu, r.plhlogement_livre) RETURNING id_plh INTO inserted_plh;
+    UPDATE tabou_operation SET id_plh = inserted_plh WHERE id_operation = r.id_operation;
+END LOOP;
+alter table tabou_operation drop plhlogement_prevu, drop plhlogement_livre;
+end if;
 END $$;
