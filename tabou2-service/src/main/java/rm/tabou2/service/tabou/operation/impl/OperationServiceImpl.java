@@ -59,6 +59,8 @@ import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.*;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -203,6 +205,15 @@ public class OperationServiceImpl implements OperationService {
 
     @Value("${foncier.code.prive}")
     private String codeFoncierPrive;
+
+    @Value("${fiche.template.operation.activite}")
+    private String pathTemplateActivite;
+
+    @Value("${fiche.template.operation.habitat}")
+    private String pathTemplateHabitat;
+
+    @Value("${fiche.template.operation.mixte}")
+    private String pathTemplateMixte;
 
     @Autowired
     private AlfrescoService alfrescoService;
@@ -418,20 +429,43 @@ public class OperationServiceImpl implements OperationService {
 
         switch (operationEntity.getVocation().getCode()){
             case "ACTIVITE":
-                path = "template/operation/template_fiche_suivi_activite.odt";
+                path = pathTemplateActivite;
                 break;
             case "HABITAT":
-                path= "template/operation/template_fiche_suivi_habitat.odt";
+                path= pathTemplateHabitat;
                 break;
             case "MIXTE":
-                path= "template/operation/template_fiche_suivi_mixte.odt";
+                path= pathTemplateMixte;
                 break;
             default:
                 throw new AppServiceNotFoundException();
         }
+        File file = new File(path);
+
+        if(!file.exists()){
+            LOGGER.warn("Le chemin de template spécifié (" + path + ") n'existe pas, utilisation du chemin par défaut");
+            switch (operationEntity.getVocation().getCode()){
+                case "ACTIVITE":
+                    path = "template/operation/template_fiche_suivi_activite.odt";
+                    break;
+                case "HABITAT":
+                    path= "template/operation/template_fiche_suivi_habitat.odt";
+                    break;
+                case "MIXTE":
+                    path= "template/operation/template_fiche_suivi_mixte.odt";
+                    break;
+                default:
+                    throw new AppServiceNotFoundException();
+            }
+            try {
+                file = new ClassPathResource(path).getFile();
+            } catch (IOException e) {
+                throw new AppServiceException("Erreur lors de la récupération du template", e);
+            }
+        }
 
         try {
-            templateFileInputStream = new ClassPathResource(path).getInputStream();
+            templateFileInputStream = new FileInputStream(file);
         } catch (IOException e) {
             throw new AppServiceException("Erreur lors de la récupération du template", e);
         }

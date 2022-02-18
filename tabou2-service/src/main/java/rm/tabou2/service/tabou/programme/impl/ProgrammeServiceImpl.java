@@ -73,6 +73,8 @@ import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -174,6 +176,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
+
+    @Value("fiche.template.programme")
+    private String pathTemplate;
 
     @Autowired
     private AlfrescoService alfrescoService;
@@ -539,8 +544,17 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         InputStream templateFileInputStream;
 
+        File templateFile = new File(pathTemplate);
+        if(!templateFile.exists()){
+            LOGGER.warn("Le chemin de template spécifié (" + pathTemplate + ") n'existe pas, utilisation du chemin par défaut");
+            try{
+                templateFile = (new ClassPathResource("template/programme/template_fiche_suivi.odt")).getFile();
+            } catch (IOException e) {
+                throw new AppServiceException("Erreur lors de la récupération du template", e);
+            }
+        }
         try {
-            templateFileInputStream = new ClassPathResource("template/programme/template_fiche_suivi.odt").getInputStream();
+            templateFileInputStream = new FileInputStream(templateFile);
         } catch (IOException e) {
             throw new AppServiceException("Erreur lors de la récupération du template", e);
         }
