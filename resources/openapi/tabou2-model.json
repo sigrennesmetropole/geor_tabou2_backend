@@ -403,6 +403,10 @@
             "$ref": "#/definitions/Acteur"
           }
         },
+        "plui": {
+          "type": "object",
+          "$ref": "#/definitions/Plui"
+        },
         "createUser": {
           "description": "Utilisateur qui a créé l'entité",
           "type": "string"

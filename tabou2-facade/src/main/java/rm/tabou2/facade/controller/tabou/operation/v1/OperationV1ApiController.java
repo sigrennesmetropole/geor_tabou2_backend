@@ -115,7 +115,7 @@ public class OperationV1ApiController extends AbstractExportDocumentApi implemen
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationEntity.class);
 
-        Page<OperationIntermediaire> page = operationService.searchOperations(operationsCriteria, pageable);
+        Page<OperationV1> page = mapper.entitiesToDto(operationService.searchOperations(operationsCriteria, pageable), pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }
