@@ -42,7 +42,9 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 				.addRule(Join.path("/v1" + TABOU2_TIERS_PATH).to("/v1" +  TABOU2_TIERS_PATH)).where("path").matches(".*")
 				//Gestion de la redirection des opérations
 				.addRule(Join.path("/v1" + TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION))
-				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH)).where("path").matches(".*")
+				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH))
+				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH + "/etapes").to("/v1" + TABOU2_OPERATION_PATH + "/etapes"))
+				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}").to("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}"))
 				// V1/** -> c'est l'officiel
 				.addRule(Join.path("/v1/{path}").to("/{path}")).where("path").matches(".*")
 				// /tiers -> l'officiel c'est V1
@@ -50,7 +52,9 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 				.addRule(Join.path(TABOU2_TIERS_PATH).to("/v1" + TABOU2_TIERS_PATH)).where("path").matches(".*")
 				// Redirection des opérations actuelles vers la v1
 				.addRule(Join.path(TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION))
-				.addRule(Join.path(TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH)).where("path").matches(".*");
+				.addRule(Join.path(TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH))
+				.addRule(Join.path(TABOU2_OPERATION_PATH + "/etapes").to("/v1" + TABOU2_OPERATION_PATH + "/etapes"))
+				.addRule(Join.path(TABOU2_OPERATION_PATH + "/evenements/{eventId}").to("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}"));
 	}
 
 	@Override
