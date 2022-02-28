@@ -10,6 +10,7 @@ import org.ocpsoft.rewrite.config.Configuration;
 import org.ocpsoft.rewrite.config.ConfigurationBuilder;
 import org.ocpsoft.rewrite.config.Direction;
 import org.ocpsoft.rewrite.config.Log;
+import org.ocpsoft.rewrite.servlet.config.DispatchType;
 import org.ocpsoft.rewrite.servlet.config.Forward;
 import org.ocpsoft.rewrite.servlet.config.HttpConfigurationProvider;
 import org.ocpsoft.rewrite.servlet.config.Path;
@@ -34,7 +35,7 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 	@Override
 	public Configuration getConfiguration(ServletContext context) {
 		return ConfigurationBuilder.begin()
-				.addRule().when(Direction.isInbound().and(Path.matches("/v2/api-docs"))).perform(Log.message(Level.INFO,"Request swagger").and(Forward.to("/v2/api-docs")))
+				.addRule().when(Direction.isInbound().and(Path.matches("/v2/api-docs")).and(DispatchType.isRequest())).perform(Log.message(Level.INFO,"Request swagger").and(Forward.to("/v2/api-docs")))
 				// V2 -> c'est l'officiel
 				.addRule().when(Direction.isInbound().and(Path.matches("/v2/{path}"))).perform(Forward.to("/{path}")).where("path").matches(".*")
 				// V1/tiers** -> c'est l'officiel pour les tiers
