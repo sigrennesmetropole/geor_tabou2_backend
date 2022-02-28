@@ -36,7 +36,7 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 	@Override
 	public Configuration getConfiguration(ServletContext context) {
 		return ConfigurationBuilder.begin()
-				.addRule().when(Direction.isInbound().and(Path.matches(SWAGGER_API_DOCS)).and(DispatchType.isRequest())).perform(Log.message(Level.INFO,"Request swagger").and(Forward.to(SWAGGER_API_DOCS)))
+				.addRule().when(Direction.isInbound().and(Path.matches(SWAGGER_API_DOCS))).perform(Log.message(Level.INFO,"Request swagger").and(Forward.to(SWAGGER_API_DOCS)))
 				// V2 -> c'est l'officiel
 				// L'URL de swgger ne doit pas être redirigée également
 				.addRule().when(Direction.isInbound().and(Path.matches("/v2/{path}")).andNot(Path.matches(SWAGGER_API_DOCS).and(DispatchType.isRequest()))).perform(Forward.to("/{path}")).where("path").matches(".*")
