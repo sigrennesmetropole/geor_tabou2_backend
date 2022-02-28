@@ -137,6 +137,7 @@ create table tabou_operation (
                            id_mode_amenagement bigint,
                            id_consommation_espace bigint,
                            id_etape_operation bigint,
+                           id_description_concertation bigint,
                            est_secteur boolean,
                            diffusion_restreinte boolean,
                            code varchar(255) unique,
@@ -655,6 +656,11 @@ alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_outil_foncier
         foreign key (id_outil_foncier)
             references tabou_outil_foncier;
+
+alter table if exists tabou_operation
+    add constraint fk_tabou_description_concertation
+        foreign key (id_description_concertation)
+            references tabou_description_concertation(id_description_concertation);
 
 alter table if exists tabou_operation_tiers
     add constraint fk_tabou_operation_tiers_tabou_operation
