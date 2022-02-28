@@ -1,6 +1,15 @@
+# LOG
+logging.level.org.springframework=INFO
+logging.level.rm.tabou2=DEBUG
+
 
 ## Path du serveur
 server.servlet.context-path=/v1
+
+## Base de données
+spring.jpa.properties.javax.persistence.schema-generation.create-source=metadata
+spring.jpa.properties.javax.persistence.schema-generation.scripts.action=create
+spring.jpa.properties.javax.persistence.schema-generation.scripts.create-target=create.sql
 
 #Hibernate
 spring.jpa.properties.hibernate.current_session_context_class=org.springframework.orm.hibernate5.SpringSessionContext
@@ -36,6 +45,22 @@ spring.sig.datasource.driver-class-name=org.postgresql.Driver
 spring.sig.datasource.hibernate.show_sql=true
 spring.sig.datasource.hibernate.format_sql=false
 spring.sig.datasource.hibernate.hbm2ddl.auto=validate
+spring.sig.datasource.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+## Roles de l'application
+role.consultation=ROLE_EL_APPLIS_TABOU_CONSULT
+role.contributeur=ROLE_EL_APPLIS_TABOU_CONTRIB
+role.referent=ROLE_EL_APPLIS_TABOU_REFERENT
+role.administrateur=ROLE_MAPSTORE_ADMIN
+
+## Configuration de l'application
+pagination.default.max.results = 100
+
+#Authentification alfresco
+alfresco.authenticate.user=admin
+alfresco.authenticate.password=admin
+alfresco.base.url=http://10.50.1.21:8080/alfresco/api/-default-/public/
+alfresco.tabou.folder.node.id=7d2d4954-83b0-4826-9f1b-5df5cc497f63
 
 
 
