@@ -18,5 +18,7 @@ public class AlfrescoProperties {
     public String objetTabou;
     @JsonProperty("tabou2:libelleTypeDocument")
     public String libelleTypeDocument;
+    @JsonProperty("tabou2:dateDocument")
+    public String dateDocument;
 
 }
