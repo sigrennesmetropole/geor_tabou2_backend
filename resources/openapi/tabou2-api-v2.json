@@ -14,7 +14,7 @@
     }
   },
   "host": "%host%",
-  "basePath": "/tabou2",
+  "basePath": "/v2",
   "schemes": [
     "http"
   ],

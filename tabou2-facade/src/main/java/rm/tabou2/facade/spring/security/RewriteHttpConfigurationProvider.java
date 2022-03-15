@@ -36,8 +36,7 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 		return ConfigurationBuilder.begin()
 				//.addRule().when(Direction.isInbound().and(Path.matches(SWAGGER_API_DOCS))).perform(Log.message(Level.INFO,"Request swagger").and(Forward.to(SWAGGER_API_DOCS)))
 				// V2 -> c'est l'officiel
-				// L'URL de swgger ne doit pas être redirigée également
-				.addRule().when(Direction.isInbound().and(Path.matches("/v2/{path}")).andNot(Path.matches(SWAGGER_API_DOCS).and(DispatchType.isRequest()))).perform(Forward.to("/{path}")).where("path").matches(".*")
+				//.addRule().when(Direction.isInbound().and(Path.matches("/v2/{path}"))).perform(Forward.to("/{path}")).where("path").matches(".*")
 				// V1/tiers** -> c'est l'officiel pour les tiers
 				.addRule(Join.path("/v1" + TABOU2_TIERS).to("/v1" +  TABOU2_TIERS))
 				.addRule(Join.path("/v1" + TABOU2_TIERS_PATH).to("/v1" +  TABOU2_TIERS_PATH)).where("path").matches(".*")
