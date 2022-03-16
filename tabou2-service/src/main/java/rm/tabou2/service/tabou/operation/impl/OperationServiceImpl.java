@@ -93,6 +93,9 @@ public class OperationServiceImpl implements OperationService {
     private ConsommationEspaceDao consommationEspaceDao;
 
     @Autowired
+    private PlhDao plhDao;
+
+    @Autowired
     private OperationEmpriseHelper operationEmpriseHelper;
 
     @Autowired
@@ -156,7 +159,9 @@ public class OperationServiceImpl implements OperationService {
 
         // ajout d'un événement système de changement d'état
         operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etape.getLibelle()));
-
+        if(operationEntity.getPlh() != null){
+            plhDao.save(operationEntity.getPlh());
+        }
         operationDao.save(operationEntity);
         OperationIntermediaire operationSaved = operationMapper.entityToDto(operationEntity);
 
@@ -200,7 +205,14 @@ public class OperationServiceImpl implements OperationService {
         if (etapeChanged) {
             operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperationEntity.getLibelle()));
         }
-
+        if(operationEntity.getPlh() != null) {
+            PlhEntity plh = plhDao.getOne(operationEntity.getPlh().getId());
+            if(operationEntity.getPlh().getDate() != null) plh.setDate(operation.getPlh().getDate());
+            if(operationEntity.getPlh().getDescription() != null) plh.setDescription(operationEntity.getPlh().getDescription());
+            if(operationEntity.getPlh().getLogementsLivres() != null) plh.setLogementsLivres(operationEntity.getPlh().getLogementsLivres());
+            if(operationEntity.getPlh().getLogementsPrevus() != null) plh.setLogementsPrevus(operationEntity.getPlh().getLogementsPrevus());
+            plhDao.save(plh);
+        }
         operationEntity = operationDao.save(operationEntity);
 
         return operationMapper.entityToDto(operationEntity);

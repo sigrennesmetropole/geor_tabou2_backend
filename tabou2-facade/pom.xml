@@ -83,7 +83,7 @@
 						<configuration>
 							<apiPackage>rm.tabou2.facade.api.v2</apiPackage>
 							<inputSpec>./resources/openapi/tabou2-api-v2.json</inputSpec>
-							<templateDirectory>${project.basedir}/src/conf/generation</templateDirectory>
+							<templateDirectory>${project.basedir}/src/conf/generation/version</templateDirectory>
 						</configuration>
 					</execution>
 				</executions>
