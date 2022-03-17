@@ -5,13 +5,12 @@ package rm.tabou2.facade.spring.security;
 
 import javax.servlet.ServletContext;
 
+import org.ocpsoft.logging.Logger;
 import org.ocpsoft.rewrite.config.Configuration;
 import org.ocpsoft.rewrite.config.ConfigurationBuilder;
 import org.ocpsoft.rewrite.config.Direction;
-import org.ocpsoft.rewrite.servlet.config.DispatchType;
-import org.ocpsoft.rewrite.servlet.config.Forward;
-import org.ocpsoft.rewrite.servlet.config.HttpConfigurationProvider;
-import org.ocpsoft.rewrite.servlet.config.Path;
+import org.ocpsoft.rewrite.config.Log;
+import org.ocpsoft.rewrite.servlet.config.*;
 import org.ocpsoft.rewrite.servlet.config.rule.Join;
 
 /**
@@ -34,9 +33,17 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 	@Override
 	public Configuration getConfiguration(ServletContext context) {
 		return ConfigurationBuilder.begin()
-				//.addRule().when(Direction.isInbound().and(Path.matches(SWAGGER_API_DOCS))).perform(Log.message(Level.INFO,"Request swagger").and(Forward.to(SWAGGER_API_DOCS)))
-				// V2 -> c'est l'officiel
-				//.addRule().when(Direction.isInbound().and(Path.matches("/v2/{path}"))).perform(Forward.to("/{path}")).where("path").matches(".*")
+				.addRule().when(Direction.isInbound().and(Path.matches(SWAGGER_API_DOCS)).and(DispatchType.isRequest())).perform(Log.message(Logger.Level.INFO,"Request swagger").and(Forward.to(SWAGGER_API_DOCS)))
+				// /V2/tiers** c'est la v2
+				.addRule(Join.path("/v2" + TABOU2_TIERS).to("/v2" + TABOU2_TIERS))
+				.addRule(Join.path("/v2" + TABOU2_TIERS_PATH).to("/v2" +  TABOU2_TIERS_PATH)).where("path").matches(".*")
+				// /V2/operations** c'est la v2
+				.addRule(Join.path("/v2" + TABOU2_OPERATION).to("/v2" + TABOU2_OPERATION))
+				.addRule(Join.path("/v2" + TABOU2_OPERATION_PATH).to("/v2" + TABOU2_OPERATION_PATH))
+				.addRule(Join.path("/v2" + TABOU2_OPERATION_PATH + "/etapes").to("/v2" + TABOU2_OPERATION_PATH + "/etapes")).when(Method.isPut().and(Direction.isInbound()).and(DispatchType.isRequest()))
+				.addRule(Join.path("/v2" + TABOU2_OPERATION_PATH + "/evenements/{eventId}").to("/v2" + TABOU2_OPERATION_PATH + "/evenements/{eventId}"))
+				// V2/** -> c'est l'officiel
+				.addRule().when(Direction.isInbound().and(Path.matches("/v2/{path}")).andNot(Path.matches(SWAGGER_API_DOCS))).perform(Forward.to("/{path}")).where("path").matches(".*")
 				// V1/tiers** -> c'est l'officiel pour les tiers
 				.addRule(Join.path("/v1" + TABOU2_TIERS).to("/v1" +  TABOU2_TIERS))
 				.addRule(Join.path("/v1" + TABOU2_TIERS_PATH).to("/v1" +  TABOU2_TIERS_PATH)).where("path").matches(".*")
@@ -47,14 +54,15 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}").to("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}"))
 				// V1/** -> c'est l'officiel
 				.addRule(Join.path("/v1/{path}").to("/{path}")).where("path").matches(".*")
+
 				// /tiers -> l'officiel c'est V1
 				.addRule(Join.path(TABOU2_TIERS).to("/v1" + TABOU2_TIERS))
 				.addRule(Join.path(TABOU2_TIERS_PATH).to("/v1" + TABOU2_TIERS_PATH)).where("path").matches(".*")
 				// Redirection des opérations actuelles vers la v1
-				.addRule(Join.path(TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION))
-				.addRule(Join.path(TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH))
-				.addRule(Join.path(TABOU2_OPERATION_PATH + "/etapes").to("/v1" + TABOU2_OPERATION_PATH + "/etapes"))
-				.addRule(Join.path(TABOU2_OPERATION_PATH + "/evenements/{eventId}").to("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}"));
+				.addRule(Join.path(TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION)).when(Direction.isInbound().and(DispatchType.isRequest()))
+				.addRule(Join.path(TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH)).when(Direction.isInbound().and(DispatchType.isRequest()))
+				.addRule(Join.path(TABOU2_OPERATION_PATH + "/etapes").to("/v1" + TABOU2_OPERATION_PATH + "/etapes")).when(Method.isPut().and(Direction.isInbound()).and(DispatchType.isRequest()))
+				.addRule(Join.path(TABOU2_OPERATION_PATH + "/evenements/{eventId}").to("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}")).when(Direction.isInbound().and(DispatchType.isRequest()));
 	}
 
 	@Override
