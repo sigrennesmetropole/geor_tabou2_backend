@@ -36,7 +36,7 @@ public interface ProgrammeService {
      * @param programme programme à modifier
      * @return programme modifié
      */
-    Programme updateProgramme(@ValidProgrammeUpdate Programme programme);
+    Programme updateProgramme(@ValidProgrammeUpdate Programme programme) throws AppServiceException;
 
     /**
      * Modification de l'étape d'un programme
@@ -45,7 +45,7 @@ public interface ProgrammeService {
      * @param etapeId     identifiant de l'étape
      * @return programme modifié
      */
-    Programme updateEtapeOfProgrammeId(long programmeId, long etapeId);
+    Programme updateEtapeOfProgrammeId(long programmeId, long etapeId) throws AppServiceException;
 
     /**
      * Récupération d'un programme par son identifiant.
