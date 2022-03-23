@@ -5,6 +5,9 @@ import rm.tabou2.service.bean.tabou.common.Commentaire;
 
 import java.util.List;
 
+/**
+ * Ensemble des commentaires d'une opération
+ */
 @Data
 public class CommentairesOperation {
     private Commentaire commentaireMontage;

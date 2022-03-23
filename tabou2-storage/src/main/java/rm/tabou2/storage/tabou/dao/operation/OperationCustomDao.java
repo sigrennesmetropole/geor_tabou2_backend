@@ -12,8 +12,8 @@ public interface OperationCustomDao {
 
     Page<OperationEntity> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable);
 
-    List<String> searchCommunesOfOperation(OperationEntity operation);
+    List<String> searchCommunesByOperation(OperationEntity operation);
 
-    OperationEntity searchParentSecteur(OperationEntity operation);
+    OperationEntity searchParentSecteur(Long idSecteur);
 
 }

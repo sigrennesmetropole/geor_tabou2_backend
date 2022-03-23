@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -73,10 +72,7 @@ import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -545,20 +541,20 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         InputStream templateFileInputStream;
 
         File templateFile = new File(pathTemplate);
-        if(!templateFile.exists()){
-            LOGGER.warn("Le chemin de template spécifié (" + pathTemplate + ") n'existe pas, utilisation du chemin par défaut");
-            try{
-                templateFile = (new ClassPathResource("template/programme/template_fiche_suivi.odt")).getFile();
+        if(!templateFile.exists()) {
+            LOGGER.warn("Le chemin de template spécifié ({}) n'existe pas, utilisation du chemin par défaut", pathTemplate);
+            templateFileInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("template/programme/template_fiche_suivi.odt");
+        }else{
+            try (FileInputStream fis = new FileInputStream(templateFile)){
+                templateFileInputStream = fis;
             } catch (IOException e) {
                 throw new AppServiceException("Erreur lors de la récupération du template", e);
             }
         }
-        try {
-            templateFileInputStream = new FileInputStream(templateFile);
-        } catch (IOException e) {
-            throw new AppServiceException("Erreur lors de la récupération du template", e);
-        }
 
+        if(templateFileInputStream == null){
+            throw new AppServiceException("Erreur lors de la récupération du template");
+        }
 
         FicheSuiviProgrammeDataModel ficheSuiviProgrammeDataModel = new FicheSuiviProgrammeDataModel();
         ficheSuiviProgrammeDataModel.setProgramme(programmeEntity);

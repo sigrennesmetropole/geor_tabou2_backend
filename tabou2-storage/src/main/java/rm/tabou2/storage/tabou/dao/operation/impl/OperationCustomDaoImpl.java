@@ -90,7 +90,7 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
     }
 
     @Override
-    public List<String> searchCommunesOfOperation(OperationEntity operation) {
+    public List<String> searchCommunesByOperation(OperationEntity operation) {
 
         StringBuilder query = new StringBuilder();
         query.append("SELECT com.nom ");
@@ -110,7 +110,7 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
     }
 
     @Override
-    public OperationEntity searchParentSecteur(OperationEntity secteur) {
+    public OperationEntity searchParentSecteur(Long idSecteur) {
         String query = "SELECT oa.* FROM urba_foncier.oa_secteur sec " +
                 "INNER JOIN (SELECT id_tabou, shape FROM urba_foncier.zac " +
                 "UNION ALL SELECT id_tabou, shape FROM urba_foncier.oa_limite_intervention inter) parent " +
@@ -119,7 +119,7 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
                 "WHERE sec.id_tabou = :idSec";
 
         List<OperationEntity> results = entityManager.createNativeQuery(query, OperationEntity.class)
-                .setParameter("idSec", secteur.getId())
+                .setParameter("idSec", idSecteur)
                 .getResultList();
 
         if(results.size() == 1){
