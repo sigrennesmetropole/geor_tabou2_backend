@@ -1674,11 +1674,11 @@
         },
         "logementsPrevus": {
           "description": "Nombre de logements prévus du plh",
-          "type": "string"
+          "type": "integer"
         },
         "logementsLivres": {
           "description": "Nombre de logements livrés du plh",
-          "type": "string"
+          "type": "integer"
         },
         "date": {
           "description": "Date du plh",
@@ -1843,7 +1843,8 @@
         },
         "taux": {
           "description": "Taux du foncier",
-          "type": "integer"
+          "type": "number",
+          "format": "double"
         }
       }
     },

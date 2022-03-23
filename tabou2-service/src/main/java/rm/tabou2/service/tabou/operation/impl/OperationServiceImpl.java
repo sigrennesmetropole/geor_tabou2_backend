@@ -1,6 +1,7 @@
 package rm.tabou2.service.tabou.operation.impl;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
+import rm.tabou2.service.helper.operation.OperationUpdateHelper;
 import rm.tabou2.service.helper.operation.OperationValidator;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
@@ -109,6 +111,9 @@ public class OperationServiceImpl implements OperationService {
     private OperationValidator operationValidator;
 
     @Autowired
+    private OperationUpdateHelper operationUpdateHelper;
+
+    @Autowired
     private EvenementOperationRightsHelper evenementOperationRightsHelper;
 
     @Autowired
@@ -134,6 +139,18 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private AlfrescoService alfrescoService;
+
+    @Autowired
+    private EntiteReferenteDao entiteReferenteDao;
+
+    @Autowired
+    private TypeOccupationDao typeOccupationDao;
+
+    @Autowired
+    private OutilFoncierDao outilFoncierDao;
+
+    @Autowired
+    private DescriptionConcertationDao concertationDao;
 
     @Override
     @Transactional
@@ -205,6 +222,28 @@ public class OperationServiceImpl implements OperationService {
         operationMapper.dtoToEntity(operation, operationEntity);
         assignMultivaluables(operation, operationEntity);
 
+        if(operation.getActeurs() != null){
+            operationUpdateHelper.updateActeurs(operation, operationEntity);
+        }
+        if(operation.getActions() != null){
+            operationUpdateHelper.updateActions(operation, operationEntity);
+        }
+        if(operation.getAmenageurs() != null){
+            operationUpdateHelper.updateAmenageurs(operation, operationEntity);
+        }
+        if(operation.getContributions() != null){
+            operationUpdateHelper.updateContributions(operation, operationEntity);
+        }
+        if(operation.getDescriptionsFoncier() != null){
+            operationUpdateHelper.updateDescriptionsFonciers(operation, operationEntity);
+        }
+        if(operation.getFinancements() != null){
+            operationUpdateHelper.updateFinancements(operation, operationEntity);
+        }
+        if(operation.getInformationsProgrammation() != null){
+            operationUpdateHelper.updateInformationsProgrammation(operation, operationEntity);
+        }
+
         if (etapeOperationEntity.isRemoveRestriction()) {
             operation.setDiffusionRestreinte(false);
         }
@@ -213,14 +252,7 @@ public class OperationServiceImpl implements OperationService {
         if (etapeChanged) {
             operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperationEntity.getLibelle()));
         }
-        if(operationEntity.getPlh() != null) {
-            PlhEntity plh = plhDao.getOne(operationEntity.getPlh().getId());
-            if(operationEntity.getPlh().getDate() != null) plh.setDate(operation.getPlh().getDate());
-            if(operationEntity.getPlh().getDescription() != null) plh.setDescription(operationEntity.getPlh().getDescription());
-            if(operationEntity.getPlh().getLogementsLivres() != null) plh.setLogementsLivres(operationEntity.getPlh().getLogementsLivres());
-            if(operationEntity.getPlh().getLogementsPrevus() != null) plh.setLogementsPrevus(operationEntity.getPlh().getLogementsPrevus());
-            plhDao.save(plh);
-        }
+
         operationEntity = operationDao.save(operationEntity);
 
         return operationMapper.entityToDto(operationEntity);
@@ -238,14 +270,14 @@ public class OperationServiceImpl implements OperationService {
     }
 
     private void assignMultivaluables(OperationIntermediaire operation, OperationEntity operationEntity){
-        if(operation.getEtape() != null && operation.getEtape().getId() != null){
-            EtapeOperationEntity etapeOperation = etapeOperationDao.findById(operation.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape d'opération id=" + operation.getId() + " n'a été trouvée"));
-            operationEntity.setEtapeOperation(etapeOperation);
-        }
-
         if(operation.getNature() != null && operation.getNature().getId() != null){
             NatureEntity nature = natureDao.findById(operation.getNature().getId()).orElseThrow(() -> new NoSuchElementException("Aucune nature id = " + operation.getNature().getId() + " n'a été trouvée"));
             operationEntity.setNature(nature);
+        }
+
+        if(operation.getEtape() != null && operation.getEtape().getId() != null){
+            EtapeOperationEntity etapeOperation = etapeOperationDao.findById(operation.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape d'opération id=" + operation.getId() + " n'a été trouvée"));
+            operationEntity.setEtapeOperation(etapeOperation);
         }
 
         if(operation.getVocation() != null && operation.getVocation().getId() != null){
@@ -273,11 +305,17 @@ public class OperationServiceImpl implements OperationService {
             operationEntity.setModeAmenagement(modeAmenagement);
         }
 
+        if(operation.getTypeOccupation() != null && operation.getTypeOccupation().getId() != null){
+            TypeOccupationEntity typeOccupation = typeOccupationDao.findById(operation.getTypeOccupation().getId()).orElseThrow(() -> new NoSuchElementException("Aucun type d'occupation id = " + operation.getTypeOccupation().getId() + " n'a été trouvé"));
+            operationEntity.setTypeOccupation(typeOccupation);
+        }
+
         if(operation.getConsommationEspace() != null && operation.getConsommationEspace().getId() != null){
             ConsommationEspaceEntity consommationEspace = consommationEspaceDao.findById(operation.getConsommationEspace().getId())
                     .orElseThrow(() -> new NoSuchElementException("Aucune consommation d'espace id = " + operation.getConsommationEspace().getId() + " n'a été trouvée"));
             operationEntity.setConsommationEspace(consommationEspace);
         }
+
     }
 
     @Override
