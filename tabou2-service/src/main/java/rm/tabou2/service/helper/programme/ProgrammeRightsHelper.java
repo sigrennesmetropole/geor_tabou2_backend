@@ -22,9 +22,6 @@ public class ProgrammeRightsHelper {
     private AuthentificationHelper authentificationHelper;
 
     @Autowired
-    private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
-
-    @Autowired
     private OperationRightsHelper operationRightsHelper;
 
     @Autowired
@@ -82,13 +79,6 @@ public class ProgrammeRightsHelper {
         if (programme.getOperationId() != null && !operationRightsHelper.checkCanGetOperation(operationDao.findOneById(programme.getOperationId()))) {
             String errorMessage = String.format("L'utilisateur n'a pas les droits de récupérer l'opération %s", programme.getOperationId());
             LOGGER.warn(errorMessage);
-            return false;
-        }
-
-        // validation de l'étape
-        boolean etapeValidation = etapeProgrammeWorkflowHelper.checkCanAssignEtapeToProgramme(programme.getEtape(), programme.getId());
-        if (!etapeValidation) {
-            LOGGER.warn("L'étape ne peut être assigné au programme");
             return false;
         }
 

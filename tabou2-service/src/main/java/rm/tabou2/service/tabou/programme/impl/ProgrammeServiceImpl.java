@@ -34,6 +34,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
+import rm.tabou2.service.helper.programme.ProgrammeValidator;
 import rm.tabou2.service.mapper.sig.ProgrammeRmMapper;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
@@ -154,6 +155,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeRightsHelper programmeRightsHelper;
 
     @Autowired
+    private ProgrammeValidator programmeValidator;
+
+    @Autowired
     private EvenementProgrammeRigthsHelper evenementProgrammeRigthsHelper;
 
     @Autowired
@@ -230,7 +234,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional
-    public Programme updateProgramme(Programme programme) {
+    public Programme updateProgramme(Programme programme) throws AppServiceException {
 
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programme.getId());
 
@@ -238,6 +242,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programmeEntity.isDiffusionRestreinte())) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
         }
+
+        programmeValidator.validateUpdateProgramme(programme, programmeEntity);
 
         // Récupération de la prochaine étape
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(programme.getEtape().getId());
@@ -274,7 +280,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional
-    public Programme updateEtapeOfProgrammeId(long programmeId, long etapeId) {
+    public Programme updateEtapeOfProgrammeId(long programmeId, long etapeId) throws AppServiceException {
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(etapeId);
 
         Programme programme = getProgrammeById(programmeId);

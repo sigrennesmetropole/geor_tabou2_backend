@@ -33,7 +33,7 @@ public interface OperationService {
      * @param operation opération à modifier
      * @return opération modifiée
      */
-    OperationIntermediaire updateOperation(@ValidOperationUpdate OperationIntermediaire operation);
+    OperationIntermediaire updateOperation(@ValidOperationUpdate OperationIntermediaire operation) throws AppServiceException;
 
     /**
      * Récupération d'une opération

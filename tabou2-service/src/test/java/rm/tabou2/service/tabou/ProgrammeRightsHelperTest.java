@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
+import rm.tabou2.service.helper.programme.ProgrammeValidator;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
@@ -34,6 +36,9 @@ class ProgrammeRightsHelperTest extends DatabaseInitializerTest {
 
     @Autowired
     private ProgrammeRightsHelper programmeRightsHelper;
+
+    @Autowired
+    private ProgrammeValidator programmeValidator;
 
     @Autowired
     private ProgrammeDao programmeDao;
@@ -234,7 +239,7 @@ class ProgrammeRightsHelperTest extends DatabaseInitializerTest {
         programme.setNumAds(programmeEntity.getNumAds());
         programme.setEtape(etapeProgrammeMapper.entityToDto(etapeProgrammeEntityEnChantier));
 
-        Assertions.assertFalse(programmeRightsHelper.checkCanUpdateProgramme(programme, programmeEntity.isDiffusionRestreinte()));
+        Assertions.assertThrows(AppServiceException.class, () -> programmeValidator.validateProgramme(programme));
     }
 
     @DisplayName("testCanGetEtapesForProgrammeDiffusionRestreinte: Test de la possibilité de récupérer la liste des étapes possibles " +

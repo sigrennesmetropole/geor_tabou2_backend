@@ -30,6 +30,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
+import rm.tabou2.service.helper.operation.OperationValidator;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
@@ -105,6 +106,9 @@ public class OperationServiceImpl implements OperationService {
     private OperationRightsHelper operationRightsHelper;
 
     @Autowired
+    private OperationValidator operationValidator;
+
+    @Autowired
     private EvenementOperationRightsHelper evenementOperationRightsHelper;
 
     @Autowired
@@ -173,7 +177,7 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     @Transactional
-    public OperationIntermediaire updateOperation(OperationIntermediaire operation) {
+    public OperationIntermediaire updateOperation(OperationIntermediaire operation) throws AppServiceException {
 
         OperationEntity operationEntity = operationDao.findOneById(operation.getId());
 
@@ -181,6 +185,10 @@ public class OperationServiceImpl implements OperationService {
         if (!operationRightsHelper.checkCanUpdateOperation(operation, operationMapper.entityToDto(operationEntity))) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification de l'operation " + operation.getNom());
         }
+
+        //Vérification contraintes métiers
+        operationValidator.validateUpdateOperation(operation, operationMapper.entityToDto(operationEntity));
+
 
         // Récupération de la prochaine étape
         EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findOneById(operation.getEtape().getId());
@@ -221,7 +229,7 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     @Transactional
-    public OperationIntermediaire updateEtapeOfOperationId(long operationId, long etapeId) {
+    public OperationIntermediaire updateEtapeOfOperationId(long operationId, long etapeId) throws AppServiceException {
         EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findOneById(etapeId);
 
         OperationIntermediaire operation = getOperationById(operationId);
