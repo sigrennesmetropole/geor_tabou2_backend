@@ -1201,6 +1201,11 @@
           "description": "Libellé du type de document",
           "type": "string"
         },
+        "dateDocument": {
+          "description": "Date du document",
+          "type": "string",
+          "format": "date"
+        },
         "typeMime": {
           "description": "Type MIME du document",
           "type": "string"
