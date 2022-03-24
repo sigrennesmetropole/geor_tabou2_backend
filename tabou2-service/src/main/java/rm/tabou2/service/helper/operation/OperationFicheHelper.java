@@ -22,9 +22,12 @@ import rm.tabou2.service.st.generator.DocumentGenerator;
 import rm.tabou2.service.st.generator.model.FicheSuiviOperationDataModel;
 import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.utils.PaginationUtils;
+import rm.tabou2.storage.sig.dao.CommuneCustomDao;
+import rm.tabou2.storage.sig.dao.SecteurCustomDao;
+import rm.tabou2.storage.sig.entity.CommuneEntity;
 import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
-import rm.tabou2.storage.tabou.dao.operation.OperationCustomDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.operation.VocationDao;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.*;
@@ -46,7 +49,13 @@ public class OperationFicheHelper {
     private DocumentGenerator documentGenerator;
 
     @Autowired
-    private OperationCustomDao operationCustomDao;
+    private OperationDao operationDao;
+
+    @Autowired
+    private SecteurCustomDao secteurCustomDao;
+
+    @Autowired
+    private CommuneCustomDao communeCustomDao;
 
     @Autowired
     private TypeEvenementDao typeEvenementDao;
@@ -166,8 +175,8 @@ public class OperationFicheHelper {
             }
         }
 
-        try (InputStream is = new FileInputStream(file)){
-            templateFileInputStream = is;
+        try {
+            templateFileInputStream = new FileInputStream(file);
         } catch (IOException e) {
             throw new AppServiceException("Erreur lors de la récupération du template", e);
         }
@@ -288,15 +297,21 @@ public class OperationFicheHelper {
     }
 
     private OperationEntity getParent(OperationEntity operationEntity){
+
         if(Boolean.TRUE.equals(operationEntity.getSecteur())){
-            return operationCustomDao.searchParentSecteur(operationEntity.getId());
-        }else{
-            return null;
+            Long id = secteurCustomDao.findIdParent(operationEntity.getId());
+            if(id != null) {
+                operationDao.findOneById(id);
+            }
         }
+
+        return null;
     }
 
     private String getCommunes(OperationEntity operationEntity){
-        List<String> communes = operationCustomDao.searchCommunesByOperation(operationEntity);
+        List<String> communes = communeCustomDao.searchCommunesByOperationId(operationEntity.getId(),
+                operationEntity.getSecteur(), operationEntity.getNature().getId() == 1).stream()
+                .map(CommuneEntity::getNom).collect(Collectors.toList());
         return String.join(", ", communes);
     }
 
