@@ -626,7 +626,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException {
+    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file, Date dateDocument) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
@@ -636,7 +636,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         //Récupération du document Dans alfresco
-        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.PROGRAMME, programmeId, file));
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.PROGRAMME, programmeId, dateDocument, file));
 
     }
 

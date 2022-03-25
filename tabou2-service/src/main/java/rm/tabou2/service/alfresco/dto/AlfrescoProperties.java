@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AlfrescoProperties {
@@ -19,6 +21,6 @@ public class AlfrescoProperties {
     @JsonProperty("tabou2:libelleTypeDocument")
     public String libelleTypeDocument;
     @JsonProperty("tabou2:dateDocument")
-    public String dateDocument;
+    public Date dateDocument;
 
 }

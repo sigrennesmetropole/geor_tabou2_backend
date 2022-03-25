@@ -17,6 +17,7 @@ import rm.tabou2.service.validator.programme.ValidProgrammeCreation;
 import rm.tabou2.service.validator.programme.ValidProgrammeUpdate;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ProgrammeService {
@@ -149,10 +150,11 @@ public interface ProgrammeService {
      * @param nom nom du document
      * @param libelleTypeDocument libellé du type de document
      * @param file document à ajouter
+     * @param datedocument
      * @return métadonnées du document
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
-    DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException;
+    DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file, Date datedocument) throws AppServiceException;
 
     /**
      * Suppresion d'un document dans Alfresco.
