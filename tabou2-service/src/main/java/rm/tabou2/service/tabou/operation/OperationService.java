@@ -14,6 +14,7 @@ import rm.tabou2.service.validator.operation.ValidOperationCreation;
 import rm.tabou2.service.validator.operation.ValidOperationUpdate;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -150,11 +151,12 @@ public interface OperationService {
      * @param operationId identifiant de l'opération
      * @param nom nom du document
      * @param libelleTypeDocument libellé du type de document
+     * @param dateDocument
      * @param file document à ajouter
      * @return métadonnées du document
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
-    DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException;
+    DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, Date dateDocument, MultipartFile file) throws AppServiceException;
 
 
     /**

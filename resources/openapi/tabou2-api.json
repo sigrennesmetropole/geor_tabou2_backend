@@ -164,6 +164,14 @@
             "type": "string"
           },
           {
+            "in" : "query",
+            "name": "dateDocument",
+            "description": "Date du document",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
             "in": "formData",
             "name": "fileToUpload",
             "description": "Document à ajouter",
@@ -2003,6 +2011,14 @@
             "description": "Libellé du type de document",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "dateDocument",
+            "description": "Date du document",
+            "required": false,
+            "type": "string",
+            "format": "date"
           },
           {
             "in": "formData",

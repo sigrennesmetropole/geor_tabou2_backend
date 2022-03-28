@@ -530,7 +530,7 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException {
+    public DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, Date dateDocument, MultipartFile file) throws AppServiceException {
 
         //On vérifie que l'opération existe et que l'utilisateur a bien les droits d'ajout sur le document
         OperationIntermediaire operation = getOperationById(operationId);
@@ -540,7 +540,7 @@ public class OperationServiceImpl implements OperationService {
         }
 
         //Récupération du document Dans alfresco
-        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.OPERATION, operationId, file));
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.OPERATION, operationId, dateDocument, file));
 
     }
 

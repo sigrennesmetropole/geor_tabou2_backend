@@ -9,6 +9,8 @@ import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 
+import java.util.Date;
+
 public interface AlfrescoService {
 
 
@@ -56,11 +58,12 @@ public interface AlfrescoService {
      * @param libelleTypeDocument libellé du type de document
      * @param objectType type de l'objet tabou
      * @param objectId identifiant de l'objet tabou
+     * @param dateDocument
      * @param file fichier
      * @return document
      * @throws AppServiceException erreur lors de l'ajout d'un document dans tabou
      */
-    AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, MultipartFile file) throws AppServiceException;
+    AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, Date dateDocument, MultipartFile file) throws AppServiceException;
 
     /**
      * Mise à jour des métadonnées d'un document.

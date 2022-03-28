@@ -48,7 +48,7 @@
 					<title>Date du document</title>
 					<description>Date intrinsèque du document (Date de délivrance, date de délibération, etc..)</description>
 					<type>d:date</type>
-					<mandatory>true</mandatory>
+					<mandatory>false</mandatory>
 					<index enabled="true">
 						<tokenised>TRUE</tokenised>
 					</index>
