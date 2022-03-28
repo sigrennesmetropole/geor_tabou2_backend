@@ -143,7 +143,6 @@ public class OperationFicheHelper {
 
 
     public GenerationModel buildGenerationModel(OperationEntity operationEntity) throws AppServiceException {
-        InputStream templateFileInputStream;
 
         String path;
         VocationEntity vocation = operationEntity.getVocation();
@@ -163,22 +162,6 @@ public class OperationFicheHelper {
             LOGGER.warn("Le chemin de template spécifié ({}) n'existe pas, utilisation du chemin par défaut", path);
 
             path = defaultTemplatesPath.get(vocation);
-
-            if(path == null){
-                throw new AppServiceNotFoundException();
-            }
-
-            try {
-                file = new ClassPathResource(path).getFile();
-            } catch (IOException e) {
-                throw new AppServiceException("Erreur lors de la récupération du template", e);
-            }
-        }
-
-        try {
-            templateFileInputStream = new FileInputStream(file);
-        } catch (IOException e) {
-            throw new AppServiceException("Erreur lors de la récupération du template", e);
         }
 
         FicheSuiviOperationDataModel ficheSuiviOperationDataModel = new FicheSuiviOperationDataModel();
@@ -222,7 +205,7 @@ public class OperationFicheHelper {
         //Insertion illustration
         ficheSuiviOperationDataModel.setIllustration(documentGenerator.generatedImgForTemplate(AlfrescoTabouType.OPERATION, operationEntity.getId()));
 
-        return new GenerationModel(ficheSuiviOperationDataModel, templateFileInputStream, MediaType.APPLICATION_PDF.getSubtype());
+        return new GenerationModel(ficheSuiviOperationDataModel, path, MediaType.APPLICATION_PDF.getSubtype());
     }
 
     private FonciersOperation getFonciers(OperationEntity operationEntity) {

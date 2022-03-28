@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -173,7 +174,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
 
-    @Value("fiche.template.programme")
+    @Value("${fiche.template.programme}")
     private String pathTemplate;
 
     @Autowired
@@ -538,22 +539,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
 
-        InputStream templateFileInputStream;
+        String path = pathTemplate;
 
         File templateFile = new File(pathTemplate);
         if(!templateFile.exists()) {
             LOGGER.warn("Le chemin de template spécifié ({}) n'existe pas, utilisation du chemin par défaut", pathTemplate);
-            templateFileInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("template/programme/template_fiche_suivi.odt");
-        }else{
-            try (FileInputStream fis = new FileInputStream(templateFile)){
-                templateFileInputStream = fis;
-            } catch (IOException e) {
-                throw new AppServiceException("Erreur lors de la récupération du template", e);
-            }
-        }
-
-        if(templateFileInputStream == null){
-            throw new AppServiceException("Erreur lors de la récupération du template");
+            path = "template/programme/template_fiche_suivi.odt";
         }
 
         FicheSuiviProgrammeDataModel ficheSuiviProgrammeDataModel = new FicheSuiviProgrammeDataModel();
@@ -583,7 +574,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));
         ficheSuiviProgrammeDataModel.setProgrammeTiers(programmeTiersDao.findByProgrammeId(programmeEntity.getId()));
 
-        return new GenerationModel(ficheSuiviProgrammeDataModel, templateFileInputStream, MediaType.APPLICATION_PDF.getSubtype());
+        return new GenerationModel(ficheSuiviProgrammeDataModel, path, MediaType.APPLICATION_PDF.getSubtype());
     }
 
     private ProgrammeEntity getProgrammeEntityById(long programmeId) {

@@ -102,6 +102,9 @@ public class OperationServiceImpl implements OperationService {
     private ConsommationEspaceDao consommationEspaceDao;
 
     @Autowired
+    private TypeOccupationDao typeOccupationDao;
+
+    @Autowired
     private PlhDao plhDao;
 
     @Autowired
