@@ -73,8 +73,7 @@ import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -174,6 +173,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
+
+    @Value("${fiche.template.programme}")
+    private String pathTemplate;
 
     @Autowired
     private AlfrescoService alfrescoService;
@@ -537,14 +539,13 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
 
-        InputStream templateFileInputStream;
+        String path = pathTemplate;
 
-        try {
-            templateFileInputStream = new ClassPathResource("template/template_fiche_suivi.odt").getInputStream();
-        } catch (IOException e) {
-            throw new AppServiceException("Erreur lors de la récupération du template", e);
+        File templateFile = new File(pathTemplate);
+        if(!templateFile.exists()) {
+            LOGGER.warn("Le chemin de template spécifié ({}) n'existe pas, utilisation du chemin par défaut", pathTemplate);
+            path = "template/programme/template_fiche_suivi.odt";
         }
-
 
         FicheSuiviProgrammeDataModel ficheSuiviProgrammeDataModel = new FicheSuiviProgrammeDataModel();
         ficheSuiviProgrammeDataModel.setProgramme(programmeEntity);
@@ -573,7 +574,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));
         ficheSuiviProgrammeDataModel.setProgrammeTiers(programmeTiersDao.findByProgrammeId(programmeEntity.getId()));
 
-        return new GenerationModel(ficheSuiviProgrammeDataModel, templateFileInputStream, MediaType.APPLICATION_PDF.getSubtype());
+        return new GenerationModel(ficheSuiviProgrammeDataModel, path, MediaType.APPLICATION_PDF.getSubtype());
     }
 
     private ProgrammeEntity getProgrammeEntityById(long programmeId) {

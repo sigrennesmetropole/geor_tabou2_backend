@@ -168,4 +168,12 @@ public interface OperationService {
      */
     void deleteDocument(long operationId, String documentId) throws AppServiceException;
 
+    /**
+     *  Génère la fiche de suivi d'une opération.
+     * @param operationId identifiant de l'opération
+     * @return La fiche de suivi
+     * @throws AppServiceException
+     */
+    DocumentContent generateFicheSuivi(Long operationId) throws AppServiceException;
+
 }

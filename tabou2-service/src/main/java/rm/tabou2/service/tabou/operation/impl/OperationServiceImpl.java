@@ -1,7 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
 import org.apache.commons.lang.BooleanUtils;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,7 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
+import rm.tabou2.service.helper.operation.OperationFicheHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationUpdateHelper;
 import rm.tabou2.service.helper.operation.OperationValidator;
@@ -38,8 +38,11 @@ import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
+import rm.tabou2.service.st.generator.DocumentGenerator;
 import rm.tabou2.service.st.generator.model.DocumentContent;
+import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.operation.OperationService;
+import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.*;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
@@ -72,6 +75,9 @@ public class OperationServiceImpl implements OperationService {
     private EvenementOperationDao evenementOperationDao;
 
     @Autowired
+    private EvenementOperationCustomDao evenementOperationCustomDao;
+
+    @Autowired
     private TypeEvenementDao typeEvenementDao;
 
     @Autowired
@@ -94,6 +100,9 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private ConsommationEspaceDao consommationEspaceDao;
+
+    @Autowired
+    private TypeOccupationDao typeOccupationDao;
 
     @Autowired
     private PlhDao plhDao;
@@ -131,26 +140,20 @@ public class OperationServiceImpl implements OperationService {
     @Autowired
     private OperationService me;
 
+    @Autowired
+    private AlfrescoService alfrescoService;
+
+    @Autowired
+    private DocumentGenerator documentGenerator;
+
+    @Autowired
+    private OperationFicheHelper operationFicheHelper;
+
     @Value("${typeevenement.changementetape.code}")
     private String etapeUpdatedCode;
 
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
-
-    @Autowired
-    private AlfrescoService alfrescoService;
-
-    @Autowired
-    private EntiteReferenteDao entiteReferenteDao;
-
-    @Autowired
-    private TypeOccupationDao typeOccupationDao;
-
-    @Autowired
-    private OutilFoncierDao outilFoncierDao;
-
-    @Autowired
-    private DescriptionConcertationDao concertationDao;
 
     @Override
     @Transactional
@@ -328,6 +331,15 @@ public class OperationServiceImpl implements OperationService {
         return operationMapper.entitiesToDto(operationCustomDao.searchOperations(operationsCriteria, pageable), pageable);
     }
 
+    @Override
+    public DocumentContent generateFicheSuivi(Long operationId) throws AppServiceException {
+        OperationEntity operationEntity = getOperationEntityById(operationId);
+        GenerationModel generationModel = operationFicheHelper.buildGenerationModel(operationEntity);
+
+        DocumentContent documentContent = documentGenerator.generateDocument(generationModel);
+        documentContent.setFileName(buildRapportFileName(operationEntity));
+        return documentContent;
+    }
 
     @Override
     public OperationIntermediaire getOperationById(long operationId) {
@@ -605,6 +617,19 @@ public class OperationServiceImpl implements OperationService {
         if (operation.getSecteur() == null) {
             operation.setSecteur(false);
         }
+    }
+
+    private String buildRapportFileName(OperationEntity operationEntity) {
+        StringBuilder fileName = new StringBuilder("FicheSuivi_");
+        fileName.append(operationEntity.getId());
+        fileName.append("_");
+        fileName.append(operationEntity.getCode());
+        fileName.append("_");
+        fileName.append(operationEntity.getNom());
+        fileName.append("_");
+        fileName.append(System.nanoTime());
+
+        return fileName.toString();
     }
 
 }
