@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
-
 public interface OperationCustomDao {
 
     Page<OperationEntity> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable);

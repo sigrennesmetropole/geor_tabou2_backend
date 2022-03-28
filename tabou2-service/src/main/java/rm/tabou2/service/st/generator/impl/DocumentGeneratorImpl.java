@@ -28,12 +28,7 @@ import rm.tabou2.service.st.generator.model.FieldMetadataTypeEnum;
 import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.utils.PaginationUtils;
 
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +50,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
     private String defaultIllustration;
 
     @Value("${fiche.illustration.typesmime}")
-    private  String[] allowedMimeTypes;
+    private String[] allowedMimeTypes;
 
     @Autowired
     private AlfrescoServiceImpl alfrescoService;
@@ -119,7 +114,31 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
 
         try (FileOutputStream out = new FileOutputStream(outputFile)) {
 
-            IXDocReport report = XDocReportRegistry.getRegistry().loadReport(generationModel.getTemplateinputStream(), TemplateEngineKind.Freemarker);
+            InputStream is = null;
+
+            String path = generationModel.getTemplatePath();
+
+            IXDocReport report;
+            try {
+                File file = new File(path);
+
+                if (!file.exists()) {
+                    try {
+                        is = new ClassPathResource(path).getInputStream();
+                    } catch (IOException e) {
+                        throw new AppServiceException("Erreur lors de la récupération du template", e);
+                    }
+                } else {
+                    is = new FileInputStream(file);
+                }
+                report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Freemarker);
+            } catch (Exception e) {
+                throw new AppServiceException("Erreur lors du chargement du template");
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
 
             IContext context = report.createContext();
 

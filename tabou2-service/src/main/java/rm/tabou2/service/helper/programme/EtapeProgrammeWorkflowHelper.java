@@ -48,8 +48,8 @@ public class EtapeProgrammeWorkflowHelper {
         List<EtapeProgrammeEntity> nextEtapesEntities = List.copyOf(actualEtapeEntity.getNextEtapes());
         List<Etape> nextEtapes = etapeProgrammeMapper.entitiesToDto(nextEtapesEntities);
         List<Long> nextEtapesIdList = nextEtapes.stream().map(Etape::getId).collect(Collectors.toList());
+        List<String> nextEtapesCodesList = nextEtapes.stream().map(Etape::getCode).collect(Collectors.toList());
 
-
-        return nextEtapesIdList.contains(newEtape.getId());
+        return nextEtapesIdList.contains(newEtape.getId()) || nextEtapesCodesList.contains(newEtape.getCode());
     }
 }

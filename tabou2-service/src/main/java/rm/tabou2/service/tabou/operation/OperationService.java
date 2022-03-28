@@ -14,6 +14,7 @@ import rm.tabou2.service.validator.operation.ValidOperationCreation;
 import rm.tabou2.service.validator.operation.ValidOperationUpdate;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -33,7 +34,7 @@ public interface OperationService {
      * @param operation opération à modifier
      * @return opération modifiée
      */
-    OperationIntermediaire updateOperation(@ValidOperationUpdate OperationIntermediaire operation);
+    OperationIntermediaire updateOperation(@ValidOperationUpdate OperationIntermediaire operation) throws AppServiceException;
 
     /**
      * Récupération d'une opération
@@ -150,11 +151,12 @@ public interface OperationService {
      * @param operationId identifiant de l'opération
      * @param nom nom du document
      * @param libelleTypeDocument libellé du type de document
+     * @param dateDocument
      * @param file document à ajouter
      * @return métadonnées du document
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
-    DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException;
+    DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, Date dateDocument, MultipartFile file) throws AppServiceException;
 
 
     /**
@@ -165,5 +167,13 @@ public interface OperationService {
      * @throws AppServiceException
      */
     void deleteDocument(long operationId, String documentId) throws AppServiceException;
+
+    /**
+     *  Génère la fiche de suivi d'une opération.
+     * @param operationId identifiant de l'opération
+     * @return La fiche de suivi
+     * @throws AppServiceException
+     */
+    DocumentContent generateFicheSuivi(Long operationId) throws AppServiceException;
 
 }

@@ -6,7 +6,7 @@
     <parent>
         <artifactId>tabou2</artifactId>
         <groupId>rm</groupId>
-        <version>1.2.4</version>
+        <version>1.2.5</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>

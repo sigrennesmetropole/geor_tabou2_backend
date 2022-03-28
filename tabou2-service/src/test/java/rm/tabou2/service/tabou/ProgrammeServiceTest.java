@@ -22,6 +22,7 @@ import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
@@ -172,7 +173,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
 
     @DisplayName("testUpdateProgrammeWithDiffusionRestreinte: Test de l'édition d'un programme avec une étape qui change la diffusion restreinte'")
     @Test
-    void testUpdateProgrammeWithDiffusionRestreinte() {
+    void testUpdateProgrammeWithDiffusionRestreinte() throws AppServiceException {
 
         OperationEntity operationEntity = new OperationEntity();
         operationEntity.setNom("test");

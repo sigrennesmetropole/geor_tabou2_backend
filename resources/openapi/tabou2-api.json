@@ -158,10 +158,18 @@
           },
           {
             "in": "query",
-            "name": "libelle",
+            "name": "libelleTypeDocument",
             "description": "Libellé du type de document",
             "required": true,
             "type": "string"
+          },
+          {
+            "in" : "query",
+            "name": "dateDocument",
+            "description": "Date du document",
+            "required": false,
+            "type": "string",
+            "format": "date"
           },
           {
             "in": "formData",
@@ -863,6 +871,37 @@
             "schema": {
               "$ref": "#/definitions/PageResult"
             }
+          }
+        }
+      }
+    },
+
+    "/operations/{operationId}/fiche-suivi": {
+      "get": {
+        "summary": "Récupération de la fiche de suivi d'une opération",
+        "operationId": "downloadFicheSuivi",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "Identifiant de l'opération",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "404": {
+            "description": "La resource demandée n'existe pas"
           }
         }
       }
@@ -2005,6 +2044,14 @@
             "type": "string"
           },
           {
+            "in": "query",
+            "name": "dateDocument",
+            "description": "Date du document",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
             "in": "formData",
             "name": "fileToUpload",
             "description": "Document à ajouter",
@@ -2048,7 +2095,7 @@
           },
           {
             "in": "query",
-            "name": "libelle",
+            "name": "libelleTypeDocument",
             "description": "Libellé du type de document",
             "required": false,
             "type": "string"
@@ -3116,8 +3163,8 @@
           },
           {
             "in": "query",
-            "name": "libelle",
-            "description": "libelle du type de document",
+            "name": "libelleTypeDocument",
+            "description": "Libelle du type de document",
             "required": false,
             "type": "string"
           },
