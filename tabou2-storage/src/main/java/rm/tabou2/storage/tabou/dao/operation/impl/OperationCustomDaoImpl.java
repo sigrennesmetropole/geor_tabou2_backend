@@ -1,8 +1,6 @@
 package rm.tabou2.storage.tabou.dao.operation.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -89,9 +87,7 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
         List<OperationEntity> operationEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
         return new PageImpl<>(operationEntities, pageable, totalCount.intValue());
 
-
     }
-
 
     private void buildQuery(OperationsCriteria operationsCriteria, CriteriaBuilder builder,
                             CriteriaQuery<?> criteriaQuery, Root<OperationEntity> root

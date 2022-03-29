@@ -64,6 +64,27 @@ public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements Commu
         return new PageImpl<>(communeEntities, pageable, totalCount.intValue());
     }
 
+    @Override
+    public List<CommuneEntity> searchCommunesByOperationId(Long operationId, boolean estSecteur, boolean estZac) {
+        // La requête est faite en dure car les shapes ne sont pas mappées
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT com.* ");
+        if(estSecteur){ //L'opération est un secteur
+            query.append("FROM urba_foncier.oa_secteur op ");
+        }else if(estZac){ //L'opération est une ZAC
+            query.append("FROM urba_foncier.zac op ");
+        }else{ //L'opération est en diffus
+            query.append("FROM urba_foncier.oa_limite_intervention op ");
+        }
+        query.append("JOIN limite_admin.commune_emprise com ON st_intersects(op.shape, com.shape) " +
+                "WHERE op.id_tabou = :idOp");
+
+        return sigEntityManager.createNativeQuery(query.toString(), CommuneEntity.class)
+                .setParameter("idOp", operationId)
+                .getResultList();
+    }
+
     private void buildQuery(String nom, Integer codeInsee, CriteriaBuilder builder,
                             CriteriaQuery<?> criteriaQuery, Root<CommuneEntity> root) {
 

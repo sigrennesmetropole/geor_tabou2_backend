@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.constant.NatureLibelle;
+import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
+import rm.tabou2.service.helper.operation.OperationValidator;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
@@ -58,6 +60,9 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
 
     @MockBean
     private AuthentificationHelper authentificationHelper;
+
+    @Autowired
+    private OperationValidator operationValidator;
 
     @BeforeEach
     public void initTest() {
@@ -188,7 +193,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
         operation.setSecteur(false);
         operation.setEtape(etapeOperationMapper.entityToDto(etapeOperationEntityNonRestreint));
 
-        Assertions.assertFalse(operationRightsHelper.checkCanUpdateOperation(operation, operationMapper.entityToDto(operationEntity)));
+        Assertions.assertThrows(AppServiceException.class, () -> operationValidator.validateUpdateOperation(operation, operationMapper.entityToDto(operationEntity)));
     }
 
     @DisplayName("testCanUpdateOperation: Test de l'interdiction de modification d'une opération avec le rôle referent, " +
@@ -222,7 +227,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
         operation.setSecteur(true);
         operation.setEtape(etapeOperationMapper.entityToDto(etapeOperationEntityNonRestreint));
 
-        Assertions.assertFalse(operationRightsHelper.checkCanUpdateOperation(operation, operationMapper.entityToDto(operationEntity)));
+        Assertions.assertThrows(AppServiceException.class, () -> operationValidator.validateUpdateOperation(operation, operationMapper.entityToDto(operationEntity)));
     }
 
     @DisplayName("testCannotUpdateOperationWithUpdateDiffusionRestreinte: Test de l'interdiction de modification d'une opération avec le rôle contributeur " +
@@ -284,7 +289,7 @@ class OperationRightsHelperTest extends DatabaseInitializerTest {
         operation.setSecteur(true);
         operation.setEtape(etapeOperationMapper.entityToDto(etapeOperationEntityEnChantier));
 
-        Assertions.assertFalse(operationRightsHelper.checkCanUpdateOperation(operation, operationMapper.entityToDto(operationEntity)));
+        Assertions.assertThrows(AppServiceException.class, () -> operationValidator.validateUpdateOperation(operation, operationMapper.entityToDto(operationEntity)));
     }
 
     @DisplayName("testCanGetEtapesForOperationDiffusionRestreinte: Test de la possibilité de récupérer la liste des étapes possibles pour une opération " +

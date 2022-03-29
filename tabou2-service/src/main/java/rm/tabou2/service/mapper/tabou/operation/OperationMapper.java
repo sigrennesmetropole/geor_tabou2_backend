@@ -36,6 +36,17 @@ public interface OperationMapper extends AbstractMapper<OperationEntity, Operati
     @Mapping(target = "maitriseOuvrage", ignore = true)
     @Mapping(target = "modeAmenagement", ignore = true)
     @Mapping(target = "consommationEspace", ignore = true)
+    @Mapping(target = "programmes", ignore = true)
+    @Mapping(target = "acteurs", ignore = true)
+    @Mapping(target = "actions", ignore = true)
+    @Mapping(target = "amenageurs", ignore = true)
+    @Mapping(target = "contributions", ignore = true)
+    @Mapping(target = "descriptionsFoncier", ignore = true)
+    @Mapping(target = "financements", ignore = true)
+    @Mapping(target = "informationsProgrammation", ignore = true)
+    @Mapping(target = "operationsTiers", ignore = true)
+    @Mapping(target = "evenements", ignore = true)
+    @Mapping(target = "typeOccupation", ignore = true)
     @Mapping(target = "secteur",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Override

@@ -6,13 +6,13 @@ public class GenerationModel {
 
     private DataModel dataModel;
 
-    private InputStream templateinputStream;
+    private String templatePath;
 
     private String outputFileExtension;
 
-    public GenerationModel(DataModel dataModel, InputStream templateinputStream, String outputFileExtension) {
+    public GenerationModel(DataModel dataModel, String templatePath, String outputFileExtension) {
         this.dataModel = dataModel;
-        this.templateinputStream = templateinputStream;
+        this.templatePath = templatePath;
         this.outputFileExtension = outputFileExtension;
     }
 
@@ -24,12 +24,12 @@ public class GenerationModel {
         this.dataModel = dataModel;
     }
 
-    public InputStream getTemplateinputStream() {
-        return templateinputStream;
+    public String getTemplatePath() {
+        return templatePath;
     }
 
-    public void setTemplateinputStream(InputStream templateinputStream) {
-        this.templateinputStream = templateinputStream;
+    public void setTemplatePath(String templatePath) {
+        this.templatePath = templatePath;
     }
 
     public String getOutputFileExtension() {

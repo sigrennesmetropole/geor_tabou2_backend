@@ -10,8 +10,6 @@ import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
-import java.util.Objects;
-
 @Component
 public class OperationRightsHelper {
 
@@ -19,9 +17,6 @@ public class OperationRightsHelper {
 
     @Autowired
     private AuthentificationHelper authentificationHelper;
-
-    @Autowired
-    private EtapeOperationWorkflowHelper etapeOperationWorkflowHelper;
 
     @Autowired
     private OperationDao operationDao;
@@ -55,23 +50,6 @@ public class OperationRightsHelper {
 
         if (BooleanUtils.isTrue(actualOperation.getDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
             LOGGER.warn("L'opération avec diffusion restreinte ne peut être modifiée par un utilisateur qui n'a pas les droits");
-            return false;
-        }
-
-        // validation de l'étape
-        boolean etapeValidation = etapeOperationWorkflowHelper.checkCanAssignEtapeToOperation(operation.getEtape(), operation.getId());
-        if (!etapeValidation) {
-            LOGGER.warn("L'étape ne peut être assignée à l'opération");
-            return false;
-        }
-
-        if (operation.getNature() != null && !Objects.equals(operation.getNature().getId(), actualOperation.getNature().getId())) {
-            LOGGER.warn("La nature d'une opération ne doit pas être modifiée");
-            return false;
-        }
-
-        if (operation.getSecteur() != null && !operation.getSecteur().equals(actualOperation.getSecteur())) {
-            LOGGER.warn("le paramètre secteur d'une opération ne doit pas être modifiée");
             return false;
         }
 

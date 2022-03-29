@@ -34,6 +34,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
+import rm.tabou2.service.helper.programme.ProgrammeValidator;
 import rm.tabou2.service.mapper.sig.ProgrammeRmMapper;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
@@ -72,8 +73,7 @@ import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -154,6 +154,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeRightsHelper programmeRightsHelper;
 
     @Autowired
+    private ProgrammeValidator programmeValidator;
+
+    @Autowired
     private EvenementProgrammeRigthsHelper evenementProgrammeRigthsHelper;
 
     @Autowired
@@ -170,6 +173,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
+
+    @Value("${fiche.template.programme}")
+    private String pathTemplate;
 
     @Autowired
     private AlfrescoService alfrescoService;
@@ -230,7 +236,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional
-    public Programme updateProgramme(Programme programme) {
+    public Programme updateProgramme(Programme programme) throws AppServiceException {
 
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programme.getId());
 
@@ -238,6 +244,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programmeEntity.isDiffusionRestreinte())) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
         }
+
+        programmeValidator.validateUpdateProgramme(programme, programmeEntity);
 
         // Récupération de la prochaine étape
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(programme.getEtape().getId());
@@ -274,7 +282,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional
-    public Programme updateEtapeOfProgrammeId(long programmeId, long etapeId) {
+    public Programme updateEtapeOfProgrammeId(long programmeId, long etapeId) throws AppServiceException {
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(etapeId);
 
         Programme programme = getProgrammeById(programmeId);
@@ -531,14 +539,13 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
 
-        InputStream templateFileInputStream;
+        String path = pathTemplate;
 
-        try {
-            templateFileInputStream = new ClassPathResource("template/template_fiche_suivi.odt").getInputStream();
-        } catch (IOException e) {
-            throw new AppServiceException("Erreur lors de la récupération du template", e);
+        File templateFile = new File(pathTemplate);
+        if(!templateFile.exists()) {
+            LOGGER.warn("Le chemin de template spécifié ({}) n'existe pas, utilisation du chemin par défaut", pathTemplate);
+            path = "template/programme/template_fiche_suivi.odt";
         }
-
 
         FicheSuiviProgrammeDataModel ficheSuiviProgrammeDataModel = new FicheSuiviProgrammeDataModel();
         ficheSuiviProgrammeDataModel.setProgramme(programmeEntity);
@@ -567,7 +574,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));
         ficheSuiviProgrammeDataModel.setProgrammeTiers(programmeTiersDao.findByProgrammeId(programmeEntity.getId()));
 
-        return new GenerationModel(ficheSuiviProgrammeDataModel, templateFileInputStream, MediaType.APPLICATION_PDF.getSubtype());
+        return new GenerationModel(ficheSuiviProgrammeDataModel, path, MediaType.APPLICATION_PDF.getSubtype());
     }
 
     private ProgrammeEntity getProgrammeEntityById(long programmeId) {
@@ -620,7 +627,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException {
+    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file, Date dateDocument) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
@@ -630,7 +637,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         //Récupération du document Dans alfresco
-        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.PROGRAMME, programmeId, file));
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.PROGRAMME, programmeId, dateDocument, file));
 
     }
 

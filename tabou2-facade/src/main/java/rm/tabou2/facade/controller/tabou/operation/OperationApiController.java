@@ -36,6 +36,7 @@ import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 
@@ -146,8 +147,8 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> addDocument(@NotNull @Valid Long operationId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload) throws Exception {
-        return new ResponseEntity<>(operationService.addDocument(operationId, nom, libelle, fileToUpload), HttpStatus.OK);
+    public ResponseEntity<DocumentMetadata> addDocument(@NotNull @Valid Long operationId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload, @Valid Date dateDocument) throws Exception {
+        return new ResponseEntity<>(operationService.addDocument(operationId, nom, libelle, dateDocument , fileToUpload), HttpStatus.OK);
     }
 
     @Override
@@ -205,5 +206,9 @@ public class OperationApiController extends AbstractExportDocumentApi implements
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<Resource> downloadFicheSuivi(Long operationId) throws Exception {
+        return downloadDocument(operationService.generateFicheSuivi(operationId));
+    }
 
 }

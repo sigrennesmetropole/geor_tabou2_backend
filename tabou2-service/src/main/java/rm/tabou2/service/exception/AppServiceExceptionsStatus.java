@@ -13,4 +13,5 @@ public class AppServiceExceptionsStatus {
 
     public static final String FORBIDDEN = "GENIUS_ERROR_FORBIDDEN_403";
 
+    public static final String BADREQUEST = "GENIUS_ERROR_BADREQUEST_400";
 }

@@ -35,6 +35,8 @@ public class AppExceptionHandler {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             } else if (ex.getAppExceptionStatusCode().equals(AppServiceExceptionsStatus.FORBIDDEN)) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            } else if(ex.getAppExceptionStatusCode().equals(AppServiceExceptionsStatus.BADREQUEST)) {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
             } else {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -45,9 +47,15 @@ public class AppExceptionHandler {
     }
 
 
-    @ExceptionHandler({AccessDeniedException.class, AuthenticationCredentialsNotFoundException.class, RefreshTokenExpiredException.class})
-    protected ResponseEntity<Object> handleAccessDeniedException(final Exception ex, final WebRequest request) {
+    @ExceptionHandler({AuthenticationCredentialsNotFoundException.class, RefreshTokenExpiredException.class})
+    protected ResponseEntity<Object> handleUnauthorizedException(final Exception ex, final WebRequest request) {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    }
+
+    @ExceptionHandler({AccessDeniedException.class})
+    protected ResponseEntity<Object> handleAccessDeniedException(final Exception ex, final WebRequest request) {
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
     }
 

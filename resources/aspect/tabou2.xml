@@ -44,6 +44,15 @@
 						<tokenised>TRUE</tokenised>
 					</index>
 				</property>
+				<property name="tabou2:dateDocument">
+					<title>Date du document</title>
+					<description>Date intrinsèque du document (Date de délivrance, date de délibération, etc..)</description>
+					<type>d:date</type>
+					<mandatory>false</mandatory>
+					<index enabled="true">
+						<tokenised>TRUE</tokenised>
+					</index>
+				</property>
 			</properties>
 		</aspect>
 	</aspects>

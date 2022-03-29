@@ -37,9 +37,10 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class AlfrescoServiceImpl implements AlfrescoService {
@@ -255,7 +256,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     }
 
     @Override
-    public AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, MultipartFile file) throws AppServiceException {
+    public AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, Date dateDocument, MultipartFile file) throws AppServiceException {
 
         //Construction de l'uri du document
         String documentUri = DOCUMENT_START_URI + tabouNodeId + CHILDREN_URI + "?autoRename=true";
@@ -274,6 +275,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
         DocumentMetadata documentMetadata = new DocumentMetadata();
         documentMetadata.setLibelleTypeDocument(libelleTypeDocument);
+        documentMetadata.setDateDocument(dateDocument);
 
         //Mise à jour des métadonnées
         updateDocumentMetadata(objectType, objectId, document.getEntry().getId(), documentMetadata, true);
@@ -311,6 +313,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .path(documentId);
 
         properties.setLibelleTypeDocument(documentMetadata.getLibelleTypeDocument());
+        properties.setDateDocument(documentMetadata.getDateDocument());
         AlfrescoMetadata alfrescoMetadata = new AlfrescoMetadata();
         alfrescoMetadata.setProperties(properties);
         alfrescoMetadata.setName(documentMetadata.getNom());

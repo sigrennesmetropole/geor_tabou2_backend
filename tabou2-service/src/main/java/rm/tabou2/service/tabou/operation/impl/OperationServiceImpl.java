@@ -29,14 +29,20 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
+import rm.tabou2.service.helper.operation.OperationFicheHelper;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
+import rm.tabou2.service.helper.operation.OperationUpdateHelper;
+import rm.tabou2.service.helper.operation.OperationValidator;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
+import rm.tabou2.service.st.generator.DocumentGenerator;
 import rm.tabou2.service.st.generator.model.DocumentContent;
+import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.operation.OperationService;
+import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.*;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
@@ -69,6 +75,9 @@ public class OperationServiceImpl implements OperationService {
     private EvenementOperationDao evenementOperationDao;
 
     @Autowired
+    private EvenementOperationCustomDao evenementOperationCustomDao;
+
+    @Autowired
     private TypeEvenementDao typeEvenementDao;
 
     @Autowired
@@ -93,6 +102,9 @@ public class OperationServiceImpl implements OperationService {
     private ConsommationEspaceDao consommationEspaceDao;
 
     @Autowired
+    private TypeOccupationDao typeOccupationDao;
+
+    @Autowired
     private PlhDao plhDao;
 
     @Autowired
@@ -103,6 +115,12 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private OperationRightsHelper operationRightsHelper;
+
+    @Autowired
+    private OperationValidator operationValidator;
+
+    @Autowired
+    private OperationUpdateHelper operationUpdateHelper;
 
     @Autowired
     private EvenementOperationRightsHelper evenementOperationRightsHelper;
@@ -122,14 +140,20 @@ public class OperationServiceImpl implements OperationService {
     @Autowired
     private OperationService me;
 
+    @Autowired
+    private AlfrescoService alfrescoService;
+
+    @Autowired
+    private DocumentGenerator documentGenerator;
+
+    @Autowired
+    private OperationFicheHelper operationFicheHelper;
+
     @Value("${typeevenement.changementetape.code}")
     private String etapeUpdatedCode;
 
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
-
-    @Autowired
-    private AlfrescoService alfrescoService;
 
     @Override
     @Transactional
@@ -173,7 +197,7 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     @Transactional
-    public OperationIntermediaire updateOperation(OperationIntermediaire operation) {
+    public OperationIntermediaire updateOperation(OperationIntermediaire operation) throws AppServiceException {
 
         OperationEntity operationEntity = operationDao.findOneById(operation.getId());
 
@@ -181,6 +205,10 @@ public class OperationServiceImpl implements OperationService {
         if (!operationRightsHelper.checkCanUpdateOperation(operation, operationMapper.entityToDto(operationEntity))) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification de l'operation " + operation.getNom());
         }
+
+        //Vérification contraintes métiers
+        operationValidator.validateUpdateOperation(operation, operationMapper.entityToDto(operationEntity));
+
 
         // Récupération de la prochaine étape
         EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findOneById(operation.getEtape().getId());
@@ -197,6 +225,28 @@ public class OperationServiceImpl implements OperationService {
         operationMapper.dtoToEntity(operation, operationEntity);
         assignMultivaluables(operation, operationEntity);
 
+        if(operation.getActeurs() != null){
+            operationUpdateHelper.updateActeurs(operation, operationEntity);
+        }
+        if(operation.getActions() != null){
+            operationUpdateHelper.updateActions(operation, operationEntity);
+        }
+        if(operation.getAmenageurs() != null){
+            operationUpdateHelper.updateAmenageurs(operation, operationEntity);
+        }
+        if(operation.getContributions() != null){
+            operationUpdateHelper.updateContributions(operation, operationEntity);
+        }
+        if(operation.getDescriptionsFoncier() != null){
+            operationUpdateHelper.updateDescriptionsFonciers(operation, operationEntity);
+        }
+        if(operation.getFinancements() != null){
+            operationUpdateHelper.updateFinancements(operation, operationEntity);
+        }
+        if(operation.getInformationsProgrammation() != null){
+            operationUpdateHelper.updateInformationsProgrammation(operation, operationEntity);
+        }
+
         if (etapeOperationEntity.isRemoveRestriction()) {
             operation.setDiffusionRestreinte(false);
         }
@@ -205,14 +255,7 @@ public class OperationServiceImpl implements OperationService {
         if (etapeChanged) {
             operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperationEntity.getLibelle()));
         }
-        if(operationEntity.getPlh() != null) {
-            PlhEntity plh = plhDao.getOne(operationEntity.getPlh().getId());
-            if(operationEntity.getPlh().getDate() != null) plh.setDate(operation.getPlh().getDate());
-            if(operationEntity.getPlh().getDescription() != null) plh.setDescription(operationEntity.getPlh().getDescription());
-            if(operationEntity.getPlh().getLogementsLivres() != null) plh.setLogementsLivres(operationEntity.getPlh().getLogementsLivres());
-            if(operationEntity.getPlh().getLogementsPrevus() != null) plh.setLogementsPrevus(operationEntity.getPlh().getLogementsPrevus());
-            plhDao.save(plh);
-        }
+
         operationEntity = operationDao.save(operationEntity);
 
         return operationMapper.entityToDto(operationEntity);
@@ -221,7 +264,7 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     @Transactional
-    public OperationIntermediaire updateEtapeOfOperationId(long operationId, long etapeId) {
+    public OperationIntermediaire updateEtapeOfOperationId(long operationId, long etapeId) throws AppServiceException {
         EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findOneById(etapeId);
 
         OperationIntermediaire operation = getOperationById(operationId);
@@ -230,14 +273,14 @@ public class OperationServiceImpl implements OperationService {
     }
 
     private void assignMultivaluables(OperationIntermediaire operation, OperationEntity operationEntity){
-        if(operation.getEtape() != null && operation.getEtape().getId() != null){
-            EtapeOperationEntity etapeOperation = etapeOperationDao.findById(operation.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape d'opération id=" + operation.getId() + " n'a été trouvée"));
-            operationEntity.setEtapeOperation(etapeOperation);
-        }
-
         if(operation.getNature() != null && operation.getNature().getId() != null){
             NatureEntity nature = natureDao.findById(operation.getNature().getId()).orElseThrow(() -> new NoSuchElementException("Aucune nature id = " + operation.getNature().getId() + " n'a été trouvée"));
             operationEntity.setNature(nature);
+        }
+
+        if(operation.getEtape() != null && operation.getEtape().getId() != null){
+            EtapeOperationEntity etapeOperation = etapeOperationDao.findById(operation.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape d'opération id=" + operation.getId() + " n'a été trouvée"));
+            operationEntity.setEtapeOperation(etapeOperation);
         }
 
         if(operation.getVocation() != null && operation.getVocation().getId() != null){
@@ -265,11 +308,17 @@ public class OperationServiceImpl implements OperationService {
             operationEntity.setModeAmenagement(modeAmenagement);
         }
 
+        if(operation.getTypeOccupation() != null && operation.getTypeOccupation().getId() != null){
+            TypeOccupationEntity typeOccupation = typeOccupationDao.findById(operation.getTypeOccupation().getId()).orElseThrow(() -> new NoSuchElementException("Aucun type d'occupation id = " + operation.getTypeOccupation().getId() + " n'a été trouvé"));
+            operationEntity.setTypeOccupation(typeOccupation);
+        }
+
         if(operation.getConsommationEspace() != null && operation.getConsommationEspace().getId() != null){
             ConsommationEspaceEntity consommationEspace = consommationEspaceDao.findById(operation.getConsommationEspace().getId())
                     .orElseThrow(() -> new NoSuchElementException("Aucune consommation d'espace id = " + operation.getConsommationEspace().getId() + " n'a été trouvée"));
             operationEntity.setConsommationEspace(consommationEspace);
         }
+
     }
 
     @Override
@@ -282,6 +331,15 @@ public class OperationServiceImpl implements OperationService {
         return operationMapper.entitiesToDto(operationCustomDao.searchOperations(operationsCriteria, pageable), pageable);
     }
 
+    @Override
+    public DocumentContent generateFicheSuivi(Long operationId) throws AppServiceException {
+        OperationEntity operationEntity = getOperationEntityById(operationId);
+        GenerationModel generationModel = operationFicheHelper.buildGenerationModel(operationEntity);
+
+        DocumentContent documentContent = documentGenerator.generateDocument(generationModel);
+        documentContent.setFileName(buildRapportFileName(operationEntity));
+        return documentContent;
+    }
 
     @Override
     public OperationIntermediaire getOperationById(long operationId) {
@@ -484,7 +542,7 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, MultipartFile file) throws AppServiceException {
+    public DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, Date dateDocument, MultipartFile file) throws AppServiceException {
 
         //On vérifie que l'opération existe et que l'utilisateur a bien les droits d'ajout sur le document
         OperationIntermediaire operation = getOperationById(operationId);
@@ -494,7 +552,7 @@ public class OperationServiceImpl implements OperationService {
         }
 
         //Récupération du document Dans alfresco
-        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.OPERATION, operationId, file));
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.OPERATION, operationId, dateDocument, file));
 
     }
 
@@ -559,6 +617,19 @@ public class OperationServiceImpl implements OperationService {
         if (operation.getSecteur() == null) {
             operation.setSecteur(false);
         }
+    }
+
+    private String buildRapportFileName(OperationEntity operationEntity) {
+        StringBuilder fileName = new StringBuilder("FicheSuivi_");
+        fileName.append(operationEntity.getId());
+        fileName.append("_");
+        fileName.append(operationEntity.getCode());
+        fileName.append("_");
+        fileName.append(operationEntity.getNom());
+        fileName.append("_");
+        fileName.append(System.nanoTime());
+
+        return fileName.toString();
     }
 
 }
