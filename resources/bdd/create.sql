@@ -769,7 +769,7 @@ alter table if exists tabou_description_financement_operation
 alter table if exists tabou_description_financement_operation
     add constraint fk_tabou_description_financement_operation_tabou_operation
         foreign key (id_operation)
-            references tabou_type_financement_operation;
+            references tabou_operation;
 
 alter table if exists tabou_action_operation
     add constraint fk_tabou_action_operation_tabou_type_action_operation

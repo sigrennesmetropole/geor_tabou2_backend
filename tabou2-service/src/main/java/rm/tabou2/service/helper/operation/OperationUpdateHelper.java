@@ -13,8 +13,7 @@ import rm.tabou2.service.dto.InformationProgrammation;
 import rm.tabou2.storage.tabou.dao.operation.*;
 import rm.tabou2.storage.tabou.entity.operation.*;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class OperationUpdateHelper {
@@ -62,10 +61,10 @@ public class OperationUpdateHelper {
     private TypeProgrammationDao typeProgrammation;
 
     public void updateActeurs(OperationIntermediaire operation, OperationEntity actualOperation){
-        Set<Acteur> acteurs = operation.getActeurs();
-        Set<ActeurEntity> actualActeurs = actualOperation.getActeurs();
+        List<Acteur> acteurs = new ArrayList<>(operation.getActeurs());
+        List<ActeurEntity> actualActeurs = new ArrayList<>(actualOperation.getActeurs());
 
-        for(ActeurEntity acteurEntity : actualActeurs){
+        actualActeurs.forEach(acteurEntity -> {
             Optional<Acteur> first = acteurs.stream().filter(acteur ->{
                 if(acteur.getId() == null) return false;
                 else return acteurEntity.getId() == acteur.getId();
@@ -74,10 +73,12 @@ public class OperationUpdateHelper {
                 acteurDao.delete(acteurEntity);
                 actualOperation.getActeurs().remove(acteurEntity);
             }
-        }
+        });
 
-        for(Acteur acteur : acteurs){
-            Optional<ActeurEntity> first = actualActeurs.stream().filter(entity -> Long.valueOf(entity.getId()).equals(acteur.getId())).findFirst();
+        acteurs.forEach(acteur -> {
+            Optional<ActeurEntity> first = actualActeurs.stream()
+                    .filter(entity -> Long.valueOf(entity.getId()).equals(acteur.getId()))
+                    .findFirst();
             if(first.isPresent()){
                 ActeurEntity toUpdate = first.get();
                 toUpdate.setDescription(acteur.getDescription());
@@ -90,15 +91,15 @@ public class OperationUpdateHelper {
                 toAdd = acteurDao.save(toAdd);
                 actualOperation.getActeurs().add(toAdd);
             }
-        }
+        });
     }
 
     public void updateActions(OperationIntermediaire operation, OperationEntity actualOperation){
-        Set<ActionOperation> actions = operation.getActions();
-        Set<ActionOperationEntity> actualActions = actualOperation.getActions();
+        List<ActionOperation> actions = new ArrayList<>(operation.getActions());
+        List<ActionOperationEntity> actualActions = new ArrayList<>(actualOperation.getActions());
 
         for(ActionOperationEntity actionEntity : actualActions){
-            Optional<ActionOperation> first = actions.stream().filter(action ->{
+            Optional<ActionOperation> first = operation.getActions().stream().filter(action ->{
                 if(action.getId() == null) return false;
                 else return actionEntity.getId() == action.getId();
             }).findFirst();
@@ -109,7 +110,8 @@ public class OperationUpdateHelper {
         }
 
         for(ActionOperation action : actions){
-            Optional<ActionOperationEntity> first = actualActions.stream().filter(entity -> Long.valueOf(entity.getId()).equals(action.getId())).findFirst();
+            Optional<ActionOperationEntity> first = actualActions.stream()
+                    .filter(entity -> Long.valueOf(entity.getId()).equals(action.getId())).findFirst();
             if(first.isPresent()){
                 ActionOperationEntity toUpdate = first.get();
                 toUpdate.setDescription(action.getDescription());
@@ -126,8 +128,8 @@ public class OperationUpdateHelper {
     }
 
     public void updateAmenageurs(OperationIntermediaire operation, OperationEntity actualOperation){
-        Set<Amenageur> amenageurs = operation.getAmenageurs();
-        Set<AmenageurEntity> actualAmenageurs = actualOperation.getAmenageurs();
+        List<Amenageur> amenageurs = new ArrayList<>(operation.getAmenageurs());
+        List<AmenageurEntity> actualAmenageurs = new ArrayList<>(actualOperation.getAmenageurs());
 
         for(AmenageurEntity amenageurEntity : actualAmenageurs){
             Optional<Amenageur> first = amenageurs.stream().filter(amenageur ->{
@@ -141,7 +143,9 @@ public class OperationUpdateHelper {
         }
 
         for(Amenageur amenageur : amenageurs){
-            Optional<AmenageurEntity> first = actualAmenageurs.stream().filter(entity -> Long.valueOf(entity.getId()).equals(amenageur.getId())).findFirst();
+            Optional<AmenageurEntity> first = actualAmenageurs.stream()
+                    .filter(entity -> Long.valueOf(entity.getId()).equals(amenageur.getId()))
+                    .findFirst();
             if(first.isPresent()){
                 AmenageurEntity toUpdate = first.get();
                 toUpdate.setNom(amenageur.getNom());
@@ -158,8 +162,8 @@ public class OperationUpdateHelper {
     }
 
     public void updateContributions(OperationIntermediaire operation, OperationEntity actualOperation){
-        Set<Contribution> contributions = operation.getContributions();
-        Set<ContributionEntity> actualContributions = actualOperation.getContributions();
+        List<Contribution> contributions = new ArrayList<>(operation.getContributions());
+        List<ContributionEntity> actualContributions = new ArrayList<>(actualOperation.getContributions());
 
         for(ContributionEntity contributionEntity : actualContributions){
             Optional<Contribution> first = contributions.stream().filter(contribution ->{
@@ -190,8 +194,8 @@ public class OperationUpdateHelper {
     }
 
     public void updateDescriptionsFonciers(OperationIntermediaire operation, OperationEntity actualOperation){
-        Set<DescriptionFoncier> descriptionsFoncier = operation.getDescriptionsFoncier();
-        Set<DescriptionFoncierEntity> actualDescriptionsFoncier = actualOperation.getDescriptionsFoncier();
+        List<DescriptionFoncier> descriptionsFoncier = new ArrayList<>(operation.getDescriptionsFoncier());
+        List<DescriptionFoncierEntity> actualDescriptionsFoncier = new ArrayList<>(actualOperation.getDescriptionsFoncier());
 
         for(DescriptionFoncierEntity descriptionFoncierEntity : actualDescriptionsFoncier){
             Optional<DescriptionFoncier> first = descriptionsFoncier.stream().filter(descriptionFoncier ->{
@@ -205,7 +209,9 @@ public class OperationUpdateHelper {
         }
 
         for(DescriptionFoncier descriptionFoncier : descriptionsFoncier){
-            Optional<DescriptionFoncierEntity> first = actualDescriptionsFoncier.stream().filter(entity -> Long.valueOf(entity.getId()).equals(descriptionFoncier.getId())).findFirst();
+            Optional<DescriptionFoncierEntity> first = actualDescriptionsFoncier.stream()
+                    .filter(entity -> Long.valueOf(entity.getId()).equals(descriptionFoncier.getId()))
+                    .findFirst();
             if(first.isPresent()){
                 DescriptionFoncierEntity toUpdate = first.get();
                 toUpdate.setDescription(descriptionFoncier.getDescription());
@@ -225,8 +231,8 @@ public class OperationUpdateHelper {
 
     public void updateFinancements(OperationIntermediaire operation, OperationEntity actualOperation)
     {
-        Set<DescriptionFinancementOperation> financements = operation.getFinancements();
-        Set<DescriptionFinancementOperationEntity> actualFinancements = actualOperation.getFinancements();
+        List<DescriptionFinancementOperation> financements = new ArrayList<>(operation.getFinancements());
+        List<DescriptionFinancementOperationEntity> actualFinancements = new ArrayList<>(actualOperation.getFinancements());
 
         for(DescriptionFinancementOperationEntity financementEntity : actualFinancements){
             Optional<DescriptionFinancementOperation> first = financements.stream().filter(financement ->{
@@ -240,7 +246,9 @@ public class OperationUpdateHelper {
         }
 
         for(DescriptionFinancementOperation financement : financements){
-            Optional<DescriptionFinancementOperationEntity> first = actualFinancements.stream().filter(entity -> Long.valueOf(entity.getId()).equals(financement.getId())).findFirst();
+            Optional<DescriptionFinancementOperationEntity> first = actualFinancements.stream()
+                    .filter(entity -> Long.valueOf(entity.getId()).equals(financement.getId()))
+                    .findFirst();
             if(first.isPresent()){
                 DescriptionFinancementOperationEntity toUpdate = first.get();
                 toUpdate.setDescription(financement.getDescription());
@@ -258,8 +266,8 @@ public class OperationUpdateHelper {
 
     public void updateInformationsProgrammation(OperationIntermediaire operation, OperationEntity actualOperation)
     {
-        Set<InformationProgrammation> programmations = operation.getInformationsProgrammation();
-        Set<InformationProgrammationEntity> actualProgrammations = actualOperation.getInformationsProgrammation();
+        List<InformationProgrammation> programmations = new ArrayList<>(operation.getInformationsProgrammation());
+        List<InformationProgrammationEntity> actualProgrammations = new ArrayList<>(actualOperation.getInformationsProgrammation());
 
         for(InformationProgrammationEntity programmationEntity : actualProgrammations){
             Optional<InformationProgrammation> first = programmations.stream().filter(programmation ->{
@@ -273,7 +281,9 @@ public class OperationUpdateHelper {
         }
 
         for(InformationProgrammation programmation : programmations){
-            Optional<InformationProgrammationEntity> first = actualProgrammations.stream().filter(entity -> Long.valueOf(entity.getId()).equals(programmation.getId())).findFirst();
+            Optional<InformationProgrammationEntity> first = actualProgrammations.stream()
+                    .filter(entity -> Long.valueOf(entity.getId()).equals(programmation.getId()))
+                    .findFirst();
             if(first.isPresent()){
                 InformationProgrammationEntity toUpdate = first.get();
                 toUpdate.setDescription(programmation.getDescription());

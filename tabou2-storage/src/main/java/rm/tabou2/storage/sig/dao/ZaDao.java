@@ -11,6 +11,8 @@ public interface ZaDao extends CustomCrudRepository<ZaEntity, Integer>, JpaRepos
 
     List<ZaEntity> findAllByIdTabouIsNullAndNomZaIsLikeIgnoreCase(String nom, Pageable pageable);
 
+    ZaEntity getByIdTabou(Integer idTabou);
+
     int countAllByIdTabouIsNullAndNomZaIsLikeIgnoreCase(String nom);
 
 }
