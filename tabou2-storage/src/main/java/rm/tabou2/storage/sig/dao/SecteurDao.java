@@ -11,6 +11,8 @@ public interface SecteurDao extends CustomCrudRepository<SecteurEntity, Integer>
 
     List<SecteurEntity> findAllByIdTabouIsNullAndSecteurIsLikeIgnoreCase(String secteur, Pageable pageable);
 
+    SecteurEntity getByIdTabou(Integer idTabou);
+
     int countAllByIdTabouIsNullAndSecteurIsLikeIgnoreCase(String secteur);
 
 }

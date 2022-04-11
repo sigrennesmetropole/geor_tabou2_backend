@@ -1,10 +1,10 @@
 package rm.tabou2.service.sig;
 
 
-import org.junit.Test;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -12,13 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.SecteurFoncier;
 import rm.tabou2.storage.sig.dao.SecteurFoncierDao;
 import rm.tabou2.storage.sig.entity.SecteurFoncierEntity;
 
-@RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
 public class SecteurFoncierServiceTest {

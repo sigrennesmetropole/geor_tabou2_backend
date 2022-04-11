@@ -19,6 +19,8 @@ public interface EnDiffusDao extends CustomCrudRepository<EnDiffusEntity, Intege
             "UPPER(e.nom) LIKE UPPER(:nom)")
     List<EnDiffusEntity> findAllByName(@Param("nom") String nom, Pageable pageable);
 
+    EnDiffusEntity getByIdTabou(Integer idTabou);
+
     int countAllByIdTabouIsNullAndNomIsLikeIgnoreCase(String nom);
 
 }

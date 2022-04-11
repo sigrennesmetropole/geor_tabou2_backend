@@ -1,10 +1,9 @@
 package rm.tabou2.service.tabou;
 
-import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.constant.ConsommationEspaceCode;
 import rm.tabou2.service.constant.DecisionCode;
@@ -23,7 +22,6 @@ import rm.tabou2.service.constant.MaitriseOuvrageCode;
 import rm.tabou2.service.constant.ModeAmenagementCode;
 import rm.tabou2.service.constant.VocationCode;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
-import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
@@ -47,7 +45,7 @@ import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 
 
-@RunWith(SpringRunner.class)
+
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
 public class OperationTiersServiceTest {

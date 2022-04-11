@@ -1,26 +1,25 @@
 package rm.tabou2.service.tabou;
 
+import java.util.Date;
+
 import org.joda.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
-import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
-import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 
-import java.util.Date;
 
-@RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
 @Transactional

@@ -6,13 +6,13 @@
 
     <groupId>rm</groupId>
     <artifactId>tabou2</artifactId>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.1.RELEASE</version>
+        <version>2.5.12</version>
         <relativePath/>
     </parent>
 

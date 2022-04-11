@@ -1,9 +1,8 @@
 package rm.tabou2.service.sig;
 
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,6 @@ import rm.tabou2.storage.sig.dao.QuartierDao;
 import rm.tabou2.storage.sig.entity.QuartierEntity;
 import rm.tabou2.storage.sig.item.QuartierCriteria;
 
-@RunWith(SpringRunner.class)
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
 public class QuartierServiceTest {
