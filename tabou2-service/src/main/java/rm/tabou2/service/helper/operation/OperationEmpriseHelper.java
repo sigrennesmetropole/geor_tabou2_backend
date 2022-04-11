@@ -2,6 +2,7 @@ package rm.tabou2.service.helper.operation;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,6 +21,7 @@ import rm.tabou2.storage.sig.entity.ZaEntity;
 import rm.tabou2.storage.sig.entity.ZacEntity;
 import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -66,6 +68,28 @@ public class OperationEmpriseHelper {
             enDiffusEntity.setIdTabou(operationToSave.getId().intValue());
             enDiffusDao.save(enDiffusEntity);
         }
+    }
+
+    @Named("getIdEmpriseOperation")
+    public Long getIdEmprise(OperationEntity operationEntity) {
+        if(operationEntity.getNature() == null){
+            return null;
+        }
+        NatureEntity nature = natureDao.findById(operationEntity.getNature().getId()).orElseThrow(() -> new EntityNotFoundException("Le nature id={0} n'existe pas"));
+        if (BooleanUtils.isTrue(operationEntity.getSecteur())) {
+            SecteurEntity secteurEntity = secteurDao.getByIdTabou(Math.toIntExact(operationEntity.getId()));
+            return secteurEntity != null ? secteurEntity.getId().longValue() : null;
+        } else if (NatureLibelle.ZAC.equalsIgnoreCase(nature.getLibelle())) {
+            ZacEntity zacEntity = zacDao.getByIdTabou(Math.toIntExact(operationEntity.getId()));
+            return zacEntity != null ? zacEntity.getId().longValue() : null;
+        } else if (NatureLibelle.ZA.equalsIgnoreCase(nature.getLibelle())) {
+            ZaEntity zaEntity = zaDao.getByIdTabou(Math.toIntExact(operationEntity.getId()));
+            return zaEntity != null ? zaEntity.getId().longValue() : null;
+        } else if (NatureLibelle.EN_DIFFUS.equalsIgnoreCase(nature.getLibelle())) {
+            EnDiffusEntity enDiffusEntity = enDiffusDao.getByIdTabou(Math.toIntExact(operationEntity.getId()));
+            return enDiffusEntity != null ? enDiffusEntity.getId().longValue() : null;
+        }
+        return null;
     }
 
     public Page<Emprise> getAvailableEmprises(Long natureId, Boolean estSecteur, Pageable pageable, String nom) {

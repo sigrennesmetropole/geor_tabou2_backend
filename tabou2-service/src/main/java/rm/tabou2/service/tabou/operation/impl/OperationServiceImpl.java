@@ -34,10 +34,8 @@ import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationUpdateHelper;
 import rm.tabou2.service.helper.operation.OperationValidator;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
-import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
-import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
+import rm.tabou2.service.mapper.tabou.operation.*;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
-import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.service.st.generator.DocumentGenerator;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.st.generator.model.GenerationModel;
@@ -108,6 +106,15 @@ public class OperationServiceImpl implements OperationService {
     private PlhDao plhDao;
 
     @Autowired
+    private DescriptionConcertationDao concertationDao;
+
+    @Autowired
+    private EntiteReferenteDao entiteReferenteDao;
+
+    @Autowired
+    private OutilFoncierDao outilFoncierDao;
+
+    @Autowired
     private OperationEmpriseHelper operationEmpriseHelper;
 
     @Autowired
@@ -136,6 +143,15 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private DocumentMapper documentMapper;
+
+    @Autowired
+    private PlhMapper plhMapper;
+
+    @Autowired
+    private DescriptionConcertationMapper concertationMapper;
+
+    @Autowired
+    private EntiteReferenteMapper entiteReferenteMapper;
 
     @Autowired
     private OperationService me;
@@ -183,9 +199,18 @@ public class OperationServiceImpl implements OperationService {
 
         // ajout d'un événement système de changement d'état
         operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etape.getLibelle()));
-        if(operationEntity.getPlh() != null){
+        if(operation.getPlh() != null){
+            operationEntity.setPlh(plhMapper.dtoToEntity(operation.getPlh()));
             plhDao.save(operationEntity.getPlh());
         }
+
+        if(operation.getConcertation() != null){
+            operationEntity.setConcertation(concertationMapper.dtoToEntity(operation.getConcertation()));
+            concertationDao.save(operationEntity.getConcertation());
+        }
+
+        updateListsOperation(operation, operationEntity);
+
         operationDao.save(operationEntity);
         OperationIntermediaire operationSaved = operationMapper.entityToDto(operationEntity);
 
@@ -225,6 +250,40 @@ public class OperationServiceImpl implements OperationService {
         operationMapper.dtoToEntity(operation, operationEntity);
         assignMultivaluables(operation, operationEntity);
 
+        if(operation.getPlh() != null){
+            operationEntity.setPlh(plhMapper.dtoToEntity(operation.getPlh()));
+            plhDao.save(operationEntity.getPlh());
+        }else if(operationEntity.getPlh() != null){
+            plhDao.delete(operationEntity.getPlh());
+            operationEntity.setPlh(null);
+        }
+
+        if(operation.getConcertation() != null){
+            operationEntity.setConcertation(concertationMapper.dtoToEntity(operation.getConcertation()));
+            concertationDao.save(operationEntity.getConcertation());
+        }else if(operationEntity.getConcertation() != null){
+            concertationDao.delete(operationEntity.getConcertation());
+            operationEntity.setConcertation(null);
+        }
+
+        updateListsOperation(operation, operationEntity);
+
+        if (etapeOperationEntity.isRemoveRestriction()) {
+            operation.setDiffusionRestreinte(false);
+        }
+
+        // Ajout d'un événement système en cas de changement d'étape
+        if (etapeChanged) {
+            operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperationEntity.getLibelle()));
+        }
+
+        operationEntity = operationDao.save(operationEntity);
+
+        return operationMapper.entityToDto(operationEntity);
+
+    }
+
+    private void updateListsOperation(OperationIntermediaire operation, OperationEntity operationEntity){
         if(operation.getActeurs() != null){
             operationUpdateHelper.updateActeurs(operation, operationEntity);
         }
@@ -246,20 +305,6 @@ public class OperationServiceImpl implements OperationService {
         if(operation.getInformationsProgrammation() != null){
             operationUpdateHelper.updateInformationsProgrammation(operation, operationEntity);
         }
-
-        if (etapeOperationEntity.isRemoveRestriction()) {
-            operation.setDiffusionRestreinte(false);
-        }
-
-        // Ajout d'un événement système en cas de changement d'étape
-        if (etapeChanged) {
-            operationEntity.addEvenementOperation(buildEvenementOperationEtapeUpdated(etapeOperationEntity.getLibelle()));
-        }
-
-        operationEntity = operationDao.save(operationEntity);
-
-        return operationMapper.entityToDto(operationEntity);
-
     }
 
     @Override
@@ -319,6 +364,18 @@ public class OperationServiceImpl implements OperationService {
             operationEntity.setConsommationEspace(consommationEspace);
         }
 
+        if(operation.getOutilFoncier() != null && operation.getOutilFoncier().getId() != null){
+            OutilFoncierEntity outilFoncier = outilFoncierDao.findById(operation.getOutilFoncier().getId())
+                    .orElseThrow(() -> new NoSuchElementException("Aucun outil foncier id = " + operation.getOutilFoncier().getId()));
+            operationEntity.setOutilFoncier(outilFoncier);
+        }
+
+        if(operation.getEntiteReferente() != null && operation.getEntiteReferente().getId() != null){
+            EntiteReferenteEntity entiteReferente = entiteReferenteDao.findById(operation.getEntiteReferente().getId())
+                    .orElseThrow(() -> new NoSuchElementException("Aucune entité référente id = " + operation.getEntiteReferente().getId()));
+            operationEntity.setEntiteReferente(entiteReferente);
+        }
+
     }
 
     @Override
@@ -343,11 +400,8 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public OperationIntermediaire getOperationById(long operationId) {
-
         OperationEntity operationEntity = getOperationEntityById(operationId);
-
         return operationMapper.entityToDto(operationEntity);
-
     }
 
     @Override
