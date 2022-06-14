@@ -26,7 +26,7 @@ public interface OperationService {
      * @param operation opération à créer
      * @return opération crée
      */
-    OperationIntermediaire createOperation(@ValidOperationCreation OperationIntermediaire operation);
+    OperationIntermediaire createOperation(@ValidOperationCreation OperationIntermediaire operation) throws AppServiceException;
 
     /**
      * Mise à jour d'une opération
