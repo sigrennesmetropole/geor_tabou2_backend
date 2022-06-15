@@ -10,9 +10,9 @@ import org.springframework.context.annotation.PropertySource;
  * Classe de configuration globale de l'application.
  */
 @SpringBootApplication(scanBasePackages = {"rm.tabou2.facade", "rm.tabou2.service", "rm.tabou2.storage.tabou", "rm.tabou2.storage.ddc", "rm.tabou2.storage.sig"})
+@PropertySource(value = { "classpath:tabou2-common.properties" }, ignoreResourceNotFound = false)
 @PropertySource(value = { "file:${georchestra.datadir}/default.properties" }, ignoreResourceNotFound = false)
 @PropertySource(value = { "file:${georchestra.datadir}/tabou2/tabou2.properties" }, ignoreResourceNotFound = false)
-@PropertySource(value = { "classpath:tabou2-common.properties" }, ignoreResourceNotFound = false)
 public class AppFacadeApplication extends SpringBootServletInitializer {
 
     public static void main(final String[] args) {
