@@ -61,7 +61,7 @@ public class OperationIntermediaire {
 
     private BigDecimal surfaceTotale;
 
-    private Integer nbLogementPrevu;
+    private Integer nbLogementsPrevu;
 
     private String ql1;
 
@@ -172,7 +172,7 @@ public class OperationIntermediaire {
                 ", operationnelDate=" + operationnelDate +
                 ", clotureDate=" + clotureDate +
                 ", surfaceTotale=" + surfaceTotale +
-                ", nbLogementPrevu=" + nbLogementPrevu +
+                ", nbLogementsPrevu=" + nbLogementsPrevu +
                 ", ql1='" + ql1 + '\'' +
                 ", scot=" + scot +
                 ", densiteScot=" + densiteScot +

@@ -9,5 +9,4 @@ import rm.tabou2.service.dto.Operation;
 @Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class, VocationMapper.class,
         DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, ConsommationEspaceMapper.class})
 public interface OperationV2Mapper extends AbstractMapper<OperationIntermediaire, Operation> {
-
 }
