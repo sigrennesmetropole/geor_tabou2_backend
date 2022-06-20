@@ -37,9 +37,6 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -60,7 +57,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     public static final String SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT = "=tabou2:libelleTypeDocument:";
     public static final String SEARCH_PARAM_OBJET = "=tabou2:objet:";
     public static final String SEARCH_PARAM_MIME_TYPE = "=cm:content.mimetype:";
-    public static final String SEARCH_PARAM_NAME = "=cm:name:";
+    public static final String SEARCH_PARAM_NAME = "cm:name:";
     public static final String ALFRESCO_SEARCH_CRITERIA_TYPE = "FIELD";
     public static final String AND = " AND ";
 
