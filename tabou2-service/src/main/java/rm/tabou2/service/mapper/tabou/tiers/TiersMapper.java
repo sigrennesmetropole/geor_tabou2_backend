@@ -19,5 +19,6 @@ public interface TiersMapper extends AbstractMapper<TiersEntity, Tiers> {
     void dtoToEntity(Tiers dto, @MappingTarget TiersEntity entity);
 
     @Override
+    @Mapping(target="adresseRue", source="adresse")
     Tiers entityToDto(TiersEntity entity);
 }
