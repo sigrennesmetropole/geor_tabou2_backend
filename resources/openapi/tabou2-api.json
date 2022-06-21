@@ -142,7 +142,7 @@
         ],
         "parameters": [
           {
-            "in": "query",
+            "in": "path",
             "name": "operationId",
             "description": "Identifiant de l'opération",
             "required": true,
@@ -2022,7 +2022,7 @@
         ],
         "parameters": [
           {
-            "in": "query",
+            "in": "path",
             "name": "programmeId",
             "description": "Identifiant du programme",
             "required": true,
