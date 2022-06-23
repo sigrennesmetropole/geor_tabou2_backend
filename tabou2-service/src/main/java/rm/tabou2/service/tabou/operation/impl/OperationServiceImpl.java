@@ -321,59 +321,81 @@ public class OperationServiceImpl implements OperationService {
         if(operation.getNature() != null && operation.getNature().getId() != null){
             NatureEntity nature = natureDao.findById(operation.getNature().getId()).orElseThrow(() -> new NoSuchElementException("Aucune nature id = " + operation.getNature().getId() + " n'a été trouvée"));
             operationEntity.setNature(nature);
+        }else if(operation.getNature() == null){
+            operationEntity.setNature(null);
         }
 
         if(operation.getEtape() != null && operation.getEtape().getId() != null){
             EtapeOperationEntity etapeOperation = etapeOperationDao.findById(operation.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape d'opération id=" + operation.getId() + " n'a été trouvée"));
             operationEntity.setEtapeOperation(etapeOperation);
+        }else if(operation.getEtape() == null){
+            operationEntity.setEtapeOperation(null);
         }
 
         if(operation.getVocation() != null && operation.getVocation().getId() != null){
             VocationEntity vocation = vocationDao.findById(operation.getVocation().getId()).orElseThrow(() -> new NoSuchElementException("Aucune vocation id = " + operation.getVocation().getId() + " n'a été trouvée"));
             operationEntity.setVocation(vocation);
+        }else if(operation.getVocation() == null){
+            operationEntity.setVocation(null);
         }
 
         if(operation.getVocationZa() != null && operation.getVocationZa().getId() != null){
             VocationZAEntity vocationZA = vocationZADao.findById(operation.getVocationZa().getId()).orElseThrow(() -> new NoSuchElementException("Aucune vocation id = " + operation.getVocation().getId() + " n'a été trouvée"));
             operationEntity.setVocationZa(vocationZA);
+        }else if(operation.getVocationZa() == null){
+            operationEntity.setVocationZa(null);
         }
 
         if(operation.getDecision() != null && operation.getDecision().getId() != null){
             DecisionEntity decision = decisionDao.findById(operation.getDecision().getId()).orElseThrow(() -> new NoSuchElementException("Aucune décision id = " + operation.getDecision().getId() + " n'a été trouvée"));
             operationEntity.setDecision(decision);
+        }else if(operation.getDecision() == null){
+            operationEntity.setDecision(null);
         }
 
         if(operation.getMaitriseOuvrage() != null && operation.getMaitriseOuvrage().getId() != null){
             MaitriseOuvrageEntity maitriseOuvrage = maitriseOuvrageDao.findById(operation.getMaitriseOuvrage().getId()).orElseThrow(() -> new NoSuchElementException("Aucune maitrîse d'ouvrage id = " + operation.getMaitriseOuvrage().getId() + " n'a été trouvée"));
             operationEntity.setMaitriseOuvrage(maitriseOuvrage);
+        }else if(operation.getMaitriseOuvrage() == null){
+            operationEntity.setMaitriseOuvrage(null);
         }
 
         if(operation.getModeAmenagement() != null && operation.getModeAmenagement().getId() != null){
             ModeAmenagementEntity modeAmenagement = modeAmenagementDao.findById(operation.getModeAmenagement().getId()).orElseThrow(() -> new NoSuchElementException("Aucun mode d'aménagement id = " + operation.getModeAmenagement().getId() + " n'a été trouvé"));
             operationEntity.setModeAmenagement(modeAmenagement);
+        }else if(operation.getModeAmenagement() == null){
+            operationEntity.setModeAmenagement(null);
         }
 
         if(operation.getTypeOccupation() != null && operation.getTypeOccupation().getId() != null){
             TypeOccupationEntity typeOccupation = typeOccupationDao.findById(operation.getTypeOccupation().getId()).orElseThrow(() -> new NoSuchElementException("Aucun type d'occupation id = " + operation.getTypeOccupation().getId() + " n'a été trouvé"));
             operationEntity.setTypeOccupation(typeOccupation);
+        }else if(operation.getTypeOccupation() == null){
+            operationEntity.setTypeOccupation(null);
         }
 
         if(operation.getConsommationEspace() != null && operation.getConsommationEspace().getId() != null){
             ConsommationEspaceEntity consommationEspace = consommationEspaceDao.findById(operation.getConsommationEspace().getId())
                     .orElseThrow(() -> new NoSuchElementException("Aucune consommation d'espace id = " + operation.getConsommationEspace().getId() + " n'a été trouvée"));
             operationEntity.setConsommationEspace(consommationEspace);
+        }else if(operation.getConsommationEspace() == null){
+            operationEntity.setConsommationEspace(null);
         }
 
         if(operation.getOutilFoncier() != null && operation.getOutilFoncier().getId() != null){
             OutilFoncierEntity outilFoncier = outilFoncierDao.findById(operation.getOutilFoncier().getId())
                     .orElseThrow(() -> new NoSuchElementException("Aucun outil foncier id = " + operation.getOutilFoncier().getId()));
             operationEntity.setOutilFoncier(outilFoncier);
+        }else if(operation.getOutilFoncier() == null){
+            operationEntity.setOutilFoncier(null);
         }
 
         if(operation.getEntiteReferente() != null && operation.getEntiteReferente().getId() != null){
             EntiteReferenteEntity entiteReferente = entiteReferenteDao.findById(operation.getEntiteReferente().getId())
                     .orElseThrow(() -> new NoSuchElementException("Aucune entité référente id = " + operation.getEntiteReferente().getId()));
             operationEntity.setEntiteReferente(entiteReferente);
+        }else if(operation.getEntiteReferente() == null){
+            operationEntity.setEntiteReferente(null);
         }
 
     }
