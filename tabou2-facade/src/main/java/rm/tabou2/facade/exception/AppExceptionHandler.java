@@ -1,6 +1,5 @@
 package rm.tabou2.facade.exception;
 
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -99,16 +98,7 @@ public class AppExceptionHandler {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     protected ResponseEntity<Object> handleFileSizeLimitExceededException(final MaxUploadSizeExceededException ex, final WebRequest request){
         LOGGER.error(ex.getMessage());
-
-        FileSizeLimitExceededException rootEx = (FileSizeLimitExceededException) ex.getRootCause();
-        String message;
-        if(rootEx != null){
-            message = "Le fichier fourni est trop volumineux (" + rootEx.getActualSize() + " octets au lieu de " + rootEx.getPermittedSize() + " octets)";
-        }else{
-            message = "Le fichier fourni est trop volumineux";
-        }
-
-        return new ResponseEntity<>(message, HttpStatus.PAYLOAD_TOO_LARGE);
+        return new ResponseEntity<>("Le fichier fourni est trop volumineux", HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
     @ExceptionHandler(Exception.class)
