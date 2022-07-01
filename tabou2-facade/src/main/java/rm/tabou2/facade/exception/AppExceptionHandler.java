@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
@@ -99,6 +100,12 @@ public class AppExceptionHandler {
     protected ResponseEntity<Object> handleFileSizeLimitExceededException(final MaxUploadSizeExceededException ex, final WebRequest request){
         LOGGER.error(ex.getMessage());
         return new ResponseEntity<>("Le fichier fourni est trop volumineux", HttpStatus.PAYLOAD_TOO_LARGE);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    protected ResponseEntity<Object> handleMultipartException(final MultipartException ex, final WebRequest request){
+        LOGGER.error(ex.getMessage());
+        return new ResponseEntity<>("La requête est trop volumineuse", HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
     @ExceptionHandler(Exception.class)
