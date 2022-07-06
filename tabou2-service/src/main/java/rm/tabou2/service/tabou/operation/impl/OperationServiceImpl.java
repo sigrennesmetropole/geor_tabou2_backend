@@ -173,7 +173,7 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     @Transactional
-    public OperationIntermediaire createOperation(OperationIntermediaire operation) {
+    public OperationIntermediaire createOperation(OperationIntermediaire operation) throws AppServiceException {
 
         // Ajout des valeurs par défaut
         setOperationDefaultValue(operation);
@@ -283,7 +283,7 @@ public class OperationServiceImpl implements OperationService {
 
     }
 
-    private void updateListsOperation(OperationIntermediaire operation, OperationEntity operationEntity){
+    private void updateListsOperation(OperationIntermediaire operation, OperationEntity operationEntity) throws AppServiceException {
         if(operation.getActeurs() != null){
             operationUpdateHelper.updateActeurs(operation, operationEntity);
         }
