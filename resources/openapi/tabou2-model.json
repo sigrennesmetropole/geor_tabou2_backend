@@ -838,6 +838,10 @@
           "description": "Adresse du tiers",
           "type": "string"
         },
+        "adresseRue": {
+          "description": "Champ temporaire équivalent à adresse du tiers pour maintenir les accès tiers depuis programme et opérations valides",
+          "type": "string"
+        },
         "adresseCp": {
           "description": "Code postal de l'adresse du tiers",
           "type": "string"
