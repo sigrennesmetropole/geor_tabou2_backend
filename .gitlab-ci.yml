@@ -93,7 +93,7 @@ tabou2:sonar:master:
 
 tabou2:deploy:
   stage: deploy
-  image: ansible/ansible-runner:1.4.4
+  image: glregistry.boost.open.global/boost/docker/mvn-node-jdk11-ansible:latest
   dependencies:
     - tabou2:build  
   only:
@@ -110,7 +110,7 @@ tabou2:deploy:master:
   stage: deploy
   tags: 
    - cdp-rennes  
-  image: ansible/ansible-runner:1.4.4  
+  image: glregistry.boost.open.global/boost/docker/mvn-node-jdk11-ansible:latest
   dependencies:
     - tabou2:build:master   
   only:

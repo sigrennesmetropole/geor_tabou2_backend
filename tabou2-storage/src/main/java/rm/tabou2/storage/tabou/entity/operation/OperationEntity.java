@@ -63,7 +63,7 @@ public class OperationEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "nb_logement_prevu")
-    private Integer nbLogementPrevu;
+    private Integer nbLogementsPrevu;
 
     @Basic
     @Column(name = "QL1")
@@ -263,7 +263,7 @@ public class OperationEntity extends GenericAuditableEntity {
                 ", operationnelDate=" + operationnelDate +
                 ", clotureDate=" + clotureDate +
                 ", surfaceTotale=" + surfaceTotale +
-                ", nbLogementPrevu=" + nbLogementPrevu +
+                ", nbLogementsPrevu=" + nbLogementsPrevu +
                 ", ql1='" + ql1 + '\'' +
                 ", scot=" + scot +
                 ", densiteScot=" + densiteScot +
