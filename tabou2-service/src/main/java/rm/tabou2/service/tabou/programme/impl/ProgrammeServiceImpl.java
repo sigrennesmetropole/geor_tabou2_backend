@@ -1,6 +1,7 @@
 package rm.tabou2.service.tabou.programme.impl;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -554,7 +555,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ficheSuiviProgrammeDataModel.setIllustration(documentGenerator.generatedImgForTemplate(AlfrescoTabouType.PROGRAMME, programmeEntity.getId()));
         ficheSuiviProgrammeDataModel.setNomFichier(buildRapportFileName(programmeEntity));
 
-        if (programmeEntity.getNumAds() != null) { // traiter le cas où le nusAds ne retourne rien
+        if (StringUtils.isNotEmpty(programmeEntity.getNumAds())) { // traiter le cas où le numAds ne retourne rien / est vide
 
             AgapeoSuiviHabitat agapeoSuiviHabitat = agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds());
             if (agapeoSuiviHabitat != null) ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(agapeoSuiviHabitat);
