@@ -54,7 +54,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
     public static final String SEARCH_PARAM_PROPERTIES = "properties";
     public static final String SEARCH_PARAM_ID = "=tabou2:id:";
-    public static final String SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT = "=tabou2:libelleTypeDocument:";
+    public static final String SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT = "tabou2:libelleTypeDocument:";
     public static final String SEARCH_PARAM_OBJET = "=tabou2:objet:";
     public static final String SEARCH_PARAM_MIME_TYPE = "=cm:content.mimetype:";
     public static final String SEARCH_PARAM_NAME = "cm:name:";
@@ -189,7 +189,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
         }
         if (!StringUtils.isEmpty(libelleTypeDocument)) {
             query.append(AND);
-            query.append(SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT).append(libelleTypeDocument);
+            query.append(SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT).append("\"").append(libelleTypeDocument).append("\"");
         }
         if (!StringUtils.isEmpty(typeMime)) {
             query.append(AND);
