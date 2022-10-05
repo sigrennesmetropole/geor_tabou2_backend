@@ -172,7 +172,7 @@ public class OperationServiceImpl implements OperationService {
     private String etapeUpdatedMessage;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {AppServiceException.class})
     public OperationIntermediaire createOperation(OperationIntermediaire operation) throws AppServiceException {
 
         // Ajout des valeurs par défaut
@@ -221,7 +221,7 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = {AppServiceException.class})
     public OperationIntermediaire updateOperation(OperationIntermediaire operation) throws AppServiceException {
 
         OperationEntity operationEntity = operationDao.findOneById(operation.getId());
