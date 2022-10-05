@@ -98,7 +98,8 @@ public class OperationUpdateHelper {
 		});
 
 		// On vérifie qu'on a pas de doublons
-		if (actualActeurs.stream().map(a -> a.getTypeActeur().getCode()).distinct().count() != actualActeurs.size()) {
+		Set<ActeurEntity> finalActeurs = actualOperation.getActeurs();
+		if (finalActeurs.stream().map(a -> a.getTypeActeur().getCode()).distinct().count() != finalActeurs.size()) {
 			throw new AppServiceException("Un type acteur ne peut être utilisé qu'une seule fois",
 					AppServiceExceptionsStatus.BADREQUEST);
 		}
@@ -145,7 +146,8 @@ public class OperationUpdateHelper {
 		}
 
 		// On vérifie qu'on a pas de doublons
-		if (actualActions.stream().map(a -> a.getTypeAction().getCode()).distinct().count() != actualActions.size()) {
+		Set<ActionOperationEntity> finalActions = actualOperation.getActions();
+		if (finalActions.stream().map(a -> a.getTypeAction().getCode()).distinct().count() != finalActions.size()) {
 			throw new AppServiceException("Un type action ne peut être utilisé qu'une seule fois",
 					AppServiceExceptionsStatus.BADREQUEST);
 		}
@@ -193,8 +195,9 @@ public class OperationUpdateHelper {
 		}
 
 		// On vérifie qu'on a pas de doublons
-		if (actualAmenageurs.stream().map(a -> a.getTypeAmenageur().getCode()).distinct()
-				.count() != actualAmenageurs.size()) {
+		Set<AmenageurEntity> finalAmenageurs = actualOperation.getAmenageurs();
+		if (finalAmenageurs.stream().map(a -> a.getTypeAmenageur().getCode()).distinct()
+				.count() != finalAmenageurs.size()) {
 			throw new AppServiceException("Un type aménageur ne peut être utilisé qu'une seule fois",
 					AppServiceExceptionsStatus.BADREQUEST);
 		}
@@ -242,8 +245,9 @@ public class OperationUpdateHelper {
 		}
 
 		// On vérifie qu'on a pas de doublons
-		if (actualContributions.stream().map(c -> c.getTypeContribution().getCode()).distinct()
-				.count() != actualContributions.size()) {
+		Set<ContributionEntity> finalContributions = actualOperation.getContributions();
+		if (finalContributions.stream().map(c -> c.getTypeContribution().getCode()).distinct()
+				.count() != finalContributions.size()) {
 			throw new AppServiceException("Un type contribution ne peut être utilisé qu'une seule fois",
 					AppServiceExceptionsStatus.BADREQUEST);
 		}
@@ -295,8 +299,9 @@ public class OperationUpdateHelper {
 		}
 
 		// On vérifie qu'on a pas de doublons
-		if (actualDescriptionsFoncier.stream().map(df -> df.getTypeFoncier().getCode()).distinct()
-				.count() != actualDescriptionsFoncier.size()) {
+		Set<DescriptionFoncierEntity> finalDescriptions = actualOperation.getDescriptionsFoncier();
+		if (finalDescriptions.stream().map(df -> df.getTypeFoncier().getCode()).distinct()
+				.count() != finalDescriptions.size()) {
 			throw new AppServiceException("Un type foncier ne peut être utilisé qu'une seule fois",
 					AppServiceExceptionsStatus.BADREQUEST);
 		}
@@ -346,8 +351,9 @@ public class OperationUpdateHelper {
 		}
 
 		// On vérifie qu'on a pas de doublons
-		if (actualFinancements.stream().map(f -> f.getTypeFinancement().getCode()).distinct()
-				.count() != actualFinancements.size()) {
+		Set<DescriptionFinancementOperationEntity> finalFinancements = actualOperation.getFinancements();
+		if (finalFinancements.stream().map(f -> f.getTypeFinancement().getCode()).distinct()
+				.count() != finalFinancements.size()) {
 			throw new AppServiceException("Un type financement ne peut être utilisé qu'une seule fois",
 					AppServiceExceptionsStatus.BADREQUEST);
 		}
@@ -397,8 +403,9 @@ public class OperationUpdateHelper {
 		}
 
 		// On vérifie qu'on a pas de doublons
-		if (actualProgrammations.stream().map(p -> p.getTypeProgrammation().getCode()).distinct()
-				.count() != actualProgrammations.size()) {
+		Set<InformationProgrammationEntity> finalProgrammations = actualOperation.getInformationsProgrammation();
+		if (finalProgrammations.stream().map(p -> p.getTypeProgrammation().getCode()).distinct()
+				.count() != finalProgrammations.size()) {
 			throw new AppServiceException("Un type programmation ne peut être utilisé qu'une seule fois",
 					AppServiceExceptionsStatus.BADREQUEST);
 		}
