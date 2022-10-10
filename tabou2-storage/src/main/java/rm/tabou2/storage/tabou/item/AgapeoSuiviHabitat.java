@@ -5,15 +5,15 @@ import lombok.Data;
 @Data
 public class AgapeoSuiviHabitat {
 
-    private int logementsLocatifAide;
+    private Integer logementsLocatifAide;
 
-    private int logementsAccessAide;
+    private Integer logementsAccessAide;
 
-    private int logementsLocatifRegulePrive;
+    private Integer logementsLocatifRegulePrive;
 
-    private int logementsLocatifReguleHlm;
+    private Integer logementsLocatifReguleHlm;
 
-    private int logementsAccessMaitrise;
+    private Integer logementsAccessMaitrise;
 
     public AgapeoSuiviHabitat() {
 
@@ -23,11 +23,11 @@ public class AgapeoSuiviHabitat {
                               Long logementsAccessMaitrise) {
 
 
-        this.logementsLocatifAide = logementsLocatifAide != null ? Math.toIntExact(logementsLocatifAide) : 0;
-        this.logementsAccessAide = logementsAccessAide != null ? Math.toIntExact(logementsAccessAide) : 0;
-        this.logementsLocatifRegulePrive = logementsLocatifRegulePrive != null ? Math.toIntExact(logementsLocatifRegulePrive) : 0;
-        this.logementsLocatifReguleHlm = logementsLocatifReguleHlm != null ? Math.toIntExact(logementsLocatifReguleHlm) : 0;
-        this.logementsAccessMaitrise = logementsAccessMaitrise != null ? Math.toIntExact(logementsAccessMaitrise) : 0;
+        this.logementsLocatifAide = logementsLocatifAide != null ? Math.toIntExact(logementsLocatifAide) : null;
+        this.logementsAccessAide = logementsAccessAide != null ? Math.toIntExact(logementsAccessAide) : null;
+        this.logementsLocatifRegulePrive = logementsLocatifRegulePrive != null ? Math.toIntExact(logementsLocatifRegulePrive) : null;
+        this.logementsLocatifReguleHlm = logementsLocatifReguleHlm != null ? Math.toIntExact(logementsLocatifReguleHlm) : null;
+        this.logementsAccessMaitrise = logementsAccessMaitrise != null ? Math.toIntExact(logementsAccessMaitrise) : null;
 
     }
 }

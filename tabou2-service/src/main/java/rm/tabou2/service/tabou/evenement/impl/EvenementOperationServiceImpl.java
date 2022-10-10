@@ -52,17 +52,17 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public void deleteEvenementByOperationId(long evenementId, long operationId) throws AppServiceException {
-
-        Optional<EvenementOperationEntity> evenementOperationOpt = evenementOperationDao.findById(evenementId);
-        if (evenementOperationOpt.isEmpty()) {
-            throw new NoSuchElementException("L'evenement id=" + evenementId + " n'existe pas");
-        }
 
         Optional<OperationEntity> operationEntityOpt = operationDao.findById(operationId);
         if (operationEntityOpt.isEmpty()) {
             throw new NoSuchElementException("L'opération id=" + operationId + " n'existe pas");
+        }
+        OperationEntity operationEntity = operationEntityOpt.get();
+        Optional<EvenementOperationEntity> evenementOperationOpt = operationEntity.getEvenements().stream().filter(e-> e.getId() == evenementId).findFirst();
+        if (evenementOperationOpt.isEmpty()) {
+            throw new NoSuchElementException("L'evenement id=" + evenementId + " n'existe pas");
         }
         OperationIntermediaire operation = operationMapper.entityToDto(operationEntityOpt.get());
         Evenement evenement = evenementOperationMapper.entityToDto(evenementOperationOpt.get());
@@ -70,7 +70,8 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
         //Test les Permissions : droit en modification et si evenement system
         if (evenementOperationRigthsHelper.checkCanUpdateEvenementOperation(operation, evenement)) {
             //Suppression de l'évènement
-            evenementOperationDao.deleteById(evenementId);
+            operationEntity.getEvenements().remove(evenementOperationOpt.get());
+            operationDao.save(operationEntity);
         } else {
             throw new AppServiceException("Utilisateur non autorisé à supprimer l'évènement ", AppServiceExceptionsStatus.FORBIDDEN);
         }

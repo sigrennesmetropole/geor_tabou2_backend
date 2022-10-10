@@ -6,7 +6,6 @@ import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.*;
 
 @Getter
@@ -59,7 +58,7 @@ public class OperationEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "surface_totale")
-    private BigDecimal surfaceTotale;
+    private Double surfaceTotale;
 
     @Basic
     @Column(name = "nb_logement_prevu")
