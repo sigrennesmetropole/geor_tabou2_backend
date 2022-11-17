@@ -23,11 +23,11 @@ public class AgapeoSuiviHabitat {
                               Long logementsAccessMaitrise) {
 
 
-        this.logementsLocatifAide = logementsLocatifAide != null ? Math.toIntExact(logementsLocatifAide) : null;
-        this.logementsAccessAide = logementsAccessAide != null ? Math.toIntExact(logementsAccessAide) : null;
-        this.logementsLocatifRegulePrive = logementsLocatifRegulePrive != null ? Math.toIntExact(logementsLocatifRegulePrive) : null;
-        this.logementsLocatifReguleHlm = logementsLocatifReguleHlm != null ? Math.toIntExact(logementsLocatifReguleHlm) : null;
-        this.logementsAccessMaitrise = logementsAccessMaitrise != null ? Math.toIntExact(logementsAccessMaitrise) : null;
+        this.logementsLocatifAide = logementsLocatifAide != null ? Math.toIntExact(logementsLocatifAide) : 0;
+        this.logementsAccessAide = logementsAccessAide != null ? Math.toIntExact(logementsAccessAide) : 0;
+        this.logementsLocatifRegulePrive = logementsLocatifRegulePrive != null ? Math.toIntExact(logementsLocatifRegulePrive) : 0;
+        this.logementsLocatifReguleHlm = logementsLocatifReguleHlm != null ? Math.toIntExact(logementsLocatifReguleHlm) : 0;
+        this.logementsAccessMaitrise = logementsAccessMaitrise != null ? Math.toIntExact(logementsAccessMaitrise) : 0;
 
     }
 }
