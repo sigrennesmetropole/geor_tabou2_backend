@@ -154,11 +154,12 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .bodyToFlux(DataBuffer.class);
 
         try {
-            File tempFile = File.createTempFile(document.getEntry().getName(), "", new File(temporaryDirectory));
+            String name = document.getEntry().getName();
+            File tempFile = File.createTempFile("tabou2_" + name, ".tmp", new File(temporaryDirectory));
             final Path path = FileSystems.getDefault().getPath(tempFile.getPath());
             DataBufferUtils.write(dataBufferFlux, path, StandardOpenOption.CREATE).block();
 
-            return new DocumentContent(document.getEntry().getName(), document.getEntry().getContent().getMimeType(), path.toFile());
+            return new DocumentContent(name, document.getEntry().getContent().getMimeType(), path.toFile());
         } catch (IOException e) {
             throw new AppServiceException("Erreur lors de la génération du fichier temporaire", e);
         }
