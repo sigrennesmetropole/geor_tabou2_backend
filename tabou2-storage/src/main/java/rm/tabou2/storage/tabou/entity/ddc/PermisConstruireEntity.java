@@ -17,19 +17,24 @@ public class PermisConstruireEntity {
 
     @OrderBy
     @Basic
-    @Column(name = "num_ads")
+    @Column(name = "num_ads", length = 255)
     private String numAds;
 
+    @OrderBy
     @Basic
-    @Column(name = "demandeur")
+    @Column(name = "version_ads", length = 3)
+    private String versionAds;
+
+    @Basic
+    @Column(name = "demandeur", length = 602)
     private String demandeur = null;
 
     @Basic
-    @Column(name = "parcelles")
+    @Column(name = "parcelles", length = 1000)
     private String parcelles = null;
 
     @Basic
-    @Column(name = "decision")
+    @Column(name = "decision", length = 100)
     private String decision = null;
 
     @Basic

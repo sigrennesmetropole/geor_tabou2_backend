@@ -1,22 +1,34 @@
 package rm.tabou2.service.helper.programme;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.item.AgapeoSuiviHabitat;
-import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
+
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Component
 public class ProgrammePlannerHelper {
 
+    private static final String PERMIS_MODIFICATIF = "m";
+    private static final String PERMIS_TEMPORAIRE = "t";
     @Autowired
     private AgapeoDao agapeoDao;
 
     @Autowired
     private PermisConstruireDao permisConstruireDao;
+
+    @Value("#{'${pc.decisions-exclues}'.split(';')}")
+    private List<String> decisionsExclues;
 
     public void computeSuiviHabitatOfProgramme(Page<Programme> programmes) {
         for (Programme programme : programmes.getContent()) {
@@ -25,7 +37,7 @@ public class ProgrammePlannerHelper {
     }
 
     public void computeSuiviHabitatOfProgramme(Programme programme) {
-        if (programme.getNumAds() != null) {
+        if (StringUtils.isNotEmpty(programme.getNumAds())) {
             computePermisSuiviHabitatOfProgramme(programme);
             computeAgapeoSuiviHabitatOfProgramme(programme);
         }
@@ -38,22 +50,65 @@ public class ProgrammePlannerHelper {
      */
     public void computePermisSuiviHabitatOfProgramme(Programme programme) {
 
-        //Attention, on peut retourner plusieurs lignes , dans ces cas prendre la date la plus récente
-        PermisConstruireSuiviHabitat permisConstruireSuiviHabitat = permisConstruireDao.getPermisSuiviHabitatByNumAds(programme.getNumAds());
+        List<PermisConstruireEntity> permis = permisConstruireDao.findAllByNumAds(programme.getNumAds());
 
-        programme.setDatDate(permisConstruireSuiviHabitat != null && permisConstruireSuiviHabitat.getDatDate() != null
-                ? permisConstruireSuiviHabitat.getDatDate()
-                : programme.getDatDatePrevu());
+        programme.setDocDate(computeDocDate(permis));
 
-        programme.setDocDate(permisConstruireSuiviHabitat != null && permisConstruireSuiviHabitat.getDocDate() != null
-                ? permisConstruireSuiviHabitat.getDocDate()
-                : programme.getDocDatePrevu());
+        programme.setDatDate(computeDatDate(permis));
 
-        programme.setAdsDate(permisConstruireSuiviHabitat != null && permisConstruireSuiviHabitat.getAdsDate() != null
-                ? permisConstruireSuiviHabitat.getAdsDate()
-                : programme.getAdsDatePrevu());
+        programme.setAdsDate(computeAdsDate(permis));
+
     }
 
+    /** Gestion de la date Doc
+     * Règle : la date Doc s'obtient en prenant le maximum de la date de DOC de toutes les versions de l'ADS ( T et M exclus)
+     *
+     * @param permis Liste des permis
+     * @return Date dateDoc
+     */
+    public Date computeDocDate(List<PermisConstruireEntity> permis){
+        return permis.stream().filter(p -> p.getVersionAds() == null
+                        || (!p.getVersionAds().toLowerCase().contains(PERMIS_TEMPORAIRE)
+                        && !p.getVersionAds().toLowerCase().contains(PERMIS_MODIFICATIF)))
+                .filter(p -> p.getDecision() != null && !decisionsExclues.contains(p.getDecision()))
+                .sorted(Comparator.comparing(PermisConstruireEntity::getDocDate))
+                .map(PermisConstruireEntity::getDocDate)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /** Gestion de la date Dat
+     *  Règle : la date de DAACT s'obtient en prenant le maximum de la date de DAACT de toutes les versions de l'ADS ( inclus T )
+     *
+     * @param permis Liste des permis
+     * @return Date dateDat
+     */
+    public Date computeDatDate(List<PermisConstruireEntity> permis){
+        return permis.stream().filter(p -> p.getVersionAds() == null
+                        || p.getVersionAds().toLowerCase().contains(PERMIS_TEMPORAIRE))
+                .filter(p -> p.getDecision() != null && !decisionsExclues.contains(p.getDecision()))
+                .sorted(Comparator.comparing(PermisConstruireEntity::getDatDate))
+                .map(PermisConstruireEntity::getDatDate)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /** Gestion de la date ADS
+     * Règle :  la date de décision s'obtient en prenant le maximum de la date de décision de toutes les versions de l'ADS (inclus T et M)
+     * @param permis
+     * @return
+     */
+    public Date computeAdsDate(List<PermisConstruireEntity> permis){
+        return permis.stream()
+                .filter(p -> p.getDecision() != null && !decisionsExclues.contains(p.getDecision()))
+                .sorted(Comparator.comparing(PermisConstruireEntity::getAdsDate))
+                .map(PermisConstruireEntity::getAdsDate)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
+    }
     /**
      * Mise à jour des paramètres nombre de logements en fonction des permis de constuire du programme
      *
