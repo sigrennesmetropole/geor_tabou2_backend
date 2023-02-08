@@ -196,7 +196,8 @@ public interface ProgrammeService {
      * @param pageable paramètres de pagination
      * @return liste des documents
      */
-    Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable);
+    Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable)
+            throws AppServiceException;
 
 
 }
