@@ -560,15 +560,19 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             AgapeoSuiviHabitat agapeoSuiviHabitat = agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds());
             if (agapeoSuiviHabitat != null) ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(agapeoSuiviHabitat);
 
-            PermisConstruireSuiviHabitat permisConstruireSuiviHabitat = permisConstruireDao.getPermisSuiviHabitatByNumAds(programmeEntity.getNumAds());
-            if (permisConstruireSuiviHabitat != null)
-                ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireSuiviHabitat);
-
             List<AgapeoEntity> agapeos = agapeoDao.findAllByNumAds(programmeEntity.getNumAds());
             if (agapeos != null) ficheSuiviProgrammeDataModel.setAgapeos(agapeos);
 
             List<PermisConstruireEntity> permis = permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds());
-            if (permis != null) ficheSuiviProgrammeDataModel.setPermis(permis);
+            if (permis != null) {
+                ficheSuiviProgrammeDataModel.setPermis(permis);
+
+                PermisConstruireSuiviHabitat permisConstruireSuiviHabitat = new PermisConstruireSuiviHabitat();
+                permisConstruireSuiviHabitat.setAdsDate(programmePlannerHelper.computeAdsDate(permis));
+                permisConstruireSuiviHabitat.setDatDate(programmePlannerHelper.computeDatDate(permis));
+                permisConstruireSuiviHabitat.setDocDate(programmePlannerHelper.computeDocDate(permis));
+                ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireSuiviHabitat);
+            }
         }
 
         ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));
@@ -695,7 +699,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable) {
+    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable)
+            throws AppServiceException {
 
         //On vérifie que le programme existe
         Programme programmeToDelete = getProgrammeById(programmeId);
