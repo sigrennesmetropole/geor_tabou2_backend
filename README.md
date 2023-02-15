@@ -1,4 +1,4 @@
-# tabou2
+# Tabou2
 
 ## I - Description de l'application
 
