@@ -82,7 +82,7 @@ class ProgrammePlannerHelperTest {
 
         programmePlannerHelper.computePermisSuiviHabitatOfProgramme(programme);
 
-        Assertions.assertEquals(localDateTimeAds2.toDate(), programme.getAdsDate());
+        Assertions.assertEquals(localDateTimeAds1.toDate(), programme.getAdsDate());
         Assertions.assertEquals(null, programme.getDocDate());
         Assertions.assertEquals(localDateTimeDat1.toDate(), programme.getDatDate());
     }

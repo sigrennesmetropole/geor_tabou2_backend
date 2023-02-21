@@ -11,7 +11,6 @@ import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.item.AgapeoSuiviHabitat;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -71,10 +70,9 @@ public class ProgrammePlannerHelper {
                         || (!p.getVersionAds().toLowerCase().contains(PERMIS_TEMPORAIRE)
                         && !p.getVersionAds().toLowerCase().contains(PERMIS_MODIFICATIF)))
                 .filter(p -> p.getDecision() != null && !decisionsExclues.contains(p.getDecision()))
-                .sorted(Comparator.comparing(PermisConstruireEntity::getDocDate))
                 .map(PermisConstruireEntity::getDocDate)
                 .filter(Objects::nonNull)
-                .findFirst()
+                .max(Date::compareTo)
                 .orElse(null);
     }
 
@@ -88,10 +86,9 @@ public class ProgrammePlannerHelper {
         return permis.stream().filter(p -> p.getVersionAds() == null
                         || p.getVersionAds().toLowerCase().contains(PERMIS_TEMPORAIRE))
                 .filter(p -> p.getDecision() != null && !decisionsExclues.contains(p.getDecision()))
-                .sorted(Comparator.comparing(PermisConstruireEntity::getDatDate))
                 .map(PermisConstruireEntity::getDatDate)
                 .filter(Objects::nonNull)
-                .findFirst()
+                .max(Date::compareTo)
                 .orElse(null);
     }
 
@@ -103,10 +100,9 @@ public class ProgrammePlannerHelper {
     public Date computeAdsDate(List<PermisConstruireEntity> permis){
         return permis.stream()
                 .filter(p -> p.getDecision() != null && !decisionsExclues.contains(p.getDecision()))
-                .sorted(Comparator.comparing(PermisConstruireEntity::getAdsDate))
                 .map(PermisConstruireEntity::getAdsDate)
                 .filter(Objects::nonNull)
-                .findFirst()
+                .max(Date::compareTo)
                 .orElse(null);
     }
     /**
