@@ -104,7 +104,7 @@ tabou2:deploy:
     - cd $CI_PROJECT_DIR/ansible  
     - chmod og-rw key/id_rsa
     - cp tabou2_dev_var.yml $HOME/tabou2_var.yml
-    - ansible-playbook tabou2-docker.yml -v -i "ren1vml0095," -u root --private-key=key/id_rsa --ssh-common-args=-oStrictHostKeyChecking=no
+    - ansible-playbook tabou2-docker.yml -v -i "ren1vml0096," -u root --private-key=key/id_rsa --ssh-common-args=-oStrictHostKeyChecking=no
 
 tabou2:deploy:master:
   stage: deploy
@@ -121,4 +121,4 @@ tabou2:deploy:master:
     - cd $CI_PROJECT_DIR/ansible  
     - chmod og-rw key/id_rsa
     - cp tabou2_rct_var.yml $HOME/tabou2_var.yml
-    - ansible-playbook tabou2-docker.yml -v -i "ren1vml0096," -u root --private-key=key/id_rsa --ssh-common-args=-oStrictHostKeyChecking=no
+    - ansible-playbook tabou2-docker.yml -v -i "ren1vml0095," -u root --private-key=key/id_rsa --ssh-common-args=-oStrictHostKeyChecking=no
