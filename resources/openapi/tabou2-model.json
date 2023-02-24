@@ -1342,7 +1342,7 @@
           "format": "int64"
         },
         "numAds": {
-          "description": "Numero du permis de constuire",
+          "description": "Numero du permis de constuire avec sa version",
           "type": "string"
         },
         "demandeur": {

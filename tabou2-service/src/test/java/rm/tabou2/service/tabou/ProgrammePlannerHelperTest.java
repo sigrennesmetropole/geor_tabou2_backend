@@ -18,7 +18,7 @@ import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
-
+import rm.tabou2.storage.tabou.entity.operation.DecisionEntity;
 
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
@@ -50,12 +50,16 @@ class ProgrammePlannerHelperTest {
 
         PermisConstruireEntity permisConstruireEntity1 = new PermisConstruireEntity();
         permisConstruireEntity1.setNumAds("numadspr");
+        permisConstruireEntity1.setVersionAds("t");
+        permisConstruireEntity1.setDecision("Accordé sous réserves");
         permisConstruireEntity1.setAdsDate(localDateTimeAds1.toDate());
         permisConstruireEntity1.setDatDate(localDateTimeDat1.toDate());
         permisConstruireEntity1.setDocDate(null);
 
         PermisConstruireEntity permisConstruireEntity2 = new PermisConstruireEntity();
         permisConstruireEntity2.setNumAds("numadspr");
+        permisConstruireEntity2.setVersionAds("m");
+        permisConstruireEntity2.setDecision("Accordé");
         permisConstruireEntity2.setAdsDate(localDateTimeAds2.toDate());
         permisConstruireEntity2.setDatDate(localDateTimeDat2.toDate());
         permisConstruireEntity2.setDocDate(null);
@@ -78,8 +82,8 @@ class ProgrammePlannerHelperTest {
 
         programmePlannerHelper.computePermisSuiviHabitatOfProgramme(programme);
 
-        Assertions.assertEquals(localDateTimeAds2.toDate(), programme.getAdsDate());
-        Assertions.assertEquals(docDatePrevu, programme.getDocDate());
+        Assertions.assertEquals(localDateTimeAds1.toDate(), programme.getAdsDate());
+        Assertions.assertEquals(null, programme.getDocDate());
         Assertions.assertEquals(localDateTimeDat1.toDate(), programme.getDatDate());
     }
 
