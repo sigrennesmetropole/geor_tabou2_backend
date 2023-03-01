@@ -190,6 +190,7 @@ public class OperationFicheHelper {
         ficheSuiviOperationDataModel.setTypesFinancements(operationEntity.getFinancements().stream()
                 .distinct()
                 .map(x -> x.getTypeFinancement().getLibelle())
+                .filter(Objects::nonNull)
                 .reduce("", (partialString, element) -> partialString + ", " + element));
 
 
@@ -215,16 +216,19 @@ public class OperationFicheHelper {
         fonciers.setFoncierPrive(foncierEntities.stream()
                 .filter(x -> codeFoncierPrive.equals(x.getTypeFoncier().getCode()))
                 .map(DescriptionFoncierEntity::getDescription)
+                .filter(Objects::nonNull)
                 .reduce("", (partialString, element)-> partialString + "\n" + element));
 
         fonciers.setFoncierPublic(foncierEntities.stream()
                 .filter(x -> codeFoncierPublic.equals(x.getTypeFoncier().getCode()))
                 .map(DescriptionFoncierEntity::getDescription)
+                .filter(Objects::nonNull)
                 .reduce("", (partialString, element)-> partialString + "\n" + element));
 
         fonciers.setTauxFoncierPublic(foncierEntities.stream()
                 .filter(x -> codeFoncierPublic.equals(x.getTypeFoncier().getCode()))
                 .map(DescriptionFoncierEntity::getTaux)
+                .filter(Objects::nonNull)
                 .reduce(0.0, Double::sum));
 
         return fonciers;
@@ -264,16 +268,19 @@ public class OperationFicheHelper {
         contributionsOperation.setContributionEnjeux(contributions.stream()
                 .filter(x-> codeContributionEnjeux.equals(x.getTypeContribution().getCode()))
                 .map(ContributionEntity::getDescription)
+                .filter(Objects::nonNull)
                 .reduce("", (partialString, element) -> partialString + "\n" + element));
 
         contributionsOperation.setContributionTraitee(contributions.stream()
                 .filter(x-> codeContributionTraitee.equals(x.getTypeContribution().getCode()))
                 .map(ContributionEntity::getDescription)
+                .filter(Objects::nonNull)
                 .reduce("", (partialString, element) -> partialString + "\n" + element));
 
         contributionsOperation.setContributionAvenir(contributions.stream()
                 .filter(x-> codeContributionAvenir.equals(x.getTypeContribution().getCode()))
                 .map(ContributionEntity::getDescription)
+                .filter(Objects::nonNull)
                 .reduce("", (partialString, element) -> partialString + "\n" + element));
 
         return contributionsOperation;
