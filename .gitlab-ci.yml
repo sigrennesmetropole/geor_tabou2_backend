@@ -11,6 +11,8 @@ cache:
 
 default:
   image: maven:3.6.0-jdk-11
+  tags:
+    - IaaS
   before_script:
     - apt update && apt install -y gettext-base
     - envsubst '${MVN_GROUP} ${MVN_RELEASE} ${MVN_SNAPSHOTS}' < pom.xml > pom.subst && mv -f pom.subst pom.xml
