@@ -424,7 +424,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // Programme
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
         Programme programme = programmeMapper.entityToDto(programmeEntity);
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programme.isDiffusionRestreinte())) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un évènement pour le programme id = " + programmeId);
         }
 
@@ -652,7 +652,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         Programme programmeToDelete = getProgrammeById(programmeId);
 
         // Vérification des droits utilisateur
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, programmeToDelete.isDiffusionRestreinte())) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, BooleanUtils.isTrue(programmeToDelete.getDiffusionRestreinte()))) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programmeToDelete.getNom());
         }
 
@@ -675,7 +675,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
 
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programme.isDiffusionRestreinte())) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
         }
 
@@ -690,7 +690,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
 
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programme.isDiffusionRestreinte())) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
         }
 
@@ -706,7 +706,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         Programme programmeToDelete = getProgrammeById(programmeId);
 
         // Vérification des droits utilisateur
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, programmeToDelete.isDiffusionRestreinte())) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, BooleanUtils.isTrue(programmeToDelete.getDiffusionRestreinte()))) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programmeToDelete.getNom());
         }
 
