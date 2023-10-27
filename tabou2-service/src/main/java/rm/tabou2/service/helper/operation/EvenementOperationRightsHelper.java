@@ -21,6 +21,6 @@ public class EvenementOperationRightsHelper {
      */
     public boolean checkCanUpdateEvenementOperation(OperationIntermediaire operation, Evenement actualEvenement) {
         return operationRightsHelper.checkCanUpdateOperation(operation, operation)
-                && BooleanUtils.isFalse(actualEvenement.isSysteme());
+                && BooleanUtils.isFalse(actualEvenement.getSysteme());
     }
 }

@@ -74,7 +74,7 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<PageResult> getAvailableEmprises(@NotNull @Valid Long natureId, @NotNull @Valid Boolean estSecteur, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getAvailableOperationEmprises(@NotNull @Valid Long natureId, @NotNull @Valid Boolean estSecteur, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationTiersEntity.class);
 
@@ -147,17 +147,17 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> addDocument(@NotNull @Valid Long operationId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload, @Valid Date dateDocument) throws Exception {
+    public ResponseEntity<DocumentMetadata> addOperationDocument(@NotNull @Valid Long operationId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload, @Valid Date dateDocument) throws Exception {
         return new ResponseEntity<>(operationService.addDocument(operationId, nom, libelle, dateDocument , fileToUpload), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Evenement> addEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
+    public ResponseEntity<Evenement> addEvenementByOperationId(Long operationId, @Valid Evenement evenement) throws Exception {
         return new ResponseEntity<>(operationService.addEvenementByOperationId(operationId, evenement), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Evenement> updateEvenementByOperationId(@Valid Evenement evenement, Long operationId) throws Exception {
+    public ResponseEntity<Evenement> updateEvenementByOperationId(Long operationId, @Valid Evenement evenement) throws Exception {
         return new ResponseEntity<>(operationService.updateEvenementByOperationId(operationId, evenement), HttpStatus.OK);
     }
 
@@ -168,28 +168,28 @@ public class OperationApiController extends AbstractExportDocumentApi implements
 
 
     @Override
-    public ResponseEntity<DocumentMetadata> getDocumentMetadata(Long operationId, String documentId) throws Exception {
+    public ResponseEntity<DocumentMetadata> getOperationDocumentMetadata(Long operationId, String documentId) throws Exception {
         return new ResponseEntity<>(operationService.getDocumentMetadata(operationId, documentId), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> updateDocumentMetadata(Long operationId, String documentId, @Valid DocumentMetadata documentMetadata) throws Exception {
+    public ResponseEntity<DocumentMetadata> updateOperationDocumentMetadata(Long operationId, String documentId, @Valid DocumentMetadata documentMetadata) throws Exception {
         return new ResponseEntity<>(operationService.updateDocumentMetadata(operationId, documentId, documentMetadata), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Resource> getDocumentContent(Long operationId, String documentId) throws Exception {
+    public ResponseEntity<Resource> getOperationDocumentContent(Long operationId, String documentId) throws Exception {
         return downloadDocument(operationService.downloadDocument(operationId, documentId));
     }
 
     @Override
-    public ResponseEntity<Void> deleteDocument(Long operationId, String documentId) throws Exception {
+    public ResponseEntity<Void> deleteOperationDocument(Long operationId, String documentId) throws Exception {
         operationService.deleteDocument(operationId, documentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> updateDocumentContent(Long operationId, String documentId, @Valid MultipartFile fileToUpload) throws Exception {
+    public ResponseEntity<DocumentMetadata> updateOperationDocumentContent(Long operationId, String documentId, @Valid MultipartFile fileToUpload) throws Exception {
 
         operationService.updateDocumentContent(operationId, documentId, fileToUpload);
 
@@ -197,7 +197,7 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<PageResult> searchDocuments(Long operationId, String nom, String libelleTypeDocument, String typeMime, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchOperationDocuments(Long operationId, String nom, String libelleTypeDocument, String typeMime, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageableForAlfresco(start, resultsNumber, orderBy, asc);
 
@@ -207,7 +207,7 @@ public class OperationApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<Resource> downloadFicheSuivi(Long operationId) throws Exception {
+    public ResponseEntity<Resource> downloadOperationFicheSuivi(Long operationId) throws Exception {
         return downloadDocument(operationService.generateFicheSuivi(operationId));
     }
 

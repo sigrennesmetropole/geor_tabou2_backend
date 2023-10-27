@@ -28,20 +28,17 @@
 
 		<plugins>
 			<plugin>
-				<!-- <groupId>org.openapitools</groupId> <artifactId>openapi-generator-maven-plugin</artifactId> -->
-				<groupId>io.swagger</groupId>
-				<artifactId>swagger-codegen-maven-plugin</artifactId>
-				<version>${swagger.codegen.version}</version>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<configuration>
 					<!-- Les interfaces sont généres dans la target, c'est normal -->
 					<modelPackage>rm.tabou2.service.dto</modelPackage>
-					<language>spring</language>
-					<!-- <generatorName>spring</generatorName> -->
-					<library>spring-mvc</library>
+					<generatorName>spring</generatorName>
+					<library>spring-boot</library>
 					<generateModelTests>false</generateModelTests>
 					<generateModelDocumentation>false</generateModelDocumentation>
-					<generateSupportingFiles>false</generateSupportingFiles>
-					<generateApiDocumentation>false</generateApiDocumentation>
+					<generateSupportingFiles>true</generateSupportingFiles>
+					<generateApiDocumentation>true</generateApiDocumentation>
 					<generateApis>true</generateApis>
 					<generateModels>false</generateModels>
 					<configOptions>
@@ -50,6 +47,7 @@
 						<interfaceOnly>true</interfaceOnly>
 						<dateLibrary>legacy</dateLibrary>
 						<!--<skipOverwrite>true</skipOverwrite> -->
+						<useSwaggerUI>true</useSwaggerUI>
 					</configOptions>
 				</configuration>
 				<executions>
@@ -266,6 +264,15 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-models</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
 		</dependency>
 
 		<dependency>

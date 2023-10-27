@@ -37,12 +37,12 @@ public class ProgrammeRightsHelper {
      */
     public boolean checkCanCreateProgramme(Programme programme) {
         // L'utilisateur peut créer un programme en étant au moins contributeur en diffusion non restreinte
-        if (BooleanUtils.isFalse(programme.isDiffusionRestreinte()) && !authentificationHelper.hasEditAccess()) {
+        if (BooleanUtils.isFalse(programme.getDiffusionRestreinte()) && !authentificationHelper.hasEditAccess()) {
             LOGGER.warn("L'utilisateur n'ayant pas les droits d'édition ne peut pas créer un programme");
             return false;
         }
         // L'utilisateur peut créer un programme en étant au moins référent en diffusion restreinte
-        if (BooleanUtils.isTrue(programme.isDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
+        if (BooleanUtils.isTrue(programme.getDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
             LOGGER.warn("L'utilisateur n'ayant pas au moins le rôle référent ne peut pas créer un programme en diffusion restreinte");
             return false;
         }
@@ -91,7 +91,7 @@ public class ProgrammeRightsHelper {
      * @return true si l'utilisateur peut récupérer le programme
      */
     public boolean checkCanGetProgramme(Programme programme) {
-        return !programme.isDiffusionRestreinte() || authentificationHelper.hasRestreintAccess();
+        return BooleanUtils.isFalse(programme.getDiffusionRestreinte()) || authentificationHelper.hasRestreintAccess();
     }
 
     /**
