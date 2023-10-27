@@ -19,7 +19,7 @@ public class EvenementProgrammeRigthsHelper {
      * @return true si l'utilisateur peut modifier
      */
     public boolean checkCanUpdateEvenementProgramme(Programme programme, Evenement actualEvenement) {
-        return programmeRightsHelper.checkCanUpdateProgramme(programme, programme.isDiffusionRestreinte())
-                && BooleanUtils.isFalse(actualEvenement.isSysteme());
+        return programmeRightsHelper.checkCanUpdateProgramme(programme, programme.getDiffusionRestreinte())
+                && BooleanUtils.isFalse(actualEvenement.getSysteme());
     }
 }

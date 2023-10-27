@@ -176,7 +176,7 @@ class EvenementOperationServiceTest extends DatabaseInitializerTest implements E
 		evenement2.setDescription("evenement2");
 		evenement2.setEventDate(evenement1.getEventDate());
 		evenement2.setTypeEvenement(typeEvenement);
-		evenement2.setSysteme(evenement1.isSysteme());
+		evenement2.setSysteme(evenement1.getSysteme());
 
 		evenement2 = operationService.updateEvenementByOperationId(operationEntity.getId(), evenement2);
 

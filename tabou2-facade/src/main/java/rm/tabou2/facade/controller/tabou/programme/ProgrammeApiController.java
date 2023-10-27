@@ -165,7 +165,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<PageResult> getAvailableEmprises(@Valid String nom, @Valid Long operationId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getAvailableProgrammeEmprises(@Valid String nom, @Valid Long operationId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeRmEntity.class);
 
@@ -206,7 +206,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
 
     @Override
-    public ResponseEntity<Evenement> updateEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
+    public ResponseEntity<Evenement> updateEvenementByProgrammeId(Long programmeId, @Valid Evenement evenement) throws Exception {
         return new ResponseEntity<>(programmeService.updateEvenementByProgrammeId(programmeId, evenement), HttpStatus.OK);
     }
 
@@ -221,7 +221,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<Evenement> addEvenementByProgrammeId(@Valid Evenement evenement, Long programmeId) throws Exception {
+    public ResponseEntity<Evenement> addEvenementByProgrammeId(Long programmeId, @Valid Evenement evenement) throws Exception {
         return new ResponseEntity<>(programmeService.addEvenementByProgrammeId(programmeId, evenement), HttpStatus.OK);
     }
 
@@ -238,7 +238,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<Resource> downloadFicheSuivi(Long programmeId) throws Exception {
+    public ResponseEntity<Resource> downloadProgrammeFicheSuivi(Long programmeId) throws Exception {
         return downloadDocument(programmeService.generateFicheSuivi(programmeId));
     }
 
@@ -253,41 +253,41 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> getDocumentMetadata(Long programmeId, String documentId) throws Exception {
+    public ResponseEntity<DocumentMetadata> getProgrammeDocumentMetadata(Long programmeId, String documentId) throws Exception {
         return new ResponseEntity<>(programmeService.getDocumentMetadata(programmeId, documentId), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Resource> getDocumentContent(Long programmeId, String documentId) throws Exception {
+    public ResponseEntity<Resource> getProgrammeDocumentContent(Long programmeId, String documentId) throws Exception {
         return downloadDocument(programmeService.downloadDocument(programmeId, documentId));
     }
 
     @Override
-    public ResponseEntity<Void> deleteDocument(Long programmeId, String documentId) throws Exception {
+    public ResponseEntity<Void> deleteProgrammeDocument(Long programmeId, String documentId) throws Exception {
         programmeService.deleteDocument(programmeId, documentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> updateDocumentMetadata(Long programmeId, String documentId, @Valid DocumentMetadata documentMetadata) throws Exception {
+    public ResponseEntity<DocumentMetadata> updateProgrammeDocumentMetadata(Long programmeId, String documentId, @Valid DocumentMetadata documentMetadata) throws Exception {
         return new ResponseEntity<>(programmeService.updateDocumentMetadata(programmeId, documentId, documentMetadata), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> updateDocumentContent(Long programmeId, String documentId, @Valid MultipartFile fileToUpload) throws Exception {
+    public ResponseEntity<DocumentMetadata> updateProgrammeDocumentContent(Long programmeId, String documentId, @Valid MultipartFile fileToUpload) throws Exception {
         programmeService.updateDocumentContent(programmeId, documentId, fileToUpload);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> addDocument(@NotNull @Valid Long programmeId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload, @Valid Date dateDocument) throws Exception {
+    public ResponseEntity<DocumentMetadata> addProgrammeDocument(@NotNull @Valid Long programmeId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload, @Valid Date dateDocument) throws Exception {
         return new ResponseEntity<>(programmeService.addDocument(programmeId, nom, libelle, fileToUpload, dateDocument), HttpStatus.OK);
 
     }
 
     @Override
-    public ResponseEntity<PageResult> searchDocuments(Long programmeId, @Valid String nom, @Valid String libelleTypeDocument, @Valid String typeMime, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchProgrammeDocuments(Long programmeId, @Valid String nom, @Valid String libelleTypeDocument, @Valid String typeMime, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageableForAlfresco(start, resultsNumber, orderBy, asc);
 

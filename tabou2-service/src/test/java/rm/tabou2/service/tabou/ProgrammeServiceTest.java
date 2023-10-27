@@ -206,7 +206,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
 
         programme = programmeService.updateEtapeOfProgrammeId(programmeId, etapeId);
 
-        Assertions.assertFalse(programme.isDiffusionRestreinte());
+        Assertions.assertFalse(programme.getDiffusionRestreinte());
 
     }
 }

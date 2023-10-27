@@ -90,7 +90,7 @@ class TypeEvenementServiceTest implements ExceptionTest {
 
         Assertions.assertNotNull(page.getContent());
         Assertions.assertEquals(2, page.getTotalElements());
-        Assertions.assertTrue(page.stream().noneMatch(TypeEvenement::isSysteme));
+        Assertions.assertTrue(page.stream().noneMatch(TypeEvenement::getSysteme));
     }
 
     @DisplayName("testCannotCreateTypeEvenementWithInvalidParameters: Test de l'interdiction de la création d'un type d'événement " +
