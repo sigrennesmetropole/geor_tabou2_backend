@@ -503,6 +503,7 @@ create table if not exists tabou_pc_ddc(
                                            surf_commerces          float,
                                            surf_equip_pub          float,
                                            surf_industries         float,
+                                           version_ads             VARCHAR(3),
                                            primary key (id)
 );
 
