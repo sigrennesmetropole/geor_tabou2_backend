@@ -14,3 +14,8 @@ UPDATE tabou_maitrise_ouvrage SET order_ = 1 WHERE code = 'METROPOLITAINE';
 UPDATE tabou_maitrise_ouvrage SET order_ = 2 WHERE code = 'INTERCOMMUNALE';
 UPDATE tabou_maitrise_ouvrage SET order_ = 3 WHERE code = 'COMMUNALE';
 UPDATE tabou_maitrise_ouvrage SET order_ = 4 WHERE code = 'PRIVE';
+
+-- Changement de la contrainte modame_dom
+ALTER TABLE urba_foncier.zac DROP CONSTRAINT IF EXISTS modame_dom;
+ALTER TABLE urba_foncier.zac ADD CONSTRAINT modame_dom CHECK (modame::text = ANY (ARRAY['Régie directe'::text, 'Concession'::text, 'Autre'::text]));
+
