@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MaitriseOuvrageCode {
 
-    public static final String COMMUNAUTAIRE = "COMMUNAUTAIRE";
+    public static final String INTERCOMMUNALE = "INTERCOMMUNALE";
 }

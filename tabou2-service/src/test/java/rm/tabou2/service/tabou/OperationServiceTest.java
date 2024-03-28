@@ -138,7 +138,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
 
         DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
         VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);
-        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.COMMUNAUTAIRE);
+        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.INTERCOMMUNALE);
         ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagementCode.REGIE);
         ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspaceCode.EXTENSION);
 
@@ -223,7 +223,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         NatureEntity natureEntityZAC = natureDao.findByLibelle(NatureLibelle.ZAC);
         DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
         VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);
-        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.COMMUNAUTAIRE);
+        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.INTERCOMMUNALE);
         ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagementCode.REGIE);
         ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspaceCode.EXTENSION);
         EtapeOperationEntity etape = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
