@@ -91,6 +91,8 @@ tabou2:sonar:master:
 
 tabou2:deploy:
   stage: deploy
+  tags:
+    - iaas
   image: glregistry.boost.open.global/boost/docker/mvn-node-jdk11-ansible:latest
   dependencies:
     - tabou2:build  
