@@ -158,7 +158,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         operationsCriteria.setNom("tes*");
         operationsCriteria.setDecision("Délibération du Conseil*");
         operationsCriteria.setVocation("Espace ver*");
-        operationsCriteria.setMaitriseOuvrage("Communautaire");
+        operationsCriteria.setMaitriseOuvrage("Intercommunale");
         operationsCriteria.setModeAmenagement("Régie dir*");
         operationsCriteria.setConsommationEspace("Extension urbaine");
         operationsCriteria.setDiffusionRestreinte(false);
