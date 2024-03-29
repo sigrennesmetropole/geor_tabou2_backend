@@ -19,3 +19,4 @@ UPDATE tabou_maitrise_ouvrage SET order_ = 4 WHERE code = 'PRIVE';
 ALTER TABLE urba_foncier.zac DROP CONSTRAINT IF EXISTS modame_dom;
 ALTER TABLE urba_foncier.zac ADD CONSTRAINT modame_dom CHECK (modame::text = ANY (ARRAY['Régie directe'::text, 'Concession'::text, 'Autre'::text]));
 
+ALTER TABLE tabou_programme ADD date_annulation timestamp;
