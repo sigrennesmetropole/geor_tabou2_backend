@@ -43,6 +43,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIVRAISON_DATE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ANNULATION_DATE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_ACCESS_AIDE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LOGEMENTS_LOCAT_AIDE_PREVU;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NATURE;
@@ -165,6 +166,9 @@ public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements Pro
 
         //Date de livraison
         predicateDateCriteria(programmeCriteria.getLivraisonDateDebut(), programmeCriteria.getLivraisonDateFin(), FIELD_LIVRAISON_DATE, predicates, builder, root);
+
+        //Date d'annulation
+        predicateDateCriteria(programmeCriteria.getAnnulationDate(), null, FIELD_ANNULATION_DATE, predicates, builder, root);
 
         //DOCDate
         predicateDateCriteria(programmeCriteria.getDocDateDebut(), programmeCriteria.getDocDateFin(), FIELD_DOC_DATE_PREVU, predicates, builder, root);
