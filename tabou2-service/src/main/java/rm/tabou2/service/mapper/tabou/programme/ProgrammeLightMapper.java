@@ -11,6 +11,7 @@ public interface ProgrammeLightMapper extends AbstractMapper<ProgrammeEntity, Pr
 
     @Mapping(source = "etapeProgramme.libelle", target = "etape")
     @Mapping(source = "nbLogements", target = "logements")
+    @Mapping(source = "dateAnnulation", target = "dateAnnulation")
     @Mapping(source = "dateLivraison", target = "dateLiv")
     ProgrammeLight entityToDto(ProgrammeEntity entity);
 

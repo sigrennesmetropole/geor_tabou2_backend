@@ -453,6 +453,11 @@
           "description": "Etape du programme",
           "type": "string"
         },
+        "dateAnnulation": {
+          "description": "Date d'annulation de l'étape",
+          "type": "string",
+          "format": "date"
+        },
         "dateLiv": {
           "description": "Date de livraison du programme",
           "type": "string",
@@ -520,6 +525,11 @@
         },
         "adsDate": {
           "description": "Date adsDate",
+          "type": "string",
+          "format": "date"
+        },
+        "annulationDate": {
+          "description": "Date d'annulation",
           "type": "string",
           "format": "date"
         },
