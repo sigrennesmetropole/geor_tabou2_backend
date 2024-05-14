@@ -219,6 +219,10 @@ public class OperationEntity extends GenericAuditableEntity {
     @JoinColumn(name = "id_operation")
     private Set<ActeurEntity> acteurs;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_projet_urbain")
+    private ProjetUrbainEntity projetUrbain;
+
     @Embedded
     @AttributeOverride(name = "densiteOap", column = @Column(name = "densite_oap"))
     @AttributeOverride(name = "pluiDisposition", column = @Column(name = "plui_disposition"))

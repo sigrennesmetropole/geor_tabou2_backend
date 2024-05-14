@@ -3,6 +3,7 @@ package rm.tabou2.service.bean.tabou.operation;
 import lombok.*;
 import rm.tabou2.service.dto.Nature;
 import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.ProjetUrbain;
 import rm.tabou2.service.dto.Vocation;
 import rm.tabou2.service.dto.Decision;
 import rm.tabou2.service.dto.MaitriseOuvrage;
@@ -144,6 +145,8 @@ public class OperationIntermediaire {
     private Set<Acteur> acteurs;
 
     private Plui plui;
+
+    private ProjetUrbain projetUrbain;
 
     @Override
     public boolean equals(Object o) {
