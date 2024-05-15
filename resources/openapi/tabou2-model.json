@@ -424,6 +424,35 @@
           "description": "Date de dernière modification de l'entité",
           "type": "string",
           "format": "date"
+        },
+        "projetUrbain": {
+          "description": "Projet urbain de l'opération",
+          "$ref": "#/definitions/ProjetUrbain"
+        }
+      }
+    },
+    "ProjetUrbain": {
+      "type": "object",
+      "description": "Projet urbain",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "chapeau": {
+          "type": "string"
+        },
+        "projet": {
+          "type": "string"
+        },
+        "actualites": {
+          "type": "string"
+        },
+        "savoir": {
+          "type": "string"
         }
       }
     },
