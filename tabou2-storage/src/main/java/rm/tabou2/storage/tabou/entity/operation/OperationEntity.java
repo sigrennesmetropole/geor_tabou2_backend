@@ -45,6 +45,10 @@ public class OperationEntity extends GenericAuditableEntity {
     private Boolean secteur;
 
     @Basic
+    @Column(name = "annulation_date")
+    private Date annulationDate;
+
+    @Basic
     @Column(name = "autorisation_date")
     private Date autorisationDate;
 
