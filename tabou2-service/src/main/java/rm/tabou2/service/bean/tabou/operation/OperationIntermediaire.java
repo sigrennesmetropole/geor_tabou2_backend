@@ -54,6 +54,8 @@ public class OperationIntermediaire {
 
     private Boolean secteur;
 
+    private Date annulationDate;
+
     private Date autorisationDate;
 
     private Date operationnelDate;
