@@ -354,6 +354,7 @@ create table tabou_programme (
                            ads_date_prevu timestamp,
                            doc_date_prevu timestamp,
                            dat_date_prevu timestamp,
+                           date_annulation timestamp,
                            date_livraison timestamp,
                            attribution_fonciere_annee integer,
                            attribution_date timestamp,
@@ -503,6 +504,7 @@ create table if not exists tabou_pc_ddc(
                                            surf_commerces          float,
                                            surf_equip_pub          float,
                                            surf_industries         float,
+                                           version_ads             VARCHAR(3),
                                            primary key (id)
 );
 

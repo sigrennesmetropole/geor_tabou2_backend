@@ -45,6 +45,10 @@ public class OperationEntity extends GenericAuditableEntity {
     private Boolean secteur;
 
     @Basic
+    @Column(name = "annulation_date")
+    private Date annulationDate;
+
+    @Basic
     @Column(name = "autorisation_date")
     private Date autorisationDate;
 
@@ -218,6 +222,10 @@ public class OperationEntity extends GenericAuditableEntity {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_operation")
     private Set<ActeurEntity> acteurs;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_projet_urbain")
+    private ProjetUrbainEntity projetUrbain;
 
     @Embedded
     @AttributeOverride(name = "densiteOap", column = @Column(name = "densite_oap"))

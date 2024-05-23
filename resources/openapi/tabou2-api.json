@@ -1186,6 +1186,13 @@
             "required": false,
             "type": "string",
             "format": "date"
+          },{
+            "in": "query",
+            "name": "annulationDate",
+            "description": "Recherche par date d'annulation",
+            "required": false,
+            "type": "string",
+            "format": "date"
           },
           {
             "in": "query",

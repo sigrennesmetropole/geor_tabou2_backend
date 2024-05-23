@@ -11,8 +11,6 @@ cache:
 
 default:
   image: maven:3.6.0-jdk-11
-  tags:
-    - IaaS
   before_script:
     - apt update && apt install -y gettext-base
     - envsubst '${MVN_GROUP} ${MVN_RELEASE} ${MVN_SNAPSHOTS}' < pom.xml > pom.subst && mv -f pom.subst pom.xml
@@ -91,34 +89,35 @@ tabou2:sonar:master:
       -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
       -Dsonar.gitlab.project_id=$CI_PROJECT_ID
 
-tabou2:deploy:
+.tabou2:deploy:
   stage: deploy
+  tags:
+    - iaas
   image: glregistry.boost.open.global/boost/docker/mvn-node-jdk11-ansible:latest
   dependencies:
     - tabou2:build  
-  only:
-    refs:
-      - open/develop
+  before_script:
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$ansible_private_key" | base64 -d)       
   script:
     - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.war $CI_PROJECT_DIR/ansible/dockerize/files/tabou2-facade.war 
     - cd $CI_PROJECT_DIR/ansible  
-    - chmod og-rw key/id_rsa
     - cp tabou2_dev_var.yml $HOME/tabou2_var.yml
-    - ansible-playbook tabou2-docker.yml -v -i "ren1vml0096," -u root --private-key=key/id_rsa --ssh-common-args=-oStrictHostKeyChecking=no
+    - ansible-playbook tabou2-docker.yml -v -i "${TARGET_ENV}," -u root --ssh-common-args=-oStrictHostKeyChecking=no
 
+
+tabou2:deploy:
+  extends: .tabou2:deploy
+  only:
+    refs:
+      - open/develop
+  variables: 
+    TARGET_ENV: REN1VML0096
+    
 tabou2:deploy:master:
-  stage: deploy
-  tags: 
-   - cdp-rennes  
-  image: glregistry.boost.open.global/boost/docker/mvn-node-jdk11-ansible:latest
-  dependencies:
-    - tabou2:build:master   
+  extends: .tabou2:deploy
   only:
     refs:
       - open/master
-  script:
-    - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.war $CI_PROJECT_DIR/ansible/dockerize/files/tabou2-facade.war
-    - cd $CI_PROJECT_DIR/ansible  
-    - chmod og-rw key/id_rsa
-    - cp tabou2_rct_var.yml $HOME/tabou2_var.yml
-    - ansible-playbook tabou2-docker.yml -v -i "ren1vml0095," -u root --private-key=key/id_rsa --ssh-common-args=-oStrictHostKeyChecking=no
+  variables: 
+    TARGET_ENV: REN1VML0095

@@ -206,11 +206,10 @@ INSERT INTO tabou_decision (libelle, code) VALUES ('Non précisé', 'NON_PRECISE
 
 -- Insertion des maitrises d'ouvrage
 
-INSERT INTO tabou_maitrise_ouvrage (libelle, code) VALUES ('Communale', 'COMMUNALE');
-INSERT INTO tabou_maitrise_ouvrage (libelle, code) VALUES ('Communautaire', 'COMMUNAUTAIRE');
-INSERT INTO tabou_maitrise_ouvrage (libelle, code) VALUES ('Intercommunale', 'INTERCOMMUNALE');
-INSERT INTO tabou_maitrise_ouvrage (libelle, code) VALUES ('Métropolitaine', 'METROPOLITAINE');
-
+INSERT INTO tabou_maitrise_ouvrage (libelle, code, order_) VALUES ('Métropolitaine', 'METROPOLITAINE', 1);
+INSERT INTO tabou_maitrise_ouvrage (libelle, code, order_) VALUES ('Intercommunale', 'INTERCOMMUNALE', 2);
+INSERT INTO tabou_maitrise_ouvrage (libelle, code, order_) VALUES ('Communale', 'COMMUNALE', 3);
+INSERT INTO tabou_maitrise_ouvrage (libelle, code, order_) VALUES ('Privé', 'PRIVE', 4);
 
 -- Insertion des modes d'aménagement
 
