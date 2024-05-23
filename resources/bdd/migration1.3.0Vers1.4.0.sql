@@ -21,6 +21,8 @@ ALTER TABLE urba_foncier.zac ADD CONSTRAINT modame_dom CHECK (modame::text = ANY
 
 ALTER TABLE tabou_programme ADD date_annulation timestamp;
 ALTER TABLE tabou_operation ADD annulation_date timestamp;
+ALTER TABLE tabou_evenement_operation ALTER COLUMN description TYPE varchar(500);
+ALTER TABLE tabou_evenement_programme ALTER COLUMN description TYPE varchar(500);
 
 CREATE TABLE IF NOT EXISTS tabou_projet_urbain(id_projet_urbain bigserial, title varchar, chapeau text, projet text, actualites text, savoir text, primary key (id_projet_urbain));
 ALTER TABLE tabou_operation ADD fk_projet_urbain bigint;
