@@ -267,6 +267,11 @@
           "type": "integer",
           "format": "int64"
         },
+        "annulationDate": {
+          "description": "Date d'annulation",
+          "type": "string",
+          "format": "date"
+        },
         "autorisationDate": {
           "description": "Date d'autorisation (liée à un document d'urbanisme)",
           "type": "string",
