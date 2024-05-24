@@ -3,6 +3,8 @@ ENV TZ=Europe/Paris
 
 ADD /var/lib/jetty/webapps/tabou2.war /var/lib/jetty/webapps/tabou2.war
 
+ENV PROPERTIES_PATH /etc/georchestra/tabou2/tabou2.properties
+
 ADD entrypoint.sh /opt/tabou2/entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/opt/tabou2/entrypoint.sh" ]
 
