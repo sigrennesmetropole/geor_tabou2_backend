@@ -1,7 +1,9 @@
 FROM jetty:9.4.31-jdk11
 
 ADD georchestra-tabou2-1.0-SNAPSHOT.war /var/lib/jetty/webapps/tabou2.war
-#ADD etc/ /etc
+
+ADD entrypoint.sh /opt/tabou2/entrypoint.sh
+ENTRYPOINT [ "/bin/bash", "/opt/tabou2/entrypoint.sh" ]
 
 CMD ["sh", "-c", "exec java -Djava.io.tmpdir=/tmp/jetty \
   ${ADD_JAVA_OPTS} \
