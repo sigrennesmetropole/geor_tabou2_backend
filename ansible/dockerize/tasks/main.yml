@@ -28,7 +28,20 @@
     src: tabou2.properties.j2
     dest: "{{ tabou2_config_directory }}/tabou2/tabou2.properties"
     mode: 0770
-  
+
+- name: Copy certificate
+  copy:
+    src: "{{ tabou2_server_keystore_cert }}"
+    dest: "{{ tabou2_config_directory }}/tabou2/{{ tabou2_server_keystore_cert }}"
+    mode: 0770
+  when: tabou2_server_keystore_cert | length > 0
+
+- name: Copy entrypoint shell script
+  copy:
+    src: "entrypoint.sh"
+    dest: "{{ tabou2_image_directory }}/entrypoint.sh"
+    mode: 0770
+
 - name: Build tabou2 facade image
   shell: 
     cmd: docker build -t tabou2-image {{tabou2_image_directory}}

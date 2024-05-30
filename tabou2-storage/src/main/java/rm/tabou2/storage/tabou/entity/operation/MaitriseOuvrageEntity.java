@@ -29,4 +29,8 @@ public class MaitriseOuvrageEntity {
     @Basic
     @Column(name = "code")
     private String code;
+
+    @Basic
+    @Column(name = "order_")
+    private int order;
 }

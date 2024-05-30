@@ -6,13 +6,13 @@
 
     <groupId>rm</groupId>
     <artifactId>tabou2</artifactId>
-    <version>1.3.1</version>
+    <version>1.4.0</version>
     <packaging>pom</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.12</version>
+        <version>2.7.13</version>
         <relativePath/>
     </parent>
 
@@ -26,24 +26,26 @@
         <json.simple.version>1.1</json.simple.version>
         <commons.lang.version>2.6</commons.lang.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
-        <springfox.version>2.8.0</springfox.version>
+        <springdoc.version>2.1.0</springdoc.version>
         <google.maps.version>0.2.7</google.maps.version>
         <maven-replacer-plugin.version>1.4.1</maven-replacer-plugin.version>
-        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
         <apache.directory.api.version>2.0.0.AM2</apache.directory.api.version>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
         <jasig.cas.client.version>3.6.0</jasig.cas.client.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
         <lombok.version>1.18.6</lombok.version>
         <log4j.version>2.17.0</log4j.version>
-        <!--<openapi.plugin.version>4.3.1</openapi.plugin.version>/-->
+        <openapi.plugin.version>6.6.0</openapi.plugin.version>
         <swagger.codegen.version>2.4.14</swagger.codegen.version>
         <compiler.plugin.version>3.5.1</compiler.plugin.version>
         <surefire.plugin.version>2.22.2</surefire.plugin.version>
         <commons.collections.version>4.4</commons.collections.version>
         <ocpsoft.rewrite.version>3.5.1.Final</ocpsoft.rewrite.version>
-        <openapi.version>0.2.1</openapi.version>
-
+        <openapitools.version>0.2.1</openapitools.version>
+		<openapi.version>1.6.15</openapi.version>
+		<swagger.version>2.2.8</swagger.version>
+		<springfox.version>2.9.2</springfox.version>
 
 		<!-- Configuration SONAR -->
 		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
@@ -137,6 +139,30 @@
 
 
 			<!-- Swagger dependencies -->
+
+			<dependency>
+				<groupId>io.swagger.core.v3</groupId>
+				<artifactId>swagger-annotations</artifactId>
+				<version>${swagger.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.swagger.core.v3</groupId>
+				<artifactId>swagger-models</artifactId>
+				<version>${swagger.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-ui</artifactId>
+				<version>${openapi.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-data-rest</artifactId>
+				<version>${openapi.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>io.springfox</groupId>
 				<artifactId>springfox-swagger-ui</artifactId>
@@ -148,7 +174,6 @@
 				<artifactId>springfox-swagger2</artifactId>
 				<version>${springfox.version}</version>
 			</dependency>
-
 
 			<!-- Google dependencies -->
 			<dependency>
@@ -219,7 +244,13 @@
 			<dependency>
 				<groupId>org.openapitools</groupId>
 				<artifactId>jackson-databind-nullable</artifactId>
-				<version>${openapi.version}</version>
+				<version>${openapitools.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql.version}</version>
 			</dependency>
 
 		</dependencies>

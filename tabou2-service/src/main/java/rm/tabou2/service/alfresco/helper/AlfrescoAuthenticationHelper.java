@@ -1,8 +1,6 @@
 package rm.tabou2.service.alfresco.helper;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -11,7 +9,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import rm.tabou2.service.alfresco.dto.AlfrescoTicket;
 import rm.tabou2.service.alfresco.dto.AlfrescoUser;
 
-import javax.annotation.PostConstruct;
 import java.util.Base64;
 
 @Component
@@ -26,9 +23,8 @@ public class AlfrescoAuthenticationHelper {
     @Value("${alfresco.base.url}")
     private String alfrescoBaseUrl;
 
-    public final static String ALFRESCO_TICKET_URL = "authentication/versions/1/tickets";
+    public static final String ALFRESCO_TICKET_URL = "authentication/versions/1/tickets";
 
-    @Autowired
     private WebClient alfrescoWebClient;
 
     public String getAuthenticationTicket() {
@@ -37,22 +33,27 @@ public class AlfrescoAuthenticationHelper {
         AlfrescoUser alfrescoUser = new AlfrescoUser(alfrescoUsername, alfrescoPassword);
 
         //Génération du ticket
-        AlfrescoTicket ticket = alfrescoWebClient.post().uri(ALFRESCO_TICKET_URL)
+        AlfrescoTicket ticket = getAlfrescoWebClient().post().uri(ALFRESCO_TICKET_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(alfrescoUser))
                 .retrieve().bodyToMono(AlfrescoTicket.class).block();
 
+        if(ticket == null){
+            return null;
+        }
         //Encodage du ticket en base 64
         return Base64.getEncoder().encodeToString(ticket.getEntry().getId().getBytes());
 
     }
 
-    @Bean(name = "alfrescoWebClient")
     public WebClient getAlfrescoWebClient() {
-        return WebClient.builder()
-                .baseUrl(alfrescoBaseUrl)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
+        if(alfrescoWebClient == null){
+            alfrescoWebClient = WebClient.builder()
+                    .baseUrl(alfrescoBaseUrl)
+                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .build();
+        }
+        return alfrescoWebClient;
     }
 
 

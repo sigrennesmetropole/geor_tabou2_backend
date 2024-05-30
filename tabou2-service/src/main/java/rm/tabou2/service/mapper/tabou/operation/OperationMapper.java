@@ -8,7 +8,8 @@ import rm.tabou2.service.mapper.AbstractMapper;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
 @Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class, VocationMapper.class,
-        DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, ConsommationEspaceMapper.class, OperationEmpriseHelper.class})
+        DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, ConsommationEspaceMapper.class,
+        OperationEmpriseHelper.class, ProjetUrbainMapper.class})
 public interface OperationMapper extends AbstractMapper<OperationEntity, OperationIntermediaire> {
 
     @Mapping(target = "etapeOperation", ignore = true)

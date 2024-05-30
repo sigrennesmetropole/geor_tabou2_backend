@@ -85,7 +85,29 @@ Description de quelques paramètres du fichier `tabou2/tabou2.properties`:
 
 Les propriétés préfixées par `spring.ddc` concernent la base de donnés Droit des cités, tandis que les propriétés préfixées par `spring.sig` concernent la base de données SIG de Rennes Métropole
 
-#### II.3 - Construction de l'application
+#### II.3 Configuration du certificat
+
+Un script est lancé au déploiement de l'image docker de l'application qui ajoute un certificat donné au keystore.  
+Afin d'ajouter le bon certificat au bon keystore, il est nécessaire de remplir les informations adéquates dans le fichier `properties` de l'application:
+
+```
+# filename du certificat (à déposer dans <...>/config/ ou <...>/config/tabou2/)
+# le chemin a renseigné est celui du container et est donc de la forme /etc/georchestra/<keystore> ou /etc/georchestra/tabou2/<keystore>
+server.trustcert.keystore.cert=
+# nom de l'alias du certificat à insérer dans le keystore
+server.trustcert.keystore.alias=
+# chemin absolu du keystore dans le container docker
+server.trustcert.keystore.store=
+# mot de passe du keystore
+server.trustcert.keystore.password=
+```
+
+Il est important de noter que la variable `server.trustcert.keystore.cert` ne doit contenir que le _nom du fichier_, pas son chemin.  
+Si les variables ne sont pas remplies, le certificat n'est pas ajouté au keystore et l'application démarre normalement.
+
+Le certificat dont le nom est renseigné doit être déposé dans `<...>/config/ ou <...>/config/tabou2/)`.
+
+#### II.4 - Construction de l'application
 
 L'application est construite à partir de la commande maven
 `mvn -DskipTest package`
@@ -94,7 +116,7 @@ Le résultat de cette construction est :
 * Un fichier WAR `[projet]/tabou2-facade/target/tabou2.war` déployable directement dans Tomcat ou Jetty
 * Un fichier SpringBoot JAR `[projet]/tabou2-facade/target/tabou2.jar`
 
-#### II.4 - Lancement de l'application
+#### II.5 - Lancement de l'application
 
 L'application peut être lancée :
 * Soit dans un container Tomcat 9.

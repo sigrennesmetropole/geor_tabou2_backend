@@ -20,9 +20,14 @@ public class MaitriseOuvrageApiController implements MaitriseOuvrageApi {
 
     @Autowired
     private MaitriseOuvrageService maitriseOuvrageService;
+    private static final String SORT_BY_ORDER = "order";
 
     @Override
     public ResponseEntity<PageResult> getMaitrisesOuvrage(@Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+
+        if(orderBy == null) {
+            orderBy = SORT_BY_ORDER;
+        }
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, MaitriseOuvrageEntity.class);
 

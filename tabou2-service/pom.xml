@@ -6,7 +6,7 @@
     <parent>
         <artifactId>tabou2</artifactId>
         <groupId>rm</groupId>
-        <version>1.3.1</version>
+        <version>1.4.0</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -75,21 +75,16 @@
 
 
         <!-- Swagger UI dependency -->
+
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
-        <!-- Swagger 2 doc dependency -->
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-annotations</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
@@ -149,12 +144,8 @@
 
             <!-- Génération de classes Java a partir de fichier SWAGGER -->
             <plugin>
-<!--                <groupId>org.openapitools</groupId>
+                <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>${openapi.plugin.version}</version>-->
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-codegen-maven-plugin</artifactId>
-                <version>${swagger.codegen.version}</version>
                 <executions>
                     <execution>
                         <id>extension1</id>
@@ -164,9 +155,8 @@
                         <configuration>
                             <modelPackage>rm.tabou2.service.dto</modelPackage>
                             <inputSpec>resources/openapi/tabou2-model.json</inputSpec>
-                            <language>spring</language>
-                            <!--<generatorName>spring</generatorName>-->
-                            <library>spring-mvc</library>
+                            <generatorName>spring</generatorName>
+                            <library>spring-boot</library>
                             <generateModelTests>false</generateModelTests>
                             <generateModelDocumentation>false</generateModelDocumentation>
                             <generateSupportingFiles>false</generateSupportingFiles>

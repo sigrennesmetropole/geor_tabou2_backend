@@ -6,6 +6,11 @@ logging.level.rm.tabou2=DEBUG
 ## Path du serveur
 server.servlet.context-path=/v1
 
+server.trustcert.keystore.cert={{tabou2_server_keystore_cert}}
+server.trustcert.keystore.alias={{tabou2_server_keystore_alias}}
+server.trustcert.keystore.store={{tabou2_server_keystore_store}}
+server.trustcert.keystore.password={{tabou2_server_keystore_password}}
+
 ## Base de données
 spring.jpa.properties.javax.persistence.schema-generation.create-source=metadata
 spring.jpa.properties.javax.persistence.schema-generation.scripts.action=create

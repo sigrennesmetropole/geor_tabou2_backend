@@ -56,7 +56,7 @@
     "/operations/{operationId}/documents": {
       "get": {
         "summary": "Recherche des documents d'une opération",
-        "operationId": "searchDocuments",
+        "operationId": "searchOperationDocuments",
         "produces": [
           "application/json"
         ],
@@ -136,7 +136,7 @@
       },
       "post": {
         "summary": "Ajout d'un document à une opération",
-        "operationId": "addDocument",
+        "operationId": "addOperationDocument",
         "produces": [
           "application/json"
         ],
@@ -195,7 +195,7 @@
     "/operations/{operationId}/documents/{documentId}": {
       "get": {
         "summary": "Récupération des métadonnées d'un document d'une opération",
-        "operationId": "getDocumentMetadata",
+        "operationId": "getOperationDocumentMetadata",
         "produces": [
           "application/json"
         ],
@@ -230,7 +230,7 @@
       },
       "put": {
         "summary": "Mise à jour des métadonnées d'un document d'une opération",
-        "operationId": "updateDocumentMetadata",
+        "operationId": "updateOperationDocumentMetadata",
         "produces": [
           "application/json"
         ],
@@ -274,7 +274,7 @@
       },
       "delete": {
         "summary": "Suppression d'un document d'une opération",
-        "operationId": "deleteDocument",
+        "operationId": "deleteOperationDocument",
         "produces": [
           "application/json"
         ],
@@ -309,7 +309,7 @@
     "/operations/{operationId}/documents/{documentId}/content": {
       "get": {
         "summary": "Récupération du contenu d'un document d'une opération",
-        "operationId": "getDocumentContent",
+        "operationId": "getOperationDocumentContent",
         "produces": [
           "application/json"
         ],
@@ -344,7 +344,7 @@
       },
       "put": {
         "summary": "Mise à jour du contenu d'un document d'une opération",
-        "operationId": "updateDocumentContent",
+        "operationId": "updateOperationDocumentContent",
         "produces": [
           "application/json"
         ],
@@ -388,7 +388,7 @@
     "/operations/emprises": {
       "get": {
         "summary": "Récupération de la liste des emprises des opérations non suivies dans Tabou",
-        "operationId": "getAvailableEmprises",
+        "operationId": "getAvailableOperationEmprises",
         "produces": [
           "application/json"
         ],
@@ -879,7 +879,7 @@
     "/operations/{operationId}/fiche-suivi": {
       "get": {
         "summary": "Récupération de la fiche de suivi d'une opération",
-        "operationId": "downloadFicheSuivi",
+        "operationId": "downloadOperationFicheSuivi",
         "produces": [
           "application/json"
         ],
@@ -1183,6 +1183,13 @@
             "in": "query",
             "name": "livraisonDateFin",
             "description": "Borne supérieure de recherche par date de livraison",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },{
+            "in": "query",
+            "name": "annulationDate",
+            "description": "Recherche par date d'annulation",
             "required": false,
             "type": "string",
             "format": "date"
@@ -1855,7 +1862,7 @@
     "/programmes/{programmeId}/fiche-suivi": {
       "get": {
         "summary": "Récupération de la fiche de suivi d'un programme",
-        "operationId": "downloadFicheSuivi",
+        "operationId": "downloadProgrammeFicheSuivi",
         "produces": [
           "application/json"
         ],
@@ -1951,7 +1958,7 @@
       "get": {
         "summary": "Liste des emprises des programmes non suivis dans Tabou",
         "description": "Ensemble des emprises des programmes",
-        "operationId": "getAvailableEmprises",
+        "operationId": "getAvailableProgrammeEmprises",
         "produces": [
           "application/json"
         ],
@@ -2016,7 +2023,7 @@
     "/programmes/{programmeId}/documents": {
       "post": {
         "summary": "Ajout d'un document à un programme",
-        "operationId": "addDocument",
+        "operationId": "addProgrammeDocument",
         "produces": [
           "application/json"
         ],
@@ -2073,7 +2080,7 @@
       },
       "get": {
         "summary": "Recherche des documents d'un programme",
-        "operationId": "searchDocuments",
+        "operationId": "searchProgrammeDocuments",
         "produces": [
           "application/json"
         ],
@@ -2155,7 +2162,7 @@
     "/programmes/{programmeId}/documents/{documentId}": {
       "get": {
         "summary": "Récupération des métadonnées d'un document d'un programme",
-        "operationId": "getDocumentMetadata",
+        "operationId": "getProgrammeDocumentMetadata",
         "produces": [
           "application/json"
         ],
@@ -2190,7 +2197,7 @@
       },
       "delete": {
         "summary": "Suppression d'un document d'un programme",
-        "operationId": "deleteDocument",
+        "operationId": "deleteProgrammeDocument",
         "produces": [
           "application/json"
         ],
@@ -2222,7 +2229,7 @@
       },
       "put": {
         "summary": "Mise à jour des métadonnées d'un document d'un programme",
-        "operationId": "updateDocumentMetadata",
+        "operationId": "updateProgrammeDocumentMetadata",
         "produces": [
           "application/json"
         ],
@@ -2268,7 +2275,7 @@
     "/programmes/{programmeId}/documents/{documentId}/content": {
       "get": {
         "summary": "Récupération du contenu d'un document d'un programme",
-        "operationId": "getDocumentContent",
+        "operationId": "getProgrammeDocumentContent",
         "produces": [
           "application/json"
         ],
@@ -2303,7 +2310,7 @@
       },
       "put": {
         "summary": "Mise à jour du contenu d'un document d'un programme",
-        "operationId": "updateDocumentContent",
+        "operationId": "updateProgrammeDocumentContent",
         "produces": [
           "application/json"
         ],

@@ -267,6 +267,11 @@
           "type": "integer",
           "format": "int64"
         },
+        "annulationDate": {
+          "description": "Date d'annulation",
+          "type": "string",
+          "format": "date"
+        },
         "autorisationDate": {
           "description": "Date d'autorisation (liée à un document d'urbanisme)",
           "type": "string",
@@ -424,6 +429,35 @@
           "description": "Date de dernière modification de l'entité",
           "type": "string",
           "format": "date"
+        },
+        "projetUrbain": {
+          "description": "Projet urbain de l'opération",
+          "$ref": "#/definitions/ProjetUrbain"
+        }
+      }
+    },
+    "ProjetUrbain": {
+      "type": "object",
+      "description": "Projet urbain",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        },
+        "chapeau": {
+          "type": "string"
+        },
+        "projet": {
+          "type": "string"
+        },
+        "actualites": {
+          "type": "string"
+        },
+        "savoir": {
+          "type": "string"
         }
       }
     },
@@ -452,6 +486,11 @@
         "etape": {
           "description": "Etape du programme",
           "type": "string"
+        },
+        "dateAnnulation": {
+          "description": "Date d'annulation de l'étape",
+          "type": "string",
+          "format": "date"
         },
         "dateLiv": {
           "description": "Date de livraison du programme",
@@ -520,6 +559,11 @@
         },
         "adsDate": {
           "description": "Date adsDate",
+          "type": "string",
+          "format": "date"
+        },
+        "annulationDate": {
+          "description": "Date d'annulation",
           "type": "string",
           "format": "date"
         },
