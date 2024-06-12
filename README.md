@@ -88,11 +88,12 @@ Les propriétés préfixées par `spring.ddc` concernent la base de donnés Droi
 #### II.3 Configuration du certificat
 
 Un script est lancé au déploiement de l'image docker de l'application qui ajoute un certificat donné au keystore.  
-Afin d'ajouter le bon certificat au bon keystore, il est nécessaire de remplir les informations adéquates dans le fichier `properties` de l'application:
+Afin d'ajouter le bon certificat au bon keystore, il est nécessaire de remplir les informations adéquates dans le fichier `properties` de l'application :
 
-```
-# filename du certificat (à déposer dans <...>/config/ ou <...>/config/tabou2/)
-# le chemin a renseigné est celui du container et est donc de la forme /etc/georchestra/<keystore> ou /etc/georchestra/tabou2/<keystore>
+```yaml
+# dossier contenant le certificat
+server.trustcert.keystore.path=
+# filename du certificat
 server.trustcert.keystore.cert=
 # nom de l'alias du certificat à insérer dans le keystore
 server.trustcert.keystore.alias=
@@ -101,11 +102,15 @@ server.trustcert.keystore.store=
 # mot de passe du keystore
 server.trustcert.keystore.password=
 ```
-
-Il est important de noter que la variable `server.trustcert.keystore.cert` ne doit contenir que le _nom du fichier_, pas son chemin.  
+Par exemple :
+```
+server.trustcert.keystore.path=/etc/georchestra/
+server.trustcert.keystore.cert=tabou2.crt
+server.trustcert.keystore.alias=certificat-tabou2
+server.trustcert.keystore.store=/usr/local/openjdk-11/lib/security/cacerts
+server.trustcert.keystore.password=changeit
+```
 Si les variables ne sont pas remplies, le certificat n'est pas ajouté au keystore et l'application démarre normalement.
-
-Le certificat dont le nom est renseigné doit être déposé dans `<...>/config/ ou <...>/config/tabou2/)`.
 
 #### II.4 - Construction de l'application
 

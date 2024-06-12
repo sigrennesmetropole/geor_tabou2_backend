@@ -21,6 +21,8 @@ tabou2_ldap_port: 389
 tabou2_ldap_username: cn=admin,dc=georchestra,dc=org
 tabou2_ldap_password: secret
 
+# path du certificat sur le serveur
+tabou2_server_keystore_path: '/etc/georchestra/tabou2/'
 # filename du certificat (à déposer dans ansible/dockerize/files/)
 tabou2_server_keystore_cert: ''
 # nom de l'alias du certificat à insérer dans le keystore
