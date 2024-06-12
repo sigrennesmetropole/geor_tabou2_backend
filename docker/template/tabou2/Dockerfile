@@ -1,9 +1,16 @@
 FROM jetty:9.4.31-jdk11
+USER root
 
 ADD georchestra-tabou2-1.0-SNAPSHOT.war /var/lib/jetty/webapps/tabou2.war
 
 ENV PROPERTIES_PATH /etc/georchestra/tabou2/tabou2.properties
 
+ADD entrypoint.sh /opt/tabou2/entrypoint.sh
+ENTRYPOINT [ "/bin/bash", "/opt/tabou2/entrypoint.sh" ]
+
+ENV PROPERTIES_PATH /etc/georchestra/tabou2/tabou2.properties
+
+RUN mkdir -p /opt/tabou2
 ADD entrypoint.sh /opt/tabou2/entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/opt/tabou2/entrypoint.sh" ]
 
