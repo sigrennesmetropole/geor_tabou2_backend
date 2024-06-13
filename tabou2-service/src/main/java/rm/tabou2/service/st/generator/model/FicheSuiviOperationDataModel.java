@@ -4,6 +4,7 @@ import fr.opensagres.xdocreport.document.images.FileImageProvider;
 import fr.opensagres.xdocreport.document.images.IImageProvider;
 import rm.tabou2.service.bean.tabou.operation.suivi.CommentairesOperation;
 import rm.tabou2.service.bean.tabou.operation.suivi.ContributionsOperation;
+import rm.tabou2.service.bean.tabou.operation.suivi.EcheancierOperation;
 import rm.tabou2.service.bean.tabou.operation.suivi.FonciersOperation;
 import rm.tabou2.service.bean.tabou.operation.suivi.ProgrammationsOperation;
 import rm.tabou2.storage.tabou.entity.operation.*;
@@ -52,6 +53,14 @@ public class FicheSuiviOperationDataModel extends DataModel{
         addContextFieldList("autresCommentaires.message");
         addContextData("autresCommentaires", commentaires.getAutresCommentaires());
         addContextData("commentaires", commentaires);
+    }
+
+    public void setEcheanciers(List<EcheancierOperation> echeanciers){
+        addContextFieldList("echeanciers.typeEvenement");
+        addContextFieldList("echeanciers.description");
+        addContextFieldList("echeanciers.eventDate");
+        addContextFieldList("echeanciers.modifUser");
+        addContextData("echeanciers", echeanciers);
     }
 
     public void setActeursInternes(List<ActeurEntity> acteursInternes){addContextData("acteursInternes", acteursInternes);}

@@ -5,17 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.bean.tabou.common.Commentaire;
-import rm.tabou2.service.bean.tabou.operation.suivi.CommentairesOperation;
-import rm.tabou2.service.bean.tabou.operation.suivi.ContributionsOperation;
-import rm.tabou2.service.bean.tabou.operation.suivi.FonciersOperation;
-import rm.tabou2.service.bean.tabou.operation.suivi.ProgrammationsOperation;
+import rm.tabou2.service.bean.tabou.operation.suivi.*;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
 import rm.tabou2.service.st.generator.DocumentGenerator;
@@ -31,12 +27,10 @@ import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.operation.VocationDao;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.*;
+import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -80,6 +74,9 @@ public class OperationFicheHelper {
 
     @Value("#{'${typeevenement.commentaire.autres}'.split(';')}")
     private List<String> typesAutresCommentaires;
+
+    @Value("${typeevenement.commentaire.regex-echeancier}")
+    private String regexTypeCommentaireEcheancier;
 
     @Value("${acteur.code.interne}")
     private String codeActeurInterne;
@@ -202,6 +199,7 @@ public class OperationFicheHelper {
 
         // Insertion des commentaires
         ficheSuiviOperationDataModel.setCommentaires(buildCommentaires(operationEntity));
+        ficheSuiviOperationDataModel.setEcheanciers(buildEcheanciers(operationEntity));
 
         //Insertion illustration
         ficheSuiviOperationDataModel.setIllustration(documentGenerator.generatedImgForTemplate(AlfrescoTabouType.OPERATION, operationEntity.getId()));
@@ -308,7 +306,7 @@ public class OperationFicheHelper {
     private CommentairesOperation buildCommentaires(OperationEntity operationEntity){
         //Récupération des évènements de l'opération
         Pageable pageable = PaginationUtils.buildPageable(0,Integer.MAX_VALUE, "id", false, EvenementOperationEntity.class);
-        Page<EvenementOperationEntity> results = evenementOperationCustomDao.searchEvenementsOperation(operationEntity.getId(), pageable);
+        Page<EvenementOperationEntity> results = evenementOperationCustomDao.searchEvenementsOperation(operationEntity.getId(), null, pageable);
 
         CommentairesOperation commentaires = new CommentairesOperation();
 
@@ -343,5 +341,28 @@ public class OperationFicheHelper {
                 .findFirst().orElse(""));
         return result;
 
+    }
+
+    private List<EcheancierOperation> buildEcheanciers(OperationEntity operationEntity) {
+        TypeEvenementCriteria typeEvenementCriteria = new TypeEvenementCriteria();
+        typeEvenementCriteria.setCode(regexTypeCommentaireEcheancier);
+
+        //Récupération des évènements de l'opération
+        Pageable pageable = PaginationUtils.buildPageable(0,Integer.MAX_VALUE, "id", false, EvenementOperationEntity.class);
+        Page<EvenementOperationEntity> results = evenementOperationCustomDao.searchEvenementsOperation(operationEntity.getId(),
+                typeEvenementCriteria, pageable);
+
+        List<EcheancierOperation> echeancierOperations = new ArrayList<>();
+        for(EvenementOperationEntity echeancierEntity : results){
+
+            EcheancierOperation echeancierOperation = new EcheancierOperation();
+            echeancierOperation.setTypeEvenement(echeancierEntity.getTypeEvenement().getLibelle());
+            echeancierOperation.setDescription(echeancierEntity.getDescription());
+            echeancierOperation.setEventDate(echeancierEntity.getEventDate());
+            echeancierOperation.setModifUser(echeancierEntity.getModifUser());
+
+            echeancierOperations.add(echeancierOperation);
+        }
+        return echeancierOperations;
     }
 }
