@@ -47,7 +47,7 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
     @Override
     public Page<Evenement> searchEvenementsOperations(long operationId, Pageable pageable) {
 
-        return evenementOperationMapper.entitiesToDto(evenementOperationCustomDao.searchEvenementsOperation(operationId, pageable), pageable);
+        return evenementOperationMapper.entitiesToDto(evenementOperationCustomDao.searchEvenementsOperation(operationId, null, pageable), pageable);
 
     }
 

@@ -19,11 +19,15 @@ public abstract class AbstractCustomDaoImpl {
      * @param root
      */
     protected void predicateStringCriteria(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+       predicateStringCriteria(criteria, root.get(type), predicates, builder);
+    }
+
+    protected void predicateStringCriteria(String criteria, Expression<String> path, List<Predicate> predicates, CriteriaBuilder builder) {
         if (criteria != null) {
             if (criteria.indexOf('*') == -1) {
-                predicates.add(builder.equal(builder.lower(root.get(type)), criteria.toLowerCase()));
+                predicates.add(builder.equal(builder.lower(path), criteria.toLowerCase()));
             } else {
-                predicates.add(builder.like(builder.lower(root.get(type)), criteria.replace("*", "%").toLowerCase()));
+                predicates.add(builder.like(builder.lower(path), criteria.replace("*", "%").toLowerCase()));
             }
         }
     }
@@ -51,12 +55,16 @@ public abstract class AbstractCustomDaoImpl {
 
     protected void predicateBooleanCriteria(Boolean criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
-        if (Boolean.TRUE.equals(criteria)) {
-            predicates.add(builder.isTrue(root.get(type)));
-        } else {
-            predicates.add(builder.isFalse(root.get(type)));
-        }
+        predicateBooleanCriteria(criteria, root.get(type), predicates, builder);
 
+    }
+
+    protected void predicateBooleanCriteria(Boolean criteria, Path<Boolean> path, List<Predicate> predicates, CriteriaBuilder builder) {
+        if (Boolean.TRUE.equals(criteria)) {
+            predicates.add(builder.isTrue(path));
+        } else {
+            predicates.add(builder.isFalse(path));
+        }
     }
 
     protected void predicateIntegerCriteria(Integer criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {

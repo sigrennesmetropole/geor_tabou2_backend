@@ -7,6 +7,8 @@ public class TypeEvenementCriteria {
 
     private String libelle;
 
+    private String code;
+
     private Boolean inactif;
 
     private Boolean systeme;

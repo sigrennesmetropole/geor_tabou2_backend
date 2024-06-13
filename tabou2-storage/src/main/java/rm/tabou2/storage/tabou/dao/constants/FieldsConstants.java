@@ -52,7 +52,8 @@ public class FieldsConstants {
     public static final String FIELD_CODE_IRIS = "codeIris";
     public static final String FIELD_NOM_IRIS = "nmiris";
     public static final String FIELD_ID_TABOU = "idTabou";
-
-
+    public static final String FIELD_TYPE_EVENEMENT = "typeEvenement";
+    public static final String FIELD_SYSTEME = "systeme";
+    public static final String FIELD_DATE_INACTIF = "dateInactif";
 
 }
