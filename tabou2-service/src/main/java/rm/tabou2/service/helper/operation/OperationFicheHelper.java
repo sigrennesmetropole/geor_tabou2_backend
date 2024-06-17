@@ -11,7 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.bean.tabou.common.Commentaire;
-import rm.tabou2.service.bean.tabou.operation.suivi.*;
+import rm.tabou2.service.bean.tabou.operation.suivi.CommentairesOperation;
+import rm.tabou2.service.bean.tabou.operation.suivi.ContributionsOperation;
+import rm.tabou2.service.bean.tabou.operation.suivi.EcheancierOperation;
+import rm.tabou2.service.bean.tabou.operation.suivi.FonciersOperation;
+import rm.tabou2.service.bean.tabou.operation.suivi.ProgrammationsOperation;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
 import rm.tabou2.service.st.generator.DocumentGenerator;
@@ -26,18 +30,32 @@ import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.operation.VocationDao;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
-import rm.tabou2.storage.tabou.entity.operation.*;
+import rm.tabou2.storage.tabou.entity.operation.ContributionEntity;
+import rm.tabou2.storage.tabou.entity.operation.DescriptionFoncierEntity;
+import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.InformationProgrammationEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
 import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class OperationFicheHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationFicheHelper.class);
+    private static final String ACTIVITE = "ACTIVITE";
+    private static final String HABITAT = "HABITAT";
+    private static final String MIXTE = "MIXTE";
 
     @Autowired
     private DocumentGenerator documentGenerator;
@@ -112,30 +130,57 @@ public class OperationFicheHelper {
     private String codeFoncierPrive;
 
     @Value("${fiche.template.operation.activite}")
-    private String pathTemplateActivite;
+    private String pathTemplateActiviteOperation;
 
     @Value("${fiche.template.operation.habitat}")
-    private String pathTemplateHabitat;
+    private String pathTemplateHabitatOperation;
 
     @Value("${fiche.template.operation.mixte}")
-    private String pathTemplateMixte;
+    private String pathTemplateMixteOperation;
+
+    @Value("${fiche.template.secteur.activite}")
+    private String pathTemplateActiviteSecteur;
+
+    @Value("${fiche.template.secteur.habitat}")
+    private String pathTemplateHabitatSecteur;
+
+    @Value("${fiche.template.secteur.mixte}")
+    private String pathTemplateMixteSecteur;
 
     private final Map<VocationEntity, String> defaultTemplatesPath = new HashMap<>();
 
     private final Map<VocationEntity, String> configuredTemplatesPath = new HashMap<>();
 
+    private final Map<VocationEntity, String> defaultTemplatesSecteurPath = new HashMap<>();
+
+    private final Map<VocationEntity, String> configuredTemplatesSecteurPath = new HashMap<>();
+
     @PostConstruct
     private void initDefaultTemplatesPath(){
-        defaultTemplatesPath.put(vocationDao.findByCode("ACTIVITE"), "template/operation/template_fiche_suivi_activite.odt");
-        defaultTemplatesPath.put(vocationDao.findByCode("HABITAT"), "template/operation/template_fiche_suivi_habitat.odt");
-        defaultTemplatesPath.put(vocationDao.findByCode("MIXTE"), "template/operation/template_fiche_suivi_mixte.odt");
+        defaultTemplatesPath.put(vocationDao.findByCode(ACTIVITE), "template/operation/template_fiche_suivi_activite.odt");
+        defaultTemplatesPath.put(vocationDao.findByCode(HABITAT), "template/operation/template_fiche_suivi_habitat.odt");
+        defaultTemplatesPath.put(vocationDao.findByCode(MIXTE), "template/operation/template_fiche_suivi_mixte.odt");
     }
 
     @PostConstruct
     private void initConfiguredTemplatesPath(){
-        configuredTemplatesPath.put(vocationDao.findByCode("ACTIVITE"), pathTemplateActivite);
-        configuredTemplatesPath.put(vocationDao.findByCode("HABITAT"), pathTemplateHabitat);
-        configuredTemplatesPath.put(vocationDao.findByCode("MIXTE"), pathTemplateMixte);
+        configuredTemplatesPath.put(vocationDao.findByCode(ACTIVITE), pathTemplateActiviteOperation);
+        configuredTemplatesPath.put(vocationDao.findByCode(HABITAT), pathTemplateHabitatOperation);
+        configuredTemplatesPath.put(vocationDao.findByCode(MIXTE), pathTemplateMixteOperation);
+    }
+
+    @PostConstruct
+    private void initDefaultTemplatesPathForSecteur(){
+        defaultTemplatesSecteurPath.put(vocationDao.findByCode(ACTIVITE), "template/secteur/template_fiche_suivi_activite.odt");
+        defaultTemplatesSecteurPath.put(vocationDao.findByCode(HABITAT), "template/secteur/template_fiche_suivi_habitat.odt");
+        defaultTemplatesSecteurPath.put(vocationDao.findByCode(MIXTE), "template/secteur/template_fiche_suivi_mixte.odt");
+    }
+
+    @PostConstruct
+    private void initConfiguredTemplatesPathForSecteur(){
+        configuredTemplatesSecteurPath.put(vocationDao.findByCode(ACTIVITE), pathTemplateActiviteSecteur);
+        configuredTemplatesSecteurPath.put(vocationDao.findByCode(HABITAT), pathTemplateHabitatSecteur);
+        configuredTemplatesSecteurPath.put(vocationDao.findByCode(MIXTE), pathTemplateMixteSecteur);
     }
 
 
@@ -147,7 +192,12 @@ public class OperationFicheHelper {
             throw new AppServiceNotFoundException();
         }
 
-        path = configuredTemplatesPath.get(vocation);
+        if (Boolean.TRUE.equals(operationEntity.getSecteur())) {
+            path = configuredTemplatesSecteurPath.get(vocation);
+        }
+        else {
+            path = configuredTemplatesPath.get(vocation);
+        }
 
         if(path == null){
             throw new AppServiceNotFoundException();
@@ -158,7 +208,12 @@ public class OperationFicheHelper {
         if(!file.exists()){
             LOGGER.warn("Le chemin de template spécifié ({}) n'existe pas, utilisation du chemin par défaut", path);
 
-            path = defaultTemplatesPath.get(vocation);
+            if (Boolean.TRUE.equals(operationEntity.getSecteur())) {
+                path = defaultTemplatesSecteurPath.get(vocation);
+            }
+            else {
+                path = defaultTemplatesPath.get(vocation);
+            }
         }
 
         FicheSuiviOperationDataModel ficheSuiviOperationDataModel = new FicheSuiviOperationDataModel();
