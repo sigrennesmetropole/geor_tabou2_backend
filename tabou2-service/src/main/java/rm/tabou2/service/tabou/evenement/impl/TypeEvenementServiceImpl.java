@@ -131,7 +131,7 @@ public class TypeEvenementServiceImpl implements TypeEvenementService {
     @Override
     public Page<TypeEvenement> searchTypeEvenement(TypeEvenementCriteria typeEvenementCriteria, Pageable pageable) {
 
-        if (BooleanUtils.isTrue(typeEvenementCriteria.getSysteme())) {
+        if (BooleanUtils.isTrue(typeEvenementCriteria.getSysteme()) && !authentificationHelper.hasAdministratorRole()) {
             typeEvenementCriteria.setSysteme(false);
             LOGGER.warn("Accès non autorisé à des types d'événement système");
         }
