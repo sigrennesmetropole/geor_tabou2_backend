@@ -413,6 +413,10 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public DocumentContent generateFicheSuivi(Long operationId) throws AppServiceException {
         OperationEntity operationEntity = getOperationEntityById(operationId);
+
+        if (Boolean.TRUE.equals(operationEntity.getSecteur())) {
+            throw new AppServiceException("Erreur de génération de la fiche de suivi Operation : l'opération est un secteur.");
+        }
         GenerationModel generationModel = operationFicheHelper.buildGenerationModel(operationEntity);
 
         DocumentContent documentContent = documentGenerator.generateDocument(generationModel);

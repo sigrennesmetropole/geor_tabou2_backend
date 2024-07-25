@@ -12,7 +12,6 @@ import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.SecteurSpeu;
 import rm.tabou2.service.sig.SecteurSpeuService;
-import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.sig.entity.SecteurSpeuEntity;
 
@@ -23,9 +22,6 @@ public class SecteurSpeuApiController extends AbstractExportDocumentApi implemen
 
     @Autowired
     private SecteurSpeuService secteurSpeuService;
-
-    @Autowired
-    private OperationService operationService;
 
     @Override
     public ResponseEntity<PageResult> searchSecteursSpeu(@Valid Integer numSecteur, @Valid String nomSecteur, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
@@ -39,6 +35,6 @@ public class SecteurSpeuApiController extends AbstractExportDocumentApi implemen
 
     @Override
     public ResponseEntity<Resource> downloadSecteurFicheSuivi(Long operationId) throws Exception {
-        return downloadDocument(operationService.generateFicheSuivi(operationId));
+        return downloadDocument(secteurSpeuService.generateFicheSuivi(operationId));
     }
 }
