@@ -1,4 +1,4 @@
-FROM jetty:9.4.31-jdk11
+FROM jetty:9.4.55-jdk17-eclipse-temurin
 USER root
 
 ADD georchestra-tabou2-1.0-SNAPSHOT.war /var/lib/jetty/webapps/tabou2.war

@@ -20,11 +20,11 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <commons.io.version>2.6</commons.io.version>
         <httpclient.version>4.5.2</httpclient.version>
         <json.simple.version>1.1</json.simple.version>
-        <commons.lang.version>2.6</commons.lang.version>
+        <commons.lang3.version>3.16.0</commons.lang3.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
         <springdoc.version>2.1.0</springdoc.version>
         <google.maps.version>0.2.7</google.maps.version>
@@ -34,7 +34,7 @@
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
         <jasig.cas.client.version>3.6.0</jasig.cas.client.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
-        <lombok.version>1.18.6</lombok.version>
+        <lombok.version>1.18.26</lombok.version>
         <log4j.version>2.17.0</log4j.version>
         <openapi.plugin.version>6.6.0</openapi.plugin.version>
         <swagger.codegen.version>2.4.14</swagger.codegen.version>
@@ -123,11 +123,10 @@
 				<artifactId>commons-io</artifactId>
 				<version>${commons.io.version}</version>
 			</dependency>
-
 			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>${commons.lang.version}</version>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons.lang3.version}</version>
 			</dependency>
 
 			<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->

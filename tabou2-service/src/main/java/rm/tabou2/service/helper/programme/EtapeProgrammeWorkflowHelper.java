@@ -9,7 +9,6 @@ import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class EtapeProgrammeWorkflowHelper {
@@ -47,8 +46,8 @@ public class EtapeProgrammeWorkflowHelper {
         }
         List<EtapeProgrammeEntity> nextEtapesEntities = List.copyOf(actualEtapeEntity.getNextEtapes());
         List<Etape> nextEtapes = etapeProgrammeMapper.entitiesToDto(nextEtapesEntities);
-        List<Long> nextEtapesIdList = nextEtapes.stream().map(Etape::getId).collect(Collectors.toList());
-        List<String> nextEtapesCodesList = nextEtapes.stream().map(Etape::getCode).collect(Collectors.toList());
+        List<Long> nextEtapesIdList = nextEtapes.stream().map(Etape::getId).toList();
+        List<String> nextEtapesCodesList = nextEtapes.stream().map(Etape::getCode).toList();
 
         return nextEtapesIdList.contains(newEtape.getId()) || nextEtapesCodesList.contains(newEtape.getCode());
     }

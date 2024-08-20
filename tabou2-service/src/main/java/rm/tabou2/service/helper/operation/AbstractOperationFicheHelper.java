@@ -1,6 +1,6 @@
 package rm.tabou2.service.helper.operation;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,7 +39,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public abstract class AbstractOperationFicheHelper {
@@ -148,9 +147,9 @@ public abstract class AbstractOperationFicheHelper {
 
         // Insertion des acteurs internes et externes
         ficheSuiviOperationDataModel.setActeursInternes(operationEntity.getActeurs().stream()
-                .filter(x-> codeActeurInterne.equals(x.getTypeActeur().getCode())).collect(Collectors.toList()));
+                .filter(x-> codeActeurInterne.equals(x.getTypeActeur().getCode())).toList());
         ficheSuiviOperationDataModel.setActeursExternes(operationEntity.getActeurs().stream()
-                .filter(x-> codeActeurExterne.equals(x.getTypeActeur().getCode())).collect(Collectors.toList()));
+                .filter(x-> codeActeurExterne.equals(x.getTypeActeur().getCode())).toList());
 
         // Insertion des commentaires
         ficheSuiviOperationDataModel.setCommentaires(buildCommentaires(operationEntity));
@@ -254,7 +253,7 @@ public abstract class AbstractOperationFicheHelper {
     private String getCommunes(OperationEntity operationEntity){
         List<String> communes = communeCustomDao.searchCommunesByOperationId(operationEntity.getId(),
                         operationEntity.getSecteur(), operationEntity.getNature().getId() == 1).stream()
-                .map(CommuneEntity::getNom).collect(Collectors.toList());
+                .map(CommuneEntity::getNom).toList();
         return String.join(", ", communes);
     }
 

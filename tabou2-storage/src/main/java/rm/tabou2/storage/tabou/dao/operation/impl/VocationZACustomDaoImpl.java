@@ -1,12 +1,12 @@
 package rm.tabou2.storage.tabou.dao.operation.impl;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.operation.VocationZACustomDao;
 import rm.tabou2.storage.tabou.entity.operation.VocationZAEntity;

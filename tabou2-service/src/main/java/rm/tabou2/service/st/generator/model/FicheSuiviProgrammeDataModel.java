@@ -71,7 +71,7 @@ public class FicheSuiviProgrammeDataModel extends DataModel {
         List<EvenementProgrammeEntity> sortedEvents = evenements
                 .stream()
                 .sorted(Comparator.comparing(EvenementProgrammeEntity::getEventDate).reversed())
-                .collect(Collectors.toList());
+                .toList();
         addContextData("evenements", sortedEvents);
         addContextFieldList("evenements");
     }

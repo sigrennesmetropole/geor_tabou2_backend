@@ -1,7 +1,7 @@
 package rm.tabou2.service.tabou.programme.impl;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +95,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     public static final String ERROR_RETRIEVE_METADATA_DOCUMENT = "Impossible de récupérer les métadonnées du document ";
     public static final String ERROR_RETRIEVE_DOCUMENT_CONTENT = "Impossible de télécharger le contenu du document ";
     public static final String ERROR_DELETE_DOCUMENT = "Impossible de supprimer le document ";
+    private static final String USER_PROGRAM_NOT_ALLOWED = "L'utilisateur n'a pas les droits de modification du programme ";
 
     @Autowired
     private ProgrammeDao programmeDao;
@@ -242,7 +243,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         // Vérification des droits utilisateur
         if (!programmeRightsHelper.checkCanUpdateProgramme(programme, programmeEntity.isDiffusionRestreinte())) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
         programmeValidator.validateUpdateProgramme(programme, programmeEntity);
@@ -637,7 +638,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         Programme programme = getProgrammeById(programmeId);
 
         if (!programmeRightsHelper.checkCanGetProgramme(programme)) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
         //Récupération du document Dans alfresco
@@ -653,7 +654,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         // Vérification des droits utilisateur
         if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, BooleanUtils.isTrue(programmeToDelete.getDiffusionRestreinte()))) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programmeToDelete.getNom());
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programmeToDelete.getNom());
         }
 
         try {
@@ -676,7 +677,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         Programme programme = getProgrammeById(programmeId);
 
         if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
         return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.PROGRAMME, programmeId, documentId, documentMetadata, false));
@@ -691,7 +692,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         Programme programme = getProgrammeById(programmeId);
 
         if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programme.getNom());
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
         alfrescoService.updateDocumentContent(AlfrescoTabouType.PROGRAMME, programmeId, documentId, file);
@@ -707,7 +708,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         // Vérification des droits utilisateur
         if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, BooleanUtils.isTrue(programmeToDelete.getDiffusionRestreinte()))) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modification du programme " + programmeToDelete.getNom());
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programmeToDelete.getNom());
         }
 
         AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.PROGRAMME, programmeId, nom, libelleTypeDocument, typeMime, pageable);

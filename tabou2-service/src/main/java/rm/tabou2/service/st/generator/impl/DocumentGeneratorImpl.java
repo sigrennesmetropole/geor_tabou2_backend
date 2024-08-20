@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class DocumentGeneratorImpl implements DocumentGenerator {
@@ -114,31 +113,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
 
         try (FileOutputStream out = new FileOutputStream(outputFile)) {
 
-            InputStream is = null;
-
-            String path = generationModel.getTemplatePath();
-
-            IXDocReport report;
-            try {
-                File file = new File(path);
-
-                if (!file.exists()) {
-                    try {
-                        is = new ClassPathResource(path).getInputStream();
-                    } catch (IOException e) {
-                        throw new AppServiceException("Erreur lors de la récupération du template", e);
-                    }
-                } else {
-                    is = new FileInputStream(file);
-                }
-                report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Freemarker);
-            } catch (Exception e) {
-                throw new AppServiceException("Erreur lors du chargement du template");
-            } finally {
-                if (is != null) {
-                    is.close();
-                }
-            }
+            IXDocReport report = getIxDocReport(generationModel);
 
             IContext context = report.createContext();
 
@@ -160,6 +135,34 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
         }
     }
 
+    private static IXDocReport getIxDocReport(GenerationModel generationModel) throws AppServiceException, IOException {
+        InputStream is = null;
+
+        String path = generationModel.getTemplatePath();
+
+        IXDocReport report;
+        try {
+            File file = new File(path);
+
+            if (!file.exists()) {
+                try {
+                    is = new ClassPathResource(path).getInputStream();
+                } catch (IOException e) {
+                    throw new AppServiceException("Erreur lors de la récupération du template", e);
+                }
+            } else {
+                is = new FileInputStream(file);
+            }
+            report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Freemarker);
+        } catch (Exception e) {
+            throw new AppServiceException("Erreur lors du chargement du template");
+        } finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return report;
+    }
 
     @Override
     public File generatedImgForTemplate(AlfrescoTabouType tabouType, long objectId) throws AppServiceException {
@@ -189,7 +192,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
                     .stream()
                     .filter(x -> Arrays.asList(allowedMimeTypes).contains(x.getEntry().getContent().getMimeType()))
                     .map(x -> x.getEntry().getId())
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (Exception e) {
             LOGGER.warn("Alfresco innaccessible, utilisation de l'image par défaut", e);
         }
