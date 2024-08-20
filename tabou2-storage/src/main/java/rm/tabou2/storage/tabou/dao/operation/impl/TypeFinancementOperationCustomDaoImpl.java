@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.operation.TypeFinancementOperationCustomDao;
 import rm.tabou2.storage.tabou.entity.operation.TypeFinancementOperationEntity;

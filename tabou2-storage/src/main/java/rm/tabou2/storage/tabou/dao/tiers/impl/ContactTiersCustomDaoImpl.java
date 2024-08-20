@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.tiers.ContactTiersCustomDao;
 import rm.tabou2.storage.tabou.entity.tiers.ContactTiersEntity;
@@ -21,8 +21,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
 public class ContactTiersCustomDaoImpl extends AbstractCustomDaoImpl implements ContactTiersCustomDao {

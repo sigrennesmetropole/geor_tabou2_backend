@@ -1,6 +1,6 @@
 package rm.tabou2.service.alfresco.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -270,6 +270,10 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .body(BodyInserters.fromValue(emptyNode))
                 .header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket())
                 .retrieve().bodyToMono(AlfrescoDocument.class).block();
+
+        if (document == null) {
+            throw new AppServiceException("Une erreur est survenue durant l'envoi du document");
+        }
 
         DocumentMetadata documentMetadata = new DocumentMetadata();
         documentMetadata.setLibelleTypeDocument(libelleTypeDocument);

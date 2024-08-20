@@ -1,7 +1,7 @@
 package rm.tabou2.service.helper.operation;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class OperationEmpriseHelper {
@@ -119,7 +118,7 @@ public class OperationEmpriseHelper {
                 emprise.setId(secteurEntity.getId().longValue());
                 emprise.setNom(secteurEntity.getSecteur());
                 return emprise;
-            }).collect(Collectors.toList());
+            }).toList();
         } else if (NatureLibelle.ZAC.equalsIgnoreCase(libelleNature)) {
             List<ZacEntity> zacEntities = zacDao.findAllByIdTabouIsNullAndNomZacIsLikeIgnoreCase(nom, pageable);
             totalResultsNumber = zacDao.countAllByIdTabouIsNullAndNomZacIsLikeIgnoreCase(nom);
@@ -128,7 +127,7 @@ public class OperationEmpriseHelper {
                 emprise.setId(zacEntity.getId().longValue());
                 emprise.setNom(zacEntity.getNomZac());
                 return emprise;
-            }).collect(Collectors.toList());
+            }).toList();
         } else if (NatureLibelle.ZA.equalsIgnoreCase(libelleNature)) {
             List<ZaEntity> zaEntities = zaDao.findAllByIdTabouIsNullAndNomZaIsLikeIgnoreCase(nom, pageable);
             totalResultsNumber = zaDao.countAllByIdTabouIsNullAndNomZaIsLikeIgnoreCase(nom);
@@ -137,7 +136,7 @@ public class OperationEmpriseHelper {
                 emprise.setId(zaEntity.getId().longValue());
                 emprise.setNom(zaEntity.getNomZa());
                 return emprise;
-            }).collect(Collectors.toList());
+            }).toList();
         } else if (NatureLibelle.EN_DIFFUS.equalsIgnoreCase(libelleNature)) {
             List<EnDiffusEntity> enDiffusEntities = enDiffusDao.findAllByName(nom, pageable);
             totalResultsNumber = enDiffusDao.countAllByIdTabouIsNullAndNomIsLikeIgnoreCase(nom);
@@ -146,7 +145,7 @@ public class OperationEmpriseHelper {
                 emprise.setId(zaEntity.getId().longValue());
                 emprise.setNom(zaEntity.getNom());
                 return emprise;
-            }).collect(Collectors.toList());
+            }).toList();
         }
 
         return new PageImpl<>(result, pageable, totalResultsNumber);
