@@ -176,9 +176,9 @@ trivyscan:back:
     - .trivy-scan
   stage: docker
   needs:
-    - tabou2:docker2
+    - tabou2:docker2:build
   dependencies:
-    - tabou2:docker2  
+    - tabou2:docker2:build  
   variables:
     TRIVY_DOCKER_SCAN: glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/rennes-metropole:open-develop
   only:
