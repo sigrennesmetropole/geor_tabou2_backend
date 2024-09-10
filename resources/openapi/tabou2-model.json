@@ -129,6 +129,10 @@
           "type": "string",
           "format": "date"
         },
+        "livraisonDate": {
+          "type": "string",
+          "format": "date"
+        },
         "clotureDate": {
           "type": "string",
           "format": "date"
@@ -278,6 +282,11 @@
           "format": "date"
         },
         "operationnelDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "livraisonDate": {
+          "description": "Date de réalisation",
           "type": "string",
           "format": "date"
         },
@@ -493,7 +502,7 @@
           "format": "date"
         },
         "dateLiv": {
-          "description": "Date de livraison du programme",
+          "description": "Date de réalisation du programme",
           "type": "string",
           "format": "date"
         }
@@ -568,7 +577,7 @@
           "format": "date"
         },
         "livraisonDate": {
-          "description": "Date de livraison",
+          "description": "Date de réalisation",
           "type": "string",
           "format": "date"
         },

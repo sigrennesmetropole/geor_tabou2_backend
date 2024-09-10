@@ -83,6 +83,7 @@ public class OperationV1ApiController extends AbstractExportDocumentApi implemen
                                                        @Valid String etape, @Valid Boolean diffusionRestreinte, @Valid Boolean estSecteur,
                                                        @Valid String code, @Valid String numAds, @Valid Date autorisationDateDebut,
                                                        @Valid Date autorisationDateFin, @Valid Date operationnelDateDebut, @Valid Date operationnelDateFin,
+                                                       @Valid Date livraisonDateDebut, @Valid Date livraisonDateFin,
                                                        @Valid Date clotureDateDebut, @Valid Date clotureDateFin, @Valid String tiers, @Valid Integer start,
                                                        @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
 
@@ -109,6 +110,9 @@ public class OperationV1ApiController extends AbstractExportDocumentApi implemen
 
         operationsCriteria.setOperationnelDateDebut(operationnelDateDebut);
         operationsCriteria.setOperationnelDateFin(operationnelDateFin);
+
+        operationsCriteria.setLivraisonDateDebut(livraisonDateDebut);
+        operationsCriteria.setLivraisonDateFin(livraisonDateFin);
 
         operationsCriteria.setClotureDateDebut(clotureDateDebut);
         operationsCriteria.setClotureDateFin(clotureDateFin);

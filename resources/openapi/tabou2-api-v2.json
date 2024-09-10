@@ -564,6 +564,22 @@
           },
           {
             "in": "query",
+            "name": "livraisonDateDebut",
+            "description": "Borne inférieure de recherche par date de livraison (date de réalisation)",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "livraisonDateFin",
+            "description": "Borne supérieure de recherche par date de livraison (date de réalisation)",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
             "name": "clotureDateDebut",
             "description": "Borne inférieure de recherche par date de cloture",
             "required": false,

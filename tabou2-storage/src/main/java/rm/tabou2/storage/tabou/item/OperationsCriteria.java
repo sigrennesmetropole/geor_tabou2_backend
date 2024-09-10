@@ -40,6 +40,10 @@ public class OperationsCriteria {
 
     private Date operationnelDateFin;
 
+    private Date livraisonDateDebut;
+
+    private Date livraisonDateFin;
+
     private Date clotureDateDebut;
 
     private Date clotureDateFin;

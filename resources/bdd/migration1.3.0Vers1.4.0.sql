@@ -27,3 +27,6 @@ ALTER TABLE tabou_evenement_programme ALTER COLUMN description TYPE varchar(500)
 CREATE TABLE IF NOT EXISTS tabou_projet_urbain(id_projet_urbain bigserial, title varchar, chapeau text, projet text, actualites text, savoir text, primary key (id_projet_urbain));
 ALTER TABLE tabou_operation ADD fk_projet_urbain bigint;
 ALTER TABLE tabou_operation ADD CONSTRAINT fk_tabou_operation_tabou_projet_urbain FOREIGN KEY (fk_projet_urbain) REFERENCES tabou_projet_urbain;
+
+-- Ajout du champs date livraison dans les opérations (nommé date de réalisation dans le front)
+ALTER TABLE tabou_operation ADD date_livraison timestamp;
