@@ -57,6 +57,10 @@ public class OperationEntity extends GenericAuditableEntity {
     private Date operationnelDate;
 
     @Basic
+    @Column(name = "date_livraison")
+    private Date livraisonDate;
+
+    @Basic
     @Column(name = "cloture_date")
     private Date clotureDate;
 
@@ -268,6 +272,7 @@ public class OperationEntity extends GenericAuditableEntity {
                 ", secteur=" + secteur +
                 ", autorisationDate=" + autorisationDate +
                 ", operationnelDate=" + operationnelDate +
+                ", livraisonDate=" + livraisonDate +
                 ", clotureDate=" + clotureDate +
                 ", surfaceTotale=" + surfaceTotale +
                 ", nbLogementsPrevu=" + nbLogementsPrevu +

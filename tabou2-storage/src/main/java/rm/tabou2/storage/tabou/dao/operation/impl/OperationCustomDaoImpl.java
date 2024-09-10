@@ -44,6 +44,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NATURE
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NUM_ADS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_OPERATIONNEL_DATE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIVRAISON_DATE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_OPERATION_TIERS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_SECTEUR;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TIERS;
@@ -173,6 +174,8 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
             //operationnelDate
             predicateDateCriteria(operationsCriteria.getOperationnelDateDebut(), operationsCriteria.getOperationnelDateFin(), FIELD_OPERATIONNEL_DATE, predicates, builder, root);
 
+            //livraisonDate
+            predicateDateCriteria(operationsCriteria.getLivraisonDateDebut(), operationsCriteria.getLivraisonDateFin(), FIELD_LIVRAISON_DATE, predicates, builder, root);
 
             //clotureDate
             predicateDateCriteria(operationsCriteria.getClotureDateDebut(), operationsCriteria.getClotureDateFin(), FIELD_CLOTURE_DATE, predicates, builder, root);

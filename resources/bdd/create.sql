@@ -180,6 +180,7 @@ create table tabou_operation (
                            create_user varchar(255),
                            modif_date timestamp,
                            modif_user varchar(255),
+                           date_livraison timestamp,
                            primary key (id_operation)
 );
 

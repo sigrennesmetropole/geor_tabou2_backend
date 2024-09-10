@@ -27,7 +27,6 @@ import rm.tabou2.service.dto.ActionOperation;
 import rm.tabou2.service.dto.Acteur;
 import rm.tabou2.service.dto.Plui;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -59,6 +58,8 @@ public class OperationIntermediaire {
     private Date autorisationDate;
 
     private Date operationnelDate;
+
+    private Date livraisonDate;
 
     private Date clotureDate;
 
@@ -175,6 +176,7 @@ public class OperationIntermediaire {
                 ", secteur=" + secteur +
                 ", autorisationDate=" + autorisationDate +
                 ", operationnelDate=" + operationnelDate +
+                ", livraisonDate=" + livraisonDate +
                 ", clotureDate=" + clotureDate +
                 ", surfaceTotale=" + surfaceTotale +
                 ", nbLogementsPrevu=" + nbLogementsPrevu +
