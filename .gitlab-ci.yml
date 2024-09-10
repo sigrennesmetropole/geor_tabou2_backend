@@ -9,6 +9,12 @@ cache:
     - $CI_PROJECT_DIR/.m2/repository/**/*
     - $CI_PROJECT_DIR/**/target/**/*
 
+include:
+  - project: 'boost/template-ci/pipelines/common'
+    file: 'docker/docker-template.yml'
+  - project: 'bots/trivy-script'
+    file: '/trivy-template-job.yml' 
+
 default:
   image: maven:3.9.0-eclipse-temurin-17
   before_script:
@@ -19,6 +25,8 @@ default:
 stages:
   - build
   - test
+  - pre_docker
+  - docker
   - deploy
 
 # Build job with maven plugin execution policies define in parent pom
@@ -89,6 +97,45 @@ tabou2:sonar:master:
       -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
       -Dsonar.gitlab.project_id=$CI_PROJECT_ID
 
+# Copie des artifacts dans les répertoires des images dockers
+tabou2:pre_docker:
+  stage: pre_docker
+  only:
+    refs:
+      - master
+      - open/master
+      - open/develop
+      - /^release.*/
+  script:
+    - ls -l $CI_PROJECT_DIR/tabou2-facade/target/
+    - cp $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar $CI_PROJECT_DIR/docker/rennes-metropole
+    - cp $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar $CI_PROJECT_DIR/docker/template/tabou2
+  artifacts:
+    paths:
+      - '$CI_PROJECT_DIR/tabou2-facade/target/**.war'
+      - '$CI_PROJECT_DIR/tabou2-facade/target/**.jar'
+      - '$CI_PROJECT_DIR/docker/**/**.war'
+      - '$CI_PROJECT_DIR/docker/**/**.jar'
+
+tabou2:docker2:build:
+  extends: ['.docker:build']
+  needs:
+    - tabou2:pre_docker
+  dependencies:
+    - tabou2:pre_docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /.*develop/ || $CI_COMMIT_BRANCH =~ /.*master/ || $CI_COMMIT_BRANCH =~ /^release.*/'
+  timeout: 1h
+  artifacts:
+    paths:
+      - '$CI_PROJECT_DIR/tabou2-facade/target/**.war'
+      - '$CI_PROJECT_DIR/tabou2-facade/target/**.jar'
+      - '$CI_PROJECT_DIR/tabou2-facade/target/*.zip'   
+      - '$CI_PROJECT_DIR/docker/**/**.war'
+      - '$CI_PROJECT_DIR/docker/**/**.zip'
+      - '$CI_PROJECT_DIR/docker/**/**.jar' 
+
+
 .tabou2:deploy:
   stage: deploy
   tags:
@@ -100,11 +147,10 @@ tabou2:sonar:master:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$ansible_private_key" | base64 -d)       
   script:
-    - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.war $CI_PROJECT_DIR/ansible/dockerize/files/tabou2-facade.war 
+    - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2.war $CI_PROJECT_DIR/ansible/dockerize/files/tabou2-facade.war 
     - cd $CI_PROJECT_DIR/ansible  
     - cp tabou2_dev_var.yml $HOME/tabou2_var.yml
     - ansible-playbook tabou2-docker.yml -v -i "${TARGET_ENV}," -u root --ssh-common-args=-oStrictHostKeyChecking=no
-
 
 tabou2:deploy:
   extends: .tabou2:deploy
@@ -121,3 +167,13 @@ tabou2:deploy:master:
       - open/master
   variables: 
     TARGET_ENV: REN1VML0095
+    
+trivyscan:back: 
+  extends: 
+    - .trivy-scan
+  stage: docker
+  variables:
+    TRIVY_DOCKER_SCAN: glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/rennes-metropole:open-develop
+  only:
+    refs:
+      - open/develop    

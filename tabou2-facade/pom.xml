@@ -210,13 +210,13 @@
 								<imageTag>latest</imageTag>
 							</imageTags>
 							<!-- chemin relatif depuis le target du présent projet -->
-							<dockerDirectory>${project.basedir}/../docker/tabou2-backend</dockerDirectory>
+							<dockerDirectory>${project.basedir}/../docker/rennes-metropole</dockerDirectory>
 
 							<!-- copy the service's jar file from target into the root directory 
 								of the image -->
 							<resources>
 								<resource>
-									<targetPath>/var/lib/jetty/webapps/</targetPath>
+									<targetPath>/</targetPath>
 									<directory>${project.build.directory}</directory>
 									<include>${finalName}.war</include>
 								</resource>

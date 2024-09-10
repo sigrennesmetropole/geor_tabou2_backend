@@ -1,12 +1,10 @@
 FROM jetty:9.4.55-jdk17-eclipse-temurin
 USER root
+ENV TZ=Europe/Paris
 
-ADD georchestra-tabou2-1.0-SNAPSHOT.war /var/lib/jetty/webapps/tabou2.war
+RUN apt-get update && apt-get upgrade -y
 
-ENV PROPERTIES_PATH /etc/georchestra/tabou2/tabou2.properties
-
-ADD entrypoint.sh /opt/tabou2/entrypoint.sh
-ENTRYPOINT [ "/bin/bash", "/opt/tabou2/entrypoint.sh" ]
+ADD tabou2.war /var/lib/jetty/webapps/tabou2.war
 
 ENV PROPERTIES_PATH /etc/georchestra/tabou2/tabou2.properties
 

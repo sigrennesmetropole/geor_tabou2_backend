@@ -2,8 +2,9 @@ FROM jetty:9.4.55-jdk17-eclipse-temurin
 USER root
 ENV TZ=Europe/Paris
 
-ADD /var/lib/jetty/webapps/tabou2.war /var/lib/jetty/webapps/tabou2.war
-#ADD etc/ /etc
+RUN apt-get update && apt-get upgrade -y
+
+ADD tabou2.war /var/lib/jetty/webapps/tabou2.war
 
 ENV PROPERTIES_PATH /etc/georchestra/tabou2/tabou2.properties
 
