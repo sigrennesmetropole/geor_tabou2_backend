@@ -4,7 +4,7 @@ MAINTAINER sigsupport@rennesmetropole.fr
 ENV TZ=Europe/Paris
 
 RUN apt-get update && apt-get upgrade -y
-RUN mkdir /tmp/jetty
+RUN mkdir -p /tmp/jetty
 RUN chmod 777 -R /tmp && chmod o+t -R /tmp
 
 RUN mkdir -p /etc/georchestra
