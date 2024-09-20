@@ -39,7 +39,7 @@
         <openapi.plugin.version>6.6.0</openapi.plugin.version>
         <swagger.codegen.version>2.4.14</swagger.codegen.version>
         <compiler.plugin.version>3.5.1</compiler.plugin.version>
-        <surefire.plugin.version>2.22.2</surefire.plugin.version>
+        <surefire.plugin.version>3.5.0</surefire.plugin.version>
         <commons.collections.version>4.4</commons.collections.version>
         <ocpsoft.rewrite.version>3.5.1.Final</ocpsoft.rewrite.version>
         <openapitools.version>0.2.1</openapitools.version>
