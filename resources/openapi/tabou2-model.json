@@ -80,6 +80,11 @@
           "type": "object",
           "$ref": "#/definitions/ModeAmenagement"
         },
+        "outilAmenagement": {
+          "description": "Liste d'outil d'aménagement de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/OutilAmenagement"
+        },
         "consommationEspace": {
           "description": "Consommation d'espace de l'opération",
           "type": "object",
@@ -231,6 +236,11 @@
           "type": "object",
           "$ref": "#/definitions/ModeAmenagement"
         },
+        "outilAmenagement": {
+          "description": "Outil d'aménagement de l'opération",
+          "type": "object",
+          "$ref": "#/definitions/OutilAmenagement"
+        },
         "consommationEspace": {
           "description": "Consommation d'espace de l'opération",
           "type": "object",
@@ -372,9 +382,6 @@
           "items": {
             "$ref": "#/definitions/Amenageur"
           }
-        },
-        "outilAmenagement": {
-          "type": "string"
         },
         "etude": {
           "type": "string"
@@ -670,6 +677,11 @@
           "description": "Nombre de logements en accession libre prévu",
           "type": "integer",
           "format": "int32"
+        },
+        "surfaceSHAB": {
+          "description": "Surface SHAB en metre carré",
+          "type": "number",
+          "format": "double"
         },
         "numAds": {
           "description": "Numéro du permis de construire",
@@ -1364,6 +1376,24 @@
         },
         "code": {
           "description": "Code du mode d'aménagement",
+          "type": "string"
+        }
+      }
+    },
+    "OutilAmenagement": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifiant unique de l'outil d'aménagement",
+          "type": "integer",
+          "format": "int64"
+        },
+        "libelle": {
+          "description": "Description de l'outil d'aménagement",
+          "type": "string"
+        },
+        "code": {
+          "description": "Code de l'outil d'aménagement",
           "type": "string"
         }
       }

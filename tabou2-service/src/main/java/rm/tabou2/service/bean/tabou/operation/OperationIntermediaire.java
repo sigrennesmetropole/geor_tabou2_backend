@@ -85,8 +85,6 @@ public class OperationIntermediaire {
 
     private Double pafTaux;
 
-    private String outilAmenagement;
-
     private String etude;
 
     private String localisation;
@@ -189,7 +187,6 @@ public class OperationIntermediaire {
                 ", numAds='" + numAds + '\'' +
                 ", objectifs='" + objectifs + '\'' +
                 ", pafTaux=" + pafTaux +
-                ", outilAmenagement='" + outilAmenagement + '\'' +
                 ", etude='" + etude + '\'' +
                 ", localisation='" + localisation + '\'' +
                 ", usageActuel='" + usageActuel + '\'' +

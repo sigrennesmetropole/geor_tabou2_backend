@@ -18,6 +18,7 @@ import rm.tabou2.storage.tabou.entity.operation.ModeAmenagementEntity;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
+import rm.tabou2.storage.tabou.entity.operation.OutilAmenagementEntity;
 import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
@@ -40,6 +41,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_MAITRISE_OUVRAGE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_MODE_AMENAGEMENT;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LISTE_OUTIL_AMENAGEMENT;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NATURE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NUM_ADS;
@@ -135,6 +137,12 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
             if(operationsCriteria.getModeAmenagement() != null) {
                 Join<OperationEntity, ModeAmenagementEntity> modeAmenagementJoin = root.join(FIELD_MODE_AMENAGEMENT);
                 predicateStringCriteriaForJoin(operationsCriteria.getModeAmenagement(), FIELD_LIBELLE, predicates, builder, modeAmenagementJoin);
+            }
+
+            // outil d'aménagement
+            if(operationsCriteria.getOutilAmenagement() != null) {
+                Join<OperationEntity, OutilAmenagementEntity> outilAmenagementJoin = root.join(FIELD_LISTE_OUTIL_AMENAGEMENT);
+                predicateStringCriteriaForJoin(operationsCriteria.getOutilAmenagement(), FIELD_LIBELLE, predicates, builder, outilAmenagementJoin);
             }
 
             //etape
