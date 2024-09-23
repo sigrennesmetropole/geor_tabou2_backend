@@ -28,5 +28,28 @@ CREATE TABLE IF NOT EXISTS tabou_projet_urbain(id_projet_urbain bigserial, title
 ALTER TABLE tabou_operation ADD fk_projet_urbain bigint;
 ALTER TABLE tabou_operation ADD CONSTRAINT fk_tabou_operation_tabou_projet_urbain FOREIGN KEY (fk_projet_urbain) REFERENCES tabou_projet_urbain;
 
+-- Création champ SHAB
+ALTER TABLE tabou_programme ADD surface_shab double precision;
+
+-- Création champ liste Outil d'amenagement
+CREATE TABLE IF NOT EXISTS tabou_outil_amenagement (
+                                         id bigserial,
+                                         libelle varchar(255),
+                                         code varchar(255) unique,
+                                         primary key (id)
+);
+ALTER TABLE tabou_operation ADD id_outil_amenagement bigint;
+ALTER TABLE if EXISTS tabou_operation
+    add constraint fk_tabou_operation_tabou_outil_amenagement
+    foreign key (id_outil_amenagement) references tabou_outil_amenagement;
+
+-- Insertion des outils d'amenagement
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (1, 'ZAC', 'ZAC');
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (2, 'PA', 'PA');
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (3, 'DP', 'DP');
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (4, 'PC', 'PC');
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (5, 'PC valant division', 'PC_DIVISION');
+
+
 -- Ajout du champs date livraison dans les opérations (nommé date de réalisation dans le front)
 ALTER TABLE tabou_operation ADD date_livraison timestamp;

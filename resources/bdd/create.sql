@@ -121,6 +121,13 @@ create table tabou_mode_amenagement (
                         primary key (id)
 );
 
+create table tabou_outil_amenagement (
+                                        id bigserial not null,
+                                        libelle varchar(255),
+                                        code varchar(255) unique,
+                                        primary key (id)
+);
+
 create table tabou_consommation_espace (
                         id bigserial,
                         libelle varchar(255),
@@ -167,6 +174,7 @@ create table tabou_operation (
                            plui_disposition text,
                            plui_adaptation text,
                            outil_amenagement varchar(255),
+                           id_outil_amenagement bigint,
                            concertation_existe boolean,
                            concertation_date_debut timestamp,
                            concertation_date_fin timestamp,
@@ -366,6 +374,7 @@ create table tabou_programme (
                            logements_locatif_aide_prevu integer,
                            logements_locatif_regule_prive_prevu integer,
                            logements_locatif_regule_hlm_prevu integer,
+                           surface_shab double precision,
                            create_date timestamp,
                            create_user varchar(255),
                            modif_date timestamp,
@@ -625,6 +634,10 @@ alter table if exists tabou_operation
 alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_mode_amenagement
         foreign key (id_mode_amenagement) references tabou_mode_amenagement;
+
+alter table if exists tabou_operation
+    add constraint fk_tabou_operation_tabou_outil_amenagement
+    foreign key (id_outil_amenagement) references tabou_outil_amenagement;
 
 alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_consommation_espace

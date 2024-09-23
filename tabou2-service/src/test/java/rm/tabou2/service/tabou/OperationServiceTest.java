@@ -248,7 +248,7 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
         SecteurEntity secteurEntityUpdated = secteurDao.findOneById(1);
         Assertions.assertEquals(operation.getId().intValue(), secteurEntityUpdated.getIdTabou());
 
-        EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findByCode("EN_PROJET_PUBLIC");
+        EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findByCode("EN_ETUDE_PUBLIC");
         long operationId = operation.getId();
         long etapeId = etapeOperationEntity.getId();
 

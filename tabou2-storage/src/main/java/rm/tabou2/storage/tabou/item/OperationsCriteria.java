@@ -18,6 +18,8 @@ public class OperationsCriteria {
 
     private String modeAmenagement;
 
+    private String outilAmenagement;
+
     private String maitriseOuvrage;
 
     private String consommationEspace;

@@ -121,6 +121,10 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @Column(name = "logements_access_libre_prevu")
     private int logementsAccessLibrePrevu;
 
+    @Basic
+    @Column(name = "surface_shab")
+    private double surfaceSHAB;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_etape_programme")
     private EtapeProgrammeEntity etapeProgramme;
