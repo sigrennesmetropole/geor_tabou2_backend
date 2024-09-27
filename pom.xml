@@ -24,12 +24,12 @@
         <commons.io.version>2.6</commons.io.version>
         <httpclient.version>4.5.2</httpclient.version>
         <json.simple.version>1.1</json.simple.version>
-        <commons.lang3.version>3.16.0</commons.lang3.version>
+        <commons.lang3.version>3.17.0</commons.lang3.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
         <springdoc.version>2.1.0</springdoc.version>
         <google.maps.version>0.2.7</google.maps.version>
         <maven-replacer-plugin.version>1.4.1</maven-replacer-plugin.version>
-        <maven-resources-plugin.version>3.3.0</maven-resources-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <apache.directory.api.version>2.0.0.AM2</apache.directory.api.version>
         <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
         <jasig.cas.client.version>3.6.0</jasig.cas.client.version>
@@ -38,7 +38,7 @@
         <log4j.version>2.17.0</log4j.version>
         <openapi.plugin.version>6.6.0</openapi.plugin.version>
         <swagger.codegen.version>2.4.14</swagger.codegen.version>
-        <compiler.plugin.version>3.5.1</compiler.plugin.version>
+        <compiler.plugin.version>3.13.0</compiler.plugin.version>
         <surefire.plugin.version>3.5.0</surefire.plugin.version>
         <commons.collections.version>4.4</commons.collections.version>
         <ocpsoft.rewrite.version>3.5.1.Final</ocpsoft.rewrite.version>

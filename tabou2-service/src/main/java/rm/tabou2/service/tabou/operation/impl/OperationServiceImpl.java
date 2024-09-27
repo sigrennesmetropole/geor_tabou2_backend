@@ -1,13 +1,11 @@
 package rm.tabou2.service.tabou.operation.impl;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,6 +24,7 @@ import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.exception.AppServiceNotFoundException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
@@ -51,7 +50,6 @@ import java.text.MessageFormat;
 import java.util.*;
 
 @Service
-@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
 @Validated
 @Transactional(readOnly = true)
 public class OperationServiceImpl implements OperationService {
@@ -149,12 +147,6 @@ public class OperationServiceImpl implements OperationService {
 
     @Autowired
     private DescriptionConcertationMapper concertationMapper;
-
-    @Autowired
-    private EntiteReferenteMapper entiteReferenteMapper;
-
-    @Autowired
-    private OperationService me;
 
     @Autowired
     private AlfrescoService alfrescoService;
@@ -311,10 +303,22 @@ public class OperationServiceImpl implements OperationService {
     @Transactional
     public OperationIntermediaire updateEtapeOfOperationId(long operationId, long etapeId) throws AppServiceException {
         EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findOneById(etapeId);
+        if (etapeOperationEntity == null) {
+            throw new AppServiceNotFoundException();
+        }
 
-        OperationIntermediaire operation = getOperationById(operationId);
-        operation.setEtape(etapeOperationMapper.entityToDto(etapeOperationEntity));
-        return me.updateOperation(operation);
+        OperationEntity operationEntity = operationDao.findOneById(operationId);
+        if (operationEntity == null) {
+            throw new AppServiceNotFoundException();
+        }
+
+        if (CollectionUtils.isEmpty(operationEntity.getEtapeOperation().getNextEtapes())
+                || operationEntity.getEtapeOperation().getNextEtapes().stream().noneMatch(opEtape -> opEtape.getId() == etapeId)) {
+            throw new AppServiceException("L'étape n'est pas compatible avec l'étape actuelle de l'opération");
+        }
+
+        operationEntity.setEtapeOperation(etapeOperationEntity);
+        return operationMapper.entityToDto(operationDao.save(operationEntity));
     }
 
     private void assignMultivaluables(OperationIntermediaire operation, OperationEntity operationEntity){

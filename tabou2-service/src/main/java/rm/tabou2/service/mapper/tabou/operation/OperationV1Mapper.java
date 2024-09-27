@@ -9,7 +9,7 @@ import rm.tabou2.service.dto.OperationV1;
 import rm.tabou2.service.mapper.AbstractMapper;
 
 @Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class, VocationMapper.class,
-        DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, ConsommationEspaceMapper.class})
+        DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, OutilAmenagementMapper.class, ConsommationEspaceMapper.class})
 public interface OperationV1Mapper extends AbstractMapper<OperationIntermediaire, OperationV1> {
 
     @Mapping(source = "plhLogementsPrevus", target = "plh.logementsPrevus")

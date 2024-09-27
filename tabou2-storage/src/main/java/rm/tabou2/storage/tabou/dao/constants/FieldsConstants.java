@@ -12,6 +12,7 @@ public class FieldsConstants {
     public static final String FIELD_VOCATION = "vocation";
     public static final String FIELD_DECISION = "decision";
     public static final String FIELD_MODE_AMENAGEMENT = "modeAmenagement";
+    public static final String FIELD_LISTE_OUTIL_AMENAGEMENT = "outilAmenagement";
     public static final String FIELD_CONSOMMATION_ESPACE = "consommationEspace";
     public static final String FIELD_MAITRISE_OUVRAGE = "maitriseOuvrage";
     public static final String FIELD_LIBELLE = "libelle";
@@ -54,6 +55,4 @@ public class FieldsConstants {
     public static final String FIELD_ID_TABOU = "idTabou";
     public static final String FIELD_TYPE_EVENEMENT = "typeEvenement";
     public static final String FIELD_SYSTEME = "systeme";
-    public static final String FIELD_DATE_INACTIF = "dateInactif";
-
 }

@@ -177,6 +177,7 @@ INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Ouverture cha
 INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Instruction', 'INSTRUCTION', false);
 INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Recours', 'RECOURS', false);
 INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Modification etape', 'ETAPE_UPDATED', true);
+INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Echéancier', 'ECHEANCIER', false);
 
 
 -- Insertion des types tiers
@@ -234,3 +235,12 @@ INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Accession 
 INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Locatif aidé', 'LOC_AIDE', true);
 INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Locatif régulé privé', 'LOC_REGULE_PRIVE', false);
 INSERT INTO tabou_type_financement (libelle, code, est_aide) VALUES ('Locatif régulé HLM', 'LOC_REGULE_HLM', false);
+
+
+-- Insertion des outils d'amenagement
+
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (1, 'ZAC', 'ZAC');
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (2, 'PA', 'PA');
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (3, 'DP', 'DP');
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (4, 'PC', 'PC');
+INSERT INTO tabou_outil_amenagement (id, libelle, code) VALUES (5, 'PC valant division', 'PC_DIVISION');

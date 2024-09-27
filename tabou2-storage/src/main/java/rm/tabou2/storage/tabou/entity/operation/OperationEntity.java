@@ -109,10 +109,6 @@ public class OperationEntity extends GenericAuditableEntity {
     private Double pafTaux;
 
     @Basic
-    @Column(name = "outil_amenagement")
-    private String outilAmenagement;
-
-    @Basic
     @Column(name = "etude")
     private String etude;
 
@@ -159,6 +155,10 @@ public class OperationEntity extends GenericAuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_mode_amenagement")
     public ModeAmenagementEntity modeAmenagement;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_outil_amenagement")
+    public OutilAmenagementEntity outilAmenagement;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_consommation_espace")
