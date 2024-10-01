@@ -64,6 +64,7 @@ tabou2:build:master:
 # Sonar code quality analysis - note a full test coverage report through a jacoco.exec merged file in base project folder
 tabou2:sonar:
   stage: test
+  image: maven:3.9.9-eclipse-temurin-17
   dependencies:
     - tabou2:build
   except:
@@ -85,6 +86,7 @@ tabou2:sonar:
 # On master, do not use branch parameter
 tabou2:sonar:master:
   stage: test
+  image: maven:3.9.9-eclipse-temurin-17
   dependencies:
     - tabou2:build 
   only:
