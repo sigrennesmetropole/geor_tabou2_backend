@@ -123,7 +123,7 @@ public class ProgrammeEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "surface_shab")
-    private double surfaceSHAB;
+    private Double surfaceSHAB;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_etape_programme")
