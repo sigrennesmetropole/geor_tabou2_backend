@@ -36,7 +36,7 @@ After=syslog.target
 User=${appname}
 Group=${appname}
 
-ExecStart=/usr/bin/java -jar /opt/${appname}/${appname}.jar --${appname}.properties=/opt/${appname}/properties/${appname}.properties --logging.config=/opt/${appname}/properties/logBack.xml --javax.net.ssl.trustStore=/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/cacerts --javax.net.ssl.trustStorePassword=changeit
+ExecStart=/usr/bin/java -jar /opt/${appname}/${appname}.jar --${appname}.properties=/opt/${appname}/properties/${appname}.properties --logging.config=/opt/${appname}/properties/logBack.xml --jakarta.net.ssl.trustStore=/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/cacerts --jakarta.net.ssl.trustStorePassword=changeit
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=${appname}

@@ -1,7 +1,5 @@
 package rm.tabou2.facade.controller.tabou.tiers.v1;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +27,7 @@ public class TiersV1ApiController implements TiersApi {
 	private TiersV1Mapper tiersV1Mapper;
 
 	@Override
-	public ResponseEntity<TiersV1> createTiersV1(@Valid TiersV1 tiersv1) throws Exception {
+	public ResponseEntity<TiersV1> createTiersV1(TiersV1 tiersv1) throws Exception {
 		Tiers tiers = tiersV1Mapper.tiersV1ToTiers(tiersv1);
 		tiersv1 = tiersV1Mapper.tiersToTiersV1(tiersService.createTiers(tiers));
 		return new ResponseEntity<>(tiersv1, HttpStatus.OK);
@@ -37,16 +35,16 @@ public class TiersV1ApiController implements TiersApi {
 	}
 
 	@Override
-	public ResponseEntity<TiersV1> updateTiersV1(@Valid TiersV1 tiersv1) throws Exception {
+	public ResponseEntity<TiersV1> updateTiersV1(TiersV1 tiersv1) throws Exception {
 		Tiers tiers = tiersV1Mapper.tiersV1ToTiers(tiersv1);
 		tiersv1 = tiersV1Mapper.tiersToTiersV1(tiersService.updateTiers(tiers));
 		return new ResponseEntity<>(tiersv1, HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<PageResult> searchTiersV1(@Valid String nom, @Valid Boolean tiersPrive,
-			@Valid String adresseVille, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber,
-			@Valid String orderBy, @Valid Boolean asc) throws Exception {
+	public ResponseEntity<PageResult> searchTiersV1(String nom, Boolean tiersPrive,
+			String adresseVille, Boolean inactif, Integer start, Integer resultsNumber,
+			String orderBy, Boolean asc) throws Exception {
 
 		TiersCriteria tiersCriteria = new TiersCriteria();
 		tiersCriteria.setNom(nom);

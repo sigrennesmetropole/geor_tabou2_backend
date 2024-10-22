@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -626,7 +626,7 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, Date dateDocument, MultipartFile file) throws AppServiceException {
+    public DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, Date dateDocument, Object file) throws AppServiceException {
 
         //On vérifie que l'opération existe et que l'utilisateur a bien les droits d'ajout sur le document
         OperationIntermediaire operation = getOperationById(operationId);
@@ -636,7 +636,7 @@ public class OperationServiceImpl implements OperationService {
         }
 
         //Récupération du document Dans alfresco
-        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.OPERATION, operationId, dateDocument, file));
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.OPERATION, operationId, dateDocument, (MultipartFile) file));
 
     }
 

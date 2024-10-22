@@ -4,8 +4,8 @@ import org.springframework.stereotype.Repository;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.sig.dao.SecteurCustomDao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository

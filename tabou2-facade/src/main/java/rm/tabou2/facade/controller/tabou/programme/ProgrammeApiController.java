@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.facade.api.ProgrammesApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
@@ -39,12 +39,10 @@ import rm.tabou2.storage.tabou.item.EtapeCriteria;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@RestController
 public class ProgrammeApiController extends AbstractExportDocumentApi implements ProgrammesApi {
 
     @Autowired
@@ -66,32 +64,32 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     private AgapeoService agapeoService;
 
     @Override
-    public ResponseEntity<Programme> createProgramme(@Valid Programme programme) throws Exception {
+    public ResponseEntity<Programme> createProgramme(Programme programme) throws Exception {
         return new ResponseEntity<>(programmeService.createProgramme(programme), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Programme> updateProgramme(@Valid Programme programme) throws Exception {
+    public ResponseEntity<Programme> updateProgramme(Programme programme) throws Exception {
         return new ResponseEntity<>(programmeService.updateProgramme(programme), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<AssociationTiersTypeTiers> updateTiersByProgrammeId(Long programmeId, Long associationTiersId, @Valid TiersTypeTiers associationTiers) throws Exception {
+    public ResponseEntity<AssociationTiersTypeTiers> updateTiersByProgrammeId(Long programmeId, Long associationTiersId, TiersTypeTiers associationTiers) throws Exception {
         return new ResponseEntity<>(programmeTiersService.updateTiersAssociation(programmeId, associationTiersId, associationTiers), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<PageResult> searchProgrammes(@Valid String nom, @Valid String etape, @Valid Boolean diffusionRestreinte,
-                                                       @Valid String code, @Valid String numAds, @Valid String nomOperation,
-                                                       @Valid String natureOperation, @Valid Date clotureDateDebut, @Valid Date clotureDateFin,
-                                                       @Valid String tiers, @Valid Integer attributionFonciereAnneeDebut, @Valid Integer attributionFonciereAnneeFin,
-                                                       @Valid Date attributionDateDebut, @Valid Date attributionDateFin, @Valid Date commercialisationDateDebut,
-                                                       @Valid Date commercialisationDateFin, @Valid Date adsDateDebut, @Valid Date adsDateFin,
-                                                       @Valid Date livraisonDateDebut, @Valid Date livraisonDateFin, @Valid Date annulationDate,
-                                                       @Valid Date docDateDebut, @Valid Date docDateFin, @Valid Date datDateDebut,
-                                                       @Valid Date datDateFin, @Valid Boolean logementsAides, @Valid Integer start,
-                                                       @Valid Boolean onlyActive, @Valid Integer resultsNumber,
-                                                       @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchProgrammes(String nom, String etape, Boolean diffusionRestreinte,
+                                                       String code, String numAds, String nomOperation,
+                                                       String natureOperation, Date clotureDateDebut, Date clotureDateFin,
+                                                       String tiers, Integer attributionFonciereAnneeDebut, Integer attributionFonciereAnneeFin,
+                                                       Date attributionDateDebut, Date attributionDateFin, Date commercialisationDateDebut,
+                                                       Date commercialisationDateFin, Date adsDateDebut, Date adsDateFin,
+                                                       Date livraisonDateDebut, Date livraisonDateFin, Date annulationDate,
+                                                       Date docDateDebut, Date docDateFin, Date datDateDebut,
+                                                       Date datDateFin, Boolean logementsAides, Integer start,
+                                                       Boolean onlyActive, Integer resultsNumber,
+                                                       String orderBy, Boolean asc) throws Exception {
 
         ProgrammeCriteria programmeCriteria = new ProgrammeCriteria();
 
@@ -132,7 +130,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<PageResult> searchProgrammesEtapes(@Valid String code, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchProgrammesEtapes(String code, String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
         EtapeCriteria etapeCriteria = new EtapeCriteria();
 
         etapeCriteria.setCode(code);
@@ -156,7 +154,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<PageResult> getAgapeoByProgrammeId(Long programmeId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getAgapeoByProgrammeId(Long programmeId, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, AgapeoEntity.class);
 
@@ -166,7 +164,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<PageResult> getAvailableProgrammeEmprises(@Valid String nom, @Valid Long operationId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getAvailableProgrammeEmprises(String nom, Long operationId, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeRmEntity.class);
 
@@ -177,7 +175,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<PageResult> getPermisByProgrammeId(Long programmeId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getPermisByProgrammeId(Long programmeId, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, PermisConstruireEntity.class);
 
@@ -188,7 +186,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<PageResult> searchTiersByProgrammeId(Long programmeId, @Valid String libelle, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchTiersByProgrammeId(Long programmeId, String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
         criteria.setAsc(asc);
@@ -207,12 +205,12 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 
 
     @Override
-    public ResponseEntity<Evenement> updateEvenementByProgrammeId(Long programmeId, @Valid Evenement evenement) throws Exception {
+    public ResponseEntity<Evenement> updateEvenementByProgrammeId(Long programmeId, Evenement evenement) throws Exception {
         return new ResponseEntity<>(programmeService.updateEvenementByProgrammeId(programmeId, evenement), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<PageResult> getEvenementsByProgrammeId(Long programmeId, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getEvenementsByProgrammeId(Long programmeId, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EvenementProgrammeEntity.class);
 
@@ -222,7 +220,7 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<Evenement> addEvenementByProgrammeId(Long programmeId, @Valid Evenement evenement) throws Exception {
+    public ResponseEntity<Evenement> addEvenementByProgrammeId(Long programmeId, Evenement evenement) throws Exception {
         return new ResponseEntity<>(programmeService.addEvenementByProgrammeId(programmeId, evenement), HttpStatus.OK);
     }
 
@@ -244,12 +242,12 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<Programme> updateEtapeOfProgrammeId(Long programmeId, @Valid Long etapeId) throws Exception {
+    public ResponseEntity<Programme> updateEtapeOfProgrammeId(Long programmeId, Long etapeId) throws Exception {
         return new ResponseEntity<>(programmeService.updateEtapeOfProgrammeId(programmeId, etapeId), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<AssociationTiersTypeTiers> associateTiersToProgramme(Long programmeId, @NotNull @Valid TiersTypeTiers tiersTypeTiers) throws Exception {
+    public ResponseEntity<AssociationTiersTypeTiers> associateTiersToProgramme(Long programmeId, TiersTypeTiers tiersTypeTiers) throws Exception {
         return new ResponseEntity<>(programmeTiersService.associateTiersToProgramme(programmeId, tiersTypeTiers.getTiersId(), tiersTypeTiers.getTypeTiersId()), HttpStatus.OK);
     }
 
@@ -270,25 +268,25 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> updateProgrammeDocumentMetadata(Long programmeId, String documentId, @Valid DocumentMetadata documentMetadata) throws Exception {
+    public ResponseEntity<DocumentMetadata> updateProgrammeDocumentMetadata(Long programmeId, String documentId, DocumentMetadata documentMetadata) throws Exception {
         return new ResponseEntity<>(programmeService.updateDocumentMetadata(programmeId, documentId, documentMetadata), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> updateProgrammeDocumentContent(Long programmeId, String documentId, @Valid MultipartFile fileToUpload) throws Exception {
+    public ResponseEntity<DocumentMetadata> updateProgrammeDocumentContent(Long programmeId, String documentId, MultipartFile fileToUpload) throws Exception {
         programmeService.updateDocumentContent(programmeId, documentId, fileToUpload);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<DocumentMetadata> addProgrammeDocument(@NotNull @Valid Long programmeId, @NotNull @Valid String nom, @NotNull @Valid String libelle, @Valid MultipartFile fileToUpload, @Valid Date dateDocument) throws Exception {
-        return new ResponseEntity<>(programmeService.addDocument(programmeId, nom, libelle, fileToUpload, dateDocument), HttpStatus.OK);
+    public ResponseEntity<DocumentMetadata> addProgrammeDocument(Long programmeId, String nom, String libelleTypeDocument, Date dateDocument, MultipartFile fileToUpload) throws Exception {
+        return new ResponseEntity<>(programmeService.addDocument(programmeId, nom, libelleTypeDocument, fileToUpload, dateDocument), HttpStatus.OK);
 
     }
 
     @Override
-    public ResponseEntity<PageResult> searchProgrammeDocuments(Long programmeId, @Valid String nom, @Valid String libelleTypeDocument, @Valid String typeMime, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchProgrammeDocuments(Long programmeId, String nom, String libelleTypeDocument, String typeMime, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageableForAlfresco(start, resultsNumber, orderBy, asc);
 

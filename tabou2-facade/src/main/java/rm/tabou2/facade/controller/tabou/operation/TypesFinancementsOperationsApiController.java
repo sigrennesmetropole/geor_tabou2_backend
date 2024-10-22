@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.facade.api.TypesFinancementsOperationsApi;
 import rm.tabou2.service.tabou.operation.TypeFinancementOperationService;
@@ -14,7 +14,7 @@ import rm.tabou2.storage.tabou.entity.operation.TypeFinancementOperationEntity;
 import rm.tabou2.storage.tabou.item.TypeFinancementOperationCriteria;
 import rm.tabou2.service.dto.TypeFinancementOperation;
 
-@Controller
+@RestController
 public class TypesFinancementsOperationsApiController implements TypesFinancementsOperationsApi {
 
     @Autowired

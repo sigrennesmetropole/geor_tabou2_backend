@@ -12,13 +12,13 @@ import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.sig.dao.SecteurSamCustomDao;
 import rm.tabou2.storage.sig.entity.SecteurSamEntity;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class SecteurSamCustomDaoImpl extends AbstractCustomDaoImpl implements Se
         CriteriaQuery<SecteurSamEntity> searchQuery = builder.createQuery(SecteurSamEntity.class).distinct(true);
         Root<SecteurSamEntity> searchRoot = searchQuery.from(SecteurSamEntity.class);
         buildQuery(secteur, builder, searchQuery, searchRoot);
-        searchQuery.multiselect(builder.literal(0), countRoot.get("nomSecteur"));
+        searchQuery.multiselect(builder.literal(0), searchRoot.get("nomSecteur"));
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
 
         TypedQuery<SecteurSamEntity> typedQuery = entityManager.createQuery(searchQuery);

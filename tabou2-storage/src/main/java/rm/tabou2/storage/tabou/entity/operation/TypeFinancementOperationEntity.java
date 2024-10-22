@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import rm.tabou2.storage.tabou.entity.common.GenericCreateAuditableEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)

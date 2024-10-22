@@ -86,12 +86,12 @@ public class OperationUpdateHelper {
 			if (first.isPresent()) {
 				ActeurEntity toUpdate = first.get();
 				toUpdate.setDescription(acteur.getDescription());
-				toUpdate.setTypeActeur(typeActeurDao.getById(acteur.getTypeActeur().getId()));
+				toUpdate.setTypeActeur(typeActeurDao.getReferenceById(acteur.getTypeActeur().getId()));
 				acteurDao.save(toUpdate);
 			} else {
 				ActeurEntity toAdd = new ActeurEntity();
 				toAdd.setDescription(acteur.getDescription());
-				toAdd.setTypeActeur(typeActeurDao.getById(acteur.getTypeActeur().getId()));
+				toAdd.setTypeActeur(typeActeurDao.getReferenceById(acteur.getTypeActeur().getId()));
 				toAdd = acteurDao.save(toAdd);
 				actualOperation.getActeurs().add(toAdd);
 			}
@@ -134,12 +134,12 @@ public class OperationUpdateHelper {
 			if (first.isPresent()) {
 				ActionOperationEntity toUpdate = first.get();
 				toUpdate.setDescription(action.getDescription());
-				toUpdate.setTypeAction(typeActionDao.getById(action.getTypeAction().getId()));
+				toUpdate.setTypeAction(typeActionDao.getReferenceById(action.getTypeAction().getId()));
 				actionOperationDao.save(toUpdate);
 			} else {
 				ActionOperationEntity toAdd = new ActionOperationEntity();
 				toAdd.setDescription(action.getDescription());
-				toAdd.setTypeAction(typeActionDao.getById(action.getTypeAction().getId()));
+				toAdd.setTypeAction(typeActionDao.getReferenceById(action.getTypeAction().getId()));
 				toAdd = actionOperationDao.save(toAdd);
 				actualOperation.getActions().add(toAdd);
 			}
@@ -183,12 +183,12 @@ public class OperationUpdateHelper {
 			if (first.isPresent()) {
 				AmenageurEntity toUpdate = first.get();
 				toUpdate.setNom(amenageur.getNom());
-				toUpdate.setTypeAmenageur(typeAmenageurDao.getById(amenageur.getTypeAmenageur().getId()));
+				toUpdate.setTypeAmenageur(typeAmenageurDao.getReferenceById(amenageur.getTypeAmenageur().getId()));
 				amenageurDao.save(toUpdate);
 			} else {
 				AmenageurEntity toAdd = new AmenageurEntity();
 				toAdd.setNom(amenageur.getNom());
-				toAdd.setTypeAmenageur(typeAmenageurDao.getById(amenageur.getTypeAmenageur().getId()));
+				toAdd.setTypeAmenageur(typeAmenageurDao.getReferenceById(amenageur.getTypeAmenageur().getId()));
 				toAdd = amenageurDao.save(toAdd);
 				actualOperation.getAmenageurs().add(toAdd);
 			}
@@ -233,12 +233,12 @@ public class OperationUpdateHelper {
 			if (first.isPresent()) {
 				ContributionEntity toUpdate = first.get();
 				toUpdate.setDescription(contribution.getDescription());
-				toUpdate.setTypeContribution(typeContributionDao.getById(contribution.getTypeContribution().getId()));
+				toUpdate.setTypeContribution(typeContributionDao.getReferenceById(contribution.getTypeContribution().getId()));
 				contributionDao.save(toUpdate);
 			} else {
 				ContributionEntity toAdd = new ContributionEntity();
 				toAdd.setDescription(contribution.getDescription());
-				toAdd.setTypeContribution(typeContributionDao.getById(contribution.getTypeContribution().getId()));
+				toAdd.setTypeContribution(typeContributionDao.getReferenceById(contribution.getTypeContribution().getId()));
 				toAdd = contributionDao.save(toAdd);
 				actualOperation.getContributions().add(toAdd);
 			}
@@ -285,13 +285,13 @@ public class OperationUpdateHelper {
 			if (first.isPresent()) {
 				DescriptionFoncierEntity toUpdate = first.get();
 				toUpdate.setDescription(descriptionFoncier.getDescription());
-				toUpdate.setTypeFoncier(typeFoncierDao.getById(descriptionFoncier.getTypeFoncier().getId()));
+				toUpdate.setTypeFoncier(typeFoncierDao.getReferenceById(descriptionFoncier.getTypeFoncier().getId()));
 				toUpdate.setTaux(descriptionFoncier.getTaux());
 				descriptionsFoncierDao.save(toUpdate);
 			} else {
 				DescriptionFoncierEntity toAdd = new DescriptionFoncierEntity();
 				toAdd.setDescription(descriptionFoncier.getDescription());
-				toAdd.setTypeFoncier(typeFoncierDao.getById(descriptionFoncier.getTypeFoncier().getId()));
+				toAdd.setTypeFoncier(typeFoncierDao.getReferenceById(descriptionFoncier.getTypeFoncier().getId()));
 				toAdd.setTaux(descriptionFoncier.getTaux());
 				toAdd = descriptionsFoncierDao.save(toAdd);
 				actualOperation.getDescriptionsFoncier().add(toAdd);
@@ -339,12 +339,12 @@ public class OperationUpdateHelper {
 			if (first.isPresent()) {
 				DescriptionFinancementOperationEntity toUpdate = first.get();
 				toUpdate.setDescription(financement.getDescription());
-				toUpdate.setTypeFinancement(typeFinancementDao.getById(financement.getTypeFinancement().getId()));
+				toUpdate.setTypeFinancement(typeFinancementDao.getReferenceById(financement.getTypeFinancement().getId()));
 				financementDao.save(toUpdate);
 			} else {
 				DescriptionFinancementOperationEntity toAdd = new DescriptionFinancementOperationEntity();
 				toAdd.setDescription(financement.getDescription());
-				toAdd.setTypeFinancement(typeFinancementDao.getById(financement.getTypeFinancement().getId()));
+				toAdd.setTypeFinancement(typeFinancementDao.getReferenceById(financement.getTypeFinancement().getId()));
 				toAdd = financementDao.save(toAdd);
 				actualOperation.getFinancements().add(toAdd);
 			}
@@ -391,12 +391,12 @@ public class OperationUpdateHelper {
 			if (first.isPresent()) {
 				InformationProgrammationEntity toUpdate = first.get();
 				toUpdate.setDescription(programmation.getDescription());
-				toUpdate.setTypeProgrammation(typeProgrammation.getById(programmation.getTypeProgrammation().getId()));
+				toUpdate.setTypeProgrammation(typeProgrammation.getReferenceById(programmation.getTypeProgrammation().getId()));
 				programmationDao.save(toUpdate);
 			} else {
 				InformationProgrammationEntity toAdd = new InformationProgrammationEntity();
 				toAdd.setDescription(programmation.getDescription());
-				toAdd.setTypeProgrammation(typeProgrammation.getById(programmation.getTypeProgrammation().getId()));
+				toAdd.setTypeProgrammation(typeProgrammation.getReferenceById(programmation.getTypeProgrammation().getId()));
 				toAdd = programmationDao.save(toAdd);
 				actualOperation.getInformationsProgrammation().add(toAdd);
 			}

@@ -4,7 +4,7 @@ import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.operation.ValidOperationUpdate;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidOperationUpdateValidator implements CustomConstraintValidator<ValidOperationUpdate, OperationIntermediaire> {
 

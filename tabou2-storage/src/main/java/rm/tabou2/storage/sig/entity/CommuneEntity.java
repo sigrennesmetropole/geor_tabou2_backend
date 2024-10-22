@@ -2,7 +2,7 @@ package rm.tabou2.storage.sig.entity;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Data

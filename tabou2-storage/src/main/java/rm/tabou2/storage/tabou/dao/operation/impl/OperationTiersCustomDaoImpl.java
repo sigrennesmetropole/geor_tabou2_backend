@@ -13,14 +13,14 @@ import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class OperationTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
             predicateStringCriteriaForJoin(criteria.getLibelle(), FIELD_LIBELLE, predicates, builder, typeTiersJoin);
         }
 
-        predicateLongCriteria(criteria.getOperationId(), "operation", predicates, builder, root);
+        predicateLongCriteriaForJoin(criteria.getOperationId(), "id", predicates, builder, root.join("operation"));
 
 
         //Définition de la clause Where

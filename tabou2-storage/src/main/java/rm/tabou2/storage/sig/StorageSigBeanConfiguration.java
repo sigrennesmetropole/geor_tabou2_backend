@@ -16,8 +16,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class StorageSigBeanConfiguration {
     @Value("${spring.sig.datasource.hibernate.hbm2ddl.auto}")
     private String hibernateHbm2ddlAuto;
 
-    @Value("${spring.sig.datasource.hibernate.dialect}")
+    @Value("${spring.sig.datasource.hibernate.dialect:org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect}")
     private String hibernateDialect;
 
     @Bean(name = "sigDataSource")

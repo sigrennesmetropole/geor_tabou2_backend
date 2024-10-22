@@ -1,5 +1,11 @@
 package rm.tabou2.service.tabou.programme.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
@@ -7,14 +13,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.service.mapper.tabou.programme.ProgrammeTiersMapper;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
 import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
-import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
@@ -27,18 +32,8 @@ import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 @Service
 public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
-
-    @Autowired
-    private ProgrammeService programmeService;
 
     @Autowired
     private ProgrammeDao programmeDao;
@@ -54,9 +49,6 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
 
     @Autowired
     private ProgrammeTiersCustomDao programmeTiersCustomDao;
-
-    @Autowired
-    private ProgrammeTiersMapper programmeTiersMapper;
 
     @Autowired
     private TiersMapper tiersMapper;

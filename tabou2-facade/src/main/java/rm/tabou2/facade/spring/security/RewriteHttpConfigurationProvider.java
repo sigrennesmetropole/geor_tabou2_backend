@@ -3,7 +3,7 @@
  */
 package rm.tabou2.facade.spring.security;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.ocpsoft.logging.Logger;
 import org.ocpsoft.rewrite.config.Configuration;

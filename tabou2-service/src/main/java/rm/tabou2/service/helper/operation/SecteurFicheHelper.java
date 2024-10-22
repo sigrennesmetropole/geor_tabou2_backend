@@ -12,7 +12,7 @@ import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.storage.tabou.dao.operation.VocationDao;
 import rm.tabou2.storage.tabou.entity.operation.*;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;

@@ -156,7 +156,7 @@ public interface OperationService {
      * @return métadonnées du document
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
-    DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, Date dateDocument, MultipartFile file) throws AppServiceException;
+    DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, Date dateDocument, Object file) throws AppServiceException;
 
 
     /**

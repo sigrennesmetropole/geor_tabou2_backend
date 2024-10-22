@@ -20,7 +20,6 @@ import rm.tabou2.storage.tabou.entity.tiers.FonctionContactsEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.item.ContactTiersCriteria;
 
-import javax.validation.Valid;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.NoSuchElementException;
@@ -72,7 +71,7 @@ public class ContactTiersServiceImpl implements ContactTiersService {
     }
 
     @Override
-    public ContactTiers createContactTiers(Long tiersId, @Valid ContactTiers contactTiers) {
+    public ContactTiers createContactTiers(Long tiersId, ContactTiers contactTiers) {
         if (!contactTiersRightsHelper.checkCanCreateContactTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un contact de tiers");
         }
@@ -96,7 +95,7 @@ public class ContactTiersServiceImpl implements ContactTiersService {
     }
 
     @Override
-    public ContactTiers updateContactTiers(Long tiersId, @Valid ContactTiers contactTiers) {
+    public ContactTiers updateContactTiers(Long tiersId, ContactTiers contactTiers) {
         if (!contactTiersRightsHelper.checkCanUpdateContactTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits d'éditer un contact de tiers");
         }

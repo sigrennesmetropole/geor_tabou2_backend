@@ -3,7 +3,7 @@ package rm.tabou2.storage.tabou.entity.operation;
 import lombok.Data;
 import rm.tabou2.storage.tabou.entity.common.GenericCreateAuditableEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Data

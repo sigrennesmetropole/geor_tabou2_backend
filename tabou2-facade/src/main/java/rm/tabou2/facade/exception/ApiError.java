@@ -1,6 +1,6 @@
 package rm.tabou2.facade.exception;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.Arrays;
 import java.util.List;
 
-@ApiModel(description = "API Error")
+@Schema(description = "API Error")
 @Validated
 @Data
 public class ApiError {

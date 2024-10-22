@@ -15,9 +15,10 @@ public abstract class AbstractExportDocumentApi {
 
     /**
      * Téléchargement d'un document
-     * @param documentContent           contenu du document
-     * @return                          ResponseEntity
-     * @throws FileNotFoundException    fichier du document introuvable
+     *
+     * @param documentContent contenu du document
+     * @return ResponseEntity
+     * @throws FileNotFoundException fichier du document introuvable
      */
     public ResponseEntity<Resource> downloadDocument(DocumentContent documentContent) throws FileNotFoundException {
         HttpHeaders responseHeaders = new HttpHeaders();

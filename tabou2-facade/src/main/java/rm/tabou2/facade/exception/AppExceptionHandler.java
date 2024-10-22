@@ -17,7 +17,7 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 import java.security.InvalidParameterException;
 import java.util.NoSuchElementException;
 

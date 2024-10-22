@@ -2,7 +2,7 @@ package rm.tabou2.storage.tabou.entity.ddc;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Data

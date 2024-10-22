@@ -5,7 +5,7 @@ import lombok.Setter;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.*;
 
 @Getter
