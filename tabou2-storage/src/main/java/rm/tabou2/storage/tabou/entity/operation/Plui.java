@@ -2,7 +2,7 @@ package rm.tabou2.storage.tabou.entity.operation;
 
 import lombok.Data;
 
-import javax.persistence.Embeddable;
+import jakarta.persistence.Embeddable;
 
 @Data
 @Embeddable

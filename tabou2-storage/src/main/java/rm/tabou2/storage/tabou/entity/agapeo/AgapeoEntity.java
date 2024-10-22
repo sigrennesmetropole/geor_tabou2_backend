@@ -3,7 +3,7 @@ package rm.tabou2.storage.tabou.entity.agapeo;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @Entity

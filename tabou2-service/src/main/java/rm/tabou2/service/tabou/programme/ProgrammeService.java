@@ -3,7 +3,6 @@ package rm.tabou2.service.tabou.programme;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Evenement;
@@ -154,7 +153,7 @@ public interface ProgrammeService {
      * @return métadonnées du document
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
-    DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file, Date datedocument) throws AppServiceException;
+    DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, Object file, Date datedocument) throws AppServiceException;
 
     /**
      * Suppresion d'un document dans Alfresco.
@@ -184,7 +183,7 @@ public interface ProgrammeService {
      * @param file fichier à mettre à jour
      * @throws AppServiceException
      */
-    void updateDocumentContent(long programmeId, String documentId, MultipartFile file) throws AppServiceException;
+    void updateDocumentContent(long programmeId, String documentId, Object file) throws AppServiceException;
 
     /**
      * Recherche des documents d'un programme.

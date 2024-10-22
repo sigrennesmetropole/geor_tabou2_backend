@@ -4,7 +4,7 @@ import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.programme.ValidProgrammeUpdate;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidProgrammeUpdateValidator implements CustomConstraintValidator<ValidProgrammeUpdate, Programme> {
 

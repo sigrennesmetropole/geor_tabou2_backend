@@ -4,7 +4,7 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.evenement.ValidEvenementUpdate;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidEvenementUpdateValidator implements CustomConstraintValidator<ValidEvenementUpdate, Evenement> {
 

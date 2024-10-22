@@ -5,7 +5,7 @@ import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.document.ValidTypeDocumentCreation;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidTypeDocumentCreationValidator implements CustomConstraintValidator<ValidTypeDocumentCreation, TypeDocument> {
 

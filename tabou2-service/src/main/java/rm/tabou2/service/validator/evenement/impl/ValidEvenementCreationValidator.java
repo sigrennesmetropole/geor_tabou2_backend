@@ -5,7 +5,7 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.validator.CustomConstraintValidator;
 import rm.tabou2.service.validator.evenement.ValidEvenementCreation;
 
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class ValidEvenementCreationValidator implements CustomConstraintValidator<ValidEvenementCreation, Evenement> {
 

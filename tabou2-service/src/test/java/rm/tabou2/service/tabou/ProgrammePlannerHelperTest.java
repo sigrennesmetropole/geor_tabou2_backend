@@ -1,8 +1,9 @@
 package rm.tabou2.service.tabou;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
-import org.joda.time.LocalDateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,6 @@ import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
-import rm.tabou2.storage.tabou.entity.operation.DecisionEntity;
 
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
@@ -39,12 +39,12 @@ class ProgrammePlannerHelperTest {
     @Test
     void testProgrammePermisSuiviHabitationValues() {
 
-        LocalDateTime localDateTimeAds1 = new LocalDateTime(2018, 3, 10, 15, 30, 55);
-        LocalDateTime localDateTimeAds2 = new LocalDateTime(2018, 3, 10, 15, 0, 0);
-        LocalDateTime localDateTimeAds3 = new LocalDateTime(2019, 4, 20, 9, 10, 0);
+        LocalDateTime localDateTimeAds1 = LocalDateTime.of(2018, 3, 10, 15, 30, 55);
+        LocalDateTime localDateTimeAds2 = LocalDateTime.of(2018, 3, 9, 15, 0, 0);
+        LocalDateTime localDateTimeAds3 = LocalDateTime.of(2019, 4, 20, 9, 10, 0);
 
-        LocalDateTime localDateTimeDat1 = new LocalDateTime(2019, 12, 1, 16, 0, 0);
-        LocalDateTime localDateTimeDat2 = new LocalDateTime(2020, 11, 2, 15, 0, 0);
+        LocalDateTime localDateTimeDat1 = LocalDateTime.of(2019, 12, 1, 16, 0, 0);
+        LocalDateTime localDateTimeDat2 = LocalDateTime.of(2020, 11, 2, 15, 0, 0);
 
         Date docDatePrevu = new Date();
 
@@ -52,21 +52,21 @@ class ProgrammePlannerHelperTest {
         permisConstruireEntity1.setNumAds("numadspr");
         permisConstruireEntity1.setVersionAds("t");
         permisConstruireEntity1.setDecision("Accordé sous réserves");
-        permisConstruireEntity1.setAdsDate(localDateTimeAds1.toDate());
-        permisConstruireEntity1.setDatDate(localDateTimeDat1.toDate());
+        permisConstruireEntity1.setAdsDate(Date.from(localDateTimeAds1.atZone(ZoneId.systemDefault()).toInstant()));
+        permisConstruireEntity1.setDatDate(Date.from(localDateTimeDat1.atZone(ZoneId.systemDefault()).toInstant()));
         permisConstruireEntity1.setDocDate(null);
 
         PermisConstruireEntity permisConstruireEntity2 = new PermisConstruireEntity();
         permisConstruireEntity2.setNumAds("numadspr");
         permisConstruireEntity2.setVersionAds("m");
         permisConstruireEntity2.setDecision("Accordé");
-        permisConstruireEntity2.setAdsDate(localDateTimeAds2.toDate());
-        permisConstruireEntity2.setDatDate(localDateTimeDat2.toDate());
+        permisConstruireEntity2.setAdsDate(Date.from(localDateTimeAds2.atZone(ZoneId.systemDefault()).toInstant()));
+        permisConstruireEntity2.setDatDate(Date.from(localDateTimeDat2.atZone(ZoneId.systemDefault()).toInstant()));
         permisConstruireEntity2.setDocDate(null);
 
         PermisConstruireEntity permisConstruireEntity3 = new PermisConstruireEntity();
         permisConstruireEntity3.setNumAds("numadspr");
-        permisConstruireEntity3.setAdsDate(localDateTimeAds3.toDate());
+        permisConstruireEntity3.setAdsDate(Date.from(localDateTimeAds3.atZone(ZoneId.systemDefault()).toInstant()));
         permisConstruireEntity3.setDatDate(null);
         permisConstruireEntity3.setDocDate(null);
 
@@ -82,9 +82,9 @@ class ProgrammePlannerHelperTest {
 
         programmePlannerHelper.computePermisSuiviHabitatOfProgramme(programme);
 
-        Assertions.assertEquals(localDateTimeAds1.toDate(), programme.getAdsDate());
-        Assertions.assertEquals(null, programme.getDocDate());
-        Assertions.assertEquals(localDateTimeDat1.toDate(), programme.getDatDate());
+        Assertions.assertEquals(Date.from(localDateTimeAds1.atZone(ZoneId.systemDefault()).toInstant()), programme.getAdsDate());
+        Assertions.assertNull(programme.getDocDate());
+        Assertions.assertEquals(Date.from(localDateTimeDat1.atZone(ZoneId.systemDefault()).toInstant()), programme.getDatDate());
     }
 
     @DisplayName("testProgrammeAgapeoSuiviHabitationValues: Test des valeurs de suivi habitation pour les agapeo " +

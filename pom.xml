@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>rm</groupId>
-    <artifactId>tabou2</artifactId>
-    <version>1.4.0</version>
-    <packaging>pom</packaging>
+	<groupId>rm</groupId>
+	<artifactId>tabou2</artifactId>
+	<version>1.4.0</version>
+	<packaging>pom</packaging>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.13</version>
-        <relativePath/>
-    </parent>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.0</version>
+		<relativePath />
+	</parent>
 
-    <!-- Propriétés du projet -->
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>17</java.version>
-        <commons.io.version>2.17.0</commons.io.version>
-        <httpclient.version>4.5.2</httpclient.version>
-        <json.simple.version>1.1</json.simple.version>
-        <commons.lang3.version>3.17.0</commons.lang3.version>
-        <javax.validation.version>2.0.1.Final</javax.validation.version>
-        <springdoc.version>2.1.0</springdoc.version>
-        <google.maps.version>0.2.7</google.maps.version>
-        <maven-replacer-plugin.version>1.4.1</maven-replacer-plugin.version>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <apache.directory.api.version>2.0.0.AM2</apache.directory.api.version>
-        <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
-        <jasig.cas.client.version>3.6.0</jasig.cas.client.version>
-        <mapstruct.version>1.6.2</mapstruct.version>
-        <lombok.version>1.18.26</lombok.version>
-        <log4j.version>2.24.0</log4j.version>
-        <openapi.plugin.version>6.6.0</openapi.plugin.version>
-        <swagger.codegen.version>2.4.14</swagger.codegen.version>
-        <compiler.plugin.version>3.13.0</compiler.plugin.version>
-        <surefire.plugin.version>3.5.0</surefire.plugin.version>
-        <commons.collections.version>4.4</commons.collections.version>
-        <ocpsoft.rewrite.version>3.5.1.Final</ocpsoft.rewrite.version>
-        <openapitools.version>0.2.1</openapitools.version>
-		<openapi.version>1.6.15</openapi.version>
-		<swagger.version>2.2.8</swagger.version>
-		<springfox.version>2.9.2</springfox.version>
+	<!-- Propriétés du projet -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>17</java.version>
+		<commons.io.version>2.17.0</commons.io.version>
+		<httpclient.version>4.5.13</httpclient.version>
+		<commons.lang3.version>3.17.0</commons.lang3.version>
+		<javax.validation.version>2.0.1.Final</javax.validation.version>
+		<javax.annotation.version>1.3.2</javax.annotation.version>
+		<servlet-api.version>4.0.1</servlet-api.version>
+		<jakarta.version>3.1.0</jakarta.version>
+		<springdoc.version>2.6.0</springdoc.version>
+		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+		<apache.directory.api.version>2.1.7</apache.directory.api.version>
+		<mapstruct.version>1.6.2</mapstruct.version>
+		<lombok.version>1.18.26</lombok.version>
+		<log4j.version>2.24.1</log4j.version>
+		<openapi.plugin.version>7.9.0</openapi.plugin.version>
+		<swagger.version>2.2.25</swagger.version>
+		<swagger.codegen.version>2.4.14</swagger.codegen.version>
+		<compiler.plugin.version>3.13.0</compiler.plugin.version>
+		<surefire.plugin.version>3.5.1</surefire.plugin.version>
+		<commons.collections.version>4.4</commons.collections.version>
+		<ocpsoft.rewrite.version>10.0.2.Final</ocpsoft.rewrite.version>
+		<opensagres.xdocreport.version>2.0.6</opensagres.xdocreport.version>
+		<jackson-datatype.version>2.15.2</jackson-datatype.version>
+		<openapitools.version>0.2.6</openapitools.version>
+		<openapi.version>2.6.0</openapi.version>
+		<org.hibernate.version>8.0.1.Final</org.hibernate.version>
 
 		<!-- Configuration SONAR -->
 		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
@@ -85,7 +85,8 @@
 				<version>${project.version}</version>
 			</dependency>
 
-			<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
+			<!--
+			https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-slf4j-impl</artifactId>
@@ -117,7 +118,7 @@
 			</dependency>
 
 
-            <!--Commons dependencies -->
+			<!--Commons dependencies -->
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
@@ -136,61 +137,35 @@
 				<version>${commons.collections.version}</version>
 			</dependency>
 
-
 			<!-- Swagger dependencies -->
-
-			<dependency>
-				<groupId>io.swagger.core.v3</groupId>
-				<artifactId>swagger-annotations</artifactId>
-				<version>${swagger.version}</version>
-			</dependency>
-
 			<dependency>
 				<groupId>io.swagger.core.v3</groupId>
 				<artifactId>swagger-models</artifactId>
 				<version>${swagger.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>io.swagger.core.v3</groupId>
+				<artifactId>swagger-annotations</artifactId>
+				<version>${swagger.version}</version>
+			</dependency>
+		
+		
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+				<version>${springdoc.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.springdoc</groupId>
-				<artifactId>springdoc-openapi-ui</artifactId>
-				<version>${openapi.version}</version>
+				<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+				<version>${springdoc.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springdoc</groupId>
-				<artifactId>springdoc-openapi-data-rest</artifactId>
+				<artifactId>springdoc-openapi-starter-common</artifactId>
 				<version>${openapi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger-ui</artifactId>
-				<version>${springfox.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger2</artifactId>
-				<version>${springfox.version}</version>
-			</dependency>
-
-			<!-- Google dependencies -->
-			<dependency>
-				<groupId>com.googlecode.json-simple</groupId>
-				<artifactId>json-simple</artifactId>
-				<version>${json.simple.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.google.maps</groupId>
-				<artifactId>google-maps-services</artifactId>
-				<version>${google.maps.version}</version>
-			</dependency>
-			<!-- https://mvnrepository.com/artifact/com.google.code.maven-replacer-plugin/maven-replacer-plugin -->
-			<dependency>
-				<groupId>com.google.code.maven-replacer-plugin</groupId>
-				<artifactId>maven-replacer-plugin</artifactId>
-				<version>${maven-replacer-plugin.version}</version>
 			</dependency>
 
 			<dependency>
@@ -199,18 +174,10 @@
 				<version>${apache.directory.api.version}</version>
 			</dependency>
 
-			<!-- JWT -->
 			<dependency>
-				<groupId>io.jsonwebtoken</groupId>
-				<artifactId>jjwt</artifactId>
-				<version>${jsonwebtoken.version}</version>
-			</dependency>
-
-			<!-- CAS / SSO -->
-			<dependency>
-				<groupId>org.jasig.cas.client</groupId>
-				<artifactId>cas-client-support-springboot</artifactId>
-				<version>${jasig.cas.client.version}</version>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${httpclient.version}</version>
 			</dependency>
 
 			<!-- Map Struct -->
@@ -220,14 +187,16 @@
 				<version>${mapstruct.version}</version>
 			</dependency>
 
-			<!-- https://mvnrepository.com/artifact/org.ocpsoft.rewrite/rewrite-integration-spring -->
+			<!--
+			https://mvnrepository.com/artifact/org.ocpsoft.rewrite/rewrite-integration-spring -->
 			<dependency>
 				<groupId>org.ocpsoft.rewrite</groupId>
 				<artifactId>rewrite-integration-spring</artifactId>
 				<version>${ocpsoft.rewrite.version}</version>
 			</dependency>
 
-			<!-- https://mvnrepository.com/artifact/org.ocpsoft.rewrite/rewrite-impl -->
+			<!--
+			https://mvnrepository.com/artifact/org.ocpsoft.rewrite/rewrite-impl -->
 			<dependency>
 				<groupId>org.ocpsoft.rewrite</groupId>
 				<artifactId>rewrite-impl</artifactId>
@@ -241,15 +210,72 @@
 			</dependency>
 
 			<dependency>
+				<groupId>com.mysql</groupId>
+				<artifactId>mysql-connector-j</artifactId>
+				<version>${mysql.version}</version>
+			</dependency>
+
+			<!-- persistence -->
+			<dependency>
+				<groupId>org.hibernate.validator</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${org.hibernate.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>${javax.validation.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>jakarta.validation</groupId>
+				<artifactId>jakarta.validation-api</artifactId>
+				<version>${jakarta.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.annotation</groupId>
+				<artifactId>javax.annotation-api</artifactId>
+				<version>${javax.annotation.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>${servlet-api.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- mapper -->
+			<dependency>
+				<groupId>com.github.joschi.jackson</groupId>
+				<artifactId>jackson-datatype-threetenbp</artifactId>
+				<version>${jackson-datatype.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.openapitools</groupId>
 				<artifactId>jackson-databind-nullable</artifactId>
 				<version>${openapitools.version}</version>
 			</dependency>
 
 			<dependency>
-				<groupId>mysql</groupId>
-				<artifactId>mysql-connector-java</artifactId>
-				<version>${mysql.version}</version>
+				<groupId>fr.opensagres.xdocreport</groupId>
+				<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
+				<version>${opensagres.xdocreport.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>fr.opensagres.xdocreport</groupId>
+				<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
+				<version>${opensagres.xdocreport.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>fr.opensagres.xdocreport</groupId>
+				<artifactId>fr.opensagres.xdocreport.converter.odt.odfdom</artifactId>
+				<version>${opensagres.xdocreport.version}</version>
 			</dependency>
 
 		</dependencies>
@@ -259,6 +285,16 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
 		</dependency>
 	</dependencies>
 

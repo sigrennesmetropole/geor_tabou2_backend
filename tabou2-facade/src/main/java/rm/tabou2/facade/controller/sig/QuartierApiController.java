@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import rm.tabou2.facade.api.QuartiersApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.Quartier;
@@ -14,9 +14,7 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.sig.entity.QuartierEntity;
 import rm.tabou2.storage.sig.item.QuartierCriteria;
 
-import javax.validation.Valid;
-
-@Controller
+@RestController
 public class QuartierApiController implements QuartiersApi {
 
 
@@ -24,7 +22,7 @@ public class QuartierApiController implements QuartiersApi {
     private QuartierService quartierService;
 
     @Override
-    public ResponseEntity<PageResult> searchQuartiers(@Valid Integer codeInsee, @Valid Integer nuQuart, @Valid String nom, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchQuartiers(Integer codeInsee, Integer nuQuart, String nom, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, QuartierEntity.class);
 

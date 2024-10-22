@@ -2,7 +2,7 @@ package rm.tabou2.storage.tabou.entity.tiers;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @Entity

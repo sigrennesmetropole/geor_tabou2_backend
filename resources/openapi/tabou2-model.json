@@ -1,9 +1,8 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.3",
   "info": {
-    "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
-    "version": "0.0.1",
     "title": "tabou2",
+    "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "apiteam@swagger.io"
@@ -11,12 +10,13 @@
     "license": {
       "name": "Apache 2.0",
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    },
+    "version": "0.0.1"
   },
-  "host": "%host%",
-  "basePath": "/tabou2",
-  "schemes": [
-    "http"
+  "servers": [
+    {
+      "url": "http://%host%/tabou2"
+    }
   ],
   "tags": [
     {
@@ -24,2153 +24,2097 @@
       "description": "API de gestion des tiers"
     }
   ],
-  "paths": {
-  },
-  "definitions": {
-    "Generic": {
-      "type": "object",
-      "properties": {
-        "data": {
-          "type": "object"
+  "paths": {},
+  "components": {
+    "schemas": {
+      "Generic": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {}
+          }
         }
-      }
-    },
-    "ConfigurationApp": {
-      "type": "object",
-      "properties": {
-        "versionApp": {
-          "type": "string"
-        },
-        "comment": {
-          "type": "string"
+      },
+      "ConfigurationApp": {
+        "type": "object",
+        "properties": {
+          "versionApp": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          }
         }
-      }
-    },
-    "OperationV1": {
-      "description": "Opération d'amménagement",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identificateur unique. Clé primaire",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nature": {
-          "description": "Nature de l'opération : ZAC, ZA ou En diffus",
-          "type": "object",
-          "$ref": "#/definitions/Nature"
-        },
-        "vocation": {
-          "description": "Vocation de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/Vocation"
-        },
-        "decision": {
-          "description": "Décision de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/Decision"
-        },
-        "maitriseOuvrage": {
-          "description": "Maitrise d'ouvrage de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/MaitriseOuvrage"
-        },
-        "modeAmenagement": {
-          "description": "Mode d'aménagement de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/ModeAmenagement"
-        },
-        "outilAmenagement": {
-          "description": "Liste d'outil d'aménagement de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/OutilAmenagement"
-        },
-        "consommationEspace": {
-          "description": "Consommation d'espace de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/ConsommationEspace"
-        },
-        "etape": {
-          "description": "Indique l'étape d'avancement de l'opération ou du secteur",
-          "type": "object",
-          "$ref": "#/definitions/Etape"
-        },
-        "secteur": {
-          "description": "Indique que l'opération est un secteur",
-          "type": "boolean"
-        },
-        "diffusionRestreinte": {
-          "description": "Indique si l'opération est en diffusion restreinte (en off)",
-          "type": "boolean",
-          "default": false
-        },
-        "code": {
-          "description": "Code de l'opératin",
-          "type": "string"
-        },
-        "nom": {
-          "description": "Nom de l'opération",
-          "type": "string"
-        },
-        "operation": {
-          "description": "Description textuelle du programme de l'opération (nombre de logement, type habitat…)",
-          "type": "string"
-        },
-        "description": {
-          "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)",
-          "type": "string"
-        },
-        "idEmprise": {
-          "description": "Identifiant de l'emprise de l'opération",
-          "type": "integer",
-          "format": "int64"
-        },
-        "autorisationDate": {
-          "description": "Date d'autorisation (liée à un document d'urbanisme)",
-          "type": "string",
-          "format": "date"
-        },
-        "operationnelDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "livraisonDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "clotureDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "numAds": {
-          "description": " numéro d'autorisation des droits des sols",
-          "type": "string"
-        },
-        "surfaceTotale": {
-          "type": "number",
-          "format": "int64"
-        },
-        "nbLogementsPrevu": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "plhLogementsPrevus": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "plhLogementsLivres": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "ql1": {
-          "description": "Renouvellement ou en extension",
-          "type": "string"
-        },
-        "ql2": {
-          "description": "Compatible ou non avec le SCOT",
-          "type": "boolean"
-        },
-        "ql3": {
-          "description": "ZA productive = Structurante, pole tertiaire, proximité",
-          "type": "string"
-        },
-        "nbEntreprise": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "nbSalarie": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé l'entité",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout de l'entité",
-          "type": "string",
-          "format": "date"
-        },
-        "modifUser": {
-          "description": "Dernier utilisateur ayant modifié l'entité",
-          "type": "string"
-        },
-        "modifDate": {
-          "description": "Date de dernière modification de l'entité",
-          "type": "string",
-          "format": "date"
-        }
-      }
-    },
-    "Operation": {
-      "description": "Opération d'amménagement",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identificateur unique. Clé primaire",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nature": {
-          "description": "Nature de l'opération : ZAC, ZA ou En diffus",
-          "type": "object",
-          "$ref": "#/definitions/Nature"
-        },
-        "vocation": {
-          "description": "Vocation de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/Vocation"
-        },
-        "decision": {
-          "description": "Décision de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/Decision"
-        },
-        "maitriseOuvrage": {
-          "description": "Maitrise d'ouvrage de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/MaitriseOuvrage"
-        },
-        "modeAmenagement": {
-          "description": "Mode d'aménagement de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/ModeAmenagement"
-        },
-        "outilAmenagement": {
-          "description": "Outil d'aménagement de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/OutilAmenagement"
-        },
-        "consommationEspace": {
-          "description": "Consommation d'espace de l'opération",
-          "type": "object",
-          "$ref": "#/definitions/ConsommationEspace"
-        },
-        "etape": {
-          "description": "Indique l'étape d'avancement de l'opération ou du secteur",
-          "type": "object",
-          "$ref": "#/definitions/Etape"
-        },
-        "secteur": {
-          "description": "Indique que l'opération est un secteur",
-          "type": "boolean"
-        },
-        "diffusionRestreinte": {
-          "description": "Indique si l'opération est en diffusion restreinte (en off)",
-          "type": "boolean",
-          "default": false
-        },
-        "code": {
-          "description": "Code de l'opératin",
-          "type": "string"
-        },
-        "nom": {
-          "description": "Nom de l'opération",
-          "type": "string"
-        },
-        "operation": {
-          "description": "Description textuelle du programme de l'opération (nombre de logement, type habitat…)",
-          "type": "string"
-        },
-        "description": {
-          "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)",
-          "type": "string"
-        },
-        "idEmprise": {
-          "description": "Identifiant de l'emprise de l'opération",
-          "type": "integer",
-          "format": "int64"
-        },
-        "annulationDate": {
-          "description": "Date d'annulation",
-          "type": "string",
-          "format": "date"
-        },
-        "autorisationDate": {
-          "description": "Date d'autorisation (liée à un document d'urbanisme)",
-          "type": "string",
-          "format": "date"
-        },
-        "operationnelDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "livraisonDate": {
-          "description": "Date de réalisation",
-          "type": "string",
-          "format": "date"
-        },
-        "clotureDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "numAds": {
-          "description": " numéro d'autorisation des droits des sols",
-          "type": "string"
-        },
-        "surfaceTotale": {
-          "type": "number",
-          "format": "int64"
-        },
-        "nbLogementsPrevu": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "scot": {
-          "description": "Compatible ou non avec le SCOT",
-          "type": "boolean"
-        },
-        "densiteScot": {
-          "type": "number",
-          "format": "double"
-        },
-        "nbEntreprise": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "nbSalarie": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "plh": {
-          "type": "object",
-          "$ref": "#/definitions/Plh"
-        },
-        "entiteReferente": {
-          "type": "object",
-          "$ref": "#/definitions/EntiteReferente"
-        },
-        "objectifs": {
-          "type": "string"
-        },
-        "informationsProgrammation": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InformationProgrammation"
+      },
+      "OperationV1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificateur unique. Clé primaire",
+            "format": "int64"
+          },
+          "nature": {
+            "$ref": "#/components/schemas/Nature"
+          },
+          "vocation": {
+            "$ref": "#/components/schemas/Vocation"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "maitriseOuvrage": {
+            "$ref": "#/components/schemas/MaitriseOuvrage"
+          },
+          "modeAmenagement": {
+            "$ref": "#/components/schemas/ModeAmenagement"
+          },
+          "outilAmenagement": {
+            "$ref": "#/components/schemas/OutilAmenagement"
+          },
+          "consommationEspace": {
+            "$ref": "#/components/schemas/ConsommationEspace"
+          },
+          "etape": {
+            "$ref": "#/components/schemas/Etape"
+          },
+          "secteur": {
+            "type": "boolean",
+            "description": "Indique que l'opération est un secteur"
+          },
+          "diffusionRestreinte": {
+            "type": "boolean",
+            "description": "Indique si l'opération est en diffusion restreinte (en off)",
+            "default": false
+          },
+          "code": {
+            "type": "string",
+            "description": "Code de l'opératin"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom de l'opération"
+          },
+          "operation": {
+            "type": "string",
+            "description": "Description textuelle du programme de l'opération (nombre de logement, type habitat…)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)"
+          },
+          "idEmprise": {
+            "type": "integer",
+            "description": "Identifiant de l'emprise de l'opération",
+            "format": "int64"
+          },
+          "autorisationDate": {
+            "type": "string",
+            "description": "Date d'autorisation (liée à un document d'urbanisme)",
+            "format": "date"
+          },
+          "operationnelDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "livraisonDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "clotureDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "numAds": {
+            "type": "string",
+            "description": " numéro d'autorisation des droits des sols"
+          },
+          "surfaceTotale": {
+            "type": "number",
+            "format": "int64"
+          },
+          "nbLogementsPrevu": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "plhLogementsPrevus": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "plhLogementsLivres": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "ql1": {
+            "type": "string",
+            "description": "Renouvellement ou en extension"
+          },
+          "ql2": {
+            "type": "boolean",
+            "description": "Compatible ou non avec le SCOT"
+          },
+          "ql3": {
+            "type": "string",
+            "description": "ZA productive = Structurante, pole tertiaire, proximité"
+          },
+          "nbEntreprise": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nbSalarie": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé l'entité"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout de l'entité",
+            "format": "date"
+          },
+          "modifUser": {
+            "type": "string",
+            "description": "Dernier utilisateur ayant modifié l'entité"
+          },
+          "modifDate": {
+            "type": "string",
+            "description": "Date de dernière modification de l'entité",
+            "format": "date"
           }
         },
-        "vocationZa": {
-          "type": "object",
-          "$ref": "#/definitions/VocationZA"
-        },
-        "contributions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Contribution"
+        "description": "Opération d'amménagement"
+      },
+      "Operation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificateur unique. Clé primaire",
+            "format": "int64"
+          },
+          "nature": {
+            "$ref": "#/components/schemas/Nature"
+          },
+          "vocation": {
+            "$ref": "#/components/schemas/Vocation"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "maitriseOuvrage": {
+            "$ref": "#/components/schemas/MaitriseOuvrage"
+          },
+          "modeAmenagement": {
+            "$ref": "#/components/schemas/ModeAmenagement"
+          },
+          "outilAmenagement": {
+            "$ref": "#/components/schemas/OutilAmenagement"
+          },
+          "consommationEspace": {
+            "$ref": "#/components/schemas/ConsommationEspace"
+          },
+          "etape": {
+            "$ref": "#/components/schemas/Etape"
+          },
+          "secteur": {
+            "type": "boolean",
+            "description": "Indique que l'opération est un secteur"
+          },
+          "diffusionRestreinte": {
+            "type": "boolean",
+            "description": "Indique si l'opération est en diffusion restreinte (en off)",
+            "default": false
+          },
+          "code": {
+            "type": "string",
+            "description": "Code de l'opératin"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom de l'opération"
+          },
+          "operation": {
+            "type": "string",
+            "description": "Description textuelle du programme de l'opération (nombre de logement, type habitat…)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)"
+          },
+          "idEmprise": {
+            "type": "integer",
+            "description": "Identifiant de l'emprise de l'opération",
+            "format": "int64"
+          },
+          "annulationDate": {
+            "type": "string",
+            "description": "Date d'annulation",
+            "format": "date"
+          },
+          "autorisationDate": {
+            "type": "string",
+            "description": "Date d'autorisation (liée à un document d'urbanisme)",
+            "format": "date"
+          },
+          "operationnelDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "livraisonDate": {
+            "type": "string",
+            "description": "Date de réalisation",
+            "format": "date"
+          },
+          "clotureDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "numAds": {
+            "type": "string",
+            "description": " numéro d'autorisation des droits des sols"
+          },
+          "surfaceTotale": {
+            "type": "number",
+            "format": "int64"
+          },
+          "nbLogementsPrevu": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "scot": {
+            "type": "boolean",
+            "description": "Compatible ou non avec le SCOT"
+          },
+          "densiteScot": {
+            "type": "number",
+            "format": "double"
+          },
+          "nbEntreprise": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nbSalarie": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "plh": {
+            "$ref": "#/components/schemas/Plh"
+          },
+          "entiteReferente": {
+            "$ref": "#/components/schemas/EntiteReferente"
+          },
+          "objectifs": {
+            "type": "string"
+          },
+          "informationsProgrammation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InformationProgrammation"
+            }
+          },
+          "vocationZa": {
+            "$ref": "#/components/schemas/VocationZA"
+          },
+          "contributions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contribution"
+            }
+          },
+          "descriptionsFoncier": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DescriptionFoncier"
+            }
+          },
+          "pafTaux": {
+            "type": "number",
+            "format": "double"
+          },
+          "typeOccupation": {
+            "$ref": "#/components/schemas/TypeOccupation"
+          },
+          "outilFoncier": {
+            "$ref": "#/components/schemas/OutilFoncier"
+          },
+          "amenageurs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Amenageur"
+            }
+          },
+          "etude": {
+            "type": "string"
+          },
+          "localisation": {
+            "type": "string"
+          },
+          "usageActuel": {
+            "type": "string"
+          },
+          "avancementAdministratif": {
+            "type": "string"
+          },
+          "environnement": {
+            "type": "string"
+          },
+          "surfaceRealisee": {
+            "type": "number",
+            "format": "double"
+          },
+          "concertation": {
+            "$ref": "#/components/schemas/DescriptionConcertation"
+          },
+          "financements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DescriptionFinancementOperation"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionOperation"
+            }
+          },
+          "acteurs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Acteur"
+            }
+          },
+          "plui": {
+            "$ref": "#/components/schemas/Plui"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé l'entité"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout de l'entité",
+            "format": "date"
+          },
+          "modifUser": {
+            "type": "string",
+            "description": "Dernier utilisateur ayant modifié l'entité"
+          },
+          "modifDate": {
+            "type": "string",
+            "description": "Date de dernière modification de l'entité",
+            "format": "date"
+          },
+          "projetUrbain": {
+            "$ref": "#/components/schemas/ProjetUrbain"
           }
         },
-        "descriptionsFoncier": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DescriptionFoncier"
+        "description": "Opération d'amménagement"
+      },
+      "ProjetUrbain": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "chapeau": {
+            "type": "string"
+          },
+          "projet": {
+            "type": "string"
+          },
+          "actualites": {
+            "type": "string"
+          },
+          "savoir": {
+            "type": "string"
           }
         },
-        "pafTaux": {
-          "type": "number",
-          "format": "double"
-        },
-        "typeOccupation": {
-          "type": "object",
-          "$ref": "#/definitions/TypeOccupation"
-        },
-        "outilFoncier": {
-          "type": "object",
-          "$ref": "#/definitions/OutilFoncier"
-        },
-        "amenageurs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Amenageur"
+        "description": "Projet urbain"
+      },
+      "ProgrammeLight": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du programme",
+            "format": "int64"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom du programme"
+          },
+          "promoteur": {
+            "type": "string",
+            "description": "Nom du promoteur"
+          },
+          "logements": {
+            "type": "integer",
+            "description": "Nombre de logements",
+            "format": "int64"
+          },
+          "etape": {
+            "type": "string",
+            "description": "Etape du programme"
+          },
+          "dateAnnulation": {
+            "type": "string",
+            "description": "Date d'annulation de l'étape",
+            "format": "date"
+          },
+          "dateLiv": {
+            "type": "string",
+            "description": "Date de réalisation du programme",
+            "format": "date"
           }
         },
-        "etude": {
-          "type": "string"
-        },
-        "localisation": {
-          "type": "string"
-        },
-        "usageActuel": {
-          "type": "string"
-        },
-        "avancementAdministratif": {
-          "type": "string"
-        },
-        "environnement": {
-          "type": "string"
-        },
-        "surfaceRealisee": {
-          "type": "number",
-          "format": "double"
-        },
-        "concertation": {
-          "type": "object",
-          "$ref": "#/definitions/DescriptionConcertation"
-        },
-        "financements": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DescriptionFinancementOperation"
+        "description": ""
+      },
+      "Programme": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificateur unique. Clé primaire",
+            "format": "int64"
+          },
+          "etape": {
+            "$ref": "#/components/schemas/Etape"
+          },
+          "operationId": {
+            "type": "integer",
+            "description": "Identifiant de l'opération",
+            "format": "int64"
+          },
+          "diffusionRestreinte": {
+            "type": "boolean",
+            "description": "Indique si le programme est en diffusion restreinte (en off)e"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du programme (celui du plan guide)"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom du programme (celui donné par le promoteur)"
+          },
+          "programme": {
+            "type": "string",
+            "description": "Description du programme (nombre de logement, type habitat…)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description du programme pour des besoins de la communication (par ex: Panorama des ZAC)"
+          },
+          "idEmprise": {
+            "type": "integer",
+            "description": "Identifiant de l'emprise du programme",
+            "format": "int32"
+          },
+          "attributionFonciereAnnee": {
+            "type": "integer",
+            "description": "Année de l'attribution foncière",
+            "format": "int32"
+          },
+          "attributionDate": {
+            "type": "string",
+            "description": "Date d'attribution du programme au promoteur",
+            "format": "date"
+          },
+          "commercialisationDate": {
+            "type": "string",
+            "description": "Date de lancement de la commercialisation",
+            "format": "date"
+          },
+          "adsDate": {
+            "type": "string",
+            "description": "Date adsDate",
+            "format": "date"
+          },
+          "annulationDate": {
+            "type": "string",
+            "description": "Date d'annulation",
+            "format": "date"
+          },
+          "livraisonDate": {
+            "type": "string",
+            "description": "Date de réalisation",
+            "format": "date"
+          },
+          "docDate": {
+            "type": "string",
+            "description": "Date d'ouverture de chantier",
+            "format": "date"
+          },
+          "datDate": {
+            "type": "string",
+            "description": "tDate d’achèvement de travaux",
+            "format": "date"
+          },
+          "adsDatePrevu": {
+            "type": "string",
+            "description": "Date adsDate prévue",
+            "format": "date"
+          },
+          "docDatePrevu": {
+            "type": "string",
+            "description": "Date d'ouverture de chantier prévue",
+            "format": "date"
+          },
+          "datDatePrevu": {
+            "type": "string",
+            "description": "Date d’achèvement de travaux prévue",
+            "format": "date"
+          },
+          "clotureDate": {
+            "type": "string",
+            "description": "Date de clôture",
+            "format": "date"
+          },
+          "logementsTotal": {
+            "type": "integer",
+            "description": "Nombre de logements total (prévu, jusqu'à l'étape de livraison, livré ensuite)",
+            "format": "int32"
+          },
+          "logementsAccessMaitrise": {
+            "type": "integer",
+            "description": "Nombre de logements en accession maitrisée",
+            "format": "int32"
+          },
+          "logementsLocatifRegulePrive": {
+            "type": "integer",
+            "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
+            "format": "int32"
+          },
+          "logementsLocatifReguleHLM": {
+            "type": "integer",
+            "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
+            "format": "int32"
+          },
+          "logementsAccessAide": {
+            "type": "integer",
+            "description": "Nombre de logements en accession sociale (PSLA, OFS-BRS)",
+            "format": "int32"
+          },
+          "logementsLocatifAide": {
+            "type": "integer",
+            "description": "Nombre de logements en locatif social (PLUS, PLAI)",
+            "format": "int32"
+          },
+          "logementsAccessAidePrevu": {
+            "type": "integer",
+            "description": "Nombre de logements en accession sociale (PSLA, OFS-BRS) prévu",
+            "format": "int32"
+          },
+          "logementsLocatifAidePrevu": {
+            "type": "integer",
+            "description": "Nombre de logements en locatif social (PLUS, PLAI) prévu",
+            "format": "int32"
+          },
+          "logementsLocatifRegulePrivePrevu": {
+            "type": "integer",
+            "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit) prévu",
+            "format": "int32"
+          },
+          "logementsLocatifReguleHlmPrevu": {
+            "type": "integer",
+            "description": "Nombre de logements en PLS institutionnel (PLS HLM) prévu",
+            "format": "int32"
+          },
+          "logementsAccessMaitrisePrevu": {
+            "type": "integer",
+            "description": "Nombre de logements en accession maitrisée prévu",
+            "format": "int32"
+          },
+          "logementsAccessLibrePrevu": {
+            "type": "integer",
+            "description": "Nombre de logements en accession libre prévu",
+            "format": "int32"
+          },
+          "surfaceSHAB": {
+            "type": "number",
+            "description": "Surface SHAB en metre carré",
+            "format": "double"
+          },
+          "numAds": {
+            "type": "string",
+            "description": "Numéro du permis de construire"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le programme"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du programme",
+            "format": "date"
+          },
+          "modifUser": {
+            "type": "string",
+            "description": "Dernier utilisateur ayant modifié le programme"
+          },
+          "modifDate": {
+            "type": "string",
+            "description": "Date de dernière modification du programme",
+            "format": "date"
+          }
+        }
+      },
+      "TiersTypeTiers": {
+        "type": "object",
+        "properties": {
+          "typeTiersId": {
+            "type": "integer",
+            "description": "Identifiant du type de tiers",
+            "format": "int64"
+          },
+          "tiersId": {
+            "type": "integer",
+            "description": "Identifiant du tiers",
+            "format": "int64"
           }
         },
-        "actions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ActionOperation"
+        "description": ""
+      },
+      "AssociationTiersTypeTiers": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de la jointure entité opération ou programme - tiers - type tiers",
+            "format": "int64"
+          },
+          "typeTiers": {
+            "$ref": "#/components/schemas/TypeTiers"
+          },
+          "tiers": {
+            "$ref": "#/components/schemas/Tiers"
           }
         },
-        "acteurs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Acteur"
+        "description": ""
+      },
+      "Evenement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifant de l'évènement",
+            "format": "int64"
+          },
+          "eventDate": {
+            "type": "string",
+            "description": "Date de l'évènement",
+            "format": "date"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de l'évènement"
+          },
+          "systeme": {
+            "type": "boolean",
+            "description": "Indique si l'évènement est de type système ou non"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé l'évènement"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date création de l'évènement",
+            "format": "date"
+          },
+          "modifUser": {
+            "type": "string",
+            "description": "Dernier utilisateur ayant modifié l'évènement"
+          },
+          "modifDate": {
+            "type": "string",
+            "description": "Date de dernière modification de l'évènement",
+            "format": "date"
+          },
+          "typeEvenement": {
+            "$ref": "#/components/schemas/TypeEvenement"
           }
         },
-        "plui": {
-          "type": "object",
-          "$ref": "#/definitions/Plui"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé l'entité",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout de l'entité",
-          "type": "string",
-          "format": "date"
-        },
-        "modifUser": {
-          "description": "Dernier utilisateur ayant modifié l'entité",
-          "type": "string"
-        },
-        "modifDate": {
-          "description": "Date de dernière modification de l'entité",
-          "type": "string",
-          "format": "date"
-        },
-        "projetUrbain": {
-          "description": "Projet urbain de l'opération",
-          "$ref": "#/definitions/ProjetUrbain"
+        "description": "Liste des évènements : système et utilisateur"
+      },
+      "TypeEvenement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique du type d'évènement",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du type de document"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type de document",
+            "format": "date"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code unique d'un type de document"
+          },
+          "systeme": {
+            "type": "boolean",
+            "description": "Indique si le type d'évènement est de type système ou non"
+          }
         }
-      }
-    },
-    "ProjetUrbain": {
-      "type": "object",
-      "description": "Projet urbain",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "title": {
-          "type": "string"
-        },
-        "chapeau": {
-          "type": "string"
-        },
-        "projet": {
-          "type": "string"
-        },
-        "actualites": {
-          "type": "string"
-        },
-        "savoir": {
-          "type": "string"
+      },
+      "Commune": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifant de la commune",
+            "format": "int32"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom de la commune"
+          },
+          "codeInsee": {
+            "type": "integer",
+            "description": "Code Insee de la commune"
+          }
         }
-      }
-    },
-    "ProgrammeLight": {
-      "type": "object",
-      "description": "",
-      "properties": {
-        "id": {
-          "description": "Identifiant du programme",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nom": {
-          "description": "Nom du programme",
-          "type": "string"
-        },
-        "promoteur": {
-          "description": "Nom du promoteur",
-          "type": "string"
-        },
-        "logements": {
-          "description": "Nombre de logements",
-          "type": "integer",
-          "format": "int64"
-        },
-        "etape": {
-          "description": "Etape du programme",
-          "type": "string"
-        },
-        "dateAnnulation": {
-          "description": "Date d'annulation de l'étape",
-          "type": "string",
-          "format": "date"
-        },
-        "dateLiv": {
-          "description": "Date de réalisation du programme",
-          "type": "string",
-          "format": "date"
+      },
+      "Iris": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique",
+            "format": "int32"
+          },
+          "ccom": {
+            "type": "string",
+            "description": "Code insee de l'iris"
+          },
+          "codeIris": {
+            "type": "string",
+            "description": "Code l'IRIS"
+          },
+          "nmiris": {
+            "type": "string",
+            "description": "Nom de l'iris"
+          }
         }
-      }
-    },
-    "Programme": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identificateur unique. Clé primaire",
-          "type": "integer",
-          "format": "int64"
-        },
-        "etape": {
-          "description": "Indique l'étape d'avancement du programme",
-          "type": "object",
-          "$ref": "#/definitions/Etape"
-        },
-        "operationId": {
-          "description": "Identifiant de l'opération",
-          "type": "integer",
-          "format": "int64"
-        },
-        "diffusionRestreinte": {
-          "description": "Indique si le programme est en diffusion restreinte (en off)e",
-          "type": "boolean"
-        },
-        "code": {
-          "description": "Code du programme (celui du plan guide)",
-          "type": "string"
-        },
-        "nom": {
-          "description": "Nom du programme (celui donné par le promoteur)",
-          "type": "string"
-        },
-        "programme": {
-          "description": "Description du programme (nombre de logement, type habitat…)",
-          "type": "string"
-        },
-        "description": {
-          "description": "Description du programme pour des besoins de la communication (par ex: Panorama des ZAC)",
-          "type": "string"
-        },
-        "idEmprise": {
-          "description": "Identifiant de l'emprise du programme",
-          "type": "integer",
-          "format": "int32"
-        },
-        "attributionFonciereAnnee": {
-          "description": "Année de l'attribution foncière",
-          "type": "integer",
-          "format": "int32"
-        },
-        "attributionDate": {
-          "description": "Date d'attribution du programme au promoteur",
-          "type": "string",
-          "format": "date"
-        },
-        "commercialisationDate": {
-          "description": "Date de lancement de la commercialisation",
-          "type": "string",
-          "format": "date"
-        },
-        "adsDate": {
-          "description": "Date adsDate",
-          "type": "string",
-          "format": "date"
-        },
-        "annulationDate": {
-          "description": "Date d'annulation",
-          "type": "string",
-          "format": "date"
-        },
-        "livraisonDate": {
-          "description": "Date de réalisation",
-          "type": "string",
-          "format": "date"
-        },
-        "docDate": {
-          "description": "Date d'ouverture de chantier",
-          "type": "string",
-          "format": "date"
-        },
-        "datDate": {
-          "description": "tDate d’achèvement de travaux",
-          "type": "string",
-          "format": "date"
-        },
-        "adsDatePrevu": {
-          "description": "Date adsDate prévue",
-          "type": "string",
-          "format": "date"
-        },
-        "docDatePrevu": {
-          "description": "Date d'ouverture de chantier prévue",
-          "type": "string",
-          "format": "date"
-        },
-        "datDatePrevu": {
-          "description": "Date d’achèvement de travaux prévue",
-          "type": "string",
-          "format": "date"
-        },
-        "clotureDate": {
-          "description": "Date de clôture",
-          "type": "string",
-          "format": "date"
-        },
-        "logementsTotal": {
-          "description": "Nombre de logements total (prévu, jusqu'à l'étape de livraison, livré ensuite)",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsAccessMaitrise": {
-          "description": "Nombre de logements en accession maitrisée",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsLocatifRegulePrive": {
-          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsLocatifReguleHLM": {
-          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsAccessAide": {
-          "description": "Nombre de logements en accession sociale (PSLA, OFS-BRS)",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsLocatifAide": {
-          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsAccessAidePrevu": {
-          "description": "Nombre de logements en accession sociale (PSLA, OFS-BRS) prévu",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsLocatifAidePrevu": {
-          "description": "Nombre de logements en locatif social (PLUS, PLAI) prévu",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsLocatifRegulePrivePrevu": {
-          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit) prévu",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsLocatifReguleHlmPrevu": {
-          "description": "Nombre de logements en PLS institutionnel (PLS HLM) prévu",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsAccessMaitrisePrevu": {
-          "description": "Nombre de logements en accession maitrisée prévu",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsAccessLibrePrevu": {
-          "description": "Nombre de logements en accession libre prévu",
-          "type": "integer",
-          "format": "int32"
-        },
-        "surfaceSHAB": {
-          "description": "Surface SHAB en metre carré",
-          "type": "number",
-          "format": "double"
-        },
-        "numAds": {
-          "description": "Numéro du permis de construire",
-          "type": "string"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le programme",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du programme",
-          "type": "string",
-          "format": "date"
-        },
-        "modifUser": {
-          "description": "Dernier utilisateur ayant modifié le programme",
-          "type": "string"
-        },
-        "modifDate": {
-          "description": "Date de dernière modification du programme",
-          "type": "string",
-          "format": "date"
+      },
+      "Quartier": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique",
+            "format": "int32"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom du quartier"
+          },
+          "nuQuart": {
+            "type": "number",
+            "description": ""
+          },
+          "codeInsee": {
+            "type": "number",
+            "description": "Code insee"
+          }
         }
-      }
-    },
-    "TiersTypeTiers": {
-      "type": "object",
-      "description": "",
-      "properties": {
-        "typeTiersId": {
-          "description": "Identifiant du type de tiers",
-          "type": "integer",
-          "format": "int64"
-        },
-        "tiersId": {
-          "description": "Identifiant du tiers",
-          "type": "integer",
-          "format": "int64"
+      },
+      "PluiZonage": {
+        "type": "object",
+        "properties": {
+          "libelle": {
+            "type": "string",
+            "description": "Nom du zonage PLUi"
+          }
         }
-      }
-    },
-    "AssociationTiersTypeTiers": {
-      "type": "object",
-      "description": "",
-      "properties": {
-        "id": {
-          "description": "Identifiant de la jointure entité opération ou programme - tiers - type tiers",
-          "type": "integer",
-          "format": "int64"
-        },
-        "typeTiers": {
-          "description": "Type de tiers",
-          "$ref": "#/definitions/TypeTiers"
-        },
-        "tiers": {
-          "description": "Tiers",
-          "$ref": "#/definitions/Tiers"
+      },
+      "Tiers": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificateur unique. Clé primaire",
+            "format": "int64"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom du tiers (raison sociale)"
+          },
+          "adresse": {
+            "type": "string",
+            "description": "Adresse du tiers"
+          },
+          "adresseRue": {
+            "type": "string",
+            "description": "Champ temporaire équivalent à adresse du tiers pour maintenir les accès tiers depuis programme et opérations valides"
+          },
+          "adresseCp": {
+            "type": "string",
+            "description": "Code postal de l'adresse du tiers"
+          },
+          "adresseVille": {
+            "type": "string",
+            "description": "Ville du tiers"
+          },
+          "telephone": {
+            "type": "string",
+            "description": "Numéro de téléphone du tiers"
+          },
+          "telecopie": {
+            "type": "string",
+            "description": "Numéro de télécopie du tiers"
+          },
+          "email": {
+            "type": "string",
+            "description": "Adresse email du tiers"
+          },
+          "siteWeb": {
+            "type": "string",
+            "description": "Site Web du tiers"
+          },
+          "estPrive": {
+            "type": "boolean",
+            "description": "True si le tiers est un privé, false si société"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du tiers",
+            "format": "date"
+          }
         }
-      }
-    },
-    "Evenement": {
-      "type": "object",
-      "description": "Liste des évènements : système et utilisateur",
-      "properties": {
-        "id": {
-          "description": "Identifant de l'évènement",
-          "type": "integer",
-          "format": "int64"
-        },
-        "eventDate": {
-          "description": "Date de l'évènement",
-          "type": "string",
-          "format": "date"
-        },
-        "description": {
-          "description": "Description de l'évènement",
-          "type": "string"
-        },
-        "systeme": {
-          "description": "Indique si l'évènement est de type système ou non",
-          "type": "boolean"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé l'évènement",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date création de l'évènement",
-          "type": "string",
-          "format": "date"
-        },
-        "modifUser": {
-          "description": "Dernier utilisateur ayant modifié l'évènement",
-          "type": "string"
-        },
-        "modifDate": {
-          "description": "Date de dernière modification de l'évènement",
-          "type": "string",
-          "format": "date"
-        },
-        "typeEvenement": {
-          "description": "Type de l'évènement",
-          "type": "object",
-          "$ref": "#/definitions/TypeEvenement"
+      },
+      "TiersV1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificateur unique. Clé primaire",
+            "format": "int64"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom du tiers (raison sociale)"
+          },
+          "adresseNum": {
+            "type": "string",
+            "description": "Numéro de rue de l'adresse du tiers"
+          },
+          "adresseRue": {
+            "type": "string",
+            "description": "Nom de la rue de l'adresse du tiers"
+          },
+          "adresseCp": {
+            "type": "string",
+            "description": "Code postal de l'adresse du tiers"
+          },
+          "adresseVille": {
+            "type": "string",
+            "description": "Ville du tiers"
+          },
+          "telephone": {
+            "type": "string",
+            "description": "Numéro de téléphone du tiers"
+          },
+          "telecopie": {
+            "type": "string",
+            "description": "Numéro de télécopie du tiers"
+          },
+          "email": {
+            "type": "string",
+            "description": "Adresse email du tiers"
+          },
+          "siteWeb": {
+            "type": "string",
+            "description": "Site Web du tiers"
+          },
+          "contact": {
+            "type": "string",
+            "description": "Nom du contact"
+          },
+          "estPrive": {
+            "type": "boolean",
+            "description": "True si le tiers est un privé, false si société"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du tiers",
+            "format": "date"
+          }
         }
-      }
-    },
-    "TypeEvenement": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique du type d'évènement",
-          "type": "integer",
-          "format": "int64"
+      },
+      "TiersAmenagement": {
+        "type": "object",
+        "properties": {
+          "nom": {
+            "type": "string",
+            "description": "Nom du tiers (raison sociale)"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du type de tiers associé"
+          }
         },
-        "libelle": {
-          "description": "Libellé du type de document",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type de document",
-          "type": "string",
-          "format": "date"
-        },
-        "code": {
-          "description": "Code unique d'un type de document",
-          "type": "string"
-        },
-        "systeme": {
-          "description": "Indique si le type d'évènement est de type système ou non",
-          "type": "boolean"
+        "description": "Tiers d'un programme ou d'une opération d'aménagement"
+      },
+      "TypeTiers": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique du type de tiers",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du type de tiers"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type tiers"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du type tiers",
+            "format": "date"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type de document",
+            "format": "date"
+          }
         }
-      }
-    },
-    "Commune": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifant de la commune",
-          "type": "integer",
-          "format": "int32"
-        },
-        "nom": {
-          "description": "Nom de la commune",
-          "type": "string"
-        },
-        "codeInsee": {
-          "description": "Code Insee de la commune",
-          "type": "integer"
+      },
+      "FonctionContacts": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificateur unique. Clé primaire",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Référence unique de la fonction"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé de la fonction"
+          }
         }
-      }
-    },
-    "Iris": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique",
-          "type": "integer",
-          "format": "int32"
-        },
-        "ccom": {
-          "description": "Code insee de l'iris",
-          "type": "string"
-        },
-        "codeIris": {
-          "description": "Code l'IRIS",
-          "type": "string"
-        },
-        "nmiris": {
-          "description": "Nom de l'iris",
-          "type": "string"
+      },
+      "ContactTiers": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique du contact",
+            "format": "int64"
+          },
+          "fonctionContact": {
+            "$ref": "#/components/schemas/FonctionContacts"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom du contact"
+          },
+          "prenom": {
+            "type": "string",
+            "description": "Prénom du contact"
+          },
+          "service": {
+            "type": "string",
+            "description": "Service du contact"
+          },
+          "adresse": {
+            "type": "string",
+            "description": "Adresse du contact"
+          },
+          "adresseCp": {
+            "type": "string",
+            "description": "Code postal de l'adresse du contact"
+          },
+          "adresseVille": {
+            "type": "string",
+            "description": "Ville de l'adresse du contact"
+          },
+          "telecopie": {
+            "type": "string",
+            "description": "Numéro de télécopie du contact"
+          },
+          "telephone": {
+            "type": "string",
+            "description": "Numéro de téléphone du contact"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email du contact"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date d'inactivité du contact",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le contact"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date création du contact",
+            "format": "date"
+          },
+          "modifUser": {
+            "type": "string",
+            "description": "Dernier utilisateur ayant modifié le contact"
+          },
+          "modifDate": {
+            "type": "string",
+            "description": "Date de dernière modification du contact",
+            "format": "date"
+          }
         }
-      }
-    },
-    "Quartier": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique",
-          "type": "integer",
-          "format": "int32"
-        },
-        "nom": {
-          "description": "Nom du quartier",
-          "type": "string"
-        },
-        "nuQuart": {
-          "description": "",
-          "type": "number"
-        },
-        "codeInsee": {
-          "description": "Code insee",
-          "type": "number"
+      },
+      "SecteurDds": {
+        "type": "object",
+        "properties": {
+          "secteur": {
+            "type": "string",
+            "description": "Nom du secteur"
+          }
         }
-      }
-    },
-    "PluiZonage": {
-      "type": "object",
-      "properties": {
-        "libelle": {
-          "description": "Nom du zonage PLUi",
-          "type": "string"
+      },
+      "SecteurSam": {
+        "type": "object",
+        "properties": {
+          "nomSecteur": {
+            "type": "string",
+            "description": "Nom du secteur"
+          }
         }
-      }
-    },
-    "Tiers": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identificateur unique. Clé primaire",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nom": {
-          "description": "Nom du tiers (raison sociale)",
-          "type": "string"
-        },
-        "adresse": {
-          "description": "Adresse du tiers",
-          "type": "string"
-        },
-        "adresseRue": {
-          "description": "Champ temporaire équivalent à adresse du tiers pour maintenir les accès tiers depuis programme et opérations valides",
-          "type": "string"
-        },
-        "adresseCp": {
-          "description": "Code postal de l'adresse du tiers",
-          "type": "string"
-        },
-        "adresseVille": {
-          "description": "Ville du tiers",
-          "type": "string"
-        },
-        "telephone": {
-          "description": "Numéro de téléphone du tiers",
-          "type": "string"
-        },
-        "telecopie": {
-          "description": "Numéro de télécopie du tiers",
-          "type": "string"
-        },
-        "email": {
-          "description": "Adresse email du tiers",
-          "type": "string"
-        },
-        "siteWeb": {
-          "description": "Site Web du tiers",
-          "type": "string"
-        },
-        "estPrive": {
-          "description": "True si le tiers est un privé, false si société",
-          "type": "boolean"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du tiers",
-          "type": "string",
-          "format": "date"
+      },
+      "SecteurSpeu": {
+        "type": "object",
+        "properties": {
+          "numSecteur": {
+            "type": "integer",
+            "description": "Numero du secteur"
+          },
+          "nomSecteur": {
+            "type": "string",
+            "description": "Nom du secteur"
+          }
         }
-      }
-    },
-    "TiersV1": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identificateur unique. Clé primaire",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nom": {
-          "description": "Nom du tiers (raison sociale)",
-          "type": "string"
-        },
-        "adresseNum": {
-          "description": "Numéro de rue de l'adresse du tiers",
-          "type": "string"
-        },
-        "adresseRue": {
-          "description": "Nom de la rue de l'adresse du tiers",
-          "type": "string"
-        },
-        "adresseCp": {
-          "description": "Code postal de l'adresse du tiers",
-          "type": "string"
-        },
-        "adresseVille": {
-          "description": "Ville du tiers",
-          "type": "string"
-        },
-        "telephone": {
-          "description": "Numéro de téléphone du tiers",
-          "type": "string"
-        },
-        "telecopie": {
-          "description": "Numéro de télécopie du tiers",
-          "type": "string"
-        },
-        "email": {
-          "description": "Adresse email du tiers",
-          "type": "string"
-        },
-        "siteWeb": {
-          "description": "Site Web du tiers",
-          "type": "string"
-        },
-        "contact": {
-          "description": "Nom du contact",
-          "type": "string"
-        },
-        "estPrive": {
-          "description": "True si le tiers est un privé, false si société",
-          "type": "boolean"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du tiers",
-          "type": "string",
-          "format": "date"
+      },
+      "SecteurFoncier": {
+        "type": "object",
+        "properties": {
+          "negociateur": {
+            "type": "string",
+            "description": "Nom du secteur"
+          }
         }
-      }
-    },
-    "TiersAmenagement": {
-      "type": "object",
-      "description": "Tiers d'un programme ou d'une opération d'aménagement",
-      "properties": {
-        "nom": {
-          "description": "Nom du tiers (raison sociale)",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libellé du type de tiers associé",
-          "type": "string"
+      },
+      "SecteurHabitat": {
+        "type": "object",
+        "properties": {
+          "nom": {
+            "type": "string",
+            "description": "Non du secteur"
+          }
         }
-      }
-    },
-    "TypeTiers": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique du type de tiers",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Libellé du type de tiers",
-          "type": "string"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type tiers",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du type tiers",
-          "type": "string",
-          "format": "date"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type de document",
-          "type": "string",
-          "format": "date"
+      },
+      "EtapeRestricted": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificateur unique. Clé primaire",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé de l'étape "
+          },
+          "code": {
+            "type": "string",
+            "description": "Identifiant unique pour l'étape"
+          }
         }
-      }
-    },
-    "FonctionContacts": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identificateur unique. Clé primaire",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Référence unique de la fonction",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libellé de la fonction",
-          "type": "string"
-        }
-      }
-    },
-    "ContactTiers": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique du contact",
-          "type": "integer",
-          "format": "int64"
-        },
-        "fonctionContact": {
-          "description": "Fonction du contact",
-          "type": "object",
-          "$ref": "#/definitions/FonctionContacts"
-        },
-        "nom": {
-          "description": "Nom du contact",
-          "type": "string"
-        },
-        "prenom": {
-          "description": "Prénom du contact",
-          "type": "string"
-        },
-        "service": {
-          "description": "Service du contact",
-          "type": "string"
-        },
-        "adresse": {
-          "description": "Adresse du contact",
-          "type": "string"
-        },
-        "adresseCp": {
-          "description": "Code postal de l'adresse du contact",
-          "type": "string"
-        },
-        "adresseVille": {
-          "description": "Ville de l'adresse du contact",
-          "type": "string"
-        },
-        "telecopie": {
-          "description": "Numéro de télécopie du contact",
-          "type": "string"
-        },
-        "telephone": {
-          "description": "Numéro de téléphone du contact",
-          "type": "string"
-        },
-        "email": {
-          "description": "Email du contact",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date d'inactivité du contact",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le contact",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date création du contact",
-          "type": "string",
-          "format": "date"
-        },
-        "modifUser": {
-          "description": "Dernier utilisateur ayant modifié le contact",
-          "type": "string"
-        },
-        "modifDate": {
-          "description": "Date de dernière modification du contact",
-          "type": "string",
-          "format": "date"
-        }
-      }
-    },
-    "SecteurDds": {
-      "type": "object",
-      "properties": {
-        "secteur": {
-          "description": "Nom du secteur",
-          "type": "string"
-        }
-      }
-    },
-    "SecteurSam": {
-      "type": "object",
-      "properties": {
-        "nomSecteur": {
-          "description": "Nom du secteur",
-          "type": "string"
-        }
-      }
-    },
-    "SecteurSpeu": {
-      "type": "object",
-      "properties": {
-        "numSecteur": {
-          "description": "Numero du secteur",
-          "type": "integer"
-        },
-        "nomSecteur": {
-          "description": "Nom du secteur",
-          "type": "string"
-        }
-      }
-    },
-    "SecteurFoncier": {
-      "type": "object",
-      "properties": {
-        "negociateur": {
-          "description": "Nom du secteur",
-          "type": "string"
-        }
-      }
-    },
-    "SecteurHabitat": {
-      "type": "object",
-      "properties": {
-        "nom": {
-          "description": "Non du secteur",
-          "type": "string"
-        }
-      }
-    },
-    "EtapeRestricted": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identificateur unique. Clé primaire",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Libellé de l'étape ",
-          "type": "string"
-        },
-        "code": {
-          "description": "Identifiant unique pour l'étape",
-          "type": "string"
-        }
-      }
-    },
-    "Etape": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/EtapeRestricted"
-        },
-        {
-          "properties": {
-            "type": {
-              "description": "Indicateur permettant de savoir s'il s'agit de l'étape initiale, finale ou intermédiaire",
-              "type": "string",
-              "enum": [
-                "START",
-                "NORMAL",
-                "END"
-              ]
-            },
-            "mode": {
-              "description": "Indicateur permettant de savoir si l'étape est visible en mode off ou publique",
-              "type": "string",
-              "enum": [
-                "OFF",
-                "PUBLIC",
-                "NONE"
-              ]
+      },
+      "Etape": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/EtapeRestricted"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Indicateur permettant de savoir s'il s'agit de l'étape initiale, finale ou intermédiaire",
+                "enum": [
+                  "START",
+                  "NORMAL",
+                  "END"
+                ]
+              },
+              "mode": {
+                "type": "string",
+                "description": "Indicateur permettant de savoir si l'étape est visible en mode off ou publique",
+                "enum": [
+                  "OFF",
+                  "PUBLIC",
+                  "NONE"
+                ]
+              }
             }
           }
+        ]
+      },
+      "TypeDocument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique du type de document",
+            "format": "int64"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom du document"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du type document"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type de document",
+            "format": "date"
+          }
         }
-      ]
-    },
-    "TypeDocument": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique du type de document",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nom": {
-          "description": "Nom du document",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libellé du type document",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type de document",
-          "type": "string",
-          "format": "date"
+      },
+      "DocumentMetadata": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Identifiant unique du document"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom du document"
+          },
+          "libelleTypeDocument": {
+            "type": "string",
+            "description": "Libellé du type de document"
+          },
+          "dateDocument": {
+            "type": "string",
+            "description": "Date du document",
+            "format": "date"
+          },
+          "typeMime": {
+            "type": "string",
+            "description": "Type MIME du document"
+          },
+          "modifUser": {
+            "type": "string",
+            "description": "Utilisateur ayant effectué la dernière modification du document"
+          },
+          "modifDate": {
+            "type": "string",
+            "description": "Date de dernière modification du document"
+          }
         }
-      }
-    },
-    "DocumentMetadata": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique du document",
-          "type": "string"
-        },
-        "nom": {
-          "description": "Nom du document",
-          "type": "string"
-        },
-        "libelleTypeDocument": {
-          "description": "Libellé du type de document",
-          "type": "string"
-        },
-        "dateDocument": {
-          "description": "Date du document",
-          "type": "string",
-          "format": "date"
-        },
-        "typeMime": {
-          "description": "Type MIME du document",
-          "type": "string"
-        },
-        "modifUser": {
-          "description": "Utilisateur ayant effectué la dernière modification du document",
-          "type": "string"
-        },
-        "modifDate": {
-          "description": "Date de dernière modification du document",
-          "type": "string"
+      },
+      "Nature": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique de la nature",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Description de la nature"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité de la nature",
+            "format": "date"
+          }
         }
-      }
-    },
-    "Nature": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique de la nature",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Description de la nature",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité de la nature",
-          "type": "string",
-          "format": "date"
+      },
+      "Vocation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique de la vocation",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Description de la vocation"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code de la vocation"
+          }
         }
-      }
-    },
-    "Vocation": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique de la vocation",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Description de la vocation",
-          "type": "string"
-        },
-        "code": {
-          "description": "Code de la vocation",
-          "type": "string"
+      },
+      "Decision": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique de la décision",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Description de la décision"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code de la décision"
+          }
         }
-      }
-    },
-    "Decision": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique de la décision",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Description de la décision",
-          "type": "string"
-        },
-        "code": {
-          "description": "Code de la décision",
-          "type": "string"
+      },
+      "MaitriseOuvrage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique de la maitrise d'ouvrage",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Description de la maitrise d'ouvrage"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code de la maitrise d'ouvrage"
+          }
         }
-      }
-    },
-    "MaitriseOuvrage": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique de la maitrise d'ouvrage",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Description de la maitrise d'ouvrage",
-          "type": "string"
-        },
-        "code": {
-          "description": "Code de la maitrise d'ouvrage",
-          "type": "string"
+      },
+      "ModeAmenagement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique du mode d'aménagement",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Description du mode d'aménagement"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du mode d'aménagement"
+          }
         }
-      }
-    },
-    "ModeAmenagement": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique du mode d'aménagement",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Description du mode d'aménagement",
-          "type": "string"
-        },
-        "code": {
-          "description": "Code du mode d'aménagement",
-          "type": "string"
+      },
+      "OutilAmenagement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique de l'outil d'aménagement",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Description de l'outil d'aménagement"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code de l'outil d'aménagement"
+          }
         }
-      }
-    },
-    "OutilAmenagement": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique de l'outil d'aménagement",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Description de l'outil d'aménagement",
-          "type": "string"
-        },
-        "code": {
-          "description": "Code de l'outil d'aménagement",
-          "type": "string"
+      },
+      "ConsommationEspace": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique de la consommation d'espace",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Description de la consommation d'espace"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code de la consommation d'espace"
+          }
         }
-      }
-    },
-    "ConsommationEspace": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique de la consommation d'espace",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Description de la consommation d'espace",
-          "type": "string"
-        },
-        "code": {
-          "description": "Code de la consommation d'espace",
-          "type": "string"
+      },
+      "PermisConstruire": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique du permis",
+            "format": "int64"
+          },
+          "numAds": {
+            "type": "string",
+            "description": "Numero du permis de constuire avec sa version"
+          },
+          "demandeur": {
+            "type": "string",
+            "description": "Demandeur du permis de construire"
+          },
+          "parcelles": {
+            "type": "string",
+            "description": "Parcelles du permis de construire"
+          },
+          "decisionDossier": {
+            "type": "string",
+            "description": "Décision du dossier"
+          },
+          "depotDossier": {
+            "type": "string",
+            "description": "Date de dépot du permis de constuire",
+            "format": "date"
+          },
+          "dateCompletudeDossier": {
+            "type": "string",
+            "description": "Date de complétion du dossier de permis de construire",
+            "format": "date"
+          },
+          "adsDate": {
+            "type": "string",
+            "description": "Date du permis de construire",
+            "format": "date"
+          },
+          "docDate": {
+            "type": "string",
+            "description": "Date d'ouverture du chantier",
+            "format": "date"
+          },
+          "datDate": {
+            "type": "string",
+            "description": "Date d'achèvement des travaux",
+            "format": "date"
+          },
+          "nbreLogement": {
+            "type": "integer",
+            "description": "Nombre de logements"
+          },
+          "surfPlancherMax": {
+            "type": "number",
+            "description": "M² de surface de placher",
+            "format": "double"
+          },
+          "surfHabitat": {
+            "type": "number",
+            "description": "M² de surface de plancer dédié à l'activité habitat",
+            "format": "double"
+          },
+          "surfBureaux": {
+            "type": "number",
+            "description": "M² de surface de plancher dédié à l'activité bureaux",
+            "format": "double"
+          },
+          "surfCommerces": {
+            "type": "number",
+            "description": "M² de surface de plancher dédié à l'activité commerces",
+            "format": "double"
+          },
+          "surfIndustries": {
+            "type": "number",
+            "description": "M² de surface de plancher dédié à l'activité industries",
+            "format": "double"
+          },
+          "surfEquipPub": {
+            "type": "number",
+            "description": "M² de surface de plancher dédié à l'activité équipement public",
+            "format": "double"
+          },
+          "surfAutre": {
+            "type": "number",
+            "description": "M² de surface de plancher dédié à l'activité 'autres'",
+            "format": "double"
+          }
         }
-      }
-    },
-    "PermisConstruire": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant unique du permis",
-          "type": "integer",
-          "format": "int64"
-        },
-        "numAds": {
-          "description": "Numero du permis de constuire avec sa version",
-          "type": "string"
-        },
-        "demandeur": {
-          "description": "Demandeur du permis de construire",
-          "type": "string"
-        },
-        "parcelles": {
-          "description": "Parcelles du permis de construire",
-          "type": "string"
-        },
-        "decisionDossier": {
-          "description": "Décision du dossier",
-          "type": "string"
-        },
-        "depotDossier": {
-          "description": "Date de dépot du permis de constuire",
-          "type": "string",
-          "format": "date"
-        },
-        "dateCompletudeDossier": {
-          "description": "Date de complétion du dossier de permis de construire",
-          "type": "string",
-          "format": "date"
-        },
-        "adsDate": {
-          "description": "Date du permis de construire",
-          "type": "string",
-          "format": "date"
-        },
-        "docDate": {
-          "description": "Date d'ouverture du chantier",
-          "type": "string",
-          "format": "date"
-        },
-        "datDate": {
-          "description": "Date d'achèvement des travaux",
-          "type": "string",
-          "format": "date"
-        },
-        "nbreLogement": {
-          "description": "Nombre de logements",
-          "type": "integer"
-        },
-        "surfPlancherMax": {
-          "description": "M² de surface de placher",
-          "type": "number",
-          "format": "double"
-        },
-        "surfHabitat": {
-          "description": "M² de surface de plancer dédié à l'activité habitat",
-          "type": "number",
-          "format": "double"
-        },
-        "surfBureaux": {
-          "description": "M² de surface de plancher dédié à l'activité bureaux",
-          "type": "number",
-          "format": "double"
-        },
-        "surfCommerces": {
-          "description": "M² de surface de plancher dédié à l'activité commerces",
-          "type": "number",
-          "format": "double"
-        },
-        "surfIndustries": {
-          "description": "M² de surface de plancher dédié à l'activité industries",
-          "type": "number",
-          "format": "double"
-        },
-        "surfEquipPub": {
-          "description": "M² de surface de plancher dédié à l'activité équipement public",
-          "type": "number",
-          "format": "double"
-        },
-        "surfAutre": {
-          "description": "M² de surface de plancher dédié à l'activité 'autres'",
-          "type": "number",
-          "format": "double"
+      },
+      "Agapeo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du programme Agapeo",
+            "format": "int64"
+          },
+          "anneeProg": {
+            "type": "integer",
+            "description": "Année de l'agrément donné par l'état",
+            "format": "int64"
+          },
+          "nomOperation": {
+            "type": "string",
+            "description": "Identifiant unique du permis"
+          },
+          "numDossier": {
+            "type": "integer",
+            "description": ""
+          },
+          "etat": {
+            "type": "string",
+            "description": ""
+          },
+          "maitreOuvrage": {
+            "type": "string",
+            "description": ""
+          },
+          "commune": {
+            "type": "string",
+            "description": ""
+          },
+          "numAds": {
+            "type": "string",
+            "description": ""
+          },
+          "conventionApplicationPlh": {
+            "type": "string",
+            "description": ""
+          },
+          "logementsLocatAide": {
+            "type": "integer",
+            "description": "Nombre de logements en locatif social (PLUS, PLAI)",
+            "format": "int32"
+          },
+          "logementsAccessAide": {
+            "type": "integer",
+            "description": "Nombre de logements en accession libre",
+            "format": "int32"
+          },
+          "logementsLocatRegulPrive": {
+            "type": "integer",
+            "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
+            "format": "int32"
+          },
+          "logementsLocatRegulHlm": {
+            "type": "integer",
+            "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
+            "format": "int32"
+          },
+          "logementsAccessMaitrise": {
+            "type": "integer",
+            "description": "Nombre de logements en accession maitrisée",
+            "format": "int32"
+          }
         }
-      }
-    },
-    "Agapeo": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du programme Agapeo",
-          "type": "integer",
-          "format": "int64"
-        },
-        "anneeProg": {
-          "description": "Année de l'agrément donné par l'état",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nomOperation": {
-          "description": "Identifiant unique du permis",
-          "type": "string"
-        },
-        "numDossier": {
-          "description": "",
-          "type": "integer"
-        },
-        "etat": {
-          "description": "",
-          "type": "string"
-        },
-        "maitreOuvrage": {
-          "description": "",
-          "type": "string"
-        },
-        "commune": {
-          "description": "",
-          "type": "string"
-        },
-        "numAds": {
-          "description": "",
-          "type": "string"
-        },
-        "conventionApplicationPlh": {
-          "description": "",
-          "type": "string"
-        },
-        "logementsLocatAide": {
-          "description": "Nombre de logements en locatif social (PLUS, PLAI)",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsAccessAide": {
-          "description": "Nombre de logements en accession libre",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsLocatRegulPrive": {
-          "description": "Nombre de logements en locatif régulé (PLS privé, LLI, Pinel Régulé, Usufruit)",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsLocatRegulHlm": {
-          "description": "Nombre de logements en PLS institutionnel (PLS HLM)",
-          "type": "integer",
-          "format": "int32"
-        },
-        "logementsAccessMaitrise": {
-          "description": "Nombre de logements en accession maitrisée",
-          "type": "integer",
-          "format": "int32"
+      },
+      "TypeFinancement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identificateur unique. Clé primaire",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du type de financement "
+          },
+          "code": {
+            "type": "string",
+            "description": "Identifiant unique pour le type de financement"
+          },
+          "est_aide": {
+            "type": "boolean",
+            "description": "Indique si type de financement aidé ou non"
+          }
         }
-      }
-    },
-    "TypeFinancement": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identificateur unique. Clé primaire",
-          "type": "integer",
-          "format": "int64"
-        },
-        "libelle": {
-          "description": "Libellé du type de financement ",
-          "type": "string"
-        },
-        "code": {
-          "description": "Identifiant unique pour le type de financement",
-          "type": "string"
-        },
-        "est_aide": {
-          "description": "Indique si type de financement aidé ou non",
-          "type": "boolean"
+      },
+      "PageResult": {
+        "type": "object",
+        "properties": {
+          "elements": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          }
         }
-      }
-    },
-    "PageResult": {
-      "type": "object",
-      "properties": {
-        "elements": {
-          "type": "array",
-          "items": "object"
-        },
-        "totalElements": {
-          "type": "integer",
-          "format": "int64"
+      },
+      "Emprise": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de l'emprise",
+            "format": "int64"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom de l'emprise"
+          }
         }
-      }
-    },
-    "Emprise": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de l'emprise",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nom": {
-          "description": "Nom de l'emprise",
-          "type": "string"
+      },
+      "TypeOccupation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type d'occupation",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type d'occupation"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle du type d'occupation"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type d'occupation",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type d'occupation"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du type d'occupation",
+            "format": "date"
+          }
         }
-      }
-    },
-    "TypeOccupation": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du type d'occupation",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code du type d'occupation",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle du type d'occupation",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type d'occupation",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type d'occupation",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du type d'occupation",
-          "type": "string",
-          "format": "date"
+      },
+      "EntiteReferente": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de l'entité Rennes Métropole",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Référence de l'entité Rennes Métropole"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle de l'entité Rennes Métropole"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité de l'entité Rennes Métropole",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé l'entité"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout de l'entité",
+            "format": "date"
+          }
         }
-      }
-    },
-    "EntiteReferente": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de l'entité Rennes Métropole",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Référence de l'entité Rennes Métropole",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle de l'entité Rennes Métropole",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité de l'entité Rennes Métropole",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé l'entité",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout de l'entité",
-          "type": "string",
-          "format": "date"
+      },
+      "OutilFoncier": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de l'outil foncier",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type de l'outil foncier"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle du type de l'outil foncier"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type de l'outil foncier",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type de l'outil foncier"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout de l'outil foncier",
+            "format": "date"
+          }
         }
-      }
-    },
-    "OutilFoncier": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de l'outil foncier",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code du type de l'outil foncier",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle du type de l'outil foncier",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type de l'outil foncier",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type de l'outil foncier",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout de l'outil foncier",
-          "type": "string",
-          "format": "date"
+      },
+      "VocationZA": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de la vocation ZA",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code de la vocation ZA"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle de la vocation ZA"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité de la vocation ZA",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type de la vocation ZA"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout de la vocation ZA",
+            "format": "date"
+          }
         }
-      }
-    },
-    "VocationZA": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de la vocation ZA",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code de la vocation ZA",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle de la vocation ZA",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité de la vocation ZA",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type de la vocation ZA",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout de la vocation ZA",
-          "type": "string",
-          "format": "date"
+      },
+      "Plh": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du plh",
+            "format": "int64"
+          },
+          "logementsPrevus": {
+            "type": "integer",
+            "description": "Nombre de logements prévus du plh"
+          },
+          "logementsLivres": {
+            "type": "integer",
+            "description": "Nombre de logements livrés du plh"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date du plh",
+            "format": "date"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description du plh"
+          }
         }
-      }
-    },
-    "Plh": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du plh",
-          "type": "integer",
-          "format": "int64"
-        },
-        "logementsPrevus": {
-          "description": "Nombre de logements prévus du plh",
-          "type": "integer"
-        },
-        "logementsLivres": {
-          "description": "Nombre de logements livrés du plh",
-          "type": "integer"
-        },
-        "date": {
-          "description": "Date du plh",
-          "type": "string",
-          "format": "date"
-        },
-        "description": {
-          "description": "Description du plh",
-          "type": "string"
+      },
+      "TypeProgrammation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type de programmation",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type de programmation"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle du type de programmation"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type de programmation",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type du type de programmation"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du type de programmation",
+            "format": "date"
+          }
         }
-      }
-    },
-    "TypeProgrammation": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du type de programmation",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code du type de programmation",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle du type de programmation",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type de programmation",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type du type de programmation",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du type de programmation",
-          "type": "string",
-          "format": "date"
+      },
+      "InformationProgrammation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de l'information de programmation",
+            "format": "int64"
+          },
+          "typeProgrammation": {
+            "$ref": "#/components/schemas/TypeProgrammation"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description du type de programmation"
+          }
         }
-      }
-    },
-    "InformationProgrammation": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de l'information de programmation",
-          "type": "integer",
-          "format": "int64"
-        },
-        "typeProgrammation": {
-          "type": "object",
-          "$ref": "#/definitions/TypeProgrammation"
-        },
-        "description": {
-          "description": "Description du type de programmation",
-          "type": "string"
+      },
+      "TypeContribution": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type de contribution",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type de contribution"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle du type de contribution"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type de contribution",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type du type de contribution"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du type de contribution",
+            "format": "date"
+          }
         }
-      }
-    },
-    "TypeContribution": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du type de contribution",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code du type de contribution",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle du type de contribution",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type de contribution",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type du type de contribution",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du type de contribution",
-          "type": "string",
-          "format": "date"
+      },
+      "Contribution": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de la contribution",
+            "format": "int64"
+          },
+          "typeContribution": {
+            "$ref": "#/components/schemas/TypeContribution"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de la contribution"
+          }
         }
-      }
-    },
-    "Contribution": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de la contribution",
-          "type": "integer",
-          "format": "int64"
-        },
-        "typeContribution": {
-          "description": "Type de contribution",
-          "type": "object",
-          "$ref": "#/definitions/TypeContribution"
-        },
-        "description": {
-          "description": "Description de la contribution",
-          "type": "string"
+      },
+      "TypeFoncier": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type de foncier",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type de foncier"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle du type de foncier"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type de foncier",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type du type de foncier"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du type de foncier",
+            "format": "date"
+          }
         }
-      }
-    },
-    "TypeFoncier": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du type de foncier",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code du type de foncier",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle du type de foncier",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type de foncier",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type du type de foncier",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du type de foncier",
-          "type": "string",
-          "format": "date"
+      },
+      "DescriptionFoncier": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de la description du foncier",
+            "format": "int64"
+          },
+          "typeFoncier": {
+            "$ref": "#/components/schemas/TypeFoncier"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description du foncier"
+          },
+          "taux": {
+            "type": "number",
+            "description": "Taux du foncier",
+            "format": "double"
+          }
         }
-      }
-    },
-    "DescriptionFoncier": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de la description du foncier",
-          "type": "integer",
-          "format": "int64"
-        },
-        "typeFoncier": {
-          "description": "Type de foncier",
-          "type": "object",
-          "$ref": "#/definitions/TypeFoncier"
-        },
-        "description": {
-          "description": "Description du foncier",
-          "type": "string"
-        },
-        "taux": {
-          "description": "Taux du foncier",
-          "type": "number",
-          "format": "double"
+      },
+      "TypeAmenageur": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type d'aménageur",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type d'aménageur"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle du type d'aménageur"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type d'aménageur",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type du type d'aménageur"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du type d'aménageur",
+            "format": "date"
+          }
         }
-      }
-    },
-    "TypeAmenageur": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du type d'aménageur",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code du type d'aménageur",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle du type d'aménageur",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type d'aménageur",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type du type d'aménageur",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du type d'aménageur",
-          "type": "string",
-          "format": "date"
+      },
+      "Amenageur": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de l'aménageur",
+            "format": "int64"
+          },
+          "typeAmenageur": {
+            "$ref": "#/components/schemas/TypeAmenageur"
+          },
+          "nom": {
+            "type": "string",
+            "description": "Nom de l'aménageur"
+          }
         }
-      }
-    },
-    "Amenageur": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de l'aménageur",
-          "type": "integer",
-          "format": "int64"
-        },
-        "typeAmenageur": {
-          "description": "Type d'aménageur",
-          "type": "object",
-          "$ref": "#/definitions/TypeAmenageur"
-        },
-        "nom": {
-          "description": "Nom de l'aménageur",
-          "type": "string"
+      },
+      "DescriptionConcertation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de la concertation",
+            "format": "int64"
+          },
+          "dateDebut": {
+            "type": "string",
+            "format": "date"
+          },
+          "dateFin": {
+            "type": "string",
+            "format": "date"
+          }
         }
-      }
-    },
-    "DescriptionConcertation": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de la concertation",
-          "type": "integer",
-          "format": "int64"
-        },
-        "dateDebut": {
-          "type": "string",
-          "format": "date"
-        },
-        "dateFin": {
-          "type": "string",
-          "format": "date"
+      },
+      "TypeFinancementOperation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type de financement opération",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type de financement opération"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle ddu type de financement opération"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type de financement opération",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type du type de financement opération"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du type de financement opération",
+            "format": "date"
+          }
         }
-      }
-    },
-    "TypeFinancementOperation": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du type de financement opération",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code du type de financement opération",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle ddu type de financement opération",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type de financement opération",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type du type de financement opération",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du type de financement opération",
-          "type": "string",
-          "format": "date"
+      },
+      "DescriptionFinancementOperation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de la description de financement",
+            "format": "int64"
+          },
+          "typeFinancement": {
+            "$ref": "#/components/schemas/TypeFinancementOperation"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description du financement"
+          }
         }
-      }
-    },
-    "DescriptionFinancementOperation": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de la description de financement",
-          "type": "integer",
-          "format": "int64"
-        },
-        "typeFinancement": {
-          "description": "Type de financement",
-          "type": "object",
-          "$ref": "#/definitions/TypeFinancementOperation"
-        },
-        "description": {
-          "description": "Description du financement",
-          "type": "string"
+      },
+      "TypeActionOperation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type d'action opérateration",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type d'action opérateration"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle du type d'action opérateration"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type d'action opérateration",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type d'action opérateration"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du type d'action opérateration",
+            "format": "date"
+          }
         }
-      }
-    },
-    "TypeActionOperation": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du type d'action opérateration",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code du type d'action opérateration",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle du type d'action opérateration",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type d'action opérateration",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type d'action opérateration",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du type d'action opérateration",
-          "type": "string",
-          "format": "date"
+      },
+      "ActionOperation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de l'action d'opération",
+            "format": "int64"
+          },
+          "typeAction": {
+            "$ref": "#/components/schemas/TypeActionOperation"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de l'action d'opération"
+          }
         }
-      }
-    },
-    "ActionOperation": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de l'action d'opération",
-          "type": "integer",
-          "format": "int64"
-        },
-        "typeAction": {
-          "description": "Type d'action d'opération",
-          "type": "object",
-          "$ref": "#/definitions/TypeActionOperation"
-        },
-        "description": {
-          "description": "Description de l'action d'opération",
-          "type": "string"
+      },
+      "TypeActeur": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type d'acteur",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type d'acteur"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libelle du type d'acteur"
+          },
+          "dateInactif": {
+            "type": "string",
+            "description": "Date de mise en inactivité du type d'acteur",
+            "format": "date"
+          },
+          "createUser": {
+            "type": "string",
+            "description": "Utilisateur qui a créé le type du type d'acteur"
+          },
+          "createDate": {
+            "type": "string",
+            "description": "Date d'ajout du type d'acteur",
+            "format": "date"
+          }
         }
-      }
-    },
-    "TypeActeur": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant du type d'acteur",
-          "type": "integer",
-          "format": "int64"
-        },
-        "code": {
-          "description": "Code du type d'acteur",
-          "type": "string"
-        },
-        "libelle": {
-          "description": "Libelle du type d'acteur",
-          "type": "string"
-        },
-        "dateInactif": {
-          "description": "Date de mise en inactivité du type d'acteur",
-          "type": "string",
-          "format": "date"
-        },
-        "createUser": {
-          "description": "Utilisateur qui a créé le type du type d'acteur",
-          "type": "string"
-        },
-        "createDate": {
-          "description": "Date d'ajout du type d'acteur",
-          "type": "string",
-          "format": "date"
+      },
+      "Acteur": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant de l'acteur",
+            "format": "int64"
+          },
+          "typeActeur": {
+            "$ref": "#/components/schemas/TypeActeur"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description de l'acteur"
+          }
         }
-      }
-    },
-    "Acteur": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Identifiant de l'acteur",
-          "type": "integer",
-          "format": "int64"
-        },
-        "typeActeur": {
-          "description": "Type d'acteur",
-          "type": "object",
-          "$ref": "#/definitions/TypeActeur"
-        },
-        "description": {
-          "description": "Description de l'acteur",
-          "type": "string"
-        }
-      }
-    },
-    "Plui": {
-      "type": "object",
-      "properties": {
-        "densiteOap": {
-          "type": "number",
-          "format": "double"
-        },
-        "pluiDisposition": {
-          "type": "string"
-        },
-        "pluiAdaptation": {
-          "type": "string"
+      },
+      "Plui": {
+        "type": "object",
+        "properties": {
+          "densiteOap": {
+            "type": "number",
+            "format": "double"
+          },
+          "pluiDisposition": {
+            "type": "string"
+          },
+          "pluiAdaptation": {
+            "type": "string"
+          }
         }
       }
     }
-  }
+  },
+  "x-original-swagger-version": "2.0"
 }

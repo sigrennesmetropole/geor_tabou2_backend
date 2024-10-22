@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import rm.tabou2.facade.api.TypesDocumentsApi;
 import rm.tabou2.service.tabou.document.TypeDocumentService;
 import rm.tabou2.service.dto.PageResult;
@@ -14,10 +14,9 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.document.TypeDocumentEntity;
 import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 
-import javax.validation.Valid;
 import java.util.Date;
 
-@Controller
+@RestController
 public class TypeDocumentApiController implements TypesDocumentsApi {
 
 
@@ -25,7 +24,7 @@ public class TypeDocumentApiController implements TypesDocumentsApi {
     private TypeDocumentService typeDocumentService;
 
     @Override
-    public ResponseEntity<TypeDocument> createTypeDocument(@Valid TypeDocument typeDocument) throws Exception {
+    public ResponseEntity<TypeDocument> createTypeDocument(TypeDocument typeDocument) throws Exception {
         return new ResponseEntity<>(typeDocumentService.createTypeDocument(typeDocument), HttpStatus.OK);
     }
 
@@ -35,12 +34,12 @@ public class TypeDocumentApiController implements TypesDocumentsApi {
     }
 
     @Override
-    public ResponseEntity<TypeDocument> updateTypeDocument(@Valid TypeDocument typeDocument) throws Exception {
+    public ResponseEntity<TypeDocument> updateTypeDocument(TypeDocument typeDocument) throws Exception {
         return new ResponseEntity<>(typeDocumentService.updateTypeDocument(typeDocument), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<PageResult> searchTypeDocument(@Valid Long typeDocumentId, @Valid String libelle, @Valid Date dateInactif, @Valid Integer start, @Valid Integer resultsNumber, @Valid String orderBy, @Valid Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchTypeDocument(Long typeDocumentId, String libelle, Date dateInactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         TypeDocumentCriteria typeDocumentCriteria = new TypeDocumentCriteria();
         typeDocumentCriteria.setId(typeDocumentId);

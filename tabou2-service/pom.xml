@@ -1,71 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <artifactId>tabou2</artifactId>
-        <groupId>rm</groupId>
-        <version>1.4.0</version>
-        <relativePath>../</relativePath>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>tabou2</artifactId>
+		<groupId>rm</groupId>
+		<version>1.4.0</version>
+		<relativePath>../</relativePath>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tabou2-service</artifactId>
-    <packaging>jar</packaging>
+	<artifactId>tabou2-service</artifactId>
+	<packaging>jar</packaging>
 
-    <dependencies>
+	<dependencies>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>tabou2-storage</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
 
 
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>tabou2-storage</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webflux</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.maps</groupId>
-            <artifactId>google-maps-services</artifactId>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
         <dependency>
@@ -73,68 +63,54 @@
             <artifactId>commons-collections4</artifactId>
         </dependency>
 
+		<!-- Swagger UI dependency -->
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-models</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+		</dependency>
 
-        <!-- Swagger UI dependency -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>org.apache.directory.api</groupId>
+			<artifactId>api-all</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-        </dependency>
+		<!-- mapper -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.apache.directory.api</groupId>
-            <artifactId>api-all</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>com.github.joschi.jackson</groupId>
+			<artifactId>jackson-datatype-threetenbp</artifactId>
+		</dependency>
 
-        <!-- JWT -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-        </dependency>
-
-        <!-- mapper -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.joschi.jackson</groupId>
-            <artifactId>jackson-datatype-threetenbp</artifactId>
-            <version>2.6.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>fr.opensagres.xdocreport</groupId>
-            <artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
-            <version>2.0.2</version>
-        </dependency>
-
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
+		</dependency>
+		
         <dependency>
             <groupId>fr.opensagres.xdocreport</groupId>
             <artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
-            <version>2.0.2</version>
         </dependency>
 
         <dependency>
             <groupId>fr.opensagres.xdocreport</groupId>
             <artifactId>fr.opensagres.xdocreport.converter.odt.odfdom</artifactId>
-            <version>2.0.2</version>
         </dependency>
 
     </dependencies>
@@ -164,8 +140,8 @@
                             <generateApis>false</generateApis>
                             <generateModels>true</generateModels>
                             <configOptions>
-<!--                                <dateLibrary>legacy</dateLibrary>-->
                                 <dateLibrary>legacy</dateLibrary>
+                                <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                         </configuration>
                     </execution>

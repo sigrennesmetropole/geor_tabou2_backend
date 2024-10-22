@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import rm.tabou2.service.helper.AuthentificationHelper;
 
 
@@ -21,7 +22,7 @@ public class FacadeAspect {
     private AuthentificationHelper authentificationHelper;
 
     //Pour chaque entrée dans un controller
-    @Pointcut("execution(* rm.tabou2.facade.controller.*.*(..))")
+    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void businessMethods() {
         //Definition du pointcut
     }

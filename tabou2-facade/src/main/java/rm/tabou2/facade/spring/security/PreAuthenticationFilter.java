@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Enumeration;

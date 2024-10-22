@@ -23,7 +23,7 @@ import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -105,7 +105,7 @@ public class OperationEmpriseHelper {
         if (StringUtils.isEmpty(nom)) {
             nom = "%";
         } else if (StringUtils.endsWith(nom, "*")) {
-            nom = nom.replaceAll("\\*", "%");
+            nom = nom.replace("*", "%");
         }
 
         String libelleNature = natureEntityOpt.get().getLibelle();

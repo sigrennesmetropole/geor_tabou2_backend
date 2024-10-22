@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import rm.tabou2.facade.api.EntitesReferentesApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.tabou.operation.EntiteReferenteService;
@@ -14,7 +14,7 @@ import rm.tabou2.storage.tabou.entity.operation.EntiteReferenteEntity;
 import rm.tabou2.storage.tabou.item.EntiteReferenteCriteria;
 import rm.tabou2.service.dto.EntiteReferente;
 
-@Controller
+@RestController
 public class EntiteReferenteApiController implements EntitesReferentesApi {
 
     @Autowired

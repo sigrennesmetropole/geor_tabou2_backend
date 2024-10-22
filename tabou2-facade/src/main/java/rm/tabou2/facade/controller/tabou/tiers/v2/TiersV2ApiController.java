@@ -19,8 +19,6 @@ import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.item.ContactTiersCriteria;
 import rm.tabou2.storage.tabou.item.TiersCriteria;
 
-import javax.validation.Valid;
-
 @RestController
 public class TiersV2ApiController implements TiersApi {
 
@@ -28,19 +26,19 @@ public class TiersV2ApiController implements TiersApi {
 	private TiersService tiersService;
 
 	@Override
-	public ResponseEntity<Tiers> createTiers(@Valid Tiers tiers) throws Exception {
+	public ResponseEntity<Tiers> createTiers(Tiers tiers) throws Exception {
 		return new ResponseEntity<>(tiersService.createTiers(tiers), HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<Tiers> updateTiers(@Valid Tiers tiers) throws Exception {
+	public ResponseEntity<Tiers> updateTiers(Tiers tiers) throws Exception {
 		return new ResponseEntity<>(tiersService.updateTiers(tiers), HttpStatus.OK);
 	}
 
 	@Override
-	public ResponseEntity<PageResult> searchTiers(@Valid String nom, @Valid Boolean tiersPrive,
-			@Valid String adresseVille, @Valid Boolean inactif, @Valid Integer start, @Valid Integer resultsNumber,
-			@Valid String orderBy, @Valid Boolean asc) throws Exception {
+	public ResponseEntity<PageResult> searchTiers(String nom, Boolean tiersPrive,
+			String adresseVille, Boolean inactif, Integer start, Integer resultsNumber,
+			String orderBy, Boolean asc) throws Exception {
 		TiersCriteria tiersCriteria = new TiersCriteria();
 		tiersCriteria.setNom(nom);
 		tiersCriteria.setTiersPrive(tiersPrive);
@@ -69,7 +67,7 @@ public class TiersV2ApiController implements TiersApi {
 	private ContactTiersService contactTiersService;
 
 	@Override
-	public ResponseEntity<ContactTiers> createContactTiers(Long tiersId, @Valid ContactTiers contactTiers) throws Exception {
+	public ResponseEntity<ContactTiers> createContactTiers(Long tiersId, ContactTiers contactTiers) throws Exception {
 		return new ResponseEntity<>(contactTiersService.createContactTiers(tiersId, contactTiers), HttpStatus.OK);
 	}
 
@@ -97,7 +95,7 @@ public class TiersV2ApiController implements TiersApi {
 	}
 
 	@Override
-	public ResponseEntity<ContactTiers> updateContactTiers(Long tiersId, @Valid ContactTiers contactTiers) throws Exception {
+	public ResponseEntity<ContactTiers> updateContactTiers(Long tiersId, ContactTiers contactTiers) throws Exception {
 		return new ResponseEntity<>(contactTiersService.updateContactTiers(tiersId, contactTiers), HttpStatus.OK);
 	}
 

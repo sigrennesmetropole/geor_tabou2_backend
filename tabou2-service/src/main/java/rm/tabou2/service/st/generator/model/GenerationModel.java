@@ -1,7 +1,5 @@
 package rm.tabou2.service.st.generator.model;
 
-import java.io.InputStream;
-
 public class GenerationModel {
 
     private DataModel dataModel;

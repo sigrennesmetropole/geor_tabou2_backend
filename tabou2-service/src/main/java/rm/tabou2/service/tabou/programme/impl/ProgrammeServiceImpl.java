@@ -632,7 +632,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, MultipartFile file, Date dateDocument) throws AppServiceException {
+    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, Object file, Date dateDocument) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
@@ -642,7 +642,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         //Récupération du document Dans alfresco
-        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.PROGRAMME, programmeId, dateDocument, file));
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.PROGRAMME, programmeId, dateDocument, (MultipartFile) file));
 
     }
 
@@ -686,7 +686,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
 
     @Override
-    public void updateDocumentContent(long programmeId, String documentId, MultipartFile file) throws AppServiceException {
+    public void updateDocumentContent(long programmeId, String documentId, Object file) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
@@ -695,7 +695,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
-        alfrescoService.updateDocumentContent(AlfrescoTabouType.PROGRAMME, programmeId, documentId, file);
+        alfrescoService.updateDocumentContent(AlfrescoTabouType.PROGRAMME, programmeId, documentId, (MultipartFile) file);
 
     }
 
