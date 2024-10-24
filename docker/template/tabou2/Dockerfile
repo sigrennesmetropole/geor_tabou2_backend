@@ -1,4 +1,4 @@
-FROM jetty:9.4.55-jdk17-eclipse-temurin
+FROM jetty:12.0.14-jdk17-eclipse-temurin
 USER root
 MAINTAINER sigsupport@rennesmetropole.fr
 ENV TZ=Europe/Paris
