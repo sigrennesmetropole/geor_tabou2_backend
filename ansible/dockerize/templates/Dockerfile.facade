@@ -1,22 +1,30 @@
-FROM jetty:12.0.14-jdk17-eclipse-temurin
+FROM openjdk:17.0.2-jdk-bullseye
 USER root
-MAINTAINER fni18300@open-groupe.com
+MAINTAINER sigsupport@rennesmetropole.fr
 ENV TZ=Europe/Paris
-EXPOSE {{tabou2_server_port}}
 
-ADD tabou2.war /var/lib/jetty/webapps/tabou2.war
-#ADD jetty-logging.properties /usr/local/jetty/resources/jetty-logging.properties
+RUN apt-get update && apt-get upgrade -y
+RUN mkdir -p /tmp/jetty
+RUN chmod 777 -R /tmp && chmod o+t -R /tmp
+
+RUN mkdir -p /etc/georchestra
+RUN chmod 777 -R /etc/georchestra
 
 RUN mkdir -p /opt/tabou2
+ADD tabou2.jar /opt/tabou2/service.jar
+RUN chmod 777 -R /opt/tabou2
 
 ENV PROPERTIES_PATH /etc/georchestra/tabou2/tabou2.properties
 
 ADD entrypoint.sh /opt/tabou2/entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/opt/tabou2/entrypoint.sh" ]
 
-CMD [ "sh", "-c", "exec java -Djava.io.tmpdir=/tmp/jetty -Dgeorchestra.datadir=/etc/georchestra \
+CMD [ "sh", "-c", "exec java --add-opens java.base/java.util=ALL-UNNAMED \
+      -Duser.language=fr -Duser.country=FR \
+      -Djava.io.tmpdir=/tmp/jetty \
+      -Dgeorchestra.datadir=/etc/georchestra \
+      -Dspring.config.additional-location=file:/etc/georchestra/ \
       ${ADD_JAVA_OPTS}                                   \
       -Xmx${XMX:-1G} -Xms${XMX:-1G}                      \
-      -jar /usr/local/jetty/start.jar" ]
-
+      -jar /opt/tabou2/service.jar" ]
 

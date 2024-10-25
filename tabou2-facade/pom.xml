@@ -181,11 +181,26 @@
 					<execution>
 						<id>a-jar</id>
 						<phase>package</phase>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<finalName>${finalName}</finalName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>b-jar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<finalName>${project.parent.artifactId}</finalName>
+						</configuration>
 					</execution>
 				</executions>
 				<configuration>
 					<executable>true</executable>
-					<finalName>${project.parent.artifactId}</finalName>
 				</configuration>
 			</plugin>
 

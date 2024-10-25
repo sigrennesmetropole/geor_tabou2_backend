@@ -1,4 +1,4 @@
-FROM jetty:12.0.14-jdk17-eclipse-temurin
+FROM openjdk:17.0.2-jdk-bullseye
 USER root
 MAINTAINER sigsupport@rennesmetropole.fr
 ENV TZ=Europe/Paris

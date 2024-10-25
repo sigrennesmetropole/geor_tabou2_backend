@@ -17,10 +17,10 @@
     dest: "{{ tabou2_image_directory }}/Dockerfile"
     mode: 0770
     
-- name: Copy tabou2 war
+- name: Copy tabou2 jar
   copy:
-    src: "{{ tabou2_war_name }}"
-    dest: "{{ tabou2_image_directory }}/tabou2.war"
+    src: "{{ tabou2_jar_name }}"
+    dest: "{{ tabou2_image_directory }}/tabou2.jar"
     mode: 0770 
    
 - name: Copy tabou2 facade properties file
