@@ -41,7 +41,7 @@
 		<surefire.plugin.version>3.5.1</surefire.plugin.version>
 		<commons.collections.version>4.4</commons.collections.version>
 		<ocpsoft.rewrite.version>10.0.2.Final</ocpsoft.rewrite.version>
-		<opensagres.xdocreport.version>2.0.6</opensagres.xdocreport.version>
+		<opensagres.xdocreport.version>2.1.0</opensagres.xdocreport.version>
 		<jackson-datatype.version>2.15.2</jackson-datatype.version>
 		<openapitools.version>0.2.6</openapitools.version>
 		<openapi.version>2.6.0</openapi.version>
