@@ -3,7 +3,7 @@
 
 # installation
 tabou2_image_directory: /opt/images/tabou2
-tabou2_jar_name: tabou2.jar
+tabou2_jar_name: tabou2-facade.jar
 tabou2_docker_directory: /opt/georchestra/docker
 tabou2_config_directory: '{{tabou2_docker_directory}}/config/'
 tabou2_server_port: 8080
