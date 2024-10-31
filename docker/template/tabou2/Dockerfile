@@ -11,7 +11,7 @@ RUN mkdir -p /etc/georchestra
 RUN chmod 777 -R /etc/georchestra
 
 RUN mkdir -p /opt/tabou2
-ADD tabou2.jar /opt/tabou2/service.jar
+ADD tabou2-facade.jar /opt/tabou2/service.jar
 RUN chmod 777 -R /opt/tabou2
 
 ENV PROPERTIES_PATH /etc/georchestra/tabou2/tabou2.properties

@@ -41,10 +41,8 @@ tabou2:build:
       - open/master 
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.jar
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.war
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2.war
+      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2*.jar
+      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2*.war
   interruptible: true
  
 tabou2:build:master:
@@ -57,10 +55,8 @@ tabou2:build:master:
       - open/master   
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.jar
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade-*.war
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2.war
+      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2*.jar
+      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2*.war
   interruptible: true
   
 # Sonar code quality analysis - note a full test coverage report through a jacoco.exec merged file in base project folder
@@ -116,8 +112,8 @@ tabou2:pre_docker:
       - /^release.*/
   script:
     - ls -l $CI_PROJECT_DIR/tabou2-facade/target/
-    - cp $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar $CI_PROJECT_DIR/docker/rennes-metropole
-    - cp $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar $CI_PROJECT_DIR/docker/template/tabou2
+    - cp $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade.jar $CI_PROJECT_DIR/docker/rennes-metropole/tabou2-facade.jar
+    - cp $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade.jar $CI_PROJECT_DIR/docker/template/tabou2/tabou2-facade.jar
   artifacts:
     paths:
       - '$CI_PROJECT_DIR/tabou2-facade/target/**.war'
@@ -154,7 +150,7 @@ tabou2:docker2:build:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$ansible_private_key" | base64 -d)       
   script:
-    - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar $CI_PROJECT_DIR/ansible/dockerize/files/tabou2.jar
+    - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade.jar $CI_PROJECT_DIR/ansible/dockerize/files/tabou2-facade.jar
     - cd $CI_PROJECT_DIR/ansible  
     - cp tabou2_dev_var.yml $HOME/tabou2_var.yml
     - ansible-playbook tabou2-docker.yml -v -i "${TARGET_ENV}," -u root --ssh-common-args=-oStrictHostKeyChecking=no
