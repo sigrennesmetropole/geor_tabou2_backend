@@ -60,7 +60,7 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-models</artifactId>
@@ -166,44 +166,46 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<configuration>
+					<encoding>UTF-8</encoding>
 					<delimiters>
 						<delimiter>@</delimiter>
 					</delimiters>
 					<useDefaultDelimiters>false</useDefaultDelimiters>
+					<resources>
+						<resource>
+							<directory>src/main/resources</directory>
+						</resource>
+					</resources>
 				</configuration>
 			</plugin>
-
-			<!-- JAR executable Spring Boot -->
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>a-jar</id>
-						<phase>package</phase>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-						<configuration>
-							<finalName>${finalName}</finalName>
-						</configuration>
-					</execution>
-					<execution>
-						<id>b-jar</id>
-						<phase>package</phase>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-						<configuration>
-							<finalName>${project.parent.artifactId}</finalName>
-						</configuration>
-					</execution>
-				</executions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
-					<executable>true</executable>
+					<finalName>${project.artifactId}</finalName>
+					<excludes>
+						<exclude>**/log4j2.xml</exclude>
+						<exclude>**/default.properties</exclude>
+						<exclude>**/tabou2.properties</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
-
+			<!-- JAR executable Spring Boot -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+						</goals>
+						<configuration>
+							<executable>true</executable>
+                    		<finalName>${project.artifactId}</finalName>
+						</configuration>
+					</execution>
+                </executions>
+            </plugin>
 			<!-- War Spring Boot -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -215,43 +217,14 @@
 						<goals>
 							<goal>war</goal>
 						</goals>
-						<configuration>
+						<configuration>			
+							<finalName>${project.artifactId}</finalName>				
 							<failOnMissingWebXml>false</failOnMissingWebXml>
 							<packagingExcludes>
-								WEB-INF/lib/mapstruct-1.2.0.Final.jar,
-								WEB-INF/lib/jcl-over-slf4j-1.7.29.jar,
-								WEB-INF/lib/tomcat-embed-core-*.jar,
-								WEB-INF/lib/tomcat-annotations-api-*.jar,
-								WEB-INF/lib/spring-boot-devtools-*.jar,
+								%regex[WEB-INF/lib/mapstruct-.*\.jar],
+								%regex[WEB-INF/lib/spring-boot-devtools-.*\.jar],
 								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
 							</packagingExcludes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<!-- WAR with final name -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>b-war</id>
-						<phase>package</phase>
-						<goals>
-							<goal>war</goal>
-						</goals>
-						<configuration>
-							<failOnMissingWebXml>false</failOnMissingWebXml>
-							<packagingExcludes>
-								WEB-INF/lib/mapstruct-1.2.0.Final.jar,
-								WEB-INF/lib/jcl-over-slf4j-1.7.29.jar,
-								WEB-INF/lib/tomcat-embed-core-*.jar,
-								WEB-INF/lib/tomcat-annotations-api-*.jar,
-								WEB-INF/lib/spring-boot-devtools-*.jar,
-								%regex[WEB-INF/lib/spring.*-test-.*\.jar]
-							</packagingExcludes>
-							<warName>${finalName}</warName>
 						</configuration>
 					</execution>
 				</executions>

@@ -9,18 +9,12 @@
 	<version>1.4.0</version>
 	<packaging>pom</packaging>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.5</version>
-		<relativePath />
-	</parent>
-
 	<!-- Propriétés du projet -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>17</java.version>
+		<springframework.boot.version>3.3.5</springframework.boot.version>
 		<commons.io.version>2.17.0</commons.io.version>
 		<httpclient.version>4.5.14</httpclient.version>
 		<commons.lang3.version>3.17.0</commons.lang3.version>
@@ -46,7 +40,14 @@
 		<openapitools.version>0.2.6</openapitools.version>
 		<openapi.version>2.6.0</openapi.version>
 		<org.hibernate.version>8.0.1.Final</org.hibernate.version>
+		<mysql.version>8.0.33</mysql.version>
 
+		<maven-surefire-plugin.version>3.5.1</maven-surefire-plugin.version>
+		<plugin.dependency.check.maven.version>5.3.2</plugin.dependency.check.maven.version>
+		<plugin.maven-jar-plugin.version>3.4.2</plugin.maven-jar-plugin.version>
+		<plugin.maven-javadoc-plugin.version>3.10.1</plugin.maven-javadoc-plugin.version>
+		<plugin.maven-assembly-plugin.version>3.7.1</plugin.maven-assembly-plugin.version>
+		
 		<!-- Configuration SONAR -->
 		<sonar.projectKey>${env.SONAR_KEY}${project.artifactId}</sonar.projectKey>
 		<sonar.projectName>${project.artifactId}</sonar.projectName>
@@ -118,6 +119,31 @@
 			</dependency>
 
 
+			<!-- Spring Boot -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${springframework.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-starter-logging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-log4j2</artifactId>
+				<version>${springframework.boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-webflux</artifactId>
+				<version>${springframework.boot.version}</version>
+			</dependency>
+
 			<!--Commons dependencies -->
 			<dependency>
 				<groupId>commons-io</groupId>
@@ -130,7 +156,8 @@
 				<version>${commons.lang3.version}</version>
 			</dependency>
 
-			<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
+			<!--
+			https://mvnrepository.com/artifact/org.apache.commons/commons-collections4 -->
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-collections4</artifactId>
@@ -148,8 +175,8 @@
 				<artifactId>swagger-annotations</artifactId>
 				<version>${swagger.version}</version>
 			</dependency>
-		
-		
+
+
 			<dependency>
 				<groupId>org.springdoc</groupId>
 				<artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
@@ -306,7 +333,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${surefire.plugin.version}</version>
 				<configuration>
 					<argLine>-Dfile.encoding=UTF-8</argLine>
 				</configuration>
@@ -314,7 +340,11 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${springframework.boot.version}</version>
+				</plugin>
 				<!-- Swagger -->
 				<plugin>
 					<groupId>org.openapitools</groupId>
@@ -353,7 +383,59 @@
 						</annotationProcessorPaths>
 					</configuration>
 				</plugin>
-
+<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${plugin.maven-jar-plugin.version}</version>
+				</plugin>
+				<!-- Crée un jar contenant les javadocs du projet -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${plugin.maven-javadoc-plugin.version}</version>
+					<configuration>
+						<source>11</source>
+						<failOnError>false</failOnError>
+						<doclint>none</doclint>
+						<quiet>true</quiet>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>${plugin.maven-assembly-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>${ant.plugin.version}</version>
+				</plugin>
+				<!-- tests unitaires -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
+					<configuration>
+						<argLine>-Dfile.encoding=UTF-8 --add-opens
+							java.base/java.util=ALL-UNNAMED</argLine>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco-maven-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+				</plugin>
 
 			</plugins>
 		</pluginManagement>
