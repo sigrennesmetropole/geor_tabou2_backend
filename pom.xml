@@ -29,7 +29,7 @@
 		<lombok.version>1.18.26</lombok.version>
 		<log4j.version>2.24.1</log4j.version>
 		<openapi.plugin.version>7.9.0</openapi.plugin.version>
-		<swagger.version>2.2.25</swagger.version>
+		<swagger.version>2.2.26</swagger.version>
 		<swagger.codegen.version>2.4.14</swagger.codegen.version>
 		<compiler.plugin.version>3.13.0</compiler.plugin.version>
 		<surefire.plugin.version>3.5.1</surefire.plugin.version>
