@@ -8,6 +8,7 @@ import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.dto.ProgrammeLight;
+import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.validator.evenement.ValidEvenementCreation;
@@ -198,5 +199,39 @@ public interface ProgrammeService {
     Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable)
             throws AppServiceException;
 
+    /**
+     * Permet de récupérer un PLH d'un programme
+     * @param programmeId L'id du programme
+     * @param typePLHid L'id du TypePLH
+     * @return Le TypePLH peuplé avec les valeurs du programme
+     * @throws AppServiceException Si une erreur est rencontrée
+     */
+    TypePLH getPLHProgramme(long programmeId, long typePLHid) throws AppServiceException;
+
+    /**
+     * Permet de mettre à jour un PLH d'un programme
+     * @param programmeId L'id du programme
+     * @param typePLH Le TypePLH avec ses valeurs
+     * @return Le TypePLH mis à jour
+     * @throws AppServiceException Si une erreur est rencontrée
+     */
+    TypePLH updatePLHProgramme(long programmeId, TypePLH typePLH) throws AppServiceException;
+
+    /**
+     * Permet de créer un PLH pour un programme
+     * @param programmeId L'id du programme
+     * @param typePLHid L'id du TypePLH
+     * @return Le TypePLH peuplé avec les valeurs du programme
+     * @throws AppServiceException Si une erreur est rencontrée
+     */
+    TypePLH createPLHProgramme(long programmeId, long typePLHid) throws AppServiceException;
+
+    /**
+     * Permet de supprimer un PLH d'un programme
+     * @param programmeId L'id du programme
+     * @param typePLHid L'id du typePLH
+     * @throws AppServiceException
+     */
+    void deletePLHProgramme(long programmeId, long typePLHid) throws AppServiceException;
 
 }

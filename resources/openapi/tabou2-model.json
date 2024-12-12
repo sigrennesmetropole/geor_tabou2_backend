@@ -2113,6 +2113,56 @@
             "type": "string"
           }
         }
+      },
+      "TypePLH": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type PLH",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du type de PLH"
+          },
+          "dateDebut": {
+            "type": "string",
+            "description": "Date de début d'effet du type de PLH",
+            "format": "date"
+          },
+          "typeAttributPLH": {
+            "type": "string",
+            "enum": [
+              "CATEGORY",
+              "VALUE"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "description": "Valeur de l'attribut PLH (typeAttributPLH doit valoir VALUE). Pour l'administation des typePLH, laisser cette valeur à nulle"
+          },
+          "fils": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypePLH"
+            }
+          }
+        }
+      },
+      "TypePLHBean": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant du type PLH",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du type de PLH"
+          }
+        }
       }
     }
   },

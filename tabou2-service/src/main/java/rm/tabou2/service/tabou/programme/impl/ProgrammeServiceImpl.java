@@ -29,6 +29,7 @@ import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.dto.ProgrammeLight;
+import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
@@ -719,5 +720,27 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     }
 
+    @Override
+    public TypePLH getPLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
+        // TODO LLE23797
+        return null;
+    }
 
+    @Override
+    public TypePLH updatePLHProgramme(long programmeId, TypePLH typePLH) throws AppServiceException {
+        // TODO LLE23797
+        return null;
+    }
+
+    @Override
+    public TypePLH createPLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
+        // TODO LLE23797
+        return null;
+    }
+
+    @Override
+    public void deletePLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
+        // TODO LLE23797
+
+    }
 }
