@@ -9,6 +9,6 @@ public class Tabou2OpenApiSwaggerConfig extends OpenApiSwaggerConfig {
 
     @Bean
     public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder().group("Urbam@p").packagesToScan("rm.tabou2.facade.controller").pathsToMatch("/*").build();
+        return GroupedOpenApi.builder().group("Urbam@p").packagesToScan("rm.tabou2.facade.controller").pathsToMatch("/**").build();
     }
 }

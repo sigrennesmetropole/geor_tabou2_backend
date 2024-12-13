@@ -39,7 +39,7 @@ Le fichier `tabou2/tabou2.properties` fichier est détaillé comme suit:
 ```properties
 
 # Path du serveur
-server.servlet.context-path=/v1
+server.servlet.context-path=/tabou2
 
 # Base de données
 spring.jpa.properties.javax.persistence.schema-generation.create-source=metadata

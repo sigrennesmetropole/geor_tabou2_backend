@@ -22,12 +22,6 @@
 			<type>jar</type>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
 		<!-- Server Web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
