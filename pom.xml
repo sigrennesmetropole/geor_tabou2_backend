@@ -25,7 +25,7 @@
 		<springdoc.version>2.7.0</springdoc.version>
 		<maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
 		<apache.directory.api.version>2.1.7</apache.directory.api.version>
-		<mapstruct.version>1.6.2</mapstruct.version>
+		<mapstruct.version>1.6.3</mapstruct.version>
 		<lombok.version>1.18.26</lombok.version>
 		<log4j.version>2.24.2</log4j.version>
 		<openapi.plugin.version>7.10.0</openapi.plugin.version>
