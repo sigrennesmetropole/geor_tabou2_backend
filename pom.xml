@@ -40,7 +40,7 @@
 		<openapitools.version>0.2.6</openapitools.version>
 		<openapi.version>2.7.0</openapi.version>
 		<org.hibernate.version>8.0.1.Final</org.hibernate.version>
-		<mysql.version>8.0.33</mysql.version>
+		<mysql.version>9.1.0</mysql.version>
 
 		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
 		<plugin.dependency.check.maven.version>5.3.2</plugin.dependency.check.maven.version>
