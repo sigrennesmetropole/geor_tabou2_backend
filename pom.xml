@@ -27,7 +27,7 @@
 		<apache.directory.api.version>2.1.7</apache.directory.api.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<lombok.version>1.18.26</lombok.version>
-		<log4j.version>2.24.2</log4j.version>
+		<log4j.version>2.24.3</log4j.version>
 		<openapi.plugin.version>7.10.0</openapi.plugin.version>
 		<swagger.version>2.2.27</swagger.version>
 		<swagger.codegen.version>2.4.14</swagger.codegen.version>
