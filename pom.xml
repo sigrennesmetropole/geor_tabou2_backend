@@ -39,7 +39,7 @@
 		<jackson-datatype.version>2.15.2</jackson-datatype.version>
 		<openapitools.version>0.2.6</openapitools.version>
 		<openapi.version>2.7.0</openapi.version>
-		<org.hibernate.version>8.0.1.Final</org.hibernate.version>
+		<org.hibernate.version>8.0.2.Final</org.hibernate.version>
 		<mysql.version>9.1.0</mysql.version>
 
 		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
