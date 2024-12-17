@@ -1,5 +1,7 @@
 package rm.tabou2.storage.tabou.entity.programme;
 
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import lombok.*;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
@@ -17,6 +19,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import rm.tabou2.storage.tabou.entity.plh.AttributPLHEntity;
+import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
+
 import java.util.*;
 
 
@@ -132,6 +137,18 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_operation")
     private OperationEntity operation;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "tabou_programme_type_plh",
+            joinColumns = @JoinColumn(name = "id_programme", referencedColumnName = "id_programme"),
+            inverseJoinColumns = @JoinColumn(name = "id_type_plh", referencedColumnName = "id_type_plh")
+    )
+    private Set<TypePLHEntity> plhs;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_programme")
+    private Set<AttributPLHEntity> attributsPLH;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_programme")
