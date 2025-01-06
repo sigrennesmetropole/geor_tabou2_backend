@@ -164,6 +164,12 @@ public class ProgrammeEntity extends GenericAuditableEntity {
                 .findFirst();
     }
 
+    public Optional<TypePLHEntity> lookupOptionalTypePLHById(long typePLHid) {
+        return this.plhs.stream()
+                .filter(typePLH -> typePLH.getId()==(typePLHid))
+                .findFirst();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

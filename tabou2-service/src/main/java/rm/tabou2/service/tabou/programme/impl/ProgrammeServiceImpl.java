@@ -38,6 +38,7 @@ import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.helper.programme.ProgrammeValidator;
 import rm.tabou2.service.mapper.sig.ProgrammeRmMapper;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
+import rm.tabou2.service.mapper.tabou.plh.TypePLHMapper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeLightMapper;
@@ -55,6 +56,7 @@ import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
@@ -65,6 +67,7 @@ import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
@@ -81,6 +84,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -135,6 +139,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeTiersDao programmeTiersDao;
 
     @Autowired
+    private TypePLHDao typePLHDao;
+
+    @Autowired
     private EvenementProgrammeMapper evenementProgrammeMapper;
 
     @Autowired
@@ -148,6 +155,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private ProgrammeRmMapper programmeRmMapper;
+
+    @Autowired
+    private TypePLHMapper typePLHMapper;
 
     @Autowired
     private AuthentificationHelper authentificationHelper;
@@ -722,25 +732,98 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     public TypePLH getPLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
-        // TODO LLE23797
-        return null;
+
+        // Récupération du programme et recherche de le type PLH à modifier
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        TypePLHEntity typeProgrammePLHEntity = lookupTypePLHById(programmeEntity, typePLHid);
+
+        // Vérification si l'utilisateur a le droit de consulter un programme
+        if (!programmeRightsHelper.checkCanGetProgramme(programmeEntity)) {
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programmeEntity.getNom());}
+
+        //Récupération du type PLH
+        return typePLHMapper.entityToDto(typeProgrammePLHEntity);
     }
 
     @Override
+    @Transactional
     public TypePLH updatePLHProgramme(long programmeId, TypePLH typePLH) throws AppServiceException {
-        // TODO LLE23797
-        return null;
+
+        // Récupération du programme et recherche de le type PLH à modifier
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
+        long typePLHid = typePLH.getId();
+
+        TypePLHEntity typeProgrammePLHEntity = lookupTypePLHById(programmeEntity, typePLHid);
+
+        // Vérification si l'utilisateur a le droit de modifier un programme
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
+        }
+        TypePLHEntity typePLHEntity = typePLHMapper.dtoToEntity(typePLH);
+
+        // Enregistrement en BDD
+        try {
+            typeProgrammePLHEntity = typePLHDao.save(typePLHEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible d'éditer le type de PLH " + typePLHid, e);
+        }
+
+        return typePLHMapper.entityToDto(typeProgrammePLHEntity);
     }
 
     @Override
+    @Transactional
     public TypePLH createPLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
-        // TODO LLE23797
-        return null;
+        // Programme
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un évènement pour le programme id = " + programmeId);
+        }
+
+        //type plh
+        TypePLHEntity typeProgrammePLHEntity = lookupTypePLHById(programmeEntity, typePLHid);
+
+        // Enregistrement en BDD
+        Set<TypePLHEntity> phls = programmeEntity.getPlhs();
+        phls.add(typeProgrammePLHEntity);
+        programmeEntity.setPlhs(phls);
+
+        // Enregistrement en BDD
+        try {
+            programmeDao.save(programmeEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible d'ajouter l'évènement Programme , TypePLHid = "
+                    + typePLHid, e);
+        }
+
+        return typePLHMapper.entityToDto(typeProgrammePLHEntity);
     }
 
     @Override
+    @Transactional
     public void deletePLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
-        // TODO LLE23797
+        // Récupération du programme et recherche de le type PLH à modifier
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
+        TypePLHEntity typeProgrammePLHEntity = lookupTypePLHById(programmeEntity, typePLHid);
 
+        // Vérification si l'utilisateur a le droit de modifier un programme
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
+        }
+
+        // Supression du type PLH
+        programmeEntity.getPlhs().remove(typeProgrammePLHEntity);
+        programmeDao.save(programmeEntity);
+    }
+
+    private TypePLHEntity lookupTypePLHById(ProgrammeEntity programmeEntity, long typePLHid) throws AppServiceException {
+        Optional<TypePLHEntity> optionalTypePLHEntity = programmeEntity.lookupOptionalTypePLHById(typePLHid);
+        if (optionalTypePLHEntity.isEmpty()) {
+            throw new AppServiceException("Le type PLH id = " + typePLHid + " n'existe pas pour le programme id = " + programmeEntity.getId());
+        }
+        return optionalTypePLHEntity.get();
     }
 }
