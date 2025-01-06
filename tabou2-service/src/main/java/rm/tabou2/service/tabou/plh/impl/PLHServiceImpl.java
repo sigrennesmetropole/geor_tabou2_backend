@@ -12,6 +12,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.mapper.tabou.plh.TypePLHMapper;
 import rm.tabou2.service.tabou.plh.PLHService;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
+import rm.tabou2.storage.tabou.entity.plh.TypeAttributPLH;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 
 @Service
@@ -35,6 +36,9 @@ public class PLHServiceImpl implements PLHService {
 		}
 
 		TypePLHEntity typePLHEntity = typePLHMapper.dtoToEntity(typePLH);
+		if (typePLHEntity.getFils() != null && typePLH.getTypeAttributPLH().equals(TypePLH.TypeAttributPLHEnum.VALUE)) {
+			typePLHEntity.setTypeAttributPLH(TypeAttributPLH.CATEGORY);
+		}
 
 		try {
 			typePLHEntity = typePLHDao.save(typePLHEntity);
@@ -60,7 +64,6 @@ public class PLHServiceImpl implements PLHService {
 		}
 
 		TypePLHEntity typePLHEntity = typePLHDao.getReferenceById(typePLH.getId());
-
 		typePLHMapper.dtoToEntity(typePLH, typePLHEntity);
 
 		// Enregistrement en BDD
