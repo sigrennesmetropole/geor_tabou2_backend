@@ -1,6 +1,5 @@
 package rm.tabou2.service.tabou;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.event.annotation.AfterTestExecution;
 import org.springframework.transaction.annotation.Transactional;
 
 import rm.tabou2.service.StarterSpringBootTestApplication;
@@ -87,7 +87,7 @@ public class OperationTiersServiceTest {
         Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);
     }
 
-    @AfterEach
+    @AfterTestExecution
     public void afterTest() {
         operationDao.deleteAll();
         tiersDao.deleteAll();
@@ -99,6 +99,8 @@ public class OperationTiersServiceTest {
     private static final String NOM_TIERS = "nom";
 
 
+    @Test
+    @Transactional
     public void testSearchTiers() throws AppServiceException {
 
 
@@ -110,12 +112,10 @@ public class OperationTiersServiceTest {
 
         TiersEntity tiers = new TiersEntity();
         tiers.setNom(NOM_TIERS);
-        tiers.setId(1L);
         tiersDao.save(tiers);
 
         TypeTiersEntity typeTiers = new TypeTiersEntity();
         typeTiers.setLibelle(LIBELLE_TYPE_TIERS);
-        typeTiers.setId(2L);
         typeTiersDao.save(typeTiers);
 
         OperationEntity operationEntity = new OperationEntity();
@@ -168,12 +168,10 @@ public class OperationTiersServiceTest {
 
         TiersEntity tiers = new TiersEntity();
         tiers.setNom(NOM_TIERS);
-        tiers.setId(1L);
         tiersDao.save(tiers);
 
         TypeTiersEntity typeTiers = new TypeTiersEntity();
         typeTiers.setLibelle(LIBELLE_TYPE_TIERS);
-        typeTiers.setId(1L);
         typeTiersDao.save(typeTiers);
 
         OperationEntity operationEntity = new OperationEntity();

@@ -503,6 +503,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
+    @Transactional
     public DocumentContent generateFicheSuivi(Long programmeId) throws AppServiceException {
 
         ProgrammeEntity programmeEntity = getProgrammeEntityById(programmeId);
@@ -643,6 +644,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
+    @Transactional
     public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, Object file, Date dateDocument) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
@@ -658,6 +660,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
+    @Transactional
     public void deleteDocument(long programmeId, String documentId) throws AppServiceException {
 
         //On vérifie que le programme existe
@@ -682,6 +685,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
 
     @Override
+    @Transactional
     public DocumentMetadata updateDocumentMetadata(long programmeId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
@@ -697,6 +701,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
 
     @Override
+    @Transactional
     public void updateDocumentContent(long programmeId, String documentId, Object file) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
