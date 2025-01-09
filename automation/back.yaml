@@ -1,6 +1,6 @@
 nameOverride: "rm-tabou2-back"
 image:
-  repository: glregistry.boost.open.global/rennes-metropole/tabou2/tabou2
+  repository: glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/tabou2
   internalPort: 8080
   exposedPort: 8080
 
