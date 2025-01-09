@@ -1,0 +1,27 @@
+image:
+  tag: open-develop
+  env:
+    - name: TABOU2_DATASOURCE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: tabou2-secret-qua
+          key: database.tabou2.password
+    - name: DDC_DATASOURCE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: tabou2-secret-qua
+          key: database.ddc.password
+    - name: SIG_DATASOURCE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: tabou2-secret-qua
+          key: database.sig_user.password                  
+    - name: DDC_BDD_HOST
+      value: georchestra-bdd-qua.rennes-metropole.georchestra
+    - name: TABOU2_BDD_HOST
+      value: georchestra-bdd-qua.rennes-metropole.georchestra
+    - name: SIG_BDD_HOST
+      value: georchestra-bdd-qua.rennes-metropole.georchestra
+
+    - name: SWAGGER_SERVER
+      value: https://tabou2-back-qua.rennes-metropole-georchestra.karbon.open.global

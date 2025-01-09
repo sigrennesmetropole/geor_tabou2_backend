@@ -1,0 +1,7 @@
+{
+	"id": "tabou2-TARGET_ENV",
+	"uri": "http://tabou2-back-TARGET_ENV-rm-tabou2-back:8080/tabou2/",
+	"predicates": [ 
+		"Path=/tabou2-TARGET_ENV/**"
+	]
+}
