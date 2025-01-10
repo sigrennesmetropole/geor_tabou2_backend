@@ -138,13 +138,13 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @JoinColumn(name = "id_operation")
     private OperationEntity operation;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "tabou_programme_type_plh",
             joinColumns = @JoinColumn(name = "id_programme", referencedColumnName = "id_programme"),
             inverseJoinColumns = @JoinColumn(name = "id_type_plh", referencedColumnName = "id_type_plh")
     )
-    private Set<TypePLHEntity> plhs;
+    private Set<TypePLHEntity> plhs = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_programme")
@@ -162,6 +162,10 @@ public class ProgrammeEntity extends GenericAuditableEntity {
         return this.evenements.stream()
                 .filter(ep -> ep.getId() == idEvenementProgramme)
                 .findFirst();
+    }
+
+    public void addTypePLHProgramme(TypePLHEntity typePLHEntity) {
+        this.plhs.add(typePLHEntity);
     }
 
     public Optional<TypePLHEntity> lookupOptionalTypePLHById(long typePLHid) {
