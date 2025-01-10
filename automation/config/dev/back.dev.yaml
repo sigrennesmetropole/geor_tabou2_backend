@@ -6,16 +6,19 @@ image:
         secretKeyRef:
           name: tabou2-secret-dev
           key: database.tabou2.password
+
     - name: DDC_DATASOURCE_PASSWORD
       valueFrom:
         secretKeyRef:
           name: tabou2-secret-dev
           key: database.ddc.password
+
     - name: SIG_DATASOURCE_PASSWORD
       valueFrom:
         secretKeyRef:
           name: tabou2-secret-dev
-          key: database.sig_user.password                  
+          key: database.sig.password
+
     - name: BDD_HOST
       value: georchestra-bdd-dev.rennes-metropole.georchestra
 
