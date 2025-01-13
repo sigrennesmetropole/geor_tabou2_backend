@@ -20,7 +20,7 @@ image:
           key: database.sig.password
 
     - name: BDD_HOST
-      value: georchestra-bdd-dev.rennes-metropole.georchestra
+      value: georchestra-bdd-dev-georchestra-service-bdd
 
     - name: SWAGGER_SERVER
       value: https://tabou2-back-dev.rennes-metropole-georchestra.karbon.open.global
