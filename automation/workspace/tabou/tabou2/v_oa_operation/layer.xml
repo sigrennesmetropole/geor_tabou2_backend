@@ -1,0 +1,17 @@
+<layer>
+  <name>v_oa_operation</name>
+  <id>LayerInfoImpl--41a3de01:19275cc5168:-76dd</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl-78ff667e:12476299803:-7ffa</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--41a3de01:19275cc5168:-76de</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2024-10-10 14:19:12.566 UTC</dateCreated>
+  <dateModified>2024-10-10 23:18:44.90 UTC</dateModified>
+</layer>
