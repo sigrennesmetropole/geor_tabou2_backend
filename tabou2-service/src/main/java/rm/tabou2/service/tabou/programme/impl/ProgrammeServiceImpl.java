@@ -69,6 +69,7 @@ import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.plh.AttributPLHEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
@@ -842,6 +843,13 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         // Suppression du type PLH
         programmeEntity.getPlhs().remove(typeProgrammePLHEntity);
+
+        // Supression éventuelle de son attribut du programme
+        if (!CollectionUtils.isEmpty(programmeEntity.getAttributsPLH())) {
+            Set<AttributPLHEntity> attributPLHs = programmeEntity.getAttributsPLH();
+            attributPLHs.removeIf(attributPLHEntity -> attributPLHEntity.getType().getId() == typePLHid);
+        }
+
         programmeDao.save(programmeEntity);
     }
 
