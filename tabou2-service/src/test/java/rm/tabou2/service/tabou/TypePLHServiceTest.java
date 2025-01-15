@@ -19,7 +19,6 @@ import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
-import rm.tabou2.service.mapper.tabou.plh.TypePLHMapper;
 import rm.tabou2.service.tabou.plh.PLHService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
@@ -47,9 +46,6 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
     @Autowired
     private PLHService plhService;
 
-    @Autowired
-    private TypePLHMapper typePLHMapper;
-
     @MockBean
     private ProgrammeRightsHelper programmeRightsHelper;
 
@@ -69,6 +65,31 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
     public void afterTest() {
         typePLHDao.deleteAll();
         programmeDao.deleteAll();
+    }
+
+    @DisplayName("testCreateTypePLHProgramme: test de création de types PLH")
+    @Test
+    @Transactional
+    void testCreateTypePLHProgramme() throws AppServiceException {
+        TypePLH typePLH1 = new TypePLH();
+        typePLH1.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.CATEGORY);
+        typePLH1.setDateDebut(new Date());
+        typePLH1.setLibelle("num1");
+
+        TypePLH typePLH2 = new TypePLH();
+        typePLH2.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.VALUE);
+        typePLH2.setDateDebut(new Date());
+        typePLH2.setLibelle("num2");
+
+        TypePLH plh1 = plhService.createTypePLH(typePLH1);
+        TypePLH plh2 = plhService.createTypePLHWithParent(typePLH2, plh1.getId());
+        TypePLH plh1ApresFils = plhService.getTypePLH(plh1.getId());
+
+        Assertions.assertEquals("num1", plh1.getLibelle());
+        Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.CATEGORY, plh1.getTypeAttributPLH());
+        Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.VALUE, plh2.getTypeAttributPLH());
+        Assertions.assertEquals(1, plh1ApresFils.getFils().size());
+        Assertions.assertEquals(plh2.getId(), plh1ApresFils.getFils().get(0).getId());
     }
 
     @DisplayName("testGetListPLHProgramme: test de récupération de types PLH d'un programme")
@@ -97,7 +118,7 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
         TypePLH plh1 = programmeService.addPLHProgrammeById(programmeEntity.getId(), typePLHEntity1.getId());
         TypePLH plh2 = programmeService.addPLHProgrammeById(programmeEntity.getId(), typePLHEntity2.getId());
 
-        Assertions.assertEquals(1L, plh1.getId());
+        Assertions.assertEquals("num1", plh1.getLibelle());
         Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.CATEGORY, plh1.getTypeAttributPLH());
         Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.VALUE, plh2.getTypeAttributPLH());
     }
@@ -118,16 +139,17 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
         typePLHEntity1.setTypeAttributPLH(TypeAttributPLH.CATEGORY);
         typePLHEntity1.setDateDebut(new Date());
         typePLHEntity1.setLibelle("num1");
-        typePLHDao.save(typePLHEntity1);
+        typePLHEntity1 = typePLHDao.save(typePLHEntity1);
         TypePLH plh1 = programmeService.addPLHProgrammeById(programmeEntity.getId(), typePLHEntity1.getId());
 
-        typePLHEntity1.setLibelle("num2");
-        typePLHEntity1.setTypeAttributPLH(TypeAttributPLH.VALUE);
-        TypePLH plh2 = programmeService.updatePLHProgramme(programmeEntity.getId(), typePLHMapper.entityToDto(typePLHEntity1));
+        plh1.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.VALUE);
+        plh1.setValue("value1");
+        programmeService.updatePLHProgramme(programmeEntity.getId(), plh1);
+        TypePLH plh2 = programmeService.getPLHProgramme(programmeEntity.getId(), plh1.getId());
 
-        Assertions.assertNotEquals(plh1, plh2);
-        Assertions.assertEquals("num2", plh2.getLibelle());
+        Assertions.assertEquals(plh1, plh2);
         Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.VALUE, plh2.getTypeAttributPLH());
+        Assertions.assertEquals("value1", plh2.getValue());
     }
 
     @DisplayName("testRemovePLHProgramme: Test de la suppression d'un type plh dans un programme")
@@ -159,8 +181,7 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
     @Test
     @Transactional
     void testCannotCreatePLHWithInvalidParameters() {
-
         final TypePLH typePLH = new TypePLH();
-        Assertions.assertThrows(NullPointerException.class, () -> plhService.createTypePLH(typePLH));
+        Assertions.assertThrows(AppServiceException.class, () -> plhService.createTypePLH(typePLH));
     }
 }

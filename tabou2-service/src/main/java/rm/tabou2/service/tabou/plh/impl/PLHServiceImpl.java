@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.plh.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -9,31 +9,30 @@ import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.plh.TypePlhHelper;
 import rm.tabou2.service.mapper.tabou.plh.TypePLHMapper;
 import rm.tabou2.service.tabou.plh.PLHService;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
-import rm.tabou2.storage.tabou.entity.plh.TypeAttributPLH;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PLHServiceImpl implements PLHService {
 
-	@Autowired
-	private TypePLHDao typePLHDao;
+	private final TypePLHDao typePLHDao;
 
-	@Autowired
-	private ProgrammeDao programmeDao;
+	private final ProgrammeDao programmeDao;
 
-	@Autowired
-	private TypePLHMapper typePLHMapper;
+	private final TypePLHMapper typePLHMapper;
 
-	@Autowired
-	private AuthentificationHelper authentificationHelper;
+	private final AuthentificationHelper authentificationHelper;
+
+	private final TypePlhHelper typePlhHelper;
 
 	@Override
 	@Transactional(readOnly = false)
@@ -44,10 +43,8 @@ public class PLHServiceImpl implements PLHService {
 					+ typePLH.getLibelle());
 		}
 
-		// Vérification qu'un type PLH avec un TypeAttribut VALUE n'est pas de fils
-		if (typePLHEntity.getFils() != null && typePLH.getTypeAttributPLH().equals(TypePLH.TypeAttributPLHEnum.VALUE)) {
-			typePLHEntity.setTypeAttributPLH(TypeAttributPLH.CATEGORY);
-		}
+		// Vérification qu'aucun type PLH avec un TypeAttribut VALUE n'a pas de fils
+		typePlhHelper.checkAucunAttributVALUEaUnFils(typePLHEntity);
 
 		// Enregistrement en BDD
 		try {
@@ -67,10 +64,8 @@ public class PLHServiceImpl implements PLHService {
 					+ typePLH.getLibelle());
 		}
 
-		// Vérification qu'un type PLH avec un TypeAttribut VALUE n'est pas de fils
-		if (typePLHEntity.getFils() != null && typePLH.getTypeAttributPLH().equals(TypePLH.TypeAttributPLHEnum.VALUE)) {
-			typePLHEntity.setTypeAttributPLH(TypeAttributPLH.CATEGORY);
-		}
+		// Vérification qu'aucun type PLH avec un TypeAttribut VALUE n'a pas de fils
+		typePlhHelper.checkAucunAttributVALUEaUnFils(typePLHEntity);
 
 		// Enregistrement en BDD
 		try {
@@ -81,9 +76,8 @@ public class PLHServiceImpl implements PLHService {
 
 		// rajout du type PLH en tant que fils
 		TypePLHEntity parentEntity = typePLHDao.findOneById(parentId);
-		Set<TypePLHEntity> fils = parentEntity.getFils();
-		fils.add(typePLHEntity);
-		parentEntity.setFils(fils);
+		typePlhHelper.checkAucunAttributVALUEaUnFils(parentEntity);
+		parentEntity.addTypePLHToFils(typePLHEntity);
 		typePLHDao.save(parentEntity);
 
 		return typePLHMapper.entityToDto(typePLHEntity);
@@ -104,10 +98,8 @@ public class PLHServiceImpl implements PLHService {
 					"du type de PLH " + typePLH.getLibelle());
 		}
 
-		// Vérification qu'un type PLH avec un TypeAttribut VALUE n'est pas de fils
-		if (typePLHEntity.getFils() != null && typePLH.getTypeAttributPLH().equals(TypePLH.TypeAttributPLHEnum.VALUE)) {
-			typePLHEntity.setTypeAttributPLH(TypeAttributPLH.CATEGORY);
-		}
+		// Vérification qu'aucun type PLH avec un TypeAttribut VALUE n'a pas de fils
+		typePlhHelper.checkAucunAttributVALUEaUnFils(typePLHEntity);
 
 		// Enregistrement en BDD
 		try {
@@ -122,7 +114,7 @@ public class PLHServiceImpl implements PLHService {
 	@Transactional(readOnly = false)
 	public void deleteTypePLH(long id) throws AppServiceException {
 		if (!authentificationHelper.hasContributeurRole()) {
-			throw new AppServiceException("Utilisateur non autorisé à supprimer l'évènement ", AppServiceExceptionsStatus.FORBIDDEN);
+			throw new AppServiceException("Utilisateur non autorisé à supprimer le type PLH ", AppServiceExceptionsStatus.FORBIDDEN);
 		}
 
 		// Vérification qu'aucun programmes ne possède le type PLH à supprimer
@@ -135,7 +127,7 @@ public class PLHServiceImpl implements PLHService {
 		}
 
 		//Suppression du type PLH
-		TypePLHEntity typePLHEntity = typePLHDao.getReferenceById(id);
+		TypePLHEntity typePLHEntity = typePLHDao.findOneById(id);
 		typePLHDao.delete(typePLHEntity);
 	}
 }

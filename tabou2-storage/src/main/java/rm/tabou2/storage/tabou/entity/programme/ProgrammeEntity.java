@@ -138,13 +138,13 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @JoinColumn(name = "id_operation")
     private OperationEntity operation;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinTable(
             name = "tabou_programme_type_plh",
             joinColumns = @JoinColumn(name = "id_programme", referencedColumnName = "id_programme"),
             inverseJoinColumns = @JoinColumn(name = "id_type_plh", referencedColumnName = "id_type_plh")
     )
-    private Set<TypePLHEntity> plhs = new HashSet<>();
+    private Set<TypePLHEntity> plhs;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_programme")
@@ -165,13 +165,26 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     }
 
     public void addTypePLHProgramme(TypePLHEntity typePLHEntity) {
+        if (this.plhs == null) {
+            this.plhs = new HashSet<>();
+        }
         this.plhs.add(typePLHEntity);
     }
 
     public Optional<TypePLHEntity> lookupOptionalTypePLHById(long typePLHid) {
+        if (this.plhs == null) {
+            return Optional.empty();
+        }
         return this.plhs.stream()
-                .filter(typePLH -> typePLH.getId()==(typePLHid))
+                .filter(typePLH -> typePLH.getId()== typePLHid)
                 .findFirst();
+    }
+
+    public void addAttributPLHProgramme(AttributPLHEntity attributPLHEntity) {
+        if (this.attributsPLH == null) {
+            this.attributsPLH = new HashSet<>();
+        }
+        this.attributsPLH.add(attributPLHEntity);
     }
 
     @Override

@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -44,4 +45,11 @@ public class TypePLHEntity {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_type_plh_parent")
 	private Set<TypePLHEntity> fils;
+
+	public void addTypePLHToFils(TypePLHEntity typePLHEntity) {
+		if (this.fils == null) {
+			this.fils = new HashSet<>();
+		}
+		this.fils.add(typePLHEntity);
+	}
 }
