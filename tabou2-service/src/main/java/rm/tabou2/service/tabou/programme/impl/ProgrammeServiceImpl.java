@@ -775,8 +775,11 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
-        // Mise à jour les valeurs du programme avec le type PLH
-        programmeEntity.setPlhs(updateListPLH(programmeEntity.getPlhs(), typePLH));
+        // Mise à jour du programme avec le type PLH
+        TypePLHEntity typePLHEntity = typePLHMapper.dtoToEntity(typePLH);
+        programmeEntity.removeTypePLHProgramme(lookupTypePLHById(programmeEntity, typePLH.getId()));
+        programmeEntity.addTypePLHProgramme(typePLHEntity);
+
         try {
             programmeDao.save(programmeEntity);
         } catch (DataAccessException e) {
@@ -785,17 +788,6 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         //Récupération du type PLH
         return typePlhHelper.updateValuesTypePlh(typePLH, programmeEntity);
-    }
-
-    private Set<TypePLHEntity> updateListPLH(Set<TypePLHEntity> typePLHEntities, TypePLH typePLH) {
-        Long typePLHid = typePLH.getId();
-        for (TypePLHEntity typePLHEntity : typePLHEntities) {
-            if (typePLHEntity.getId() == typePLHid) {
-                typePLHEntities.remove(typePLHEntity);
-                typePLHEntities.add(typePLHMapper.dtoToEntity(typePLH));
-            }
-        }
-        return typePLHEntities;
     }
 
     @Override
@@ -834,7 +826,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // Récupération du programme et recherche du type PLH à modifier
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
         Programme programme = programmeMapper.entityToDto(programmeEntity);
-        TypePLHEntity typeProgrammePLHEntity = lookupTypePLHById(programmeEntity, typePLHid);
+        TypePLHEntity typePLHEntity = lookupTypePLHById(programmeEntity, typePLHid);
 
         // Vérification si l'utilisateur a le droit de modifier un programme
         if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
@@ -842,7 +834,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         // Suppression du type PLH
-        programmeEntity.getPlhs().remove(typeProgrammePLHEntity);
+        programmeEntity.getPlhs().remove(typePLHEntity);
 
         // Supression éventuelle de son attribut du programme
         if (!CollectionUtils.isEmpty(programmeEntity.getAttributsPLH())) {
@@ -850,6 +842,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             attributPLHs.removeIf(attributPLHEntity -> attributPLHEntity.getType().getId() == typePLHid);
         }
 
+        typePlhHelper.removeValuesTypePlh(typePLHMapper.entityToDto(typePLHEntity), programmeEntity);
         programmeDao.save(programmeEntity);
     }
 

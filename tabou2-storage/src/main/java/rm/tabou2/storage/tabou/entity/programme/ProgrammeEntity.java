@@ -171,6 +171,12 @@ public class ProgrammeEntity extends GenericAuditableEntity {
         this.plhs.add(typePLHEntity);
     }
 
+    public void removeTypePLHProgramme(TypePLHEntity typePLHEntity) {
+        if (this.plhs != null) {
+            this.plhs.remove(typePLHEntity);
+        }
+    }
+
     public Optional<TypePLHEntity> lookupOptionalTypePLHById(long typePLHid) {
         if (this.plhs == null) {
             return Optional.empty();

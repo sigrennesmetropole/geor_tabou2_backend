@@ -44,7 +44,7 @@ public class PLHServiceImpl implements PLHService {
 		}
 
 		// Vérification qu'aucun type PLH avec un TypeAttribut VALUE n'a pas de fils
-		typePlhHelper.checkAucunAttributVALUEaUnFils(typePLHEntity);
+		typePlhHelper.checkTypeAttributPLH(typePLHEntity);
 
 		// Enregistrement en BDD
 		try {
@@ -65,7 +65,7 @@ public class PLHServiceImpl implements PLHService {
 		}
 
 		// Vérification qu'aucun type PLH avec un TypeAttribut VALUE n'a pas de fils
-		typePlhHelper.checkAucunAttributVALUEaUnFils(typePLHEntity);
+		typePlhHelper.checkTypeAttributPLH(typePLHEntity);
 
 		// Enregistrement en BDD
 		try {
@@ -76,7 +76,7 @@ public class PLHServiceImpl implements PLHService {
 
 		// rajout du type PLH en tant que fils
 		TypePLHEntity parentEntity = typePLHDao.findOneById(parentId);
-		typePlhHelper.checkAucunAttributVALUEaUnFils(parentEntity);
+		typePlhHelper.checkTypeAttributPLH(parentEntity);
 		parentEntity.addTypePLHToFils(typePLHEntity);
 		typePLHDao.save(parentEntity);
 
@@ -99,7 +99,7 @@ public class PLHServiceImpl implements PLHService {
 		}
 
 		// Vérification qu'aucun type PLH avec un TypeAttribut VALUE n'a pas de fils
-		typePlhHelper.checkAucunAttributVALUEaUnFils(typePLHEntity);
+		typePlhHelper.checkTypeAttributPLH(typePLHEntity);
 
 		// Enregistrement en BDD
 		try {

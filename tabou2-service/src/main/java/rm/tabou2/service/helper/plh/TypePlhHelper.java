@@ -1,6 +1,6 @@
 package rm.tabou2.service.helper.plh;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import rm.tabou2.service.dto.TypePLH;
@@ -14,11 +14,11 @@ import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import java.util.List;
 import java.util.Set;
 
+@RequiredArgsConstructor
 @Component
 public class TypePlhHelper {
 
-    @Autowired
-    private TypePLHDao typePlhDao;
+    private final TypePLHDao typePlhDao;
 
     /**
      * Peuple de façon récursive un type PLH avec ses valeurs associées dans le programme
@@ -59,7 +59,7 @@ public class TypePlhHelper {
      * Vérification récursive qu'un TypePLH et ses fils ne possède pas de fils s'ils sont du type attribut VALUE
      * @param typePLH   type PLH à vérifier
      */
-    public void checkAucunAttributVALUEaUnFils (TypePLHEntity typePLH) throws AppServiceException {
+    public void checkTypeAttributPLH (TypePLHEntity typePLH) throws AppServiceException {
         if (!CollectionUtils.isEmpty(typePLH.getFils())) {
             if (typePLH.getTypeAttributPLH().equals(TypeAttributPLH.VALUE)) {
                 throw new AppServiceException("Le type PLH id = " + typePLH.getId() +
@@ -67,7 +67,7 @@ public class TypePlhHelper {
             } else {
                 Set<TypePLHEntity> fils = typePLH.getFils();
                 for (TypePLHEntity typePLHEntity : fils) {
-                    checkAucunAttributVALUEaUnFils(typePLHEntity);
+                    checkTypeAttributPLH(typePLHEntity);
                 }
             }
         }
@@ -112,6 +112,35 @@ public class TypePlhHelper {
             programmeEntity.addAttributPLHProgramme(attributPLHEntity);
         }
         return typePLH;
+    }
+
+    /**
+     * Supprime de façon récursive l'attribut d'un type PLH ET les attributs de ses fils de la liste du programme
+     * @param typePLH   type PLH à supprimer
+     * @param programmeEntity le programmeEntity duquel est rattaché le typePLH
+     */
+    public void removeValuesTypePlh (TypePLH typePLH, ProgrammeEntity programmeEntity) {
+        // Si c'est une catégorie
+        if (typePLH.getTypeAttributPLH() == TypePLH.TypeAttributPLHEnum.CATEGORY) {
+            // et qu'elle a des fils
+            if (!CollectionUtils.isEmpty(typePLH.getFils())) {
+                List<TypePLH> fils = typePLH.getFils();
+                // Alors, on supprime récursivement les attributs de ses fils
+                for (TypePLH typePLHFils : fils) {
+                    removeValuesTypePlh(typePLHFils, programmeEntity);
+                }
+            }
+
+        }
+        // sinon, c'est donc un type VALUE
+        else {
+            // on récupère les attributs du programme
+            if (!CollectionUtils.isEmpty(programmeEntity.getAttributsPLH())) {
+                Set<AttributPLHEntity> attributPLHEntities = programmeEntity.getAttributsPLH();
+                // on supprime si on trouve un attribut correspondant à notre type PLH
+                attributPLHEntities.removeIf(attributPLHEntity -> attributPLHEntity.getType().getId() == typePLH.getId());
+            }
+        }
     }
 
 }
