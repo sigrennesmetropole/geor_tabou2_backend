@@ -110,6 +110,7 @@ tabou2:pre_docker:
       - open/master
       - open/develop
       - /^release.*/
+      - /.*karbonification.*/
   script:
     - ls -l $CI_PROJECT_DIR/tabou2-facade/target/
     - cp $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade.jar $CI_PROJECT_DIR/docker/rennes-metropole/tabou2-facade.jar
@@ -128,7 +129,7 @@ tabou2:docker2:build:
   dependencies:
     - tabou2:pre_docker
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ /.*develop/ || $CI_COMMIT_BRANCH =~ /.*master/ || $CI_COMMIT_BRANCH =~ /^release.*/'
+    - if: '$CI_COMMIT_BRANCH =~ /.*develop/ || $CI_COMMIT_BRANCH =~ /.*master/ || $CI_COMMIT_BRANCH =~ /^release.*/ || $CI_COMMIT_BRANCH =~ /.*karbonification.*/'
   timeout: 1h
   artifacts:
     paths:
@@ -144,19 +145,31 @@ tabou2:docker2:build:
   tags:
     - iaas
   image: glregistry.boost.open.global/boost/docker/mvn-node-jdk11-ansible:latest
+  needs:
+    - tabou2:docker2:build
   dependencies:
-    - tabou2:build  
+    - tabou2:docker2:build
   before_script:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$ansible_private_key" | base64 -d)       
   script:
-    - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade.jar $CI_PROJECT_DIR/ansible/dockerize/files/tabou2-facade.jar
-    - cd $CI_PROJECT_DIR/ansible  
+    - ls -l $CI_PROJECT_DIR/tabou2-facade/target/*
+    - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar $CI_PROJECT_DIR/ansible/dockerize/files/tabou2.jar
+    - cd $CI_PROJECT_DIR/ansible
     - cp tabou2_dev_var.yml $HOME/tabou2_var.yml
     - ansible-playbook tabou2-docker.yml -v -i "${TARGET_ENV}," -u root --ssh-common-args=-oStrictHostKeyChecking=no
+  artifacts:
+    paths:
+      - '$CI_PROJECT_DIR/tabou2-facade/target/**.war'
+      - '$CI_PROJECT_DIR/tabou2-facade/target/**.jar'
+      - '$CI_PROJECT_DIR/tabou2-facade/target/*.zip'
+      - '$CI_PROJECT_DIR/docker/**/**.war'
+      - '$CI_PROJECT_DIR/docker/**/**.zip'
+      - '$CI_PROJECT_DIR/docker/**/**.jar'
 
 tabou2:deploy:
   extends: .tabou2:deploy
+  stage: deploy
   only:
     refs:
       - open/develop
@@ -165,22 +178,94 @@ tabou2:deploy:
     
 tabou2:deploy:master:
   extends: .tabou2:deploy
+  stage: deploy
   only:
     refs:
       - open/master
   variables: 
     TARGET_ENV: REN1VML0095
-    
-trivyscan:back: 
+  when: manual
+
+## #####
+# Déploiement Karbon
+.tabou2:deploy-karbon:prepare:
+  stage: pre_docker
+  script:
+    - echo "send automation to georchestra deploiement"
+  artifacts:
+    name: tabou2-karbon-${TARGET_ENV}
+    paths:
+      - '$CI_PROJECT_DIR/automation/**'
+
+tabou2:deploy-karbon:prepare:dev:
+  extends: .tabou2:deploy-karbon:prepare
+  only:
+    refs:
+      - open/develop
+      - /.*karbonification.*/
+  variables:
+    TARGET_ENV: dev
+
+.tabou2:deploy-karbon:
+  stage: deploy
+  trigger:
+    project: rennes-metropole/georchestra/georchestra-service-deployment
+    strategy: depend
+    branch: master
+  variables:
+    TRIGGERED_BY: tabou2
+    PARENT_PIPELINE_ID: $CI_PIPELINE_ID
+
+tabou2:deploy-karbon:dev:
+  extends: .tabou2:deploy-karbon
+  needs:
+    - job: tabou2:deploy-karbon:prepare:dev
+      artifacts: true
+  only:
+    refs:
+      - open/develop
+      - /.*karbonification.*/
+  variables:
+    TARGET_ENV: dev
+    FORCE_POD: "true"
+    PARENT_COMMIT_BRANCH: $CI_COMMIT_BRANCH
+    PARENT_SERVICE_LOGIN: $SERVICE_LOGIN
+    PARENT_SERVICE_TOKEN: $SERVICE_TOKEN
+    PARENT_SERVICE_ACCESS_TOKEN: $SERVICE_ACCESS_TOKEN
+    PARENT_PROJECT_ID: $CI_PROJECT_ID
+    PARENT_STAGE_PREFIX: tabou2:deploy-karbon:prepare
+
+tabou2:deploy-karbon:qua:
+  extends: .tabou2:deploy-karbon
+  needs:
+    - job: tabou2:deploy-karbon:prepare:dev
+      artifacts: true
+  only:
+    refs:
+      - open/master
+      - /.*karbonification.*/
+  variables:
+    TARGET_ENV: dev
+    FORCE_POD: "true"
+    PARENT_COMMIT_BRANCH: $CI_COMMIT_BRANCH
+    PARENT_SERVICE_LOGIN: $SERVICE_LOGIN
+    PARENT_SERVICE_TOKEN: $SERVICE_TOKEN
+    PARENT_SERVICE_ACCESS_TOKEN: $SERVICE_ACCESS_TOKEN
+    PARENT_PROJECT_ID: $CI_PROJECT_ID
+    PARENT_STAGE_PREFIX: tabou2:deploy-karbon:prepare
+  when: manual
+
+## Trivy
+trivyscan:back:
   extends: 
     - .trivy-scan
   stage: docker
   needs:
     - tabou2:docker2:build
   dependencies:
-    - tabou2:docker2:build  
+    - tabou2:docker2:build
   variables:
     TRIVY_DOCKER_SCAN: glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/rennes-metropole:open-develop
   only:
     refs:
-      - open/develop    
+      - open/develop

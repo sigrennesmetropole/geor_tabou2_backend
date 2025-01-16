@@ -1,0 +1,17 @@
+<layer>
+  <name>v_oa_secteur</name>
+  <id>LayerInfoImpl--41a3de01:19275cc5168:-76d8</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl-78ff667e:12476299803:-7ffa</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--41a3de01:19275cc5168:-76d9</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+  <dateCreated>2024-10-10 14:20:13.41 UTC</dateCreated>
+  <dateModified>2024-10-10 18:07:21.769 UTC</dateModified>
+</layer>
