@@ -47,4 +47,11 @@ public interface PLHService {
 	 * @param id l'id du TypePLH à supprimer
 	 */
 	void deleteTypePLH(long id)throws AppServiceException;
+
+	/**
+	 * Permet de rechercher un TypePLH parent à partir de l'id d'un fils
+	 * @param idFils l'id du TypePLH fils
+	 * @return le TypePLH parent
+	 */
+	TypePLH searchParentById(long idFils)throws AppServiceException;
 }

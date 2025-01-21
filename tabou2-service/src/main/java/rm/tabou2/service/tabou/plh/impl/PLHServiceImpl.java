@@ -14,6 +14,7 @@ import rm.tabou2.service.mapper.tabou.plh.TypePLHMapper;
 import rm.tabou2.service.tabou.plh.PLHService;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.dao.programme.TypePLHCustomDao;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
@@ -33,6 +34,8 @@ public class PLHServiceImpl implements PLHService {
 	private final AuthentificationHelper authentificationHelper;
 
 	private final TypePlhHelper typePlhHelper;
+
+	private final TypePLHCustomDao typePLHCustomDao;
 
 	@Override
 	@Transactional(readOnly = false)
@@ -114,7 +117,8 @@ public class PLHServiceImpl implements PLHService {
 	@Transactional(readOnly = false)
 	public void deleteTypePLH(long id) throws AppServiceException {
 		if (!authentificationHelper.hasContributeurRole()) {
-			throw new AppServiceException("Utilisateur non autorisé à supprimer le type PLH ", AppServiceExceptionsStatus.FORBIDDEN);
+			throw new AppServiceException("Utilisateur non autorisé à supprimer le type PLH ",
+					AppServiceExceptionsStatus.FORBIDDEN);
 		}
 
 		// Vérification qu'aucun programmes ne possède le type PLH à supprimer
@@ -129,5 +133,14 @@ public class PLHServiceImpl implements PLHService {
 		//Suppression du type PLH
 		TypePLHEntity typePLHEntity = typePLHDao.findOneById(id);
 		typePLHDao.delete(typePLHEntity);
+	}
+
+	@Override
+	public TypePLH searchParentById(long idfils) throws AppServiceException {
+		if (typePLHDao.findOneById(idfils) == null) {
+			throw new AppServiceException("Recherche impossible, l'id du fils id = " + idfils +
+					" ne correspond pas à un type PLH");
+		}
+		return typePLHMapper.entityToDto(typePLHCustomDao.getParentById(idfils));
 	}
 }
