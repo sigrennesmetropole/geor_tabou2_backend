@@ -1,6 +1,7 @@
 package rm.tabou2.storage.tabou.dao.programme.impl;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -13,7 +14,8 @@ import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.programme.TypePLHCustomDao;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 
-import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID_TYPE_PLH_PARENT;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_FILS;
 
 @Repository
 public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl implements TypePLHCustomDao {
@@ -29,12 +31,19 @@ public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl implements TypeP
         Root<TypePLHEntity> root = query.from(TypePLHEntity.class);
 
         query.where(
-                builder.equal(root.join(FIELD_ID_TYPE_PLH_PARENT), filsId));
+                builder.equal(root.join(FIELD_FILS).get(FIELD_ID), filsId));
         query.select(root);
 
         TypedQuery<TypePLHEntity> resultQuery = entityManager.createQuery(query);
 
-        return resultQuery.getSingleResult();
+        TypePLHEntity resultat;
+        try {
+            resultat = resultQuery.getSingleResult();
+        } catch (NoResultException e) {
+            throw new NullPointerException("Aucun parent n'a été trouvé pour le typePLH" + filsId);
+        }
+
+        return resultat;
     }
 
 }

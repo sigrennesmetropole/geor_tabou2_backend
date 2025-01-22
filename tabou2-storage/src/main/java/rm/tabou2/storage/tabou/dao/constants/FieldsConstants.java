@@ -55,5 +55,5 @@ public class FieldsConstants {
     public static final String FIELD_ID_TABOU = "idTabou";
     public static final String FIELD_TYPE_EVENEMENT = "typeEvenement";
     public static final String FIELD_SYSTEME = "systeme";
-    public static final String FIELD_ID_TYPE_PLH_PARENT = "id_type_plh_parent";
+    public static final String FIELD_FILS = "fils";
 }

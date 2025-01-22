@@ -177,11 +177,37 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
     }
 
     @DisplayName("testCannotCreatePLHWithInvalidParameters: Test de l'interdiction de la création" +
-            " d'un type PLH " + "avec des paramètres obligatoires non présents")
+            " d'un type PLH avec des paramètres obligatoires non présents")
     @Test
     @Transactional
     void testCannotCreatePLHWithInvalidParameters() {
         final TypePLH typePLH = new TypePLH();
         Assertions.assertThrows(AppServiceException.class, () -> plhService.createTypePLH(typePLH));
+    }
+
+    @DisplayName("testSearchParentById: Test de la recherche d'un parent à partir de l'id de son fils" +
+            " avec un cas de réussite et un cas d'erreur")
+    @Test
+    void searchParentById() throws AppServiceException {
+        TypePLH typePLH1 = new TypePLH();
+        typePLH1.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.CATEGORY);
+        typePLH1.setDateDebut(new Date());
+        typePLH1.setLibelle("num1");
+
+        TypePLH typePLH2 = new TypePLH();
+        typePLH2.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.VALUE);
+        typePLH2.setDateDebut(new Date());
+        typePLH2.setLibelle("num2");
+
+        TypePLH plh1 = plhService.createTypePLH(typePLH1);
+        TypePLH plh2 = plhService.createTypePLHWithParent(typePLH2, plh1.getId());
+        TypePLH plh1AvecFils = plhService.getTypePLH(plh1.getId());
+
+        TypePLH parent = plhService.searchParentById(plh2.getId());
+        Assertions.assertNotNull(parent);
+        Assertions.assertEquals("num1", parent.getLibelle());
+
+        long id = plh1AvecFils.getId();
+        Assertions.assertThrows(NullPointerException.class, () ->  plhService.searchParentById(id));
     }
 }
