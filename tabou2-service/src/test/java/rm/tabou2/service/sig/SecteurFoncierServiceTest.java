@@ -20,7 +20,7 @@ import rm.tabou2.storage.sig.entity.SecteurFoncierEntity;
 
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-public class SecteurFoncierServiceTest {
+class SecteurFoncierServiceTest {
 
     @Autowired
     private SecteurFoncierDao secteurFoncierDao;
@@ -32,7 +32,7 @@ public class SecteurFoncierServiceTest {
 
     @DisplayName("testSearchSecteurFoncier : test de recherche d'un secteur foncier")
     @Test
-    public void testSearchSecteurFoncier() {
+    void testSearchSecteurFoncier() {
 
         SecteurFoncierEntity secteurFoncier = new SecteurFoncierEntity();
         secteurFoncier.setId(1L);

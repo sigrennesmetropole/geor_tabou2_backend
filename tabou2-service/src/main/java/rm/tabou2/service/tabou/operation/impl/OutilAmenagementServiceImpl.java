@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,13 +10,12 @@ import rm.tabou2.service.tabou.operation.OutilAmenagementService;
 import rm.tabou2.storage.tabou.dao.operation.OutilAmenagementCustomDao;
 
 @Service
+@RequiredArgsConstructor
 public class OutilAmenagementServiceImpl implements OutilAmenagementService {
 
-    @Autowired
-    private OutilAmenagementCustomDao outilAmenagementCustomDao;
+    private final OutilAmenagementCustomDao outilAmenagementCustomDao;
 
-    @Autowired
-    private OutilAmenagementMapper outilAmenagementMapper;
+    private final OutilAmenagementMapper outilAmenagementMapper;
 
     @Override
     public Page<OutilAmenagement> searchOutilsAmenagement(Pageable pageable) {

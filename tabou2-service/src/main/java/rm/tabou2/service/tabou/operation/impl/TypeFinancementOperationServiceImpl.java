@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,16 +13,14 @@ import rm.tabou2.storage.tabou.dao.operation.TypeFinancementOperationCustomDao;
 import rm.tabou2.storage.tabou.item.TypeFinancementOperationCriteria;
 
 @Service
+@RequiredArgsConstructor
 public class TypeFinancementOperationServiceImpl implements TypeFinancementOperationService {
 
-    @Autowired
-    TypeFinancementOperationCustomDao customDao;
+    private final TypeFinancementOperationCustomDao customDao;
 
-    @Autowired
-    TypeFinancementOperationMapper mapper;
+    private final TypeFinancementOperationMapper mapper;
 
-    @Autowired
-    TypeFinancementOperationRightsHelper rightsHelper;
+    private final TypeFinancementOperationRightsHelper rightsHelper;
 
     @Override
     public Page<TypeFinancementOperation> searchTypesFinancementsOperations(TypeFinancementOperationCriteria criteria, Pageable pageable) {

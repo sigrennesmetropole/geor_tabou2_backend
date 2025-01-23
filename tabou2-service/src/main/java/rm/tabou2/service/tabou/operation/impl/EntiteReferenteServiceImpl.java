@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,16 +13,14 @@ import rm.tabou2.storage.tabou.dao.operation.EntiteReferenteCustomDao;
 import rm.tabou2.storage.tabou.item.EntiteReferenteCriteria;
 
 @Service
+@RequiredArgsConstructor
 public class EntiteReferenteServiceImpl implements EntiteReferenteService {
 
-    @Autowired
-    EntiteReferenteCustomDao entiteReferenteCustomDao;
+    private final EntiteReferenteCustomDao entiteReferenteCustomDao;
 
-    @Autowired
-    EntiteReferenteMapper mapper;
+    private final EntiteReferenteMapper mapper;
 
-    @Autowired
-    EntiteReferenteRightsHelper rightsHelper;
+    private final EntiteReferenteRightsHelper rightsHelper;
 
     @Override
     public Page<EntiteReferente> searchEntitesReferentes(EntiteReferenteCriteria criteria, Pageable pageable) {

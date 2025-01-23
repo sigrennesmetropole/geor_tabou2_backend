@@ -12,13 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.TypeDocument;
@@ -40,7 +40,7 @@ class TypeDocumentServiceTest implements ExceptionTest {
     @Autowired
     private TypeDocumentService typeDocumentService;
 
-    @MockBean
+    @MockitoBean
     private AuthentificationHelper authentificationHelper;
 
     @BeforeEach

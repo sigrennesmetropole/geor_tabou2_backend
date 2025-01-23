@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.Quartier;
 import rm.tabou2.storage.sig.dao.QuartierDao;
@@ -32,7 +31,7 @@ public class QuartierServiceTest {
 
     @DisplayName("testSearchQuartier : test de recherche d'un quartier")
     @Test
-    public void testSearchQuartier() {
+    void testSearchQuartier() {
 
         QuartierEntity quartier = new QuartierEntity();
         quartier.setNom(NOM_QUARTIER);
