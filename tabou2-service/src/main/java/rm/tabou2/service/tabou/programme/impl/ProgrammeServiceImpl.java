@@ -1,5 +1,6 @@
 package rm.tabou2.service.tabou.programme.impl;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -837,7 +837,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         programmeEntity.getPlhs().remove(typePLHEntity);
 
         // Supression éventuelle de son attribut du programme
-        if (!CollectionUtils.isEmpty(programmeEntity.getAttributsPLH())) {
+        if (CollectionUtils.isNotEmpty(programmeEntity.getAttributsPLH())) {
             Set<AttributPLHEntity> attributPLHs = programmeEntity.getAttributsPLH();
             attributPLHs.removeIf(attributPLHEntity -> attributPLHEntity.getType().getId() == typePLHid);
         }

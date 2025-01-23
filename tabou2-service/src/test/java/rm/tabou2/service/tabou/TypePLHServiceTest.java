@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.event.annotation.AfterTestExecution;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.StarterSpringBootTestApplication;
@@ -46,10 +46,10 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
     @Autowired
     private PLHService plhService;
 
-    @MockBean
+    @MockitoBean
     private ProgrammeRightsHelper programmeRightsHelper;
 
-    @MockBean
+    @MockitoBean
     private AuthentificationHelper authentificationHelper;
 
     @BeforeEach
@@ -67,10 +67,10 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
         programmeDao.deleteAll();
     }
 
-    @DisplayName("testCreateTypePLHProgramme: test de création de types PLH")
+    @DisplayName("testCreateTypePLH: test de création de types PLH")
     @Test
     @Transactional
-    void testCreateTypePLHProgramme() throws AppServiceException {
+    void testCreateTypePLH() throws AppServiceException {
         TypePLH typePLH1 = new TypePLH();
         typePLH1.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.CATEGORY);
         typePLH1.setDateDebut(new Date());
@@ -118,7 +118,7 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
         TypePLH plh1 = programmeService.addPLHProgrammeById(programmeEntity.getId(), typePLHEntity1.getId());
         TypePLH plh2 = programmeService.addPLHProgrammeById(programmeEntity.getId(), typePLHEntity2.getId());
 
-        Assertions.assertEquals("num1", plh1.getLibelle());
+        Assertions.assertEquals(plh1, programmeService.getPLHProgramme(programmeEntity.getId(), plh1.getId()));
         Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.CATEGORY, plh1.getTypeAttributPLH());
         Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.VALUE, plh2.getTypeAttributPLH());
     }

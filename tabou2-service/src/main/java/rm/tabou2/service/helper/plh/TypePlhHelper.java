@@ -1,8 +1,8 @@
 package rm.tabou2.service.helper.plh;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
@@ -30,7 +30,7 @@ public class TypePlhHelper {
         // Si c'est une catégorie
         if (typePLH.getTypeAttributPLH() == TypePLH.TypeAttributPLHEnum.CATEGORY) {
             // et qu'elle a des fils
-            if (!CollectionUtils.isEmpty(typePLH.getFils())) {
+            if (CollectionUtils.isNotEmpty(typePLH.getFils())) {
                 List<TypePLH> fils = typePLH.getFils();
                 // Alors, on réutilise récursivement populateTypePlh pour voir si les fils sont à peupler
                 for (TypePLH typePLHFils : fils) {
@@ -42,7 +42,7 @@ public class TypePlhHelper {
         // sinon, c'est donc un type VALUE
         else {
             // on récupère les attributs du programme
-            if (!CollectionUtils.isEmpty(programmeEntity.getAttributsPLH())) {
+            if (CollectionUtils.isNotEmpty(programmeEntity.getAttributsPLH())) {
                 Set<AttributPLHEntity> attributPLHEntities = programmeEntity.getAttributsPLH();
                 // on fait setValue() si on trouve un attribut correspondant à notre type PLH
                 for (AttributPLHEntity attributPLHEntity : attributPLHEntities) {
@@ -60,7 +60,7 @@ public class TypePlhHelper {
      * @param typePLH   type PLH à vérifier
      */
     public void checkTypeAttributPLH (TypePLHEntity typePLH) throws AppServiceException {
-        if (!CollectionUtils.isEmpty(typePLH.getFils())) {
+        if (CollectionUtils.isNotEmpty(typePLH.getFils())) {
             if (typePLH.getTypeAttributPLH().equals(TypeAttributPLH.VALUE)) {
                 throw new AppServiceException("Le type PLH id = " + typePLH.getId() +
                         " est une VALUE et ne peut pas avoir de fils.");
@@ -83,7 +83,7 @@ public class TypePlhHelper {
         // Si c'est une catégorie
         if (typePLH.getTypeAttributPLH() == TypePLH.TypeAttributPLHEnum.CATEGORY) {
             // et qu'elle a des fils
-            if (!CollectionUtils.isEmpty(typePLH.getFils())) {
+            if (CollectionUtils.isNotEmpty(typePLH.getFils())) {
                 List<TypePLH> fils = typePLH.getFils();
                 // Alors, on réutilise récursivement updateValuesTypePlh pour voir si les fils sont à mettre à jour
                 for (TypePLH typePLHFils : fils) {
@@ -96,7 +96,7 @@ public class TypePlhHelper {
         else {
             // on récupère les attributs du programme
             Set<AttributPLHEntity> attributsPLH = programmeEntity.getAttributsPLH();
-            if (!CollectionUtils.isEmpty(attributsPLH)) {
+            if (CollectionUtils.isNotEmpty(attributsPLH)) {
                 // on fait setValue() si on trouve un attribut correspondant à notre type PLH
                 for (AttributPLHEntity attributPLHEntity : attributsPLH) {
                     if (attributPLHEntity.getType().getId() == typePLH.getId()) {
@@ -123,7 +123,7 @@ public class TypePlhHelper {
         // Si c'est une catégorie
         if (typePLH.getTypeAttributPLH() == TypePLH.TypeAttributPLHEnum.CATEGORY) {
             // et qu'elle a des fils
-            if (!CollectionUtils.isEmpty(typePLH.getFils())) {
+            if (CollectionUtils.isNotEmpty(typePLH.getFils())) {
                 List<TypePLH> fils = typePLH.getFils();
                 // Alors, on supprime récursivement les attributs de ses fils
                 for (TypePLH typePLHFils : fils) {
@@ -135,7 +135,7 @@ public class TypePlhHelper {
         // sinon, c'est donc un type VALUE
         else {
             // on récupère les attributs du programme
-            if (!CollectionUtils.isEmpty(programmeEntity.getAttributsPLH())) {
+            if (CollectionUtils.isNotEmpty(programmeEntity.getAttributsPLH())) {
                 Set<AttributPLHEntity> attributPLHEntities = programmeEntity.getAttributsPLH();
                 // on supprime si on trouve un attribut correspondant à notre type PLH
                 attributPLHEntities.removeIf(attributPLHEntity -> attributPLHEntity.getType().getId() == typePLH.getId());
