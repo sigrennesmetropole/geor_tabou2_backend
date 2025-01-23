@@ -3,8 +3,6 @@ package rm.tabou2.service.tabou.operation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
-import rm.tabou2.service.dto.Operation;
-import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;

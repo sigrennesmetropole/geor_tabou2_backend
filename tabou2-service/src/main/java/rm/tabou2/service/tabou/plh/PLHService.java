@@ -19,7 +19,7 @@ public interface PLHService {
 	 * @param id id du TypePLH
 	 * @return le TypePLH
 	 */
-	TypePLH getTypePLH(int id)throws AppServiceException;;
+	TypePLH getTypePLH(int id)throws AppServiceException;
 
 	/**
 	 * Permet de mettre à jour un TypePLH
@@ -28,12 +28,12 @@ public interface PLHService {
 	 * @param typePLH Le TypePLH à mettre à jour
 	 * @return le TypePLH mis à jour
 	 */
-	TypePLH updateTypePLH(TypePLH typePLH)throws AppServiceException;;
+	TypePLH updateTypePLH(TypePLH typePLH)throws AppServiceException;
 
 	/**
 	 * Permet de supprimer un TypePLH
 	 * Possible uniquement si il n'est utilisé par aucun programme
 	 * @param id l'id du TypePLH à supprimer
 	 */
-	void deleteTypePLH(int id)throws AppServiceException;;
+	void deleteTypePLH(int id)throws AppServiceException;
 }

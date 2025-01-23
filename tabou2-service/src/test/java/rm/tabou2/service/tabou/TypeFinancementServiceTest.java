@@ -21,7 +21,7 @@ import rm.tabou2.storage.tabou.item.TypeFinancementCriteria;
 
 @TestPropertySource(value = { "classpath:application.properties" })
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-public class TypeFinancementServiceTest {
+class TypeFinancementServiceTest {
 	@Autowired
 	TypeFinancementService typeFinancementService;
 
