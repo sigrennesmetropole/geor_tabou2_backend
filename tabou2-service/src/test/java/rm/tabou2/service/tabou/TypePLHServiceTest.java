@@ -92,6 +92,30 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
         Assertions.assertEquals(plh2.getId(), plh1ApresFils.getFils().get(0).getId());
     }
 
+    @DisplayName("testCreateTypePLHEnCascade : test de création de types PLH avec ses fils")
+    @Test
+    @Transactional
+    void testCreateTypePLHEnCascade() throws AppServiceException {
+        TypePLH typePLH1 = new TypePLH();
+        typePLH1.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.CATEGORY);
+        typePLH1.setDateDebut(new Date());
+        typePLH1.setLibelle("num1");
+
+        TypePLH typePLH2 = new TypePLH();
+        typePLH2.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.VALUE);
+        typePLH2.setDateDebut(new Date());
+        typePLH2.setLibelle("num2");
+
+        typePLH1.addFilsItem(typePLH2);
+
+        TypePLH plh1 = plhService.createTypePLH(typePLH1);
+        TypePLH plh1ApresFils = plhService.getTypePLH(plh1.getId());
+
+        Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.CATEGORY, plh1.getTypeAttributPLH());
+        Assertions.assertEquals(1, plh1ApresFils.getFils().size());
+        Assertions.assertEquals(typePLH2.getLibelle(), plhService.getTypePLH(plh1.getId()).getFils().get(0).getLibelle());
+    }
+
     @DisplayName("testGetListPLHProgramme: test de récupération de types PLH d'un programme")
     @Test
     @Transactional
