@@ -224,7 +224,7 @@ public interface ProgrammeService {
      * @return Le TypePLH peuplé avec les valeurs du programme
      * @throws AppServiceException Si une erreur est rencontrée
      */
-    TypePLH createPLHProgramme(long programmeId, long typePLHid) throws AppServiceException;
+    TypePLH addPLHProgrammeById(long programmeId, long typePLHid) throws AppServiceException;
 
     /**
      * Permet de supprimer un PLH d'un programme
@@ -232,6 +232,6 @@ public interface ProgrammeService {
      * @param typePLHid L'id du typePLH
      * @throws AppServiceException
      */
-    void deletePLHProgramme(long programmeId, long typePLHid) throws AppServiceException;
+    void removePLHProgrammeById(long programmeId, long typePLHid) throws AppServiceException;
 
 }

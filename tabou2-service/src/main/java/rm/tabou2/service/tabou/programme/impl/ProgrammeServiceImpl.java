@@ -1,5 +1,6 @@
 package rm.tabou2.service.tabou.programme.impl;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,12 +33,14 @@ import rm.tabou2.service.dto.ProgrammeLight;
 import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.plh.TypePlhHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.helper.programme.ProgrammeValidator;
 import rm.tabou2.service.mapper.sig.ProgrammeRmMapper;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
+import rm.tabou2.service.mapper.tabou.plh.TypePLHMapper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeLightMapper;
@@ -55,6 +58,7 @@ import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
@@ -65,6 +69,8 @@ import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.plh.AttributPLHEntity;
+import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
@@ -74,13 +80,14 @@ import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
-import java.io.*;
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -135,6 +142,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeTiersDao programmeTiersDao;
 
     @Autowired
+    private TypePLHDao typePLHDao;
+
+    @Autowired
     private EvenementProgrammeMapper evenementProgrammeMapper;
 
     @Autowired
@@ -150,6 +160,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private ProgrammeRmMapper programmeRmMapper;
 
     @Autowired
+    private TypePLHMapper typePLHMapper;
+
+    @Autowired
     private AuthentificationHelper authentificationHelper;
 
     @Autowired
@@ -163,6 +176,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Autowired
     private ProgrammePlannerHelper programmePlannerHelper;
+
+    @Autowired
+    private TypePlhHelper typePlhHelper;
 
     @Autowired
     private DocumentGenerator documentGenerator;
@@ -186,7 +202,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private DocumentMapper documentMapper;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public Programme createProgramme(Programme programme) {
 
 
@@ -200,7 +216,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         EtapeProgrammeEntity etapProgramme = etapeProgrammeDao.findById(programme.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape id= " + programme.getId() + " n'a été trouvée pour les programmes"));
 
-        //Vérification des autorisation sur l'étape
+        //Vérification des autorisations sur l'étape
         if (etapProgramme.getCode().equals(Etape.ModeEnum.OFF.toString()) && !authentificationHelper.hasRestreintAccess()) {
             LOGGER.warn("L'utilisateur n'ayant pas au moins le rôle référent ne peut pas créer un programme avec une etape en diffusion restreinte");
             //TODO : throw new AppServiceException()
@@ -228,7 +244,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // mise à jour du programme avec les données de suivi
         programmePlannerHelper.computeSuiviHabitatOfProgramme(programmeSaved);
 
-        //mise à jour de l'id de l'emprise dans la table des programme RM
+        //mise à jour de l'id de l'emprise dans la table des programmes RM
         programmeRm.setIdTabou(programmeSaved.getId().intValue());
         programmeRmDao.save(programmeRm);
 
@@ -237,7 +253,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public Programme updateProgramme(Programme programme) throws AppServiceException {
 
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programme.getId());
@@ -283,7 +299,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public Programme updateEtapeOfProgrammeId(long programmeId, long etapeId) throws AppServiceException {
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(etapeId);
 
@@ -383,7 +399,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     /**
-     * Construction d'un évenement programme système
+     * Construction d'un événement programme système
      *
      * @param code                 code du type d'événement
      * @param evenementDescription description de l'événement
@@ -406,7 +422,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     /**
-     * Construction d'un évenement programme système après changement d'étape
+     * Construction d'un événement programme système après changement d'étape
      *
      * @param libelleEtape libelle de l'étape
      * @return evenement crée
@@ -420,7 +436,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public Evenement addEvenementByProgrammeId(Long programmeId, Evenement evenement) throws AppServiceException {
 
         // Programme
@@ -457,7 +473,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public Evenement updateEvenementByProgrammeId(long idProgramme, Evenement evenement) throws AppServiceException {
 
         // Récupération du programme et recherche de l'évènement à modifier
@@ -721,26 +737,120 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
+    @Transactional
     public TypePLH getPLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
-        // TODO LLE23797
-        return null;
+
+        // Récupération du programme et recherche s'il y a des PLH rattachés à ce programme
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        if (CollectionUtils.isEmpty(programmeEntity.getPlhs())){
+            throw new AppServiceException("Impossible de récupérer le TypePLH id = " + typePLHid +
+                    " Aucun TypePLH n'est rattaché au programme id = " + programmeId);
+        }
+        TypePLHEntity typePLHEntity = lookupTypePLHById(programmeEntity, typePLHid);
+
+        // Vérification si l'utilisateur a le droit de consulter un programme
+        if (!programmeRightsHelper.checkCanGetProgramme(programmeEntity)) {
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programmeEntity.getNom());}
+
+        //Récupération du type PLH
+        TypePLH typePLH = typePLHMapper.entityToDto(typePLHEntity);
+        return typePlhHelper.populateTypePlh(typePLH, programmeEntity);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public TypePLH updatePLHProgramme(long programmeId, TypePLH typePLH) throws AppServiceException {
-        // TODO LLE23797
-        return null;
+
+        // Récupération du programme et recherche du type PLH à modifier
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
+
+        // Vérification que le programme possède au moins un type PLH
+        if (CollectionUtils.isEmpty(programmeEntity.getPlhs())){
+            throw new AppServiceException("Impossible d'éditer. Aucun TypePLH n'est rattaché au programme id = "
+                    + programmeId);
+        }
+        // Vérification si l'utilisateur a le droit de modifier un programme
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
+        }
+
+        // Mise à jour du programme avec le type PLH
+        TypePLHEntity typePLHEntity = typePLHMapper.dtoToEntity(typePLH);
+        programmeEntity.removeTypePLHProgramme(lookupTypePLHById(programmeEntity, typePLH.getId()));
+        programmeEntity.addTypePLHProgramme(typePLHEntity);
+
+        try {
+            programmeDao.save(programmeEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible de mettre à jour le type de PLH = " + programmeId, e);
+        }
+
+        //Récupération du type PLH
+        return typePlhHelper.updateValuesTypePlh(typePLH, programmeEntity);
     }
 
     @Override
-    public TypePLH createPLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
-        // TODO LLE23797
-        return null;
+    @Transactional(readOnly = false)
+    public TypePLH addPLHProgrammeById(long programmeId, long typePLHid) throws AppServiceException {
+        // Programme
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+            throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un type PLH pour le programme id = " + programmeId);
+        }
+
+        //type plh
+        TypePLHEntity typePLHEntity = typePLHDao.findOneById(typePLHid);
+        if (programmeEntity.lookupOptionalTypePLHById(typePLHid).isPresent()) {
+            throw new AppServiceException("Ajout impossible du typePlh id = " + typePLHid + " dans le programme id = "
+                    + programmeId + " car il possède déjà un typePlh avec le même id.");
+        }
+
+        // Enregistrement en BDD
+        programmeEntity.addTypePLHProgramme(typePLHEntity);
+        try {
+            programmeDao.save(programmeEntity);
+        } catch (DataAccessException e) {
+            throw new AppServiceException("Impossible d'ajouter le type PLH Programme , TypePLHid = "
+                    + typePLHid, e);
+        }
+
+        TypePLH typePLH = typePLHMapper.entityToDto(typePLHEntity);
+        return typePlhHelper.populateTypePlh(typePLH, programmeEntity);
     }
 
     @Override
-    public void deletePLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
-        // TODO LLE23797
+    @Transactional(readOnly = false)
+    public void removePLHProgrammeById(long programmeId, long typePLHid) throws AppServiceException {
+        // Récupération du programme et recherche du type PLH à modifier
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
+        Programme programme = programmeMapper.entityToDto(programmeEntity);
+        TypePLHEntity typePLHEntity = lookupTypePLHById(programmeEntity, typePLHid);
 
+        // Vérification si l'utilisateur a le droit de modifier un programme
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
+        }
+
+        // Suppression du type PLH
+        programmeEntity.getPlhs().remove(typePLHEntity);
+
+        // Supression éventuelle de son attribut du programme
+        if (CollectionUtils.isNotEmpty(programmeEntity.getAttributsPLH())) {
+            Set<AttributPLHEntity> attributPLHs = programmeEntity.getAttributsPLH();
+            attributPLHs.removeIf(attributPLHEntity -> attributPLHEntity.getType().getId() == typePLHid);
+        }
+
+        typePlhHelper.removeValuesTypePlh(typePLHMapper.entityToDto(typePLHEntity), programmeEntity);
+        programmeDao.save(programmeEntity);
+    }
+
+    private TypePLHEntity lookupTypePLHById(ProgrammeEntity programmeEntity, long typePLHid) throws AppServiceException {
+        Optional<TypePLHEntity> optionalTypePLHEntity = programmeEntity.lookupOptionalTypePLHById(typePLHid);
+        if (optionalTypePLHEntity.isEmpty()) {
+            throw new AppServiceException("Le type PLH id = " + typePLHid + " n'existe pas pour le programme id = " + programmeEntity.getId());
+        }
+        return optionalTypePLHEntity.get();
     }
 }
