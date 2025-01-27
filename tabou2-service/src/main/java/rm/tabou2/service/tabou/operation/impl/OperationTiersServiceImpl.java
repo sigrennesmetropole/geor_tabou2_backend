@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -8,18 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
-import rm.tabou2.service.dto.TiersAmenagement;
 import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.mapper.tabou.operation.OperationTiersMapper;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
 import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
-import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
-import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
-import rm.tabou2.service.tabou.tiers.TiersService;
-import rm.tabou2.service.tabou.tiers.TypeTiersService;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationTiersDao;
@@ -27,7 +22,6 @@ import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
-import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
@@ -39,35 +33,28 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class OperationTiersServiceImpl implements OperationTiersService {
 
-    @Autowired
-    private OperationDao operationDao;
+    private static final String ERROR_NOT_EXIST = " n'existe pas";
 
-    @Autowired
-    private OperationTiersCustomDao operationTiersCustomDao;
+    private final OperationDao operationDao;
 
-    @Autowired
-    private TypeTiersDao typeTiersDao;
+    private final OperationTiersCustomDao operationTiersCustomDao;
 
-    @Autowired
-    private TiersDao tiersDao;
+    private final TypeTiersDao typeTiersDao;
 
-    @Autowired
-    private OperationTiersDao operationTiersDao;
+    private final TiersDao tiersDao;
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final OperationTiersDao operationTiersDao;
 
-    @Autowired
-    private OperationTiersMapper operationTiersMapper;
+    private final AuthentificationHelper authentificationHelper;
 
-    @Autowired
-    private TiersMapper tiersMapper;
+    private final OperationTiersMapper operationTiersMapper;
 
-    @Autowired
-    private TypeTiersMapper typeTiersMapper;
+    private final TiersMapper tiersMapper;
 
+    private final TypeTiersMapper typeTiersMapper;
 
 
     @Override
@@ -78,7 +65,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         // récuperer type tiers
         Optional<TypeTiersEntity> typeTiersEntityOpt = typeTiersDao.findById(typeTiersId);
         if (typeTiersEntityOpt.isEmpty()) {
-            throw new AppServiceException("Le typeTiersId = " + typeTiersId + " n'existe pas");
+            throw new AppServiceException("Le typeTiersId = " + typeTiersId + ERROR_NOT_EXIST);
         }
         operationTiersEntity.setTypeTiers(typeTiersEntityOpt.get());
 
@@ -86,14 +73,14 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         // récuperer tiers
         Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersId);
         if (tiersEntityOpt.isEmpty()) {
-            throw new AppServiceException("Le tiersID = " + tiersId + "n'existe pas");
+            throw new AppServiceException("Le tiersID = " + tiersId + ERROR_NOT_EXIST);
         }
         operationTiersEntity.setTiers(tiersEntityOpt.get());
 
         // récuperer opération
         Optional<OperationEntity> operationEntityOpt = operationDao.findById(operationId);
         if (operationEntityOpt.isEmpty()) {
-            throw new AppServiceException("L' operationId = " + operationId + "n'existe pas");
+            throw new AppServiceException("L' operationId = " + operationId + ERROR_NOT_EXIST);
         }
         operationTiersEntity.setOperation(operationEntityOpt.get());
 
@@ -119,7 +106,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         Optional<OperationEntity> optional = operationDao.findById(criteria.getOperationId());
 
         if (optional.isEmpty()) {
-            throw new AppServiceException("L'operation' = " + criteria.getOperationId() + " n'existe pas");
+            throw new AppServiceException("L'operation' = " + criteria.getOperationId() + ERROR_NOT_EXIST);
         }
         // Si diffusion restreinte et utilisateur non referent
         if (optional.get().isDiffusionRestreinte() && !authentificationHelper.hasReferentRole()) {
@@ -134,11 +121,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
             associationTiersTypeTiers.add(getAssociationById(operationTiers.getId()));
         }
 
-        Page<AssociationTiersTypeTiers> pageResult = new PageImpl<>(associationTiersTypeTiers, pageable, tiersAmenagements.getTotalElements());
-
-
-        return pageResult;
-
+        return new PageImpl<>(associationTiersTypeTiers, pageable, tiersAmenagements.getTotalElements());
     }
 
     @Override
@@ -146,7 +129,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
         Optional<OperationTiersEntity> operationTiersOpt = operationTiersDao.findById(operationTiersId);
         if (operationTiersOpt.isEmpty()) {
-            throw new NoSuchElementException("L'operationTiers id=" + operationTiersId + " n'existe pas");
+            throw new NoSuchElementException("L'operationTiers id=" + operationTiersId + ERROR_NOT_EXIST);
         }
 
         OperationTiersEntity operationTiersEntity = operationTiersOpt.get();
@@ -158,14 +141,14 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         // Vérification si type tiers existe
         Optional<TypeTiersEntity> typeTiersEntityOpt = typeTiersDao.findById(tiersTypeTiers.getTypeTiersId());
         if (typeTiersEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le typeTiersId = " + tiersTypeTiers.getTypeTiersId() + " n'existe pas");
+            throw new NoSuchElementException("Le typeTiersId = " + tiersTypeTiers.getTypeTiersId() + ERROR_NOT_EXIST);
         }
         operationTiersEntity.setTypeTiers(typeTiersEntityOpt.get());
 
         // Vérification si tiers existe
         Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersTypeTiers.getTiersId());
         if (tiersEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le tiersId = " + tiersTypeTiers.getTiersId() + " n'existe pas");
+            throw new NoSuchElementException("Le tiersId = " + tiersTypeTiers.getTiersId() + ERROR_NOT_EXIST);
         }
         operationTiersEntity.setTiers(tiersEntityOpt.get());
 
@@ -184,7 +167,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
         Optional<OperationTiersEntity> operationTiersOpt = operationTiersDao.findById(operationTiersId);
         if (operationTiersOpt.isEmpty()) {
-            throw new NoSuchElementException("L'operationTiers id=" + operationTiersId + " n'existe pas");
+            throw new NoSuchElementException("L'operationTiers id=" + operationTiersId + ERROR_NOT_EXIST);
         }
 
         if (operationId != operationTiersOpt.get().getOperation().getId()) {

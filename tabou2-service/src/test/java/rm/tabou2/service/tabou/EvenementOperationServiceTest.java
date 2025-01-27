@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.common.DatabaseInitializerTest;
@@ -48,10 +48,10 @@ class EvenementOperationServiceTest extends DatabaseInitializerTest implements E
 	@Autowired
 	private OperationService operationService;
 
-	@MockBean
+	@MockitoBean
 	private OperationRightsHelper operationRightsHelper;
 
-	@MockBean
+	@MockitoBean
 	private EvenementOperationRightsHelper evenementOperationRightsHelper;
 
 	@BeforeEach

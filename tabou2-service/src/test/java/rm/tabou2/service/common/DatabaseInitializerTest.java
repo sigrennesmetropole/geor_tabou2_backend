@@ -1,8 +1,6 @@
 package rm.tabou2.service.common;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,16 +13,14 @@ import rm.tabou2.storage.tabou.dao.operation.VocationZACustomDao;
 import rm.tabou2.storage.tabou.item.VocationZACriteria;
 
 @Service
+@RequiredArgsConstructor
 public class VocationZAServiceImpl implements VocationZAService {
 
-    @Autowired
-    VocationZARightsHelper vocationZARightsHelper;
+    private final VocationZARightsHelper vocationZARightsHelper;
 
-    @Autowired
-    VocationZACustomDao vocationZACustomDao;
+    private final VocationZACustomDao vocationZACustomDao;
 
-    @Autowired
-    VocationZAMapper vocationZAMapper;
+    private final VocationZAMapper vocationZAMapper;
 
     @Override
     public Page<VocationZA> searchVocationsZA(VocationZACriteria criteria, Pageable pageable) {

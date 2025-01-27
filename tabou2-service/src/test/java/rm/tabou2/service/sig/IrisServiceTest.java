@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.Iris;
 import rm.tabou2.storage.sig.dao.IrisDao;
@@ -19,7 +18,7 @@ import rm.tabou2.storage.sig.item.IrisCriteria;
 
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-public class IrisServiceTest {
+class IrisServiceTest {
 
     private static final String NMIRIS = "Albert de Mun";
 
@@ -31,7 +30,7 @@ public class IrisServiceTest {
 
     @DisplayName("testSearchIris: test de recherche d'une iris")
     @Test
-    public void testSearchIris() {
+    void testSearchIris() {
 
         IrisEntity iris = new IrisEntity();
         iris.setNmiris(NMIRIS);

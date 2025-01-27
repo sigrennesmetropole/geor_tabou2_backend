@@ -33,5 +33,5 @@ public interface AbstractMapper<E, D> {
 
     default Page<D> entitiesToDto(Page<E> entities, Pageable pageable){
         return new PageImpl<>(entitiesToDto(entities.getContent()),pageable, entities.getTotalElements());
-    };
+    }
 }

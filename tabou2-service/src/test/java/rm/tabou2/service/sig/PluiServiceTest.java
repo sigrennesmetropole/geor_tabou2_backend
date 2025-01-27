@@ -29,7 +29,7 @@ public class PluiServiceTest {
 
     @DisplayName("testSearchPlui : test de recherche d'un plui")
     @Test
-    public void testSearchPlui() {
+    void testSearchPlui() {
 
         PluiEntity plui = new PluiEntity();
         plui.setLibelle(LIBELLE_PLUI);

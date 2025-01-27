@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -8,19 +8,14 @@ import rm.tabou2.service.dto.ConsommationEspace;
 import rm.tabou2.service.mapper.tabou.operation.ConsommationEspaceMapper;
 import rm.tabou2.service.tabou.operation.ConsommationEspaceService;
 import rm.tabou2.storage.tabou.dao.operation.ConsommationEspaceCustomDao;
-import rm.tabou2.storage.tabou.dao.operation.ConsommationEspaceDao;
 
 @Service
+@RequiredArgsConstructor
 public class ConsommationEspaceServiceImpl implements ConsommationEspaceService {
 
-    @Autowired
-    private ConsommationEspaceDao consommationEspaceDao;
+    private final ConsommationEspaceCustomDao consommationEspaceCustomDao;
 
-    @Autowired
-    private ConsommationEspaceCustomDao consommationEspaceCustomDao;
-
-    @Autowired
-    private ConsommationEspaceMapper consommationEspaceMapper;
+    private final ConsommationEspaceMapper consommationEspaceMapper;
 
     @Override
     public Page<ConsommationEspace> searchConsommationsEspace(Pageable pageable) {

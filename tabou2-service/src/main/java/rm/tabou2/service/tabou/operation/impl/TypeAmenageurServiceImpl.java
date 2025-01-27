@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,15 +13,14 @@ import rm.tabou2.storage.tabou.dao.operation.TypeAmenageurCustomDao;
 import rm.tabou2.storage.tabou.item.TypeAmenageurCriteria;
 
 @Service
+@RequiredArgsConstructor
 public class TypeAmenageurServiceImpl implements TypeAmenageurService {
-    @Autowired
-    TypeAmenageurMapper mapper;
 
-    @Autowired
-    TypeAmenageurCustomDao typeAmenageurCustomDao;
+    private final TypeAmenageurMapper mapper;
 
-    @Autowired
-    TypeAmenageurRightsHelper typeAmenageurRightsHelper;
+    private final TypeAmenageurCustomDao typeAmenageurCustomDao;
+
+    private final TypeAmenageurRightsHelper typeAmenageurRightsHelper;
 
     @Override
     public Page<TypeAmenageur> searchTypesAmenageurs(TypeAmenageurCriteria criteria, Pageable pageable) {

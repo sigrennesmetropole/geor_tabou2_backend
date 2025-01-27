@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
@@ -33,7 +33,7 @@ class EvenementOperationRightsHelperTest {
     @Autowired
     private EvenementOperationRightsHelper evenementOperationRightsHelper;
 
-    @MockBean
+    @MockitoBean
     private OperationRightsHelper operationRightsHelper;
 
     @BeforeEach

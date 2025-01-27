@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.evenement.TypeEvenementRigthsHelper;
@@ -22,7 +22,7 @@ class TypeEvenementRightsHelperTest {
     @Autowired
     private TypeEvenementRigthsHelper typeEvenementRigthsHelper;
 
-    @MockBean
+    @MockitoBean
     private AuthentificationHelper authentificationHelper;
 
     @DisplayName("testCannotGetTypeEvenementSysteme: Test de l'interdiction de la récupération " +
