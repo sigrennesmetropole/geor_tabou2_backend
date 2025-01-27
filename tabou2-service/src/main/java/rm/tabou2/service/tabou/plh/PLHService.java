@@ -15,11 +15,22 @@ public interface PLHService {
 	TypePLH createTypePLH(TypePLH typePLH) throws AppServiceException;
 
 	/**
-	 * Permet de récupérer un TypePLH
-	 * @param id id du TypePLH
-	 * @return le TypePLH
+	 * Permet de créer un type PLH
+	 * Les valeurs qui seraient passées dans le TypePLH sont ignorées
+	 * La cohérence du TypePLH est vérifiée (pas de fils pour les éléments VALUE
+	 * @param typePLH Le TypePLH à créer
+	 * @param parentId L'Id du parent du TypePLH
+	 * @return Le TypePLH créé
 	 */
-	TypePLH getTypePLH(int id)throws AppServiceException;
+	TypePLH createTypePLHWithParent(TypePLH typePLH, long parentId) throws AppServiceException;
+
+
+		/**
+         * Permet de récupérer un TypePLH
+         * @param id id du TypePLH
+         * @return le TypePLH
+         */
+	TypePLH getTypePLH(long id)throws AppServiceException;
 
 	/**
 	 * Permet de mettre à jour un TypePLH
@@ -32,8 +43,15 @@ public interface PLHService {
 
 	/**
 	 * Permet de supprimer un TypePLH
-	 * Possible uniquement si il n'est utilisé par aucun programme
+	 * Possible uniquement s'il n'est utilisé par aucun programme
 	 * @param id l'id du TypePLH à supprimer
 	 */
-	void deleteTypePLH(int id)throws AppServiceException;
+	void deleteTypePLH(long id)throws AppServiceException;
+
+	/**
+	 * Permet de rechercher un TypePLH parent à partir de l'id d'un fils
+	 * @param idFils l'id du TypePLH fils
+	 * @return le TypePLH parent
+	 */
+	TypePLH searchParentById(long idFils)throws AppServiceException;
 }

@@ -1,20 +1,18 @@
 package rm.tabou2.service.tabou;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.event.annotation.AfterTestExecution;
 import org.springframework.transaction.annotation.Transactional;
 
 import rm.tabou2.service.StarterSpringBootTestApplication;
@@ -47,7 +45,7 @@ import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 @TestPropertySource(value = { "classpath:application.properties" })
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-class OperationTiersServiceTest {
+public class OperationTiersServiceTest {
 
 	private static final String LIBELLE_TYPE_TIERS = "libelle";
 
@@ -83,38 +81,34 @@ class OperationTiersServiceTest {
 	@MockitoBean
 	private AuthentificationHelper authentificationHelper;
 
-	@BeforeEach
-	public void initTest() {
-		Mockito.when(authentificationHelper.getConnectedUsername()).thenReturn("username");
-		Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);
-	}
+    @BeforeEach
+    public void initTest() {
+        Mockito.when(authentificationHelper.getConnectedUsername()).thenReturn("username");
+        Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);
+    }
 
-	@AfterEach
-	public void afterTest() {
-		operationDao.deleteAll();
-		tiersDao.deleteAll();
-		typeTiersDao.deleteAll();
-	}
+    @AfterTestExecution
+    public void afterTest() {
+        operationDao.deleteAll();
+        tiersDao.deleteAll();
+        typeTiersDao.deleteAll();
+    }
 
-	@Disabled
-	@Test
-	void testSearchTiers() throws AppServiceException {
+    public void testSearchTiers() throws AppServiceException {
 
-		DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
-		VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);
-		MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.INTERCOMMUNALE);
-		ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagementCode.REGIE);
-		ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao
-				.findByCode(ConsommationEspaceCode.EXTENSION);
 
-		TiersEntity tiers = new TiersEntity();
-		tiers.setNom(NOM_TIERS);
-		tiers.setId(1L);
-		tiersDao.save(tiers);
+        DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
+        VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);
+        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.INTERCOMMUNALE);
+        ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagementCode.REGIE);
+        ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspaceCode.EXTENSION);
+
+        TiersEntity tiers = new TiersEntity();
+        tiers.setNom(NOM_TIERS);
+        tiersDao.save(tiers);
 
 		TypeTiersEntity typeTiers = new TypeTiersEntity();
 		typeTiers.setLibelle(LIBELLE_TYPE_TIERS);
-		typeTiers.setId(2L);
 		typeTiersDao.save(typeTiers);
 
 		OperationEntity operationEntity = new OperationEntity();
@@ -127,52 +121,50 @@ class OperationTiersServiceTest {
 		operationEntity.setConsommationEspace(consommationEspaceEntity);
 		operationDao.save(operationEntity);
 
-		try {
-			operationTiersService.associateTiersToOperation(operationEntity.getId(), tiers.getId(), typeTiers.getId());
-		} catch (AppServiceException e) {
-			e.printStackTrace();
-		}
+        try {
+            operationTiersService.associateTiersToOperation(operationEntity.getId(), tiers.getId(), typeTiers.getId());
+        } catch (AppServiceException e) {
+            e.printStackTrace();
+        }
 
-		Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nom"));
-		TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
-		criteria.setLibelle(LIBELLE_TYPE_TIERS);
-		criteria.setOperationId(operationEntity.getId());
-		criteria.setAsc(true);
-		criteria.setOrderBy("nom");
 
-		Page<AssociationTiersTypeTiers> page = null;
-		try {
-			page = operationTiersService.searchOperationTiers(criteria, pageable);
-		} catch (AppServiceException e) {
-			throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
-		}
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "nom"));
+        TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
+        criteria.setLibelle(LIBELLE_TYPE_TIERS);
+        criteria.setOperationId(operationEntity.getId());
+        criteria.setAsc(true);
+        criteria.setOrderBy("nom");
 
-		Assertions.assertEquals(1, page.getTotalElements());
-		Assertions.assertEquals(NOM_TIERS, page.getContent().get(0).getTiers().getNom());
-		Assertions.assertEquals(LIBELLE_TYPE_TIERS, page.getContent().get(0).getTypeTiers().getLibelle());
+        Page<AssociationTiersTypeTiers> page = null;
+        try {
+            page = operationTiersService.searchOperationTiers(criteria, pageable);
+        } catch (AppServiceException e) {
+            throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
+        }
 
-	}
 
-	@Test
-	@Disabled
-	@Transactional
-	void testSearchTiersDiffusionRestreinte() throws AppServiceException {
+        Assertions.assertEquals(1, page.getTotalElements());
+        Assertions.assertEquals(NOM_TIERS, page.getContent().get(0).getTiers().getNom());
+        Assertions.assertEquals(LIBELLE_TYPE_TIERS, page.getContent().get(0).getTypeTiers().getLibelle());
 
-		DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
-		VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);
-		MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.INTERCOMMUNALE);
-		ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagementCode.REGIE);
-		ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao
-				.findByCode(ConsommationEspaceCode.EXTENSION);
+    }
+
+    @Test
+    @Transactional
+    public void testSearchTiersDiffusionRestreinte() throws AppServiceException {
+
+        DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
+        VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);
+        MaitriseOuvrageEntity maitriseOuvrageEntity = maitriseOuvrageDao.findByCode(MaitriseOuvrageCode.INTERCOMMUNALE);
+        ModeAmenagementEntity modeAmenagementEntity = modeAmenagementDao.findByCode(ModeAmenagementCode.REGIE);
+        ConsommationEspaceEntity consommationEspaceEntity = consommationEspaceDao.findByCode(ConsommationEspaceCode.EXTENSION);
 
 		TiersEntity tiers = new TiersEntity();
 		tiers.setNom(NOM_TIERS);
-		tiers.setId(1L);
 		tiersDao.save(tiers);
 
 		TypeTiersEntity typeTiers = new TypeTiersEntity();
 		typeTiers.setLibelle(LIBELLE_TYPE_TIERS);
-		typeTiers.setId(1L);
 		typeTiersDao.save(typeTiers);
 
 		OperationEntity operationEntity = new OperationEntity();
@@ -185,45 +177,50 @@ class OperationTiersServiceTest {
 		operationEntity.setConsommationEspace(consommationEspaceEntity);
 		operationDao.save(operationEntity);
 
-		try {
-			Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(true);
-			operationTiersService.associateTiersToOperation(operationEntity.getId(), tiers.getId(), typeTiers.getId());
-		} catch (AppServiceException e) {
-			throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
-		} finally {
-			Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
-		}
 
-		Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "libelle"));
-		TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
-		criteria.setLibelle(LIBELLE_TYPE_TIERS);
-		criteria.setOperationId(operationEntity.getId());
-		criteria.setAsc(true);
-		criteria.setOrderBy("libelle");
+        try {
+            Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(true);
+            operationTiersService.associateTiersToOperation(operationEntity.getId(), tiers.getId(), typeTiers.getId());
+        } catch (AppServiceException e) {
+            throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
+        } finally {
+            Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
+        }
 
-		Page<AssociationTiersTypeTiers> page = null;
-		try {
-			// l'utilisateur n'as pas le role referent
-			Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(false);
-			Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
-			page = operationTiersService.searchOperationTiers(criteria, pageable);
-		} catch (AppServiceException e) {
-			throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
-		}
 
-		Assertions.assertEquals(0, page.getTotalElements());
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "libelle"));
+        TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
+        criteria.setLibelle(LIBELLE_TYPE_TIERS);
+        criteria.setOperationId(operationEntity.getId());
+        criteria.setAsc(true);
+        criteria.setOrderBy("libelle");
 
-		try {
-			// Avec le role referent
-			Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);
-			Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
-			page = operationTiersService.searchOperationTiers(criteria, pageable);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Assertions.assertEquals(1, page.getTotalElements());
-		Assertions.assertEquals(NOM_TIERS, page.getContent().get(0).getTiers().getNom());
-		Assertions.assertEquals(LIBELLE_TYPE_TIERS, page.getContent().get(0).getTypeTiers().getLibelle());
-	}
+
+        Page<AssociationTiersTypeTiers> page = null;
+        try {
+            // l'utilisateur n'as pas le role referent
+            Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(false);
+            Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
+            page = operationTiersService.searchOperationTiers(criteria, pageable);
+        } catch (AppServiceException e) {
+            throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
+        }
+
+
+        Assertions.assertEquals(0, page.getTotalElements());
+
+
+        try {
+            // Avec le role referent
+            Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);
+            Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
+            page = operationTiersService.searchOperationTiers(criteria, pageable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Assertions.assertEquals(1, page.getTotalElements());
+        Assertions.assertEquals(NOM_TIERS, page.getContent().get(0).getTiers().getNom());
+        Assertions.assertEquals(LIBELLE_TYPE_TIERS, page.getContent().get(0).getTypeTiers().getLibelle());
+    }
 
 }
