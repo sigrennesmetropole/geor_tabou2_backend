@@ -54,6 +54,9 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "surface_totale")
+    private Double surfaceTotale;
+
     @Basic
     @Column(name = "attribution_fonciere_annee")
     private Integer attributionFonciereAnnee;
@@ -153,6 +156,7 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_programme")
     private Set<EvenementProgrammeEntity> evenements = new HashSet<>();
+
 
     public void addEvenementProgramme(EvenementProgrammeEntity evenementProgrammeEntity) {
         this.evenements.add(evenementProgrammeEntity);

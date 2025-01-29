@@ -14,6 +14,7 @@ public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Program
     @Mapping(source = "etape", target = "etapeProgramme")
     @Mapping(source = "logementsTotal", target = "nbLogements")
     @Mapping(target = "operation", ignore = true)
+    @Mapping(target = "surfaceTotale", ignore = true)
     @Mapping(source = "annulationDate", target = "dateAnnulation")
     @Mapping(source = "livraisonDate", target = "dateLivraison")
     ProgrammeEntity dtoToEntity(Programme dto);
@@ -31,6 +32,7 @@ public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Program
     @Mapping(source = "annulationDate", target = "dateAnnulation")
     @Mapping(source = "livraisonDate", target = "dateLivraison")
     @Mapping(target = "operation", ignore = true)
+    @Mapping(target = "surfaceTotale", ignore = true)
     void dtoToEntity(Programme dto, @MappingTarget ProgrammeEntity entity);
 
 }

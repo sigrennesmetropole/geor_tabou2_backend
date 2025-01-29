@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -14,16 +14,14 @@ import rm.tabou2.storage.tabou.item.OutilFoncierCriteria;
 
 
 @Service
+@RequiredArgsConstructor
 public class OutilFoncierServiceImpl implements OutilsFonciersService {
 
-    @Autowired
-    OutilsFonciersMapper mapper;
+    private final OutilsFonciersMapper mapper;
 
-    @Autowired
-    OutilFoncierCustomDao outilFoncierCustomDao;
+    private final OutilFoncierCustomDao outilFoncierCustomDao;
 
-    @Autowired
-    OutilFoncierRightsHelper rightsHelper;
+    private final OutilFoncierRightsHelper rightsHelper;
 
     @Override
     public Page<OutilFoncier> searchOutilsFonciers(OutilFoncierCriteria criteria, Pageable pageable) {

@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.SecteurDds;
 import rm.tabou2.storage.sig.dao.SecteurDdsDao;
@@ -18,7 +17,7 @@ import rm.tabou2.storage.sig.entity.SecteurDdsEntity;
 
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-public class SecteurDdsServiceTest {
+class SecteurDdsServiceTest {
 
     @Autowired
     private SecteurDdsDao secteurDdsDao;
@@ -30,7 +29,7 @@ public class SecteurDdsServiceTest {
 
     @DisplayName("testSearchSecteurDds : test de recherche d'un secteur DDS")
     @Test
-    public void testSearchSecteurDds() {
+    void testSearchSecteurDds() {
 
         SecteurDdsEntity secteurDds = new SecteurDdsEntity();
         secteurDds.setId(1);

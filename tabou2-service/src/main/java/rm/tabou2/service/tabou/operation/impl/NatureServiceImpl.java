@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -8,19 +8,14 @@ import rm.tabou2.service.dto.Nature;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
 import rm.tabou2.service.tabou.operation.NatureService;
 import rm.tabou2.storage.tabou.dao.operation.NatureCustomDao;
-import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 
 @Service
+@RequiredArgsConstructor
 public class NatureServiceImpl implements NatureService {
 
-    @Autowired
-    private NatureDao natureDao;
+    private final NatureCustomDao natureCustomDao;
 
-    @Autowired
-    private NatureCustomDao natureCustomDao;
-
-    @Autowired
-    private NatureMapper natureMapper;
+    private final NatureMapper natureMapper;
 
     @Override
     public Page<Nature> searchNatures(Boolean onlyActive, Pageable pageable) {

@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,13 +11,12 @@ import rm.tabou2.storage.tabou.dao.operation.TypeProgrammationCustomDao;
 import rm.tabou2.storage.tabou.item.TypeProgrammationCriteria;
 
 @Service
+@RequiredArgsConstructor
 public class TypeProgrammationServiceImpl implements TypeProgrammationService {
 
-    @Autowired
-    TypeProgrammationMapper mapper;
+    private final TypeProgrammationMapper mapper;
 
-    @Autowired
-    TypeProgrammationCustomDao customDao;
+    private final TypeProgrammationCustomDao customDao;
 
     @Override
     public Page<TypeProgrammation> searchTypesProgrammations(TypeProgrammationCriteria criteria, Pageable pageable) {

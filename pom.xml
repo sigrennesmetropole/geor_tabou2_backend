@@ -383,7 +383,7 @@
 						</annotationProcessorPaths>
 					</configuration>
 				</plugin>
-<plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>${plugin.maven-jar-plugin.version}</version>

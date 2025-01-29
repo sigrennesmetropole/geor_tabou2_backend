@@ -154,7 +154,7 @@ tabou2:docker2:build:
     - ssh-add <(echo "$ansible_private_key" | base64 -d)       
   script:
     - ls -l $CI_PROJECT_DIR/tabou2-facade/target/*
-    - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2.jar $CI_PROJECT_DIR/ansible/dockerize/files/tabou2.jar
+    - cp -f $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade.jar $CI_PROJECT_DIR/ansible/dockerize/files/tabou2-facade.jar
     - cd $CI_PROJECT_DIR/ansible
     - cp tabou2_dev_var.yml $HOME/tabou2_var.yml
     - ansible-playbook tabou2-docker.yml -v -i "${TARGET_ENV}," -u root --ssh-common-args=-oStrictHostKeyChecking=no

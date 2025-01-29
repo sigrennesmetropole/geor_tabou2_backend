@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,16 +13,14 @@ import rm.tabou2.storage.tabou.dao.operation.TypeOccupationCustomDao;
 import rm.tabou2.storage.tabou.item.TypeOccupationCriteria;
 
 @Service
+@RequiredArgsConstructor
 public class TypeOccupationServiceImpl implements TypeOccupationService {
 
-    @Autowired
-    TypeOccupationMapper mapper;
+    private final TypeOccupationMapper mapper;
 
-    @Autowired
-    TypeOccupationCustomDao typeOccupationCustomDao;
+    private final TypeOccupationCustomDao typeOccupationCustomDao;
 
-    @Autowired
-    TypeOccupationRightsHelper rightsHelper;
+    private final TypeOccupationRightsHelper rightsHelper;
 
     @Override
     public Page<TypeOccupation> searchTypeOccupations(TypeOccupationCriteria criteria, Pageable pageable) {

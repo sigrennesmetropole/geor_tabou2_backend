@@ -5,19 +5,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.EtapeRestricted;
 import rm.tabou2.service.helper.AuthentificationHelper;
@@ -30,12 +28,12 @@ import rm.tabou2.storage.tabou.item.EtapeCriteria;
 
 @TestPropertySource(value = { "classpath:application.properties" })
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-public class EtapeProgrammeServiceTest {
+class EtapeProgrammeServiceTest {
 
 	@Autowired
 	private EtapeProgrammeService etapeProgrammeService;
 
-	@MockBean
+	@MockitoBean
 	private AuthentificationHelper authentificationHelper;
 
 	@Autowired
@@ -135,7 +133,7 @@ public class EtapeProgrammeServiceTest {
 
 	@DisplayName("searchEtapeOperationsWithNotReferenceUserTest: Recherche d'etapes d'operations par un user non référent")
 	@Test
-	public void searchEtapeOperationsWithNotReferenceUserTest() {
+	void searchEtapeOperationsWithNotReferenceUserTest() {
 
 		// C'est un non-référent qui qui effectue la recherche
 		Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(false);
@@ -168,7 +166,7 @@ public class EtapeProgrammeServiceTest {
 
 	@DisplayName("searchEtapeOperationsWithReferenceUserTest: Recherche d'etapes d'operations par un référent")
 	@Test
-	public void searchEtapeOperationsWithReferenceUserTest() {
+	void searchEtapeOperationsWithReferenceUserTest() {
 
 		// C'est un référent qui qui effectue la recherche
 		Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);

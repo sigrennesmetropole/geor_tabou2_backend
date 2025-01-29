@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,28 +23,22 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EtapeOperationServiceImpl implements EtapeOperationService {
 
-    @Autowired
-    private EtapeOperationDao etapeOperationDao;
+    private final EtapeOperationDao etapeOperationDao;
 
-    @Autowired
-    private EtapeOperationCustomDao etapeOperationCustomDao;
+    private final EtapeOperationCustomDao etapeOperationCustomDao;
 
-    @Autowired
-    private EtapeOperationMapper etapeOperationMapper;
+    private final EtapeOperationMapper etapeOperationMapper;
 
-    @Autowired
-    private EtapeOperationRestrictedMapper etapeOperationRestrictedMapper;
+    private final EtapeOperationRestrictedMapper etapeOperationRestrictedMapper;
 
-    @Autowired
-    private OperationRightsHelper operationRightsHelper;
+    private final OperationRightsHelper operationRightsHelper;
 
-    @Autowired
-    private EtapeOperationWorkflowHelper etapeOperationWorkflowHelper;
+    private final EtapeOperationWorkflowHelper etapeOperationWorkflowHelper;
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final AuthentificationHelper authentificationHelper;
 
     @Override
     public Page<EtapeRestricted> searchEtapesOperation(EtapeCriteria etapeCriteria, Pageable pageable) {

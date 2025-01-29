@@ -18,7 +18,7 @@ import rm.tabou2.storage.sig.entity.CommuneEntity;
 
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-public class CommuneServiceTest {
+class CommuneServiceTest {
 
     @Autowired
     private CommuneDao communeDao;
@@ -28,7 +28,7 @@ public class CommuneServiceTest {
 
     @DisplayName("testSearchCommune: test de recherche d'une commune")
     @Test
-    public void testSearchCommune() {
+    void testSearchCommune() {
 
         CommuneEntity commune = new CommuneEntity();
         commune.setNom("rennes");

@@ -35,6 +35,8 @@ import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 @Service
 public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
 
+    public static final String ERROR_NON_TROUVEE = " n'a été trouvée";
+
     @Autowired
     private ProgrammeDao programmeDao;
 
@@ -109,10 +111,10 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
         Optional<ProgrammeEntity> optional = programmeDao.findById(criteria.getProgrammeId());
 
         if (optional.isEmpty()) {
-            throw new NoSuchElementException("L'operation' = " + criteria.getOperationId() + " n'existe pas");
+            throw new NoSuchElementException("L'operation' = " + criteria.getOperationId() + ERROR_NON_TROUVEE);
         }
         // Si diffusion restreinte et utilisateur non referent
-        if ((boolean) optional.get().isDiffusionRestreinte() && !authentificationHelper.hasReferentRole()) {
+        if (optional.get().isDiffusionRestreinte() && !authentificationHelper.hasReferentRole()) {
             return new PageImpl<>(new ArrayList<>(), pageable, 0); // On retourne une page vide
         }
 
@@ -124,10 +126,7 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
             associationTiersTypeTiers.add(getAssociationById(programmeTiers.getId()));
         }
 
-        Page<AssociationTiersTypeTiers> pageResult = new PageImpl<>(associationTiersTypeTiers, pageable, tiersAmenagements.getTotalElements());
-
-        return pageResult;
-
+        return new PageImpl<>(associationTiersTypeTiers, pageable, tiersAmenagements.getTotalElements());
     }
 
     @Override
@@ -135,7 +134,7 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
 
         Optional<ProgrammeTiersEntity> programmeTiersOpt = programmeTiersDao.findById(programmeTiersId);
         if (programmeTiersOpt.isEmpty()) {
-            throw new NoSuchElementException("Le programmeTiers id=" + programmeTiersId + " n'existe pas");
+            throw new NoSuchElementException("Le programmeTiers id=" + programmeTiersId + ERROR_NON_TROUVEE);
         }
 
         ProgrammeTiersEntity programmeTiersEntity = programmeTiersOpt.get();
@@ -147,14 +146,14 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
         // Vérification si type tiers existe
         Optional<TypeTiersEntity> typeTiersEntityOpt = typeTiersDao.findById(tiersTypeTiers.getTypeTiersId());
         if (typeTiersEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le typeTiersId = " + tiersTypeTiers.getTypeTiersId() + " n'existe pas");
+            throw new NoSuchElementException("Le typeTiersId = " + tiersTypeTiers.getTypeTiersId() + ERROR_NON_TROUVEE);
         }
         programmeTiersEntity.setTypeTiers(typeTiersEntityOpt.get());
 
         // Vérification si tiers existe
         Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersTypeTiers.getTiersId());
         if (tiersEntityOpt.isEmpty()) {
-            throw new NoSuchElementException("Le tiersId = " + tiersTypeTiers.getTiersId() + " n'existe pas");
+            throw new NoSuchElementException("Le tiersId = " + tiersTypeTiers.getTiersId() + ERROR_NON_TROUVEE);
         }
         programmeTiersEntity.setTiers(tiersEntityOpt.get());
 
@@ -173,7 +172,7 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
 
         Optional<ProgrammeTiersEntity> programmeTiersOpt = programmeTiersDao.findById(programmeTiersId);
         if (programmeTiersOpt.isEmpty()) {
-            throw new NoSuchElementException("Le programmeTiers id=" + programmeTiersId + " n'existe pas");
+            throw new NoSuchElementException("Le programmeTiers id=" + programmeTiersId + ERROR_NON_TROUVEE);
         }
 
         if (programmeId != programmeTiersOpt.get().getProgramme().getId()) {

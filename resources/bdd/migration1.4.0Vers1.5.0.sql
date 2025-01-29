@@ -11,3 +11,5 @@ ALTER TABLE tabou_attribut_plh ADD CONSTRAINT fk_tabou_attribut_plh_type FOREIGN
 ALTER TABLE tabou_attribut_plh ADD CONSTRAINT fk_tabou_attribut_plh_programme FOREIGN KEY (id_programme) REFERENCES tabou_programme;
 ALTER TABLE tabou_programme_type_plh ADD CONSTRAINT fk_tabou_programme_type_plh_plh_type FOREIGN KEY (id_type_plh) REFERENCES tabou_type_plh;
 ALTER TABLE tabou_programme_type_plh ADD CONSTRAINT fk_tabou_programme_type_plh_programme FOREIGN KEY (id_programme) REFERENCES tabou_programme;
+
+ALTER TABLE tabou_programme ADD COLUMN IF NOT EXISTS surface_totale double precision;
