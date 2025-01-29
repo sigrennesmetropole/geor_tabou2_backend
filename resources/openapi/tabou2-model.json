@@ -512,6 +512,10 @@
             "type": "string",
             "description": "Description du programme pour des besoins de la communication (par ex: Panorama des ZAC)"
           },
+          "surfaceTotale": {
+            "type": "number",
+            "format": "double"
+          },
           "idEmprise": {
             "type": "integer",
             "description": "Identifiant de l'emprise du programme",
