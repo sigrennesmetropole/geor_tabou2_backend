@@ -70,7 +70,7 @@ public class EvenementOperationCustomDaoImpl extends AbstractCustomDaoImpl imple
         List<Predicate> predicates = new ArrayList<>();
 
         //id de l'operation
-        predicateLongCriteria(operationId, FIELD_OPERATION, predicates, builder, root);
+        predicateLongCriteriaForJoin(operationId, FIELD_ID, predicates, builder, root.join(FIELD_OPERATION));
 
         if(typeEventCriteria != null) {
 
