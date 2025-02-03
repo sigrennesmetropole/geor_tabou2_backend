@@ -1,7 +1,10 @@
 package rm.tabou2.service.tabou.plh;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.storage.tabou.item.TypePLHCriteria;
 
 public interface PLHService {
 
@@ -53,5 +56,14 @@ public interface PLHService {
 	 * @param idFils l'id du TypePLH fils
 	 * @return le TypePLH parent
 	 */
-	TypePLH searchParentById(long idFils)throws AppServiceException;
+	TypePLH searchTypePLHParent(long idFils)throws AppServiceException;
+
+	/**
+	 * Recherche des types PLH
+	 * @param criteria Les critères de recherche
+	 * @param pageable La pagination a respecter
+	 * @return La liste des types PLH qui suivent les critères
+	 * @throws AppServiceException
+	 */
+	Page<TypePLH> searchTypePLHs(TypePLHCriteria criteria, Pageable pageable)throws AppServiceException;
 }

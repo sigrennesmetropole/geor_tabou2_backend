@@ -21,6 +21,7 @@ import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.dto.TiersTypeTiers;
+import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.tabou.agaepo.AgapeoService;
 import rm.tabou2.service.tabou.ddc.PermisConstruireService;
 import rm.tabou2.service.tabou.evenement.EvenementProgrammeService;
@@ -295,5 +296,25 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<TypePLH> addPLHProgramme(Long programmeId, Long typePLHId) throws Exception {
+        return ResponseEntity.ok(programmeService.addPLHProgrammeById(programmeId, typePLHId));
+    }
 
+    @Override
+    public ResponseEntity<TypePLH> getPLHProgramme(Long programmeId, Long typePLHId) throws Exception {
+        return ResponseEntity.ok(programmeService.getPLHProgramme(programmeId, typePLHId));
+    }
+
+    @Override
+    public ResponseEntity<Void> removePLHProgramme(Long programmeId, Long typePLHId) throws Exception {
+        programmeService.removePLHProgrammeById(programmeId, typePLHId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<TypePLH> updatePLHProgramme(Long programmeId, TypePLH typePLH)
+            throws Exception {
+        return ResponseEntity.ok(programmeService.updatePLHProgramme(programmeId, typePLH));
+    }
 }

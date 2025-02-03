@@ -20,6 +20,6 @@ public interface TypePLHCustomDao {
      * @param pageable pagination
      * @return page des TypePlh trouvés
      */
-    Page<TypePLHEntity> searchTypePLH(TypePLHCriteria typePLHCriteria, Pageable pageable);
+    Page<TypePLHEntity> searchTypePLHs(TypePLHCriteria typePLHCriteria, Pageable pageable);
 
 }

@@ -2781,6 +2781,162 @@
 				}
 			}
 		},
+		"/programmes/{programmeId}/plh": {
+			"put": {
+				"summary": "Mets à jour le PLH d'un programme",
+				"operationId": "updatePLHProgramme",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "programmeId",
+						"description": "Identifiant du programme",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "PLH",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/programmes/{programmeId}/plh/{typePLHId}": {
+			"get": {
+				"summary": "Récupération du PLH d'un programme",
+				"operationId": "getPLHProgramme",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "programmeId",
+						"description": "Identifiant du programme",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"in": "path",
+						"name": "typePLHId",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			},
+			"post": {
+				"summary": "Ajout d'un PLH à un programme",
+				"operationId": "addPLHProgramme",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "programmeId",
+						"description": "Identifiant du programme",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"in": "path",
+						"name": "typePLHId",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Suppression d'un PLH d'un programme",
+				"operationId": "removePLHProgramme",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "programmeId",
+						"description": "Identifiant du programme",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"in": "path",
+						"name": "typePLHId",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
 		"/communes": {
 			"get": {
 				"summary": "Recherche d'une commune",
@@ -5546,6 +5702,271 @@
 								}
 							}
 						}
+					}
+				}
+			}
+		},
+		"/type-plh": {
+			"get": {
+				"summary": "Liste des types de PLH",
+				"description": "Ensemble des types de PLH  suivant le critère de recherche",
+				"operationId": "searchTypePLHs",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "libelle",
+						"description": "Recherche par libelle des types PLH",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "dateDebut",
+						"description": "Recherche par inactivité des types PLH",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date"
+						}
+					},
+					{
+						"in": "query",
+						"name": "start",
+						"description": "Index de début - démarre à 0",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"in": "query",
+						"name": "resultsNumber",
+						"description": "Nombre de résultats à remonter",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"in": "query",
+						"name": "orderBy",
+						"description": "Nom du champ sur lequel trier les résultats",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "asc",
+						"description": "Indique si le tri doit être fait par ordre ascendant",
+						"required": false,
+						"schema": {
+							"type": "boolean",
+							"default": true
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/PageResult"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Ajout d'un type PLH",
+				"operationId": "createTypePLH",
+				"requestBody": {
+					"description": "Nouveau type PLH",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"summary": "Modification d'un type PLH",
+				"operationId": "updateTypePLH",
+				"requestBody": {
+					"description": "Type PLH à modifier",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
+		"/type-plh/{typePLHId}": {
+			"get": {
+				"summary": "Récupération du détail d'un type PLH",
+				"operationId": "getTypePLH",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "typePLHId",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			},
+			"post": {
+				"summary": "Ajout d'un type PLH à son partent",
+				"operationId": "createTypePLHWithParent",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "typePLHId",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Nouveau type PLH",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"summary": "Suppression d'un type PLH",
+				"operationId": "deleteTypePLH",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "typePLHId",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
+		"/type-plh/{typePLHId}/searchParent": {
+			"get": {
+				"summary": "Récupération du typePLH parent d'un typePLH",
+				"operationId": "searchTypePLHParent",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "typePLHId",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
 					}
 				}
 			}

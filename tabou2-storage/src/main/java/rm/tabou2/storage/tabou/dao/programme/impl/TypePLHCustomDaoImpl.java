@@ -61,7 +61,7 @@ public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl implements TypeP
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<TypePLHEntity> searchTypePLH(TypePLHCriteria typePLHCriteria, Pageable pageable) {
+    public Page<TypePLHEntity> searchTypePLHs(TypePLHCriteria typePLHCriteria, Pageable pageable) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
