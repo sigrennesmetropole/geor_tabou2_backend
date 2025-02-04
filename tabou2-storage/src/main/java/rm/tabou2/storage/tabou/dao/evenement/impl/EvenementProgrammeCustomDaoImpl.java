@@ -22,6 +22,7 @@ import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_PROGRAMME;
 
 @Repository
@@ -68,7 +69,7 @@ public class EvenementProgrammeCustomDaoImpl extends AbstractCustomDaoImpl imple
         List<Predicate> predicates = new ArrayList<>();
 
         //id du programme
-        predicateLongCriteria(programmeId, FIELD_PROGRAMME, predicates, builder, root);
+        predicateLongCriteriaForJoin(programmeId, FIELD_ID, predicates, builder, root.join(FIELD_PROGRAMME));
 
         if (CollectionUtils.isNotEmpty(predicates)) {
             criteriaQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
