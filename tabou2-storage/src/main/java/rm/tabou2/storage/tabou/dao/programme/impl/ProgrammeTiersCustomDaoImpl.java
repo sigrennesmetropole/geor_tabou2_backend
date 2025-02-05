@@ -29,6 +29,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CODE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_PROGRAMME;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TIERS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_TIERS;
 
@@ -91,8 +92,7 @@ public class ProgrammeTiersCustomDaoImpl extends AbstractCustomDaoImpl implement
             predicateStringCriteriaForJoin(criteria.getCodeTypeTiers(), FIELD_CODE, predicates, builder, typeTiersJoin);
         }
 
-        predicateLongCriteria(criteria.getProgrammeId(), "programme", predicates, builder, root);
-
+        predicateLongCriteriaForJoin(criteria.getProgrammeId(), FIELD_ID , predicates, builder, root.join(FIELD_PROGRAMME));
 
         //Définition de la clause Where
         if (CollectionUtils.isNotEmpty(predicates)) {
