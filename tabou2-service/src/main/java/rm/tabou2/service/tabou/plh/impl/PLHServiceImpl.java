@@ -2,6 +2,8 @@ package rm.tabou2.service.tabou.plh.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.TypePLHCustomDao;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
+import rm.tabou2.storage.tabou.item.TypePLHCriteria;
 
 import java.util.List;
 
@@ -40,11 +43,7 @@ public class PLHServiceImpl implements PLHService {
 	@Override
 	@Transactional(readOnly = false)
 	public TypePLH createTypePLH(TypePLH typePLH) throws AppServiceException {
-		TypePLHEntity typePLHEntity = typePLHMapper.dtoToEntity(typePLH);
-		if (!authentificationHelper.hasEditAccess()) {
-			throw new AccessDeniedException("L'utilisateur n'a pas les droits de création d'un type de PLH "
-					+ typePLH.getLibelle());
-		}
+		TypePLHEntity typePLHEntity = getTypePLHEntity(typePLH);
 
 		// Vérification qu'aucun type PLH avec un TypeAttribut VALUE n'a pas de fils
 		typePlhHelper.checkTypeAttributPLH(typePLHEntity);
@@ -61,11 +60,7 @@ public class PLHServiceImpl implements PLHService {
 	@Override
 	@Transactional(readOnly = false)
 	public TypePLH createTypePLHWithParent(TypePLH typePLH, long parentId) throws AppServiceException {
-		TypePLHEntity typePLHEntity = typePLHMapper.dtoToEntity(typePLH);
-		if (!authentificationHelper.hasEditAccess()) {
-			throw new AccessDeniedException("L'utilisateur n'a pas les droits de création d'un type de PLH "
-					+ typePLH.getLibelle());
-		}
+		TypePLHEntity typePLHEntity = getTypePLHEntity(typePLH);
 
 		// Vérification qu'aucun type PLH avec un TypeAttribut VALUE n'a pas de fils
 		typePlhHelper.checkTypeAttributPLH(typePLHEntity);
@@ -136,11 +131,25 @@ public class PLHServiceImpl implements PLHService {
 	}
 
 	@Override
-	public TypePLH searchParentById(long idfils) throws AppServiceException {
+	public TypePLH searchTypePLHParent(long idfils) throws AppServiceException {
 		if (typePLHDao.findOneById(idfils) == null) {
 			throw new AppServiceException("Recherche impossible, l'id du fils id = " + idfils +
 					" ne correspond pas à un type PLH");
 		}
 		return typePLHMapper.entityToDto(typePLHCustomDao.getParentById(idfils));
+	}
+
+	@Override
+	public Page<TypePLH> searchTypePLHs(TypePLHCriteria criteria, Pageable pageable) throws AppServiceException {
+		return typePLHMapper.entitiesToDto(typePLHCustomDao.searchTypePLHs(criteria, pageable), pageable);
+	}
+
+	private TypePLHEntity getTypePLHEntity(TypePLH typePLH) {
+		TypePLHEntity typePLHEntity = typePLHMapper.dtoToEntity(typePLH);
+		if (!authentificationHelper.hasEditAccess()) {
+			throw new AccessDeniedException("L'utilisateur n'a pas les droits de création d'un type de PLH "
+					+ typePLH.getLibelle());
+		}
+		return typePLHEntity;
 	}
 }

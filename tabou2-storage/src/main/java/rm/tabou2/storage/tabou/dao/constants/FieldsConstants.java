@@ -56,4 +56,6 @@ public class FieldsConstants {
     public static final String FIELD_TYPE_EVENEMENT = "typeEvenement";
     public static final String FIELD_SYSTEME = "systeme";
     public static final String FIELD_FILS = "fils";
+    public static final String FIELD_DATE_DEBUT = "dateDebut";
+
 }

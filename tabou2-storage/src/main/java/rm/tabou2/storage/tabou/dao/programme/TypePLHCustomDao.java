@@ -1,6 +1,9 @@
 package rm.tabou2.storage.tabou.dao.programme;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
+import rm.tabou2.storage.tabou.item.TypePLHCriteria;
 
 public interface TypePLHCustomDao {
 
@@ -10,4 +13,13 @@ public interface TypePLHCustomDao {
      * @return le parent du fils sinon null
      */
     TypePLHEntity getParentById(long filsId);
+
+    /**
+     * Recherche d'un typePLH à partir d'un TypePLHCriteria
+     * @param typePLHCriteria   filtre de recherche
+     * @param pageable pagination
+     * @return page des TypePlh trouvés
+     */
+    Page<TypePLHEntity> searchTypePLHs(TypePLHCriteria typePLHCriteria, Pageable pageable);
+
 }

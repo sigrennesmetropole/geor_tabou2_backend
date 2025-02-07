@@ -227,11 +227,11 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
         TypePLH plh2 = plhService.createTypePLHWithParent(typePLH2, plh1.getId());
         TypePLH plh1AvecFils = plhService.getTypePLH(plh1.getId());
 
-        TypePLH parent = plhService.searchParentById(plh2.getId());
+        TypePLH parent = plhService.searchTypePLHParent(plh2.getId());
         Assertions.assertNotNull(parent);
         Assertions.assertEquals("num1", parent.getLibelle());
 
         long id = plh1AvecFils.getId();
-        Assertions.assertThrows(NullPointerException.class, () ->  plhService.searchParentById(id));
+        Assertions.assertThrows(NullPointerException.class, () ->  plhService.searchTypePLHParent(id));
     }
 }
