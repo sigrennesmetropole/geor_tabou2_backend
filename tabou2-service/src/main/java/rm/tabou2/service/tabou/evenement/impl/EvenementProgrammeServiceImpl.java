@@ -8,6 +8,7 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
+import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
@@ -17,6 +18,7 @@ import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
+import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -42,10 +44,20 @@ public class EvenementProgrammeServiceImpl implements EvenementProgrammeService 
     @Autowired
     private EvenementProgrammeRigthsHelper evenementProgrammeRigthsHelper;
 
+    @Autowired
+    private AuthentificationHelper authentificationHelper;
+
     @Override
     public Page<Evenement> searchEvenementsProgramme(long programmeId, Pageable pageable) {
 
-        return evenementProgrammeMapper.entitiesToDto(evenementProgrammeCustomDao.searchEvenementsProgramme(programmeId, pageable), pageable);
+        TypeEvenementCriteria typeEvenementCriteria = new TypeEvenementCriteria();
+
+        if (!authentificationHelper.hasAdministratorRole()) {
+            typeEvenementCriteria.setSysteme(false);
+        }
+
+
+        return evenementProgrammeMapper.entitiesToDto(evenementProgrammeCustomDao.searchEvenementsProgramme(programmeId, typeEvenementCriteria, pageable), pageable);
 
     }
 

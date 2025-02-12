@@ -13,6 +13,7 @@ import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
+import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
@@ -21,6 +22,7 @@ import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,10 +43,19 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
     @Autowired
     private EvenementOperationRightsHelper evenementOperationRigthsHelper;
 
+    @Autowired
+    private AuthentificationHelper authentificationHelper;
+
     @Override
     public Page<Evenement> searchEvenementsOperations(long operationId, Pageable pageable) {
 
-        return evenementOperationMapper.entitiesToDto(evenementOperationCustomDao.searchEvenementsOperation(operationId, null, pageable), pageable);
+        TypeEvenementCriteria typeEvenementCriteria = new TypeEvenementCriteria();
+
+        if (!authentificationHelper.hasAdministratorRole()) {
+            typeEvenementCriteria.setSysteme(false);
+        }
+
+        return evenementOperationMapper.entitiesToDto(evenementOperationCustomDao.searchEvenementsOperation(operationId, typeEvenementCriteria, pageable), pageable);
 
     }
 
