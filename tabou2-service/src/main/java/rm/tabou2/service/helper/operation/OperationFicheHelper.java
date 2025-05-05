@@ -21,9 +21,6 @@ import java.util.Map;
 public class OperationFicheHelper extends AbstractOperationFicheHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationFicheHelper.class);
-    private static final String ACTIVITE = "ACTIVITE";
-    private static final String HABITAT = "HABITAT";
-    private static final String MIXTE = "MIXTE";
 
     @Autowired
     private VocationDao vocationDao;
@@ -37,6 +34,9 @@ public class OperationFicheHelper extends AbstractOperationFicheHelper {
     @Value("${fiche.template.operation.mixte}")
     private String pathTemplateMixteOperation;
 
+    @Value("${fiche.template.operation.mobilite}")
+    private String pathTemplateMobiliteOperation;
+
     private final Map<VocationEntity, String> defaultTemplatesPath = new HashMap<>();
 
     private final Map<VocationEntity, String> configuredTemplatesPath = new HashMap<>();
@@ -46,6 +46,7 @@ public class OperationFicheHelper extends AbstractOperationFicheHelper {
         defaultTemplatesPath.put(vocationDao.findByCode(ACTIVITE), "template/operation/template_fiche_suivi_activite.odt");
         defaultTemplatesPath.put(vocationDao.findByCode(HABITAT), "template/operation/template_fiche_suivi_habitat.odt");
         defaultTemplatesPath.put(vocationDao.findByCode(MIXTE), "template/operation/template_fiche_suivi_mixte.odt");
+        defaultTemplatesPath.put(vocationDao.findByCode(MOBILITE), "template/operation/template_fiche_suivi_mobilite.odt");
     }
 
     @PostConstruct
@@ -53,6 +54,7 @@ public class OperationFicheHelper extends AbstractOperationFicheHelper {
         configuredTemplatesPath.put(vocationDao.findByCode(ACTIVITE), pathTemplateActiviteOperation);
         configuredTemplatesPath.put(vocationDao.findByCode(HABITAT), pathTemplateHabitatOperation);
         configuredTemplatesPath.put(vocationDao.findByCode(MIXTE), pathTemplateMixteOperation);
+        configuredTemplatesPath.put(vocationDao.findByCode(MOBILITE), pathTemplateMobiliteOperation);
     }
 
 

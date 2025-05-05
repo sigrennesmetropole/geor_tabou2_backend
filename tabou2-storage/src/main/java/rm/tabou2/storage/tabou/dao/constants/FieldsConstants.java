@@ -57,5 +57,8 @@ public class FieldsConstants {
     public static final String FIELD_SYSTEME = "systeme";
     public static final String FIELD_FILS = "fils";
     public static final String FIELD_DATE_DEBUT = "dateDebut";
+    public static final String FIELD_DATE_FIN = "dateFin";
+    public static final String FIELD_PLHS = "plhs";
+    public static final String FIELD_SELECTIONNABLE = "selectionnable";
 
 }

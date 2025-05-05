@@ -352,13 +352,19 @@
           "localisation": {
             "type": "string"
           },
-          "usageActuel": {
+          "mos": {
             "type": "string"
           },
           "avancementAdministratif": {
             "type": "string"
           },
           "environnement": {
+            "type": "string"
+          },
+          "financementPPI": {
+            "type": "boolean"
+          },
+          "elementsFinanciers": {
             "type": "string"
           },
           "surfaceRealisee": {
@@ -667,6 +673,12 @@
             "type": "string",
             "description": "Date de dernière modification du programme",
             "format": "date"
+          },
+          "typePLHsBeans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypePLHBean"
+            }
           }
         }
       },
@@ -2135,6 +2147,11 @@
             "description": "Date de début d'effet du type de PLH",
             "format": "date"
           },
+          "dateFin": {
+            "type": "string",
+            "description": "Date de fin d'effet du type de PLH",
+            "format": "date"
+          },
           "typeAttributPLH": {
             "type": "string",
             "enum": [
@@ -2151,6 +2168,13 @@
             "items": {
               "$ref": "#/components/schemas/TypePLH"
             }
+          },
+          "selectionnable": {
+            "type": "boolean"
+          },
+          "order": {
+            "type": "integer",
+            "nullable": false
           }
         }
       },

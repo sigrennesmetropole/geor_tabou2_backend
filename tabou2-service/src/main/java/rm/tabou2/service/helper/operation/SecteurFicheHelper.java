@@ -21,9 +21,6 @@ import java.util.Map;
 public class SecteurFicheHelper extends AbstractOperationFicheHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecteurFicheHelper.class);
-    private static final String ACTIVITE = "ACTIVITE";
-    private static final String HABITAT = "HABITAT";
-    private static final String MIXTE = "MIXTE";
 
     @Autowired
     private VocationDao vocationDao;
@@ -37,6 +34,9 @@ public class SecteurFicheHelper extends AbstractOperationFicheHelper {
     @Value("${fiche.template.secteur.mixte}")
     private String pathTemplateMixteSecteur;
 
+    @Value("${fiche.template.secteur.mobilite}")
+    private String pathTemplateMobiliteSecteur;
+
     private final Map<VocationEntity, String> defaultTemplatesSecteurPath = new HashMap<>();
 
     private final Map<VocationEntity, String> configuredTemplatesSecteurPath = new HashMap<>();
@@ -47,6 +47,7 @@ public class SecteurFicheHelper extends AbstractOperationFicheHelper {
         defaultTemplatesSecteurPath.put(vocationDao.findByCode(ACTIVITE), "template/secteur/template_fiche_suivi_activite.odt");
         defaultTemplatesSecteurPath.put(vocationDao.findByCode(HABITAT), "template/secteur/template_fiche_suivi_habitat.odt");
         defaultTemplatesSecteurPath.put(vocationDao.findByCode(MIXTE), "template/secteur/template_fiche_suivi_mixte.odt");
+        defaultTemplatesSecteurPath.put(vocationDao.findByCode(MOBILITE), "template/secteur/template_fiche_suivi_mobilite.odt");
     }
 
     @PostConstruct
@@ -54,6 +55,7 @@ public class SecteurFicheHelper extends AbstractOperationFicheHelper {
         configuredTemplatesSecteurPath.put(vocationDao.findByCode(ACTIVITE), pathTemplateActiviteSecteur);
         configuredTemplatesSecteurPath.put(vocationDao.findByCode(HABITAT), pathTemplateHabitatSecteur);
         configuredTemplatesSecteurPath.put(vocationDao.findByCode(MIXTE), pathTemplateMixteSecteur);
+        configuredTemplatesSecteurPath.put(vocationDao.findByCode(MOBILITE), pathTemplateMobiliteSecteur);
     }
 
 

@@ -5714,6 +5714,16 @@
 				"parameters": [
 					{
 						"in": "query",
+						"name": "programmeId",
+						"description": "Recherche des plhs compatibles avec un programme",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"in": "query",
 						"name": "libelle",
 						"description": "Recherche par libelle des types PLH",
 						"required": false,
@@ -5724,6 +5734,16 @@
 					{
 						"in": "query",
 						"name": "dateDebut",
+						"description": "Recherche par inactivité des types PLH",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"format": "date"
+						}
+					},
+					{
+						"in": "query",
+						"name": "dateFin",
 						"description": "Recherche par inactivité des types PLH",
 						"required": false,
 						"schema": {

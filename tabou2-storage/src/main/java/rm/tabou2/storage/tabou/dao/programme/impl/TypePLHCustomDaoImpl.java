@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,16 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.programme.TypePLHCustomDao;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
+import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.TypePLHCriteria;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CODE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DATE_DEBUT;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DATE_FIN;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_FILS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_PLHS;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_SELECTIONNABLE;
 
 @Repository
 public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl implements TypePLHCustomDao {
@@ -80,7 +84,6 @@ public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl implements TypeP
         //Requête de recherche
         CriteriaQuery<TypePLHEntity> searchQuery = builder.createQuery(TypePLHEntity.class);
         Root<TypePLHEntity> searchRoot = searchQuery.from(TypePLHEntity.class);
-        searchQuery.multiselect(searchRoot.get(FIELD_ID), searchRoot.get(FIELD_CODE), searchRoot.get(FIELD_LIBELLE));
         buildQuery(typePLHCriteria, builder, searchQuery, searchRoot);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
@@ -100,8 +103,23 @@ public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl implements TypeP
                 predicateStringCriteria(typePLHCriteria.getLibelle(), FIELD_LIBELLE, predicates, builder, root);
             }
 
-            if (typePLHCriteria.getDateDebut() != null) {
-                predicateDateCriteria(typePLHCriteria.getDateDebut(), typePLHCriteria.getDateDebut(), FIELD_DATE_DEBUT, predicates, builder, root);
+            predicateDateCriteria(typePLHCriteria.getDateDebut(), typePLHCriteria.getDateFin(),
+                    FIELD_DATE_DEBUT, predicates, builder, root);
+
+            predicateDateCriteria(typePLHCriteria.getDateDebut(), typePLHCriteria.getDateFin(),
+                    FIELD_DATE_FIN, predicates, builder, root);
+
+            if (typePLHCriteria.getProgrammeId() != null) {
+                Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
+                Root<ProgrammeEntity> subRoot = subquery.from(ProgrammeEntity.class);
+                subquery.where(builder.equal(subRoot.get(FIELD_ID), typePLHCriteria.getProgrammeId()));
+                subquery.select(subRoot.join(FIELD_PLHS).get(FIELD_ID));
+                
+                predicates.add(builder.not(root.get(FIELD_ID).in(subquery)));
+            }
+
+            if (typePLHCriteria.getSelectionnable() != null) {
+                predicateBooleanCriteria(typePLHCriteria.getSelectionnable(), FIELD_SELECTIONNABLE, predicates, builder, root);
             }
 
             if (CollectionUtils.isNotEmpty(predicates)) {

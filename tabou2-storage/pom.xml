@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tabou2</artifactId>
         <groupId>rm</groupId>
-        <version>1.5.0</version>
+        <version>1.6.0</version>
         <relativePath>../</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -68,6 +68,15 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.locationtech.jts</groupId>
+            <artifactId>jts-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-spatial</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -129,6 +129,14 @@ public class OperationEntity extends GenericAuditableEntity {
     private String environnement;
 
     @Basic
+    @Column(name = "financement_ppi")
+    private Boolean financementPPI;
+
+    @Basic
+    @Column(name = "elements_financiers")
+    private String elementsFinanciers;
+
+    @Basic
     @Column(name = "surface_realisee")
     private Double surfaceRealisee;
 

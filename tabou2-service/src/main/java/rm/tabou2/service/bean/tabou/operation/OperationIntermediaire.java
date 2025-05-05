@@ -141,6 +141,10 @@ public class OperationIntermediaire {
 
     private Set<DescriptionFinancementOperation> financements;
 
+    private String elementsFinanciers;
+
+    private Boolean financementPPI;
+
     private Set<ActionOperation> actions;
 
     private Set<Acteur> acteurs;
@@ -148,6 +152,8 @@ public class OperationIntermediaire {
     private Plui plui;
 
     private ProjetUrbain projetUrbain;
+
+    private String mos;
 
     @Override
     public boolean equals(Object o) {

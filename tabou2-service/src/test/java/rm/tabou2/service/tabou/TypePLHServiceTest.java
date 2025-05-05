@@ -21,14 +21,18 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.tabou.plh.PLHService;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypeAttributPLH;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
+import java.time.Instant;
 import java.util.Date;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @TestPropertySource(value = {"classpath:application.properties"})
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
@@ -52,6 +56,9 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
     @MockitoBean
     private AuthentificationHelper authentificationHelper;
 
+    @Autowired
+    private PermisConstruireDao permisConstruireDao;
+
     @BeforeEach
     public void initTest() {
         Mockito.when(programmeRightsHelper.checkCanGetProgramme(Mockito.any(Programme.class))).thenReturn(true);
@@ -73,12 +80,18 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
     void testCreateTypePLH() throws AppServiceException {
         TypePLH typePLH1 = new TypePLH();
         typePLH1.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.CATEGORY);
-        typePLH1.setDateDebut(new Date());
+        typePLH1.setDateDebut(Date.from(Instant.now().minus(1, DAYS)));
+        typePLH1.setDateFin(Date.from(Instant.now().plus(1, DAYS)));
+        typePLH1.setSelectionnable(true);
+        typePLH1.setOrder(0);
         typePLH1.setLibelle("num1");
 
         TypePLH typePLH2 = new TypePLH();
         typePLH2.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.VALUE);
-        typePLH2.setDateDebut(new Date());
+        typePLH2.setDateDebut(Date.from(Instant.now().minus(1, DAYS)));
+        typePLH2.setDateFin(Date.from(Instant.now().plus(1, DAYS)));
+        typePLH2.setSelectionnable(true);
+        typePLH2.setOrder(0);
         typePLH2.setLibelle("num2");
 
         TypePLH plh1 = plhService.createTypePLH(typePLH1);
@@ -98,12 +111,18 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
     void testCreateTypePLHEnCascade() throws AppServiceException {
         TypePLH typePLH1 = new TypePLH();
         typePLH1.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.CATEGORY);
-        typePLH1.setDateDebut(new Date());
+        typePLH1.setDateDebut(Date.from(Instant.now().minus(1, DAYS)));
+        typePLH1.setDateFin(Date.from(Instant.now().plus(1, DAYS)));
+        typePLH1.setSelectionnable(true);
+        typePLH1.setOrder(0);
         typePLH1.setLibelle("num1");
 
         TypePLH typePLH2 = new TypePLH();
         typePLH2.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.VALUE);
-        typePLH2.setDateDebut(new Date());
+        typePLH2.setDateDebut(Date.from(Instant.now().minus(1, DAYS)));
+        typePLH2.setDateFin(Date.from(Instant.now().plus(1, DAYS)));
+        typePLH2.setSelectionnable(true);
+        typePLH2.setOrder(0);
         typePLH2.setLibelle("num2");
 
         typePLH1.addFilsItem(typePLH2);
@@ -127,24 +146,37 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
         programmeEntity.setNumAds("numads1");
         programmeDao.save(programmeEntity);
 
+        PermisConstruireEntity pc = new PermisConstruireEntity();
+        pc.setDatDate(Date.from(Instant.now()));
+        pc.setDocDate(Date.from(Instant.now()));
+        pc.setNumAds("numads1");
+        pc.setDecision("Accordé");
+        permisConstruireDao.save(pc);
+
         TypePLHEntity typePLHEntity1 = new TypePLHEntity();
         typePLHEntity1.setTypeAttributPLH(TypeAttributPLH.CATEGORY);
-        typePLHEntity1.setDateDebut(new Date());
+        typePLHEntity1.setDateDebut(Date.from(Instant.now().minus(1, DAYS)));
+        typePLHEntity1.setDateFin(Date.from(Instant.now().plus(1, DAYS)));
+        typePLHEntity1.setSelectionnable(true);
+        typePLHEntity1.setOrder(0);
         typePLHEntity1.setLibelle("num1");
         typePLHDao.save(typePLHEntity1);
 
         TypePLHEntity typePLHEntity2 = new TypePLHEntity();
         typePLHEntity2.setTypeAttributPLH(TypeAttributPLH.VALUE);
-        typePLHEntity2.setDateDebut(new Date());
+        typePLHEntity2.setDateDebut(Date.from(Instant.now().minus(2, DAYS)));
+        typePLHEntity2.setDateFin(Date.from(Instant.now().minus(1, DAYS)));
+        typePLHEntity2.setSelectionnable(true);
+        typePLHEntity2.setOrder(0);
         typePLHEntity2.setLibelle("num2");
         typePLHDao.save(typePLHEntity2);
 
         TypePLH plh1 = programmeService.addPLHProgrammeById(programmeEntity.getId(), typePLHEntity1.getId());
-        TypePLH plh2 = programmeService.addPLHProgrammeById(programmeEntity.getId(), typePLHEntity2.getId());
+        Assertions.assertThrows(AppServiceException.class,
+                () -> programmeService.addPLHProgrammeById(programmeEntity.getId(), typePLHEntity2.getId()));
 
         Assertions.assertEquals(plh1, programmeService.getPLHProgramme(programmeEntity.getId(), plh1.getId()));
         Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.CATEGORY, plh1.getTypeAttributPLH());
-        Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.VALUE, plh2.getTypeAttributPLH());
     }
 
     @DisplayName("testUpdatePLHProgramme: Test de la mise à jour d'un type plh dans un programme")
@@ -160,19 +192,19 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
         programmeEntity = programmeDao.save(programmeEntity);
 
         TypePLHEntity typePLHEntity1 = new TypePLHEntity();
-        typePLHEntity1.setTypeAttributPLH(TypeAttributPLH.CATEGORY);
-        typePLHEntity1.setDateDebut(new Date());
+        typePLHEntity1.setTypeAttributPLH(TypeAttributPLH.VALUE);
+        typePLHEntity1.setDateDebut(Date.from(Instant.now().minus(1, DAYS)));
+        typePLHEntity1.setDateFin(Date.from(Instant.now().plus(1, DAYS)));
+        typePLHEntity1.setSelectionnable(true);
+        typePLHEntity1.setOrder(0);
         typePLHEntity1.setLibelle("num1");
         typePLHEntity1 = typePLHDao.save(typePLHEntity1);
         TypePLH plh1 = programmeService.addPLHProgrammeById(programmeEntity.getId(), typePLHEntity1.getId());
 
-        plh1.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.VALUE);
         plh1.setValue("value1");
-        programmeService.updatePLHProgramme(programmeEntity.getId(), plh1);
+        plh1 = programmeService.updatePLHProgramme(programmeEntity.getId(), plh1);
         TypePLH plh2 = programmeService.getPLHProgramme(programmeEntity.getId(), plh1.getId());
 
-        Assertions.assertEquals(plh1, plh2);
-        Assertions.assertEquals(TypePLH.TypeAttributPLHEnum.VALUE, plh2.getTypeAttributPLH());
         Assertions.assertEquals("value1", plh2.getValue());
     }
 
@@ -190,8 +222,11 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
 
         TypePLHEntity typePLHEntity1 = new TypePLHEntity();
         typePLHEntity1.setTypeAttributPLH(TypeAttributPLH.CATEGORY);
-        typePLHEntity1.setDateDebut(new Date());
+        typePLHEntity1.setDateDebut(Date.from(Instant.now().minus(1, DAYS)));
+        typePLHEntity1.setDateFin(Date.from(Instant.now().plus(1, DAYS)));
         typePLHEntity1.setLibelle("num1");
+        typePLHEntity1.setSelectionnable(true);
+        typePLHEntity1.setOrder(0);
         typePLHDao.save(typePLHEntity1);
         TypePLH plh1 = programmeService.addPLHProgrammeById(programmeId, typePLHEntity1.getId());
 
@@ -215,12 +250,18 @@ class TypePLHServiceTest extends DatabaseInitializerTest implements ExceptionTes
     void searchParentById() throws AppServiceException {
         TypePLH typePLH1 = new TypePLH();
         typePLH1.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.CATEGORY);
-        typePLH1.setDateDebut(new Date());
+        typePLH1.setDateDebut(Date.from(Instant.now().minus(1, DAYS)));
+        typePLH1.setDateFin(Date.from(Instant.now().plus(1, DAYS)));
+        typePLH1.setSelectionnable(true);
+        typePLH1.setOrder(0);
         typePLH1.setLibelle("num1");
 
         TypePLH typePLH2 = new TypePLH();
         typePLH2.setTypeAttributPLH(TypePLH.TypeAttributPLHEnum.VALUE);
-        typePLH2.setDateDebut(new Date());
+        typePLH2.setDateDebut(Date.from(Instant.now().minus(1, DAYS)));
+        typePLH2.setDateFin(Date.from(Instant.now().plus(1, DAYS)));
+        typePLH2.setSelectionnable(true);
+        typePLH2.setOrder(0);
         typePLH2.setLibelle("num2");
 
         TypePLH plh1 = plhService.createTypePLH(typePLH1);

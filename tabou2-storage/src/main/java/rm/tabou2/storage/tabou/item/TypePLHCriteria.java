@@ -11,4 +11,10 @@ public class TypePLHCriteria {
 
     private Date dateDebut;
 
+    private Date dateFin;
+
+    private Long programmeId;
+
+    private Boolean selectionnable;
+
 }

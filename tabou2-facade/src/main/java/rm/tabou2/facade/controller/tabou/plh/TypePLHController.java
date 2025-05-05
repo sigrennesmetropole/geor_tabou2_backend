@@ -48,11 +48,20 @@ public class TypePLHController implements TypePlhApi {
 	}
 
 	@Override
-	public ResponseEntity<PageResult> searchTypePLHs(String libelle, Date dateDebut, Integer start,
+	public ResponseEntity<PageResult> searchTypePLHs(Long programmeId, String libelle, Date dateDebut, Date dateFin, Integer start,
 			Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 		TypePLHCriteria criteria = new TypePLHCriteria();
+		criteria.setProgrammeId(programmeId);
 		criteria.setLibelle(libelle);
 		criteria.setDateDebut(dateDebut);
+		criteria.setDateFin(dateFin);
+
+		// Pour le moment on ne laisse que la possibilité de récupérer les éléments sélectionnables
+		criteria.setSelectionnable(true);
+
+		if (orderBy == null) {
+			orderBy = "order";
+		}
 
 		Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypePLHEntity.class);
 

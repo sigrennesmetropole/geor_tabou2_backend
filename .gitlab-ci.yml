@@ -2,7 +2,11 @@
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml -Dmaven.repo.local=.m2/repository --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
   DOCKER_DISABLE: "true"
-  
+  GITHUB_COMMIT_MESSAGE:
+    description: "Message du commit poussé vers le GitHub (cf job push-to-github). Par défaut : $CI_COMMIT_REF_NAME (nom de la branche ou du tag)."
+    value: $CI_COMMIT_REF_NAME
+
+
 # Cache policy - Share target folders between jobs - Note that key is related to a commit and is purged automatically after pipeline execution
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -29,6 +33,7 @@ stages:
   - pre_docker
   - docker
   - deploy
+  - delivering
 
 # Build job with maven plugin execution policies define in parent pom
 tabou2:build:
@@ -104,13 +109,8 @@ tabou2:sonar:master:
 # Copie des artifacts dans les répertoires des images dockers
 tabou2:pre_docker:
   stage: pre_docker
-  only:
-    refs:
-      - master
-      - open/master
-      - open/develop
-      - /^release.*/
-      - /.*karbonification.*/
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /.*develop/ || $CI_COMMIT_BRANCH =~ /.*master/ || $CI_COMMIT_BRANCH =~ /^release.*/ || $CI_COMMIT_BRANCH =~ /.*karbonification.*/ || $CI_COMMIT_TAG'
   script:
     - ls -l $CI_PROJECT_DIR/tabou2-facade/target/
     - cp $CI_PROJECT_DIR/tabou2-facade/target/tabou2-facade.jar $CI_PROJECT_DIR/docker/rennes-metropole/tabou2-facade.jar
@@ -129,7 +129,7 @@ tabou2:docker2:build:
   dependencies:
     - tabou2:pre_docker
   rules:
-    - if: '$CI_COMMIT_BRANCH =~ /.*develop/ || $CI_COMMIT_BRANCH =~ /.*master/ || $CI_COMMIT_BRANCH =~ /^release.*/ || $CI_COMMIT_BRANCH =~ /.*karbonification.*/'
+    - if: '$CI_COMMIT_BRANCH =~ /.*develop/ || $CI_COMMIT_BRANCH =~ /.*master/ || $CI_COMMIT_BRANCH =~ /^release.*/ || $CI_COMMIT_BRANCH =~ /.*karbonification.*/ || $CI_COMMIT_TAG'
   timeout: 1h
   artifacts:
     paths:
@@ -149,6 +149,7 @@ tabou2:docker2:build:
     - tabou2:docker2:build
   dependencies:
     - tabou2:docker2:build
+  when: manual
   before_script:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$ansible_private_key" | base64 -d)       
@@ -184,7 +185,7 @@ tabou2:deploy:master:
       - open/master
   variables: 
     TARGET_ENV: REN1VML0095
-  when: manual
+
 
 ## #####
 # Déploiement Karbon
@@ -255,6 +256,25 @@ tabou2:deploy-karbon:qua:
     PARENT_STAGE_PREFIX: tabou2:deploy-karbon:prepare
   when: manual
 
+## Livraison Github
+push-to-github:
+  stage: delivering
+  dependencies:
+    - tabou2:docker2:build
+  rules:
+    - if: '$CI_COMMIT_TAG'
+      when: manual
+  script:
+    - cd ci
+    - apt install -y rsync
+    - chmod +x push-to-github.sh
+    - ./push-to-github.sh
+  variables:
+    SOURCE_REPOSITORY: $CI_PROJECT_DIR
+    # Les variables GITHUB_RM_ACCOUNT, GITHUB_RM_LOGIN et GIT_TOKEN sont à définir manuellement avant de lancer le job
+    GIT_REMOTE: "https://$GITHUB_RM_ACCOUNT:$GIT_TOKEN@github.com/sigrennesmetropole/geor_tabou2_backend.git"
+    COMMIT_MESSAGE: $GITHUB_COMMIT_MESSAGE
+
 ## Trivy
 trivyscan:back:
   extends: 
@@ -269,3 +289,5 @@ trivyscan:back:
   only:
     refs:
       - open/develop
+  
+ 

@@ -38,6 +38,9 @@ public class TypePLHEntity {
 	@Column(name = "date_debut", nullable = false)
 	private Date dateDebut;
 
+	@Column(name = "date_fin", nullable = false)
+	private Date dateFin;
+
 	@Column(name = "type_attribut")
 	@Enumerated(EnumType.STRING)
 	private TypeAttributPLH typeAttributPLH;
@@ -45,6 +48,12 @@ public class TypePLHEntity {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_type_plh_parent")
 	private Set<TypePLHEntity> fils;
+
+	@Column(name = "selectionnable")
+	private boolean selectionnable;
+
+	@Column(name = "order_")
+	private int order;
 
 	public void addTypePLHToFils(TypePLHEntity typePLHEntity) {
 		if (this.fils == null) {

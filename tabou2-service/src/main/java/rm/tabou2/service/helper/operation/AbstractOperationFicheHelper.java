@@ -24,6 +24,7 @@ import rm.tabou2.storage.sig.dao.SecteurCustomDao;
 import rm.tabou2.storage.sig.entity.CommuneEntity;
 import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
+import rm.tabou2.storage.tabou.dao.operation.MosCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.ContributionEntity;
@@ -43,6 +44,11 @@ import java.util.Set;
 @Component
 public abstract class AbstractOperationFicheHelper {
 
+    protected static final String ACTIVITE = "ACTIVITE";
+    protected static final String HABITAT = "HABITAT";
+    protected static final String MIXTE = "MIXTE";
+    protected static final String MOBILITE = "MOBILITE";
+
     @Autowired
     private DocumentGenerator documentGenerator;
 
@@ -56,8 +62,10 @@ public abstract class AbstractOperationFicheHelper {
     private CommuneCustomDao communeCustomDao;
 
     @Autowired
-    private TypeEvenementDao typeEvenementDao;
+    private MosCustomDao mosCustomDao;
 
+    @Autowired
+    private TypeEvenementDao typeEvenementDao;
 
     @Autowired
     private EvenementOperationCustomDao evenementOperationCustomDao;
@@ -73,6 +81,21 @@ public abstract class AbstractOperationFicheHelper {
 
     @Value("${typeevenement.commentaire.moa}")
     private String typeCommentaireMoa;
+
+    @Value("${typeevenement.commentaire.mobilite.dauh}")
+    private String typeCommentaireDauh;
+
+    @Value("${typeevenement.commentaire.mobilite.pisu}")
+    private String typeCommentairePisu;
+
+    @Value("${typeevenement.commentaire.mobilite.commune}")
+    private String typeCommentaireCommune;
+
+    @Value("${typeevenement.commentaire.mobilite.mandataire}")
+    private String typeCommentaireMandataire;
+
+    @Value("${typeevenement.commentaire.mobilite.autre}")
+    private String typeCommentaireMobiliteAutre;
 
     @Value("#{'${typeevenement.commentaire.autres}'.split(';')}")
     private List<String> typesAutresCommentaires;
@@ -127,6 +150,11 @@ public abstract class AbstractOperationFicheHelper {
         ficheSuiviOperationDataModel.setOutilFoncier(operationEntity.getOutilFoncier());
         ficheSuiviOperationDataModel.setModeAmenagement(operationEntity.getModeAmenagement());
         ficheSuiviOperationDataModel.setMaitriseOuvrage(operationEntity.getMaitriseOuvrage());
+        ficheSuiviOperationDataModel.setMOS(mosCustomDao.computeOperationMos(operationEntity.getId(), Boolean.TRUE.equals(operationEntity.getSecteur())));
+
+        if (operationEntity.getFinancementPPI() != null) {
+            ficheSuiviOperationDataModel.setFinancementPPI(Boolean.TRUE.equals(operationEntity.getFinancementPPI()) ? "Oui" : "Non");
+        }
 
         // Insertion des fonciers
         ficheSuiviOperationDataModel.setFonciers(getFonciers(operationEntity));
@@ -268,6 +296,12 @@ public abstract class AbstractOperationFicheHelper {
         commentaires.setCommentairePlui(findLastCommentaire(results, typeCommentairePlui));
         commentaires.setCommentaireOperationnel(findLastCommentaire(results, typeCommentaireOperationnel));
         commentaires.setCommentaireMoa(findLastCommentaire(results, typeCommentaireMoa));
+        commentaires.setCommentaireDauh(findLastCommentaire(results, typeCommentaireDauh));
+        commentaires.setCommentairePisu(findLastCommentaire(results, typeCommentairePisu));
+        commentaires.setCommentaireCommune(findLastCommentaire(results, typeCommentaireCommune));
+        commentaires.setCommentaireMandataire(findLastCommentaire(results, typeCommentaireMandataire));
+        commentaires.setCommentaireMobiliteAutre(findLastCommentaire(results, typeCommentaireMobiliteAutre));
+
         List<Commentaire> autresCommentaires = new ArrayList<>();
         for(String code : typesAutresCommentaires){
             Commentaire commentaire = findLastCommentaire(results, code);

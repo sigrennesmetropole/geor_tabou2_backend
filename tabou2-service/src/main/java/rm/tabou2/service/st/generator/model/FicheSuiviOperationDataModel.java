@@ -44,6 +44,10 @@ public class FicheSuiviOperationDataModel extends DataModel{
 
     public void setTypesFinancements(String typesFinancements){addContextData("typesFinancements", typesFinancements);}
 
+    public void setFinancementPPI(String financementPPI){addContextData("financementPPI",financementPPI);}
+
+    public void setMOS(String mos){addContextData("mos", mos);}
+
     public void setProgrammations(ProgrammationsOperation programmations){addContextData("programmations", programmations);}
 
     public void setFonciers(FonciersOperation fonciers){addContextData("fonciers", fonciers);}

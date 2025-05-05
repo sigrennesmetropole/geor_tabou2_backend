@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>tabou2</artifactId>
 		<groupId>rm</groupId>
-		<version>1.5.0</version>
+		<version>1.6.0</version>
 		<relativePath>../</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -245,7 +245,7 @@
 							<dependency>
 								<groupId>com.google.guava</groupId>
 								<artifactId>guava</artifactId>
-								<version>28.2-jre</version>
+								<version>33.4.8-jre</version>
 							</dependency>
 						</dependencies>
 						<executions>

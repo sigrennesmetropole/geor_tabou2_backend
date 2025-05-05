@@ -1,6 +1,7 @@
 package rm.tabou2.service.tabou.plh.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,13 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
+import rm.tabou2.service.exception.AppServiceNotFoundException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.plh.TypePlhHelper;
+import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.mapper.tabou.plh.TypePLHMapper;
 import rm.tabou2.service.tabou.plh.PLHService;
+import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.TypePLHCustomDao;
+import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.TypePLHCriteria;
@@ -39,6 +44,10 @@ public class PLHServiceImpl implements PLHService {
 	private final TypePlhHelper typePlhHelper;
 
 	private final TypePLHCustomDao typePLHCustomDao;
+
+	private final ProgrammePlannerHelper programmePlannerHelper;
+
+	private final PermisConstruireDao permisConstruireDao;
 
 	@Override
 	@Transactional(readOnly = false)
@@ -141,7 +150,24 @@ public class PLHServiceImpl implements PLHService {
 
 	@Override
 	public Page<TypePLH> searchTypePLHs(TypePLHCriteria criteria, Pageable pageable) throws AppServiceException {
+
+		if (criteria.getProgrammeId() != null) {
+			assignProgrammeDates(criteria);
+		}
 		return typePLHMapper.entitiesToDto(typePLHCustomDao.searchTypePLHs(criteria, pageable), pageable);
+	}
+
+	private void assignProgrammeDates(TypePLHCriteria criteria) throws AppServiceNotFoundException {
+		ProgrammeEntity programmeEntity = programmeDao.findById(criteria.getProgrammeId()).orElseThrow(
+				AppServiceNotFoundException::new);
+
+		List<PermisConstruireEntity> permis = permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds());
+
+		if (CollectionUtils.isNotEmpty(permis)) {
+			criteria.setDateDebut(programmePlannerHelper.computeDocDate(permis));
+			criteria.setDateFin(programmePlannerHelper.computeDatDate(permis));
+		}
+
 	}
 
 	private TypePLHEntity getTypePLHEntity(TypePLH typePLH) {

@@ -51,6 +51,7 @@ import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.dao.operation.EvenementOperationDao;
 import rm.tabou2.storage.tabou.dao.operation.MaitriseOuvrageDao;
 import rm.tabou2.storage.tabou.dao.operation.ModeAmenagementDao;
+import rm.tabou2.storage.tabou.dao.operation.MosCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
@@ -156,6 +157,8 @@ public class OperationServiceImpl implements OperationService {
     private final DocumentGenerator documentGenerator;
 
     private final OperationFicheHelper operationFicheHelper;
+
+    private final MosCustomDao mosCustomDao;
 
     @Value("${typeevenement.changementetape.code}")
     private String etapeUpdatedCode;
@@ -431,7 +434,9 @@ public class OperationServiceImpl implements OperationService {
     @Override
     public OperationIntermediaire getOperationById(long operationId) {
         OperationEntity operationEntity = getOperationEntityById(operationId);
-        return operationMapper.entityToDto(operationEntity);
+        OperationIntermediaire operation = operationMapper.entityToDto(operationEntity);
+        operation.setMos(mosCustomDao.computeOperationMos(operationEntity.getId(), Boolean.TRUE.equals(operationEntity.getSecteur())));
+        return operation;
     }
 
     @Override
