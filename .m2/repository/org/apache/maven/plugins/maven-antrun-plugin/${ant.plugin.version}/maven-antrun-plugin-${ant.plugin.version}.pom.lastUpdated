@@ -1,5 +1,0 @@
-#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
-#Mon May 05 12:40:05 UTC 2025
-https\://nexus.boost.open.global/repository/rennes-metropole-tabou2-mvn/.error=Could not transfer artifact org.apache.maven.plugins\:maven-antrun-plugin\:pom\:${ant.plugin.version} from/to open.nexus (https\://nexus.boost.open.global/repository/rennes-metropole-tabou2-mvn/)\: status code\: 400, reason phrase\: Invalid repository path (400)
-156c6cc511952b141e6574467c93f5e77957b90b@default-open.nexus-https\://nexus.boost.open.global/repository/rennes-metropole-tabou2-mvn/.lastUpdated=1745848666282
-6a33721579776d3ae7dc51eced001e1d5f209b31@default-open.nexus-https\://nexus.boost.open.global/repository/rennes-metropole-tabou2-mvn/.lastUpdated=1746448805600

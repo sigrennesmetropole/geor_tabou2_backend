@@ -3,5 +3,5 @@ serverUrl=https://sonar.boost.open.global
 serverVersion=9.9.5.90363
 branch=V1.6.0
 dashboardUrl=https://sonar.boost.open.global/dashboard?id=rennes-metropole.tabou2.tabou2&branch=V1.6.0
-ceTaskId=AZagdw960unnzdjAuI8_
-ceTaskUrl=https://sonar.boost.open.global/api/ce/task?id=AZagdw960unnzdjAuI8_
+ceTaskId=AZagh3zh0unnzdjAuI9b
+ceTaskUrl=https://sonar.boost.open.global/api/ce/task?id=AZagh3zh0unnzdjAuI9b
