@@ -5,9 +5,10 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.mapper.AbstractMapper;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", 	uses= { LocaDateTimeMapper.class })
 public interface TiersMapper extends AbstractMapper<TiersEntity, Tiers> {
 
     @Override

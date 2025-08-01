@@ -1,7 +1,7 @@
 package rm.tabou2.storage.tabou.entity.common;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,7 +10,8 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -26,5 +27,5 @@ public abstract class GenericAuditableEntity extends GenericCreateAuditableEntit
     @Basic
     @LastModifiedDate
     @Column(name = "modif_date")
-    private Date modifDate;
+    private LocalDateTime modifDate;
 }

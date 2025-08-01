@@ -1,10 +1,17 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import lombok.Data;
 import rm.tabou2.storage.tabou.entity.common.GenericCreateAuditableEntity;
-
-import jakarta.persistence.*;
-import java.util.Date;
 
 @Data
 @Entity
@@ -26,5 +33,5 @@ public class EntiteReferenteEntity extends GenericCreateAuditableEntity {
 
     @Basic
     @Column(name = "date_inactif")
-    private Date dateInactif;
+    private LocalDateTime dateInactif;
 }

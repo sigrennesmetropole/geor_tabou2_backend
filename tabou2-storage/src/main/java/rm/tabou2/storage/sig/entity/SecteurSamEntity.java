@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 @Data
 @Entity
-@Table(name = "chargedoperation_secteur", schema = "urba_foncier")
+@Table(name = "v_chargedoperation_secteur", schema = "urba_foncier")
 public class SecteurSamEntity {
 
     @Id
@@ -15,7 +15,7 @@ public class SecteurSamEntity {
 
     @OrderBy
     @Basic
-    @Column(name = "nom_secteur")
+    @Column(name = "com_quart")
     private String nomSecteur;
 
     public SecteurSamEntity() {
@@ -26,5 +26,4 @@ public class SecteurSamEntity {
         this.id = id;
         this.nomSecteur = nomSecteur;
     }
-
 }

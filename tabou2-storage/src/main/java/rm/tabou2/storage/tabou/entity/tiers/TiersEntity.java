@@ -1,12 +1,22 @@
 package rm.tabou2.storage.tabou.entity.tiers;
 
+import java.time.LocalDateTime;
+import java.util.Set;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
-
-import jakarta.persistence.*;
-import java.util.Date;
-import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -58,7 +68,7 @@ public class TiersEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "date_inactif")
-    private Date dateInactif;
+    private LocalDateTime dateInactif;
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_tiers", nullable = false)

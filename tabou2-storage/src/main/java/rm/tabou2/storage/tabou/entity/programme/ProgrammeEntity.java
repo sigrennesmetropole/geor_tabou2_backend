@@ -1,10 +1,10 @@
 package rm.tabou2.storage.tabou.entity.programme;
 
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import lombok.*;
-import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
-import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
@@ -15,14 +15,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.plh.AttributPLHEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
-
-import java.util.*;
 
 
 @Getter
@@ -63,11 +68,11 @@ public class ProgrammeEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "attribution_date")
-    private Date attributionDate;
+    private LocalDateTime attributionDate;
 
     @Basic
     @Column(name = "commercialisation_date")
-    private Date commercialisationDate;
+    private LocalDateTime commercialisationDate;
 
     @Basic
     @Column(name = "num_ads")
@@ -75,27 +80,27 @@ public class ProgrammeEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "ADS_date_prevu")
-    private Date adsDatePrevu;
+    private LocalDateTime adsDatePrevu;
 
     @Basic
     @Column(name = "date_annulation")
-    private Date dateAnnulation;
+    private LocalDateTime dateAnnulation;
 
     @Basic
     @Column(name = "date_livraison")
-    private Date dateLivraison;
+    private LocalDateTime dateLivraison;
 
     @Basic
     @Column(name = "DOC_date_prevu")
-    private Date docDatePrevu;
+    private LocalDateTime docDatePrevu;
 
     @Basic
     @Column(name = "DAT_date_prevu")
-    private Date datDatePrevu;
+    private LocalDateTime datDatePrevu;
 
     @Basic
     @Column(name = "cloture_date")
-    private Date clotureDate;
+    private LocalDateTime clotureDate;
 
     @Basic
     @Column(name = "diffusion_restreinte")
@@ -128,6 +133,10 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @Basic
     @Column(name = "logements_access_libre_prevu")
     private int logementsAccessLibrePrevu;
+
+    @Basic
+    @Column(name = "logements_habitat_favorable_vieillissement")
+    private int nbLogementsHFV;
 
     @Basic
     @Column(name = "surface_shab")

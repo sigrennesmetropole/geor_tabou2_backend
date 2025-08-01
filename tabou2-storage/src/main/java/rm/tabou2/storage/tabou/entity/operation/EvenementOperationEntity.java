@@ -1,8 +1,7 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
-import lombok.*;
-import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
-import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
@@ -15,8 +14,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
-import java.util.Date;
-import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
+import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 
 @Getter
 @Setter
@@ -33,7 +35,7 @@ public class EvenementOperationEntity extends GenericAuditableEntity {
     @OrderBy
     @Basic
     @Column(name = "event_date")
-    private Date eventDate;
+    private LocalDateTime eventDate;
 
     @Basic
     @Column(name = "description")

@@ -4,9 +4,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import rm.tabou2.service.dto.ProgrammeLight;
 import rm.tabou2.service.mapper.AbstractMapper;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
-@Mapper(componentModel = "spring", uses = {EtapeProgrammeMapper.class})
+@Mapper(componentModel = "spring", uses = {EtapeProgrammeMapper.class, LocaDateTimeMapper.class})
 public interface ProgrammeLightMapper extends AbstractMapper<ProgrammeEntity, ProgrammeLight> {
 
     @Mapping(source = "etapeProgramme.libelle", target = "etape")

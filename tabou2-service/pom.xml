@@ -6,7 +6,7 @@
 	<parent>
 		<artifactId>tabou2</artifactId>
 		<groupId>rm</groupId>
-		<version>1.6.0</version>
+		<version>1.7.0</version>
 		<relativePath>../</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -139,8 +139,12 @@
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApis>false</generateApis>
                             <generateModels>true</generateModels>
+							<!--<typeMappings>
+								<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
+							</typeMappings>-->
                             <configOptions>
-                                <dateLibrary>legacy</dateLibrary>
+                                <!--<dateLibrary>legacy</dateLibrary>-->
+                                <dateLibrary>java8</dateLibrary>
                                 <useJakartaEe>true</useJakartaEe>
                             </configOptions>
                         </configuration>

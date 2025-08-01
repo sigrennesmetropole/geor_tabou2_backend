@@ -24,6 +24,10 @@ public class OperationGeometryViewEntity {
     private int idTabou;
 
     @Basic
+    @Column(name = "aire_geo_ha")
+    private float aireGeoHa;
+
+    @Basic
     @Column(name = "shape", columnDefinition = "Geometry")
     private Geometry shape;
 

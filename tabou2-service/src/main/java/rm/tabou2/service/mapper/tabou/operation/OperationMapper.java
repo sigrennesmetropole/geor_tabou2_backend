@@ -5,11 +5,12 @@ import org.mapstruct.*;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.mapper.AbstractMapper;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
 @Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class, VocationMapper.class,
         DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, OutilAmenagementMapper.class, ConsommationEspaceMapper.class,
-        OperationEmpriseHelper.class, ProjetUrbainMapper.class})
+        OperationEmpriseHelper.class, ProjetUrbainMapper.class, LocaDateTimeMapper.class})
 public interface OperationMapper extends AbstractMapper<OperationEntity, OperationIntermediaire> {
 
     @Mapping(target = "etapeOperation", ignore = true)
@@ -30,6 +31,7 @@ public interface OperationMapper extends AbstractMapper<OperationEntity, Operati
 
     @Mapping(source = "etapeOperation", target = "etape")
     @Mapping(source = ".", target = "idEmprise", qualifiedByName = "getIdEmpriseOperation")
+    @Mapping(source = "parent.id", target = "parentId")
     @Override
     OperationIntermediaire entityToDto(OperationEntity operationEntity);
 

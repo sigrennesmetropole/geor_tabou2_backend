@@ -7,6 +7,7 @@ import rm.tabou2.service.bean.tabou.operation.suivi.ContributionsOperation;
 import rm.tabou2.service.bean.tabou.operation.suivi.EcheancierOperation;
 import rm.tabou2.service.bean.tabou.operation.suivi.FonciersOperation;
 import rm.tabou2.service.bean.tabou.operation.suivi.ProgrammationsOperation;
+import rm.tabou2.service.helper.operation.AbstractOperationFicheHelper;
 import rm.tabou2.storage.tabou.entity.operation.*;
 
 import java.io.File;
@@ -25,6 +26,8 @@ public class FicheSuiviOperationDataModel extends DataModel{
     public void setParent(OperationEntity parent){addContextData("parent", parent);}
 
     public void setCommunes(String communes){addContextData("communes", communes);}
+
+    public void setEcheancier(String echeancier){addContextData("echeancier", echeancier);}
 
     public void setConsommationEspace(ConsommationEspaceEntity consommationEspace){addContextData("consommationEspace", consommationEspace);}
 
@@ -77,5 +80,8 @@ public class FicheSuiviOperationDataModel extends DataModel{
         addContextFieldImage("illustration");
     }
 
+    public void setHelper(AbstractOperationFicheHelper abstractOperationFicheHelper) {
+        addContextData("helper", abstractOperationFicheHelper);
+    }
 
 }

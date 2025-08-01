@@ -1,8 +1,12 @@
 package rm.tabou2.service.tabou.programme;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Evenement;
@@ -16,9 +20,6 @@ import rm.tabou2.service.validator.evenement.ValidEvenementUpdate;
 import rm.tabou2.service.validator.programme.ValidProgrammeCreation;
 import rm.tabou2.service.validator.programme.ValidProgrammeUpdate;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
-
-import java.util.Date;
-import java.util.List;
 
 public interface ProgrammeService {
 
@@ -154,7 +155,7 @@ public interface ProgrammeService {
      * @return métadonnées du document
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
-    DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, Object file, Date datedocument) throws AppServiceException;
+    DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, Object file, LocalDateTime datedocument) throws AppServiceException;
 
     /**
      * Suppresion d'un document dans Alfresco.

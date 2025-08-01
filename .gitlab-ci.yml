@@ -5,7 +5,7 @@ variables:
   GITHUB_COMMIT_MESSAGE:
     description: "Message du commit poussé vers le GitHub (cf job push-to-github). Par défaut : $CI_COMMIT_REF_NAME (nom de la branche ou du tag)."
     value: $CI_COMMIT_REF_NAME
-
+  OSS_NPM_DISABLE: "true"
 
 # Cache policy - Share target folders between jobs - Note that key is related to a commit and is purged automatically after pipeline execution
 cache:
@@ -17,6 +17,8 @@ cache:
 include:
   - project: 'boost/template-ci/pipelines/common'
     file: 'docker/docker-template.yml'
+  - project: 'boost/template-ci/pipelines/common'
+    file: 'securite/oss-index/oss-index-template.yml'	
   - project: 'bots/trivy-script'
     file: '/trivy-template-job.yml' 
 
@@ -34,6 +36,7 @@ stages:
   - docker
   - deploy
   - delivering
+  - sast
 
 # Build job with maven plugin execution policies define in parent pom
 tabou2:build:

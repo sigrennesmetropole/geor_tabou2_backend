@@ -1,7 +1,21 @@
 package rm.tabou2.storage.common.impl;
 
-import jakarta.persistence.criteria.*;
-import java.util.Date;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Path;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.query.QueryUtils;
+import rm.tabou2.storage.tabou.dao.constants.FieldsConstants;
+import rm.tabou2.storage.tabou.entity.common.AbstractOrderEntity;
+
 import java.util.List;
 
 /**
@@ -48,7 +62,7 @@ public abstract class AbstractCustomDaoImpl {
 
     }
 
-    protected void predicateDateCriteria(Date dateDebut, Date dateFin, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+    protected void predicateDateCriteria(LocalDateTime dateDebut, LocalDateTime dateFin, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
 
         predicateBetweenCriteria(dateDebut, dateFin, type, predicates, builder, root);
     }
@@ -128,6 +142,16 @@ public abstract class AbstractCustomDaoImpl {
 
             predicates.add(builder.lessThanOrEqualTo(root.get(type), upper));
 
+        }
+    }
+
+    protected void assignOrder(Pageable pageable, CriteriaQuery searchQuery, Root searchRoot,
+                               CriteriaBuilder builder, Class entityClass) {
+        if (AbstractOrderEntity.class.isAssignableFrom(entityClass) && Sort.unsorted().equals(pageable.getSort())) {
+            searchQuery.orderBy(
+                    QueryUtils.toOrders(Sort.by(FieldsConstants.FIELD_DEFAULT_ORDERED_SORT), searchRoot, builder));
+        } else {
+            searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
         }
     }
 

@@ -16,6 +16,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -44,13 +46,26 @@ public class StorageSigBeanConfiguration {
 
     @Value("${spring.sig.datasource.hibernate.dialect:org.hibernate.spatial.dialect.postgis.PostgisPG10Dialect}")
     private String hibernateDialect;
+    
+    @Value("${spring.sig.datasource.hikari.maximum-pool-size:5}")
+	private Integer maximumPoolSize;
+
+	@Value("${spring.sig.datasource.hikari.minimum-idle:2}")
+	private Integer minIdle;
 
     @Bean(name = "sigDataSource")
     @ConfigurationProperties(prefix = "spring.sig.datasource")
     public DataSource sigDataSource() {
-        return DataSourceBuilder
-                .create()
-                .build();
+    	DataSource dataSource = DataSourceBuilder.create().build();
+		if (dataSource instanceof HikariDataSource) {
+			if (maximumPoolSize != null && maximumPoolSize > 0) {
+				((HikariDataSource) dataSource).setMaximumPoolSize(maximumPoolSize);
+			}
+			if (minIdle != null && minIdle > 0) {
+				((HikariDataSource) dataSource).setMinimumIdle(minIdle);
+			}
+		}
+		return dataSource;
     }
 
 

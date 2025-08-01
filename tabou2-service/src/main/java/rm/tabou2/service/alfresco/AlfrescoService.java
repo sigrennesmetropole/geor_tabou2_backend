@@ -1,15 +1,16 @@
 package rm.tabou2.service.alfresco;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
+
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.st.generator.model.DocumentContent;
-
-import java.util.Date;
 
 public interface AlfrescoService {
 
@@ -63,7 +64,7 @@ public interface AlfrescoService {
      * @return document
      * @throws AppServiceException erreur lors de l'ajout d'un document dans tabou
      */
-    AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, Date dateDocument, MultipartFile file) throws AppServiceException;
+    AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, LocalDateTime dateDocument, MultipartFile file) throws AppServiceException;
 
     /**
      * Mise à jour des métadonnées d'un document.

@@ -6,11 +6,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.mapper.AbstractMapper;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 
 import java.util.Comparator;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { LocaDateTimeMapper.class })
 public interface TypePLHMapper extends AbstractMapper<TypePLHEntity, TypePLH> {
 
     TypePLHEntity dtoToEntity(TypePLH dto);

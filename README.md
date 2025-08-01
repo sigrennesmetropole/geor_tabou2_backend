@@ -26,6 +26,8 @@ Dans tous les cas, il faut exécuter les scripts sql dans l'ordre suivant:
 2. `[projet]/resources/bdd/create_rm_database.sql` pour la création des tables Rennes Métropole
 3. `[projet]/resources/bdd/common_data.sql` pour l'insertion des données par défaut
 
+Une description des différentes tables (internes et externes) est disponible ici : [Schéma database](./resources/documentation/data_schema.md)
+
 #### II.2 - Configuration de l'application
 
 La configuration de l'application de trouve dans le répertoire `[projet]/tabou2-facade/src/main/resources`.
@@ -103,13 +105,15 @@ server.trustcert.keystore.store=
 server.trustcert.keystore.password=
 ```
 Par exemple :
+
 ```
 server.trustcert.keystore.path=/etc/georchestra/
 server.trustcert.keystore.cert=tabou2.crt
 server.trustcert.keystore.alias=certificat-tabou2
-server.trustcert.keystore.store=/usr/local/openjdk-11/lib/security/cacerts
+server.trustcert.keystore.store=/opt/java/openjdk/lib/security/cacerts
 server.trustcert.keystore.password=changeit
 ```
+
 Si les variables ne sont pas remplies, le certificat n'est pas ajouté au keystore et l'application démarre normalement.
 
 #### II.4 - Construction de l'application

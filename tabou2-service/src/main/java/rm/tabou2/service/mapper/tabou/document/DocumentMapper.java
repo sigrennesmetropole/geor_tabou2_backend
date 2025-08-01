@@ -5,8 +5,9 @@ import org.mapstruct.Mapping;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocument;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.mapper.AbstractMapper;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", 	uses= { LocaDateTimeMapper.class })
 public interface DocumentMapper extends AbstractMapper<AlfrescoDocument, DocumentMetadata> {
 
     @Mapping(source = "entry.id", target = "id")

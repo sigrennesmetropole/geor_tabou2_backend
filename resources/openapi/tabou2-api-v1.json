@@ -354,7 +354,7 @@
 						"description": "Borne inférieure de recherche par date d'autorisation",
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -363,7 +363,7 @@
 						"description": "Borne supérieure de recherche par date d'autorisation",
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -372,7 +372,7 @@
 						"description": "Borne inférieure de recherche par date opérationnelle",
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -381,7 +381,7 @@
 						"description": "Borne supérieure de recherche par date opérationnelle",
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -390,7 +390,7 @@
 						"description": "Borne inférieure de recherche par date de livraison (date de réalisation)",
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -399,7 +399,7 @@
 						"description": "Borne supérieure de recherche par date de livraison (date de réalisation)",
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -408,7 +408,7 @@
 						"description": "Borne inférieure de recherche par date de cloture",
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -417,7 +417,7 @@
 						"description": "Borne supérieure de recherche par date de cloture",
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{

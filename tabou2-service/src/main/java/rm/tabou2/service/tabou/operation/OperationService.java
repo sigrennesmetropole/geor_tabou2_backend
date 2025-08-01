@@ -14,6 +14,7 @@ import rm.tabou2.service.validator.operation.ValidOperationCreation;
 import rm.tabou2.service.validator.operation.ValidOperationUpdate;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -156,7 +157,7 @@ public interface OperationService {
      * @return métadonnées du document
      * @throws AppServiceException erreur lors de l'ajout d'un document
      */
-    DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, Date dateDocument, Object file) throws AppServiceException;
+    DocumentMetadata addDocument(long operationId, String nom, String libelleTypeDocument, LocalDateTime dateDocument, Object file) throws AppServiceException;
 
 
     /**

@@ -2,7 +2,7 @@ package rm.tabou2.service.tabou;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
+import java.time.ZoneOffset;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
@@ -33,6 +34,9 @@ class ProgrammePlannerHelperTest {
 
     @Autowired
     private ProgrammePlannerHelper programmePlannerHelper;
+    
+	@Autowired
+	private DateHelper dateHelper;
 
     @DisplayName("testProgrammeSuiviHabitationValues: Test des valeurs de suivi habitation pour les permis " +
             "de construire du programme")
@@ -46,27 +50,27 @@ class ProgrammePlannerHelperTest {
         LocalDateTime localDateTimeDat1 = LocalDateTime.of(2019, 12, 1, 16, 0, 0);
         LocalDateTime localDateTimeDat2 = LocalDateTime.of(2020, 11, 2, 15, 0, 0);
 
-        Date docDatePrevu = new Date();
+        LocalDateTime docDatePrevu = LocalDateTime.now();
 
         PermisConstruireEntity permisConstruireEntity1 = new PermisConstruireEntity();
         permisConstruireEntity1.setNumAds("numadspr");
         permisConstruireEntity1.setVersionAds("t");
         permisConstruireEntity1.setDecision("Accordé sous réserves");
-        permisConstruireEntity1.setAdsDate(Date.from(localDateTimeAds1.atZone(ZoneId.systemDefault()).toInstant()));
-        permisConstruireEntity1.setDatDate(Date.from(localDateTimeDat1.atZone(ZoneId.systemDefault()).toInstant()));
+        permisConstruireEntity1.setAdsDate(localDateTimeAds1);
+        permisConstruireEntity1.setDatDate(localDateTimeDat1);
         permisConstruireEntity1.setDocDate(null);
 
         PermisConstruireEntity permisConstruireEntity2 = new PermisConstruireEntity();
         permisConstruireEntity2.setNumAds("numadspr");
         permisConstruireEntity2.setVersionAds("m");
         permisConstruireEntity2.setDecision("Accordé");
-        permisConstruireEntity2.setAdsDate(Date.from(localDateTimeAds2.atZone(ZoneId.systemDefault()).toInstant()));
-        permisConstruireEntity2.setDatDate(Date.from(localDateTimeDat2.atZone(ZoneId.systemDefault()).toInstant()));
+        permisConstruireEntity2.setAdsDate(localDateTimeAds2);
+        permisConstruireEntity2.setDatDate(localDateTimeDat2);
         permisConstruireEntity2.setDocDate(null);
 
         PermisConstruireEntity permisConstruireEntity3 = new PermisConstruireEntity();
         permisConstruireEntity3.setNumAds("numadspr");
-        permisConstruireEntity3.setAdsDate(Date.from(localDateTimeAds3.atZone(ZoneId.systemDefault()).toInstant()));
+        permisConstruireEntity3.setAdsDate(localDateTimeAds3);
         permisConstruireEntity3.setDatDate(null);
         permisConstruireEntity3.setDocDate(null);
 
@@ -77,14 +81,16 @@ class ProgrammePlannerHelperTest {
         Programme programme = new Programme();
         programme.setNumAds("numadspr");
         programme.setAdsDatePrevu(null);
-        programme.setDatDatePrevu(new Date());
-        programme.setDocDatePrevu(docDatePrevu);
+        programme.setDatDatePrevu(dateHelper.nowOffset());
+        programme.setDocDatePrevu(dateHelper.convertToOffset(docDatePrevu));
 
         programmePlannerHelper.computePermisSuiviHabitatOfProgramme(programme);
 
-        Assertions.assertEquals(Date.from(localDateTimeAds1.atZone(ZoneId.systemDefault()).toInstant()), programme.getAdsDate());
+        Assertions.assertEquals(localDateTimeAds1.atZone(ZoneId.of("UTC")).toOffsetDateTime(), programme.getAdsDate()
+                .withOffsetSameLocal(ZoneOffset.UTC));
         Assertions.assertNull(programme.getDocDate());
-        Assertions.assertEquals(Date.from(localDateTimeDat1.atZone(ZoneId.systemDefault()).toInstant()), programme.getDatDate());
+        Assertions.assertEquals(localDateTimeDat1.atZone(ZoneId.of("UTC")).toOffsetDateTime(), programme.getDatDate()
+                .withOffsetSameLocal(ZoneOffset.UTC));
     }
 
     @DisplayName("testProgrammeAgapeoSuiviHabitationValues: Test des valeurs de suivi habitation pour les agapeo " +

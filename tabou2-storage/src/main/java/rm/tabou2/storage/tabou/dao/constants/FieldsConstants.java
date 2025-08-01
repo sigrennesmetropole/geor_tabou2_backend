@@ -8,6 +8,7 @@ public class FieldsConstants {
 
     public static final String FIELD_ID = "id";
     public static final String FIELD_NOM = "nom";
+    public static final String FIELD_DEFAULT_ORDERED_SORT = "order";
     public static final String FIELD_NATURE = "nature";
     public static final String FIELD_VOCATION = "vocation";
     public static final String FIELD_DECISION = "decision";

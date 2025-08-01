@@ -1,9 +1,16 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
-import lombok.Data;
+import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
-import java.util.Date;
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Data
 @Entity
@@ -25,7 +32,7 @@ public class PlhEntity {
 
     @Basic
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime date;
 
     @Basic
     @Column(name = "description")

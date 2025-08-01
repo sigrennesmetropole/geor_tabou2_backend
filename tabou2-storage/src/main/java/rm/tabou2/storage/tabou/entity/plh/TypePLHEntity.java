@@ -1,5 +1,9 @@
 package rm.tabou2.storage.tabou.entity.plh;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,10 +19,6 @@ import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -36,10 +36,10 @@ public class TypePLHEntity {
 	private String libelle;
 
 	@Column(name = "date_debut", nullable = false)
-	private Date dateDebut;
+	private LocalDateTime dateDebut;
 
 	@Column(name = "date_fin", nullable = false)
-	private Date dateFin;
+	private LocalDateTime dateFin;
 
 	@Column(name = "type_attribut")
 	@Enumerated(EnumType.STRING)

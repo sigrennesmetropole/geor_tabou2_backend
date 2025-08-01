@@ -1,13 +1,18 @@
 package rm.tabou2.service.tabou.tiers.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.helper.tiers.TiersRightsHelper;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
 import rm.tabou2.service.tabou.tiers.TiersService;
@@ -16,23 +21,20 @@ import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.item.TiersCriteria;
 
-import java.util.*;
-
 @Service
+@RequiredArgsConstructor
 public class TiersServiceImpl implements TiersService {
 
 
-    @Autowired
-    private TiersDao tiersDao;
+    private final TiersDao tiersDao;
 
-    @Autowired
-    private TiersMapper tiersMapper;
+    private final TiersMapper tiersMapper;
 
-    @Autowired
-    private TiersCustomDao tiersCustomDao;
+    private final TiersCustomDao tiersCustomDao;
 
-    @Autowired
-    private TiersRightsHelper tiersRightsHelper;
+    private final TiersRightsHelper tiersRightsHelper;
+    
+    private final DateHelper dateHelper;
 
     @Override
     public Tiers getTiersById(Long tiersId) {
@@ -94,7 +96,7 @@ public class TiersServiceImpl implements TiersService {
         }
 
         TiersEntity tiers = tiersOpt.get();
-        tiers.setDateInactif(new Date());
+        tiers.setDateInactif(dateHelper.now());
 
         // Enregistrement en BDD
         try {

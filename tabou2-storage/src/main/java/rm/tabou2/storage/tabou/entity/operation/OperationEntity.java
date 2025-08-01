@@ -1,12 +1,30 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
-
-import jakarta.persistence.*;
-import java.util.*;
 
 @Getter
 @Setter
@@ -32,6 +50,10 @@ public class OperationEntity extends GenericAuditableEntity {
     @Column(name = "operation")
     private String operation;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_parent")
+    private OperationEntity parent;
+
     @Basic
     @Column(name = "description")
     private String description;
@@ -46,23 +68,23 @@ public class OperationEntity extends GenericAuditableEntity {
 
     @Basic
     @Column(name = "annulation_date")
-    private Date annulationDate;
+    private LocalDateTime annulationDate;
 
     @Basic
     @Column(name = "autorisation_date")
-    private Date autorisationDate;
+    private LocalDateTime autorisationDate;
 
     @Basic
     @Column(name = "operationnel_date")
-    private Date operationnelDate;
+    private LocalDateTime operationnelDate;
 
     @Basic
     @Column(name = "date_livraison")
-    private Date livraisonDate;
+    private LocalDateTime livraisonDate;
 
     @Basic
     @Column(name = "cloture_date")
-    private Date clotureDate;
+    private LocalDateTime clotureDate;
 
     @Basic
     @Column(name = "surface_totale")
@@ -71,6 +93,10 @@ public class OperationEntity extends GenericAuditableEntity {
     @Basic
     @Column(name = "nb_logement_prevu")
     private Integer nbLogementsPrevu;
+
+    @Basic
+    @Column(name = "logements_habitat_favorable_vieillissement")
+    private Integer nbLogementsHFV;
 
     @Basic
     @Column(name = "QL1")
@@ -284,6 +310,7 @@ public class OperationEntity extends GenericAuditableEntity {
                 ", clotureDate=" + clotureDate +
                 ", surfaceTotale=" + surfaceTotale +
                 ", nbLogementsPrevu=" + nbLogementsPrevu +
+                ", nbLogementsHFV=" + nbLogementsHFV +
                 ", ql1='" + ql1 + '\'' +
                 ", scot=" + scot +
                 ", densiteScot=" + densiteScot +

@@ -1,7 +1,8 @@
 package rm.tabou2.service.bean.tabou.operation.suivi;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
-import java.util.Date;
 
 @Data
 public class EcheancierOperation {
@@ -10,7 +11,7 @@ public class EcheancierOperation {
 
     private String description;
 
-    private Date eventDate;
+    private LocalDateTime eventDate;
 
     private String modifUser;
 

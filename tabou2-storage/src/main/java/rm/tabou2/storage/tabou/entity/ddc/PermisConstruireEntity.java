@@ -1,9 +1,17 @@
 package rm.tabou2.storage.tabou.entity.ddc;
 
-import lombok.Data;
-
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
+
+import jakarta.persistence.Basic;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
+import lombok.Data;
 
 @Data
 @Entity
@@ -39,23 +47,23 @@ public class PermisConstruireEntity {
 
     @Basic
     @Column(name = "date_depot_dossier")
-    private Date dateDepotDossier;
+    private LocalDateTime dateDepotDossier;
 
     @Basic
     @Column(name = "date_completude_dossier")
-    private Date dateCompletudeDossier;
+    private LocalDateTime dateCompletudeDossier;
 
     @Basic
     @Column(name = "ads_date")
-    private Date adsDate;
+    private LocalDateTime adsDate;
 
     @Basic
     @Column(name = "doc_date")
-    private Date docDate;
+    private LocalDateTime docDate;
 
     @Basic
     @Column(name = "daact_date")
-    private Date datDate;
+    private LocalDateTime datDate;
 
     @Basic
     @Column(name = "nbre_logement")
@@ -89,4 +97,14 @@ public class PermisConstruireEntity {
     @Column(name = "surf_autre")
     private Double surfAutre = null;
 
+    public String buildPermisLibelle() {
+        StringBuilder sb = new StringBuilder(258);
+
+        sb.append(getNumAds());
+        if (getVersionAds() != null) {
+            sb.append("-").append(getVersionAds());
+        }
+
+        return sb.toString();
+    }
 }

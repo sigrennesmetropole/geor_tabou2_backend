@@ -1,27 +1,31 @@
 package rm.tabou2.facade.controller.tabou.document;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.OffsetDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.facade.api.TypesDocumentsApi;
-import rm.tabou2.service.tabou.document.TypeDocumentService;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TypeDocument;
+import rm.tabou2.service.helper.date.DateHelper;
+import rm.tabou2.service.tabou.document.TypeDocumentService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.document.TypeDocumentEntity;
 import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 
-import java.util.Date;
-
 @RestController
+@RequiredArgsConstructor
 public class TypeDocumentApiController implements TypesDocumentsApi {
 
 
-    @Autowired
-    private TypeDocumentService typeDocumentService;
+    private final TypeDocumentService typeDocumentService;
+    
+    private final DateHelper dateHelper;
 
     @Override
     public ResponseEntity<TypeDocument> createTypeDocument(TypeDocument typeDocument) throws Exception {
@@ -39,12 +43,12 @@ public class TypeDocumentApiController implements TypesDocumentsApi {
     }
 
     @Override
-    public ResponseEntity<PageResult> searchTypeDocument(Long typeDocumentId, String libelle, Date dateInactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchTypeDocument(Long typeDocumentId, String libelle, OffsetDateTime dateInactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
         TypeDocumentCriteria typeDocumentCriteria = new TypeDocumentCriteria();
         typeDocumentCriteria.setId(typeDocumentId);
         typeDocumentCriteria.setLibelle(libelle);
-        typeDocumentCriteria.setDateInactif(dateInactif);
+        typeDocumentCriteria.setDateInactif(dateHelper.convert(dateInactif));
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, TypeDocumentEntity.class);
 

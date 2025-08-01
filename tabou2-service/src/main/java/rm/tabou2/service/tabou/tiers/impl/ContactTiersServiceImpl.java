@@ -1,13 +1,20 @@
 package rm.tabou2.service.tabou.tiers.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.text.MessageFormat;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.service.dto.ContactTiers;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.helper.tiers.ContactTiersRightsHelper;
 import rm.tabou2.service.mapper.tabou.tiers.ContactTiersMapper;
 import rm.tabou2.service.tabou.tiers.ContactTiersService;
@@ -20,36 +27,27 @@ import rm.tabou2.storage.tabou.entity.tiers.FonctionContactsEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.item.ContactTiersCriteria;
 
-import java.text.MessageFormat;
-import java.util.Date;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
-
 @Service
+@RequiredArgsConstructor
 public class ContactTiersServiceImpl implements ContactTiersService {
-
-    @Autowired
-    private ContactTiersMapper mapper;
-
-    @Autowired
-    private ContactTiersDao contactTiersDao;
-
-    @Autowired
-    private ContactTiersCustomDao contactTiersCustomDao;
-
-    @Autowired
-    private TiersDao tiersDao;
-
-    @Autowired
-    private ContactTiersRightsHelper contactTiersRightsHelper;
-
-    @Autowired
-    private FonctionContactsDao fonctionContactsDao;
-
-    private static final String CONTACT_NOT_FOUND = "Le contact tiers id={0} nexiste pas pour le tiers id={1}";
+	private static final String CONTACT_NOT_FOUND = "Le contact tiers id={0} nexiste pas pour le tiers id={1}";
     private static final String FONCTION_NOT_FOUND = "La fonction contact ({0}) n'a pas été trouvé";
     private static final String TIERS_NOT_FOUND = "Le tiers id ={0} n'existe pas";
+    
+    
+	private final ContactTiersMapper mapper;
+
+    private final ContactTiersDao contactTiersDao;
+
+    private final  ContactTiersCustomDao contactTiersCustomDao;
+
+    private final TiersDao tiersDao;
+
+    private final ContactTiersRightsHelper contactTiersRightsHelper;
+
+    private final FonctionContactsDao fonctionContactsDao;
+
+    private final DateHelper dateHelper;
 
 
     @Override
@@ -116,7 +114,7 @@ public class ContactTiersServiceImpl implements ContactTiersService {
         }
         ContactTiersEntity contactTiers = mapper.dtoToEntity(getContactTiersById(tiersId, contactTiersId));
 
-        contactTiers.setDateInactif(new Date());
+        contactTiers.setDateInactif(dateHelper.now());
 
         try {
             return mapper.entityToDto(contactTiersDao.save(contactTiers));

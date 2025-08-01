@@ -112,19 +112,19 @@
           "autorisationDate": {
             "type": "string",
             "description": "Date d'autorisation (liée à un document d'urbanisme)",
-            "format": "date"
+            "format": "date-time"
           },
           "operationnelDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "livraisonDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "clotureDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "numAds": {
             "type": "string",
@@ -173,7 +173,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout de l'entité",
-            "format": "date"
+            "format": "date-time"
           },
           "modifUser": {
             "type": "string",
@@ -182,7 +182,7 @@
           "modifDate": {
             "type": "string",
             "description": "Date de dernière modification de l'entité",
-            "format": "date"
+            "format": "date-time"
           }
         },
         "description": "Opération d'amménagement"
@@ -240,6 +240,11 @@
             "type": "string",
             "description": "Description textuelle du programme de l'opération (nombre de logement, type habitat…)"
           },
+          "parentId": {
+            "type": "integer",
+            "description": "Identifiant de l'opération parente (uniquement pour les secteurs)",
+            "format": "int64"
+          },
           "description": {
             "type": "string",
             "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)"
@@ -252,25 +257,25 @@
           "annulationDate": {
             "type": "string",
             "description": "Date d'annulation",
-            "format": "date"
+            "format": "date-time"
           },
           "autorisationDate": {
             "type": "string",
             "description": "Date d'autorisation (liée à un document d'urbanisme)",
-            "format": "date"
+            "format": "date-time"
           },
           "operationnelDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "livraisonDate": {
             "type": "string",
             "description": "Date de réalisation",
-            "format": "date"
+            "format": "date-time"
           },
           "clotureDate": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "numAds": {
             "type": "string",
@@ -282,6 +287,11 @@
           },
           "nbLogementsPrevu": {
             "type": "integer",
+            "format": "int64"
+          },
+          "nbLogementsHFV": {
+            "type": "integer",
+            "description": "Nombre de logements adaptés favorables au vieillissement",
             "format": "int64"
           },
           "scot": {
@@ -402,7 +412,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout de l'entité",
-            "format": "date"
+            "format": "date-time"
           },
           "modifUser": {
             "type": "string",
@@ -411,7 +421,7 @@
           "modifDate": {
             "type": "string",
             "description": "Date de dernière modification de l'entité",
-            "format": "date"
+            "format": "date-time"
           },
           "projetUrbain": {
             "$ref": "#/components/schemas/ProjetUrbain"
@@ -472,12 +482,12 @@
           "dateAnnulation": {
             "type": "string",
             "description": "Date d'annulation de l'étape",
-            "format": "date"
+            "format": "date-time"
           },
           "dateLiv": {
             "type": "string",
             "description": "Date de réalisation du programme",
-            "format": "date"
+            "format": "date-time"
           }
         },
         "description": ""
@@ -535,57 +545,57 @@
           "attributionDate": {
             "type": "string",
             "description": "Date d'attribution du programme au promoteur",
-            "format": "date"
+            "format": "date-time"
           },
           "commercialisationDate": {
             "type": "string",
             "description": "Date de lancement de la commercialisation",
-            "format": "date"
+            "format": "date-time"
           },
           "adsDate": {
             "type": "string",
             "description": "Date adsDate",
-            "format": "date"
+            "format": "date-time"
           },
           "annulationDate": {
             "type": "string",
             "description": "Date d'annulation",
-            "format": "date"
+            "format": "date-time"
           },
           "livraisonDate": {
             "type": "string",
             "description": "Date de réalisation",
-            "format": "date"
+            "format": "date-time"
           },
           "docDate": {
             "type": "string",
             "description": "Date d'ouverture de chantier",
-            "format": "date"
+            "format": "date-time"
           },
           "datDate": {
             "type": "string",
-            "description": "tDate d’achèvement de travaux",
-            "format": "date"
+            "description": "Date d’achèvement de travaux",
+            "format": "date-time"
           },
           "adsDatePrevu": {
             "type": "string",
             "description": "Date adsDate prévue",
-            "format": "date"
+            "format": "date-time"
           },
           "docDatePrevu": {
             "type": "string",
             "description": "Date d'ouverture de chantier prévue",
-            "format": "date"
+            "format": "date-time"
           },
           "datDatePrevu": {
             "type": "string",
             "description": "Date d’achèvement de travaux prévue",
-            "format": "date"
+            "format": "date-time"
           },
           "clotureDate": {
             "type": "string",
             "description": "Date de clôture",
-            "format": "date"
+            "format": "date-time"
           },
           "logementsTotal": {
             "type": "integer",
@@ -647,6 +657,11 @@
             "description": "Nombre de logements en accession libre prévu",
             "format": "int32"
           },
+          "nbLogementsHFV": {
+            "type": "integer",
+            "description": "Nombre de logements adaptés favorables au vieillissement",
+            "format": "int32"
+          },
           "surfaceSHAB": {
             "type": "number",
             "description": "Surface SHAB en metre carré",
@@ -663,7 +678,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du programme",
-            "format": "date"
+            "format": "date-time"
           },
           "modifUser": {
             "type": "string",
@@ -672,7 +687,7 @@
           "modifDate": {
             "type": "string",
             "description": "Date de dernière modification du programme",
-            "format": "date"
+            "format": "date-time"
           },
           "typePLHsBeans": {
             "type": "array",
@@ -726,7 +741,7 @@
           "eventDate": {
             "type": "string",
             "description": "Date de l'évènement",
-            "format": "date"
+            "format": "date-time"
           },
           "description": {
             "type": "string",
@@ -743,7 +758,7 @@
           "createDate": {
             "type": "string",
             "description": "Date création de l'évènement",
-            "format": "date"
+            "format": "date-time"
           },
           "modifUser": {
             "type": "string",
@@ -752,7 +767,7 @@
           "modifDate": {
             "type": "string",
             "description": "Date de dernière modification de l'évènement",
-            "format": "date"
+            "format": "date-time"
           },
           "typeEvenement": {
             "$ref": "#/components/schemas/TypeEvenement"
@@ -775,7 +790,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type de document",
-            "format": "date"
+            "format": "date-time"
           },
           "code": {
             "type": "string",
@@ -909,7 +924,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du tiers",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -968,7 +983,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du tiers",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1005,12 +1020,12 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du type tiers",
-            "format": "date"
+            "format": "date-time"
           },
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type de document",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1082,7 +1097,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date d'inactivité du contact",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1091,7 +1106,7 @@
           "createDate": {
             "type": "string",
             "description": "Date création du contact",
-            "format": "date"
+            "format": "date-time"
           },
           "modifUser": {
             "type": "string",
@@ -1100,7 +1115,7 @@
           "modifDate": {
             "type": "string",
             "description": "Date de dernière modification du contact",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1220,7 +1235,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type de document",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1242,7 +1257,7 @@
           "dateDocument": {
             "type": "string",
             "description": "Date du document",
-            "format": "date"
+            "format": "date-time"
           },
           "typeMime": {
             "type": "string",
@@ -1273,7 +1288,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité de la nature",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1412,27 +1427,27 @@
           "depotDossier": {
             "type": "string",
             "description": "Date de dépot du permis de constuire",
-            "format": "date"
+            "format": "date-time"
           },
           "dateCompletudeDossier": {
             "type": "string",
             "description": "Date de complétion du dossier de permis de construire",
-            "format": "date"
+            "format": "date-time"
           },
           "adsDate": {
             "type": "string",
             "description": "Date du permis de construire",
-            "format": "date"
+            "format": "date-time"
           },
           "docDate": {
             "type": "string",
             "description": "Date d'ouverture du chantier",
-            "format": "date"
+            "format": "date-time"
           },
           "datDate": {
             "type": "string",
             "description": "Date d'achèvement des travaux",
-            "format": "date"
+            "format": "date-time"
           },
           "nbreLogement": {
             "type": "integer",
@@ -1613,7 +1628,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type d'occupation",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1622,7 +1637,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du type d'occupation",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1645,7 +1660,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité de l'entité Rennes Métropole",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1654,7 +1669,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout de l'entité",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1677,7 +1692,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type de l'outil foncier",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1686,7 +1701,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout de l'outil foncier",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1709,7 +1724,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité de la vocation ZA",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1718,7 +1733,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout de la vocation ZA",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1741,7 +1756,7 @@
           "date": {
             "type": "string",
             "description": "Date du plh",
-            "format": "date"
+            "format": "date-time"
           },
           "description": {
             "type": "string",
@@ -1768,7 +1783,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type de programmation",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1777,7 +1792,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du type de programmation",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1817,7 +1832,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type de contribution",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1826,7 +1841,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du type de contribution",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1866,7 +1881,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type de foncier",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1875,7 +1890,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du type de foncier",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1920,7 +1935,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type d'aménageur",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1929,7 +1944,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du type d'aménageur",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1960,11 +1975,11 @@
           },
           "dateDebut": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           },
           "dateFin": {
             "type": "string",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -1987,7 +2002,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type de financement opération",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -1996,7 +2011,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du type de financement opération",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -2036,7 +2051,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type d'action opérateration",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -2045,7 +2060,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du type d'action opérateration",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -2085,7 +2100,7 @@
           "dateInactif": {
             "type": "string",
             "description": "Date de mise en inactivité du type d'acteur",
-            "format": "date"
+            "format": "date-time"
           },
           "createUser": {
             "type": "string",
@@ -2094,7 +2109,7 @@
           "createDate": {
             "type": "string",
             "description": "Date d'ajout du type d'acteur",
-            "format": "date"
+            "format": "date-time"
           }
         }
       },
@@ -2145,12 +2160,12 @@
           "dateDebut": {
             "type": "string",
             "description": "Date de début d'effet du type de PLH",
-            "format": "date"
+            "format": "date-time"
           },
           "dateFin": {
             "type": "string",
             "description": "Date de fin d'effet du type de PLH",
-            "format": "date"
+            "format": "date-time"
           },
           "typeAttributPLH": {
             "type": "string",

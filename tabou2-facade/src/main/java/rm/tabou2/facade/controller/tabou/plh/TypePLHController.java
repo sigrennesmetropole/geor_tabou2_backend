@@ -1,25 +1,29 @@
 package rm.tabou2.facade.controller.tabou.plh;
 
-import lombok.RequiredArgsConstructor;
+import java.time.OffsetDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.facade.api.TypePlhApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TypePLH;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.tabou.plh.PLHService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.item.TypePLHCriteria;
-
-import java.util.Date;
 
 @RestController
 @RequiredArgsConstructor
 public class TypePLHController implements TypePlhApi {
 
 	private final PLHService plhService;
+
+	private final DateHelper dateHelper;
 
 	@Override
 	public ResponseEntity<TypePLH> createTypePLH(TypePLH typePLH) throws Exception {
@@ -48,15 +52,17 @@ public class TypePLHController implements TypePlhApi {
 	}
 
 	@Override
-	public ResponseEntity<PageResult> searchTypePLHs(Long programmeId, String libelle, Date dateDebut, Date dateFin, Integer start,
-			Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+	public ResponseEntity<PageResult> searchTypePLHs(Long programmeId, String libelle, OffsetDateTime dateDebut,
+			OffsetDateTime dateFin, Integer start, Integer resultsNumber, String orderBy, Boolean asc)
+			throws Exception {
 		TypePLHCriteria criteria = new TypePLHCriteria();
 		criteria.setProgrammeId(programmeId);
 		criteria.setLibelle(libelle);
-		criteria.setDateDebut(dateDebut);
-		criteria.setDateFin(dateFin);
+		criteria.setDateDebut(dateHelper.convert(dateDebut));
+		criteria.setDateFin(dateHelper.convert(dateFin));
 
-		// Pour le moment on ne laisse que la possibilité de récupérer les éléments sélectionnables
+		// Pour le moment on ne laisse que la possibilité de récupérer les éléments
+		// sélectionnables
 		criteria.setSelectionnable(true);
 
 		if (orderBy == null) {

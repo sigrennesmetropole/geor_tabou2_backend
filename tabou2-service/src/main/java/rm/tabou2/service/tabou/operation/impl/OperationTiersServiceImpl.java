@@ -1,20 +1,26 @@
 package rm.tabou2.service.tabou.operation.impl;
 
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.TiersTypeTiers;
-import rm.tabou2.service.mapper.tabou.operation.OperationTiersMapper;
+import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
 import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
-import rm.tabou2.service.exception.AppServiceException;
-import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationTiersCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationTiersDao;
@@ -25,12 +31,6 @@ import rm.tabou2.storage.tabou.entity.operation.OperationTiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -50,11 +50,11 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
     private final AuthentificationHelper authentificationHelper;
 
-    private final OperationTiersMapper operationTiersMapper;
-
     private final TiersMapper tiersMapper;
 
     private final TypeTiersMapper typeTiersMapper;
+    
+    private final DateHelper dateHelper;
 
 
     @Override
@@ -84,7 +84,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         }
         operationTiersEntity.setOperation(operationEntityOpt.get());
 
-        operationTiersEntity.setCreateDate(new Date());
+        operationTiersEntity.setCreateDate(dateHelper.now());
         operationTiersEntity.setCreateUser(authentificationHelper.getConnectedUsername());
 
 
@@ -152,7 +152,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         }
         operationTiersEntity.setTiers(tiersEntityOpt.get());
 
-        operationTiersEntity.setModifDate(new Date());
+        operationTiersEntity.setModifDate(dateHelper.now());
         operationTiersEntity.setModifUser(authentificationHelper.getConnectedUsername());
 
         //Enregistrement des modification

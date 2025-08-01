@@ -1,8 +1,8 @@
 package rm.tabou2.storage.tabou.item;
 
-import lombok.Data;
+import java.time.LocalDateTime;
 
-import java.util.Date;
+import lombok.Data;
 
 @Data
 public class TypeDocumentCriteria {
@@ -11,5 +11,5 @@ public class TypeDocumentCriteria {
 
     private String libelle;
 
-    private Date dateInactif;
+    private LocalDateTime dateInactif;
 }

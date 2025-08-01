@@ -1,10 +1,12 @@
 package rm.tabou2.service.mapper.tabou.operation;
 
 import org.mapstruct.Mapper;
-import rm.tabou2.service.mapper.AbstractMapper;
-import rm.tabou2.storage.tabou.entity.operation.PlhEntity;
-import rm.tabou2.service.dto.Plh;
 
-@Mapper(componentModel = "spring")
+import rm.tabou2.service.dto.Plh;
+import rm.tabou2.service.mapper.AbstractMapper;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
+import rm.tabou2.storage.tabou.entity.operation.PlhEntity;
+
+@Mapper(componentModel = "spring", uses = { LocaDateTimeMapper.class })
 public interface PlhMapper extends AbstractMapper<PlhEntity, Plh> {
 }

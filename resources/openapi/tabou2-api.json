@@ -206,7 +206,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					}
 				],
@@ -1285,7 +1285,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1295,7 +1295,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1332,7 +1332,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1342,7 +1342,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1352,7 +1352,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1362,7 +1362,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1372,7 +1372,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1382,7 +1382,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1392,7 +1392,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1402,7 +1402,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1412,7 +1412,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1422,7 +1422,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1432,7 +1432,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1442,7 +1442,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -1452,7 +1452,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -2420,7 +2420,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					}
 				],
@@ -3888,7 +3888,7 @@
 						"description": "Date d'inactivite",
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -5738,7 +5738,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{
@@ -5748,7 +5748,7 @@
 						"required": false,
 						"schema": {
 							"type": "string",
-							"format": "date"
+							"format": "date-time"
 						}
 					},
 					{

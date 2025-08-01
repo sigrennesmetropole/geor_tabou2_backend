@@ -2,11 +2,13 @@ package rm.tabou2.service.mapper.tabou.operation;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+
 import rm.tabou2.service.dto.ModeAmenagement;
 import rm.tabou2.service.mapper.AbstractMapper;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.storage.tabou.entity.operation.ModeAmenagementEntity;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { LocaDateTimeMapper.class })
 public interface ModeAmenagementMapper extends AbstractMapper<ModeAmenagementEntity, ModeAmenagement> {
 
     @Named("dtoToNewModeAmenagementEntity")

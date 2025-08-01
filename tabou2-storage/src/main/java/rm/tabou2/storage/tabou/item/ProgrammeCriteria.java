@@ -1,8 +1,8 @@
 package rm.tabou2.storage.tabou.item;
 
-import lombok.Data;
+import java.time.LocalDateTime;
 
-import java.util.Date;
+import lombok.Data;
 
 @Data
 public class ProgrammeCriteria {
@@ -16,23 +16,23 @@ public class ProgrammeCriteria {
     private long operationId;
     private long programmeId;
     private String natureOperation;
-    private Date clotureDateDebut;
-    private Date clotureDateFin;
+    private LocalDateTime clotureDateDebut;
+    private LocalDateTime clotureDateFin;
     private String tiers;
     private Integer attributionFonciereAnneeDebut;
     private Integer attributionFonciereAnneeFin;
-    private Date attributionDateDebut;
-    private Date attributionDateFin;
-    private Date commercialisationDateDebut;
-    private Date commercialisationDateFin;
-    private Date adsDateDebut;
-    private Date adsDateFin;
-    private Date livraisonDateDebut;
-    private Date livraisonDateFin;
-    private Date annulationDate;
-    private Date docDateDebut;
-    private Date docDateFin;
-    private Date datDateDebut;
-    private Date datDateFin;
+    private LocalDateTime attributionDateDebut;
+    private LocalDateTime attributionDateFin;
+    private LocalDateTime commercialisationDateDebut;
+    private LocalDateTime commercialisationDateFin;
+    private LocalDateTime adsDateDebut;
+    private LocalDateTime adsDateFin;
+    private LocalDateTime livraisonDateDebut;
+    private LocalDateTime livraisonDateFin;
+    private LocalDateTime annulationDate;
+    private LocalDateTime docDateDebut;
+    private LocalDateTime docDateFin;
+    private LocalDateTime datDateDebut;
+    private LocalDateTime datDateFin;
     private Boolean logementsAides;
 }

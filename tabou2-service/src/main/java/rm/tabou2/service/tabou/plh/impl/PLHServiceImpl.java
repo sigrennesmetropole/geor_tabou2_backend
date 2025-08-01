@@ -13,6 +13,7 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.helper.plh.TypePlhHelper;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.mapper.tabou.plh.TypePLHMapper;
@@ -48,6 +49,8 @@ public class PLHServiceImpl implements PLHService {
 	private final ProgrammePlannerHelper programmePlannerHelper;
 
 	private final PermisConstruireDao permisConstruireDao;
+	
+	private final DateHelper dateHelper;
 
 	@Override
 	@Transactional(readOnly = false)
@@ -164,8 +167,8 @@ public class PLHServiceImpl implements PLHService {
 		List<PermisConstruireEntity> permis = permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds());
 
 		if (CollectionUtils.isNotEmpty(permis)) {
-			criteria.setDateDebut(programmePlannerHelper.computeDocDate(permis));
-			criteria.setDateFin(programmePlannerHelper.computeDatDate(permis));
+			criteria.setDateDebut(dateHelper.convert(programmePlannerHelper.computeDocDate(permis)));
+			criteria.setDateFin(dateHelper.convert(programmePlannerHelper.computeDatDate(permis)));
 		}
 
 	}

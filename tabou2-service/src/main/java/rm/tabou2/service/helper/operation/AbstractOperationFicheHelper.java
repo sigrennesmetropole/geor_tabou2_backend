@@ -1,7 +1,7 @@
 package rm.tabou2.service.helper.operation;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +15,7 @@ import rm.tabou2.service.bean.tabou.operation.suivi.EcheancierOperation;
 import rm.tabou2.service.bean.tabou.operation.suivi.FonciersOperation;
 import rm.tabou2.service.bean.tabou.operation.suivi.ProgrammationsOperation;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.helper.AbstractFicheHelper;
 import rm.tabou2.service.st.generator.DocumentGenerator;
 import rm.tabou2.service.st.generator.model.FicheSuiviOperationDataModel;
 import rm.tabou2.service.st.generator.model.GenerationModel;
@@ -35,6 +36,7 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
 import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -42,33 +44,27 @@ import java.util.Objects;
 import java.util.Set;
 
 @Component
-public abstract class AbstractOperationFicheHelper {
+@RequiredArgsConstructor
+public abstract class AbstractOperationFicheHelper extends AbstractFicheHelper {
 
     protected static final String ACTIVITE = "ACTIVITE";
     protected static final String HABITAT = "HABITAT";
     protected static final String MIXTE = "MIXTE";
     protected static final String MOBILITE = "MOBILITE";
 
-    @Autowired
-    private DocumentGenerator documentGenerator;
+    private final DocumentGenerator documentGenerator;
 
-    @Autowired
-    private OperationDao operationDao;
+    private final OperationDao operationDao;
 
-    @Autowired
-    private SecteurCustomDao secteurCustomDao;
+    private final SecteurCustomDao secteurCustomDao;
 
-    @Autowired
-    private CommuneCustomDao communeCustomDao;
+    private final CommuneCustomDao communeCustomDao;
 
-    @Autowired
-    private MosCustomDao mosCustomDao;
+    private final MosCustomDao mosCustomDao;
 
-    @Autowired
-    private TypeEvenementDao typeEvenementDao;
+    private final TypeEvenementDao typeEvenementDao;
 
-    @Autowired
-    private EvenementOperationCustomDao evenementOperationCustomDao;
+    private final EvenementOperationCustomDao evenementOperationCustomDao;
 
     @Value("${typeevenement.commentaire.montage}")
     private String typeCommentaireMontage;
@@ -136,13 +132,14 @@ public abstract class AbstractOperationFicheHelper {
     @Value("${foncier.code.prive}")
     private String codeFoncierPrive;
 
-    public GenerationModel buildGenerationModel(OperationEntity operationEntity, VocationEntity vocation, String path) throws AppServiceException {
+	public GenerationModel buildGenerationModel(OperationEntity operationEntity, VocationEntity vocation, String path) throws AppServiceException {
 
         FicheSuiviOperationDataModel ficheSuiviOperationDataModel = new FicheSuiviOperationDataModel();
         ficheSuiviOperationDataModel.setOperation(operationEntity);
         ficheSuiviOperationDataModel.setEntiteReferente(operationEntity.getEntiteReferente());
-        ficheSuiviOperationDataModel.setParent(getParent(operationEntity));
+        ficheSuiviOperationDataModel.setParent(operationEntity.getParent());
         ficheSuiviOperationDataModel.setCommunes(getCommunes(operationEntity));
+        ficheSuiviOperationDataModel.setEcheancier(getEcheancier(operationEntity));
         ficheSuiviOperationDataModel.setConsommationEspace(operationEntity.getConsommationEspace());
         ficheSuiviOperationDataModel.setEtape(operationEntity.getEtapeOperation());
         ficheSuiviOperationDataModel.setVocation(vocation);
@@ -151,6 +148,7 @@ public abstract class AbstractOperationFicheHelper {
         ficheSuiviOperationDataModel.setModeAmenagement(operationEntity.getModeAmenagement());
         ficheSuiviOperationDataModel.setMaitriseOuvrage(operationEntity.getMaitriseOuvrage());
         ficheSuiviOperationDataModel.setMOS(mosCustomDao.computeOperationMos(operationEntity.getId(), Boolean.TRUE.equals(operationEntity.getSecteur())));
+        ficheSuiviOperationDataModel.setHelper(this);
 
         if (operationEntity.getFinancementPPI() != null) {
             ficheSuiviOperationDataModel.setFinancementPPI(Boolean.TRUE.equals(operationEntity.getFinancementPPI()) ? "Oui" : "Non");
@@ -187,6 +185,29 @@ public abstract class AbstractOperationFicheHelper {
         ficheSuiviOperationDataModel.setIllustration(documentGenerator.generatedImgForTemplate(AlfrescoTabouType.OPERATION, operationEntity.getId()));
 
         return new GenerationModel(ficheSuiviOperationDataModel, path, MediaType.APPLICATION_PDF.getSubtype());
+    }
+
+    private String getEcheancier(OperationEntity operationEntity) {
+        StringBuilder stringBuilder = new StringBuilder(27);
+
+        if (operationEntity.getOperationnelDate() != null) {
+            stringBuilder.append(operationEntity.getOperationnelDate().getYear());
+        } else {
+            stringBuilder.append("Non précisée");
+        }
+
+        stringBuilder.append(" - ");
+
+        LocalDateTime endDate = operationEntity.getLivraisonDate() != null
+                ? operationEntity.getLivraisonDate()
+                : operationEntity.getClotureDate();
+        if (endDate != null) {
+            stringBuilder.append(endDate.getYear());
+        } else {
+            stringBuilder.append("Non précisée");
+        }
+
+        return stringBuilder.toString();
     }
 
     private FonciersOperation getFonciers(OperationEntity operationEntity) {
@@ -264,18 +285,6 @@ public abstract class AbstractOperationFicheHelper {
                 .reduce("", (partialString, element) -> partialString + "\n" + element));
 
         return contributionsOperation;
-    }
-
-    private OperationEntity getParent(OperationEntity operationEntity){
-
-        if(Boolean.TRUE.equals(operationEntity.getSecteur())){
-            Long id = secteurCustomDao.findIdParent(operationEntity.getId());
-            if(id != null) {
-                operationDao.findOneById(id);
-            }
-        }
-
-        return null;
     }
 
     private String getCommunes(OperationEntity operationEntity){

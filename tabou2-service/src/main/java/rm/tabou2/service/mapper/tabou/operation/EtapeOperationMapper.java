@@ -2,11 +2,13 @@ package rm.tabou2.service.mapper.tabou.operation;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.mapper.AbstractMapper;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { LocaDateTimeMapper.class })
 public interface EtapeOperationMapper extends AbstractMapper<EtapeOperationEntity, Etape> {
 
     @Named("dtoToNewEtapeOperationEntity")

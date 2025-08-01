@@ -1,37 +1,41 @@
 package rm.tabou2.service.bean.tabou.operation;
 
-import lombok.*;
-import rm.tabou2.service.dto.Nature;
-import rm.tabou2.service.dto.Etape;
-import rm.tabou2.service.dto.ProjetUrbain;
-import rm.tabou2.service.dto.Vocation;
-import rm.tabou2.service.dto.Decision;
-import rm.tabou2.service.dto.MaitriseOuvrage;
-import rm.tabou2.service.dto.ModeAmenagement;
-import rm.tabou2.service.dto.ConsommationEspace;
-import rm.tabou2.service.dto.TiersAmenagement;
-import rm.tabou2.service.dto.Evenement;
-import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.dto.Plh;
-import rm.tabou2.service.dto.EntiteReferente;
-import rm.tabou2.service.dto.InformationProgrammation;
-import rm.tabou2.service.dto.VocationZA;
-import rm.tabou2.service.dto.Contribution;
-import rm.tabou2.service.dto.DescriptionFoncier;
-import rm.tabou2.service.dto.TypeOccupation;
-import rm.tabou2.service.dto.OutilFoncier;
-import rm.tabou2.service.dto.Amenageur;
-import rm.tabou2.service.dto.DescriptionConcertation;
-import rm.tabou2.service.dto.DescriptionFinancementOperation;
-import rm.tabou2.service.dto.ActionOperation;
-import rm.tabou2.service.dto.Acteur;
-import rm.tabou2.service.dto.Plui;
-
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import rm.tabou2.service.dto.Acteur;
+import rm.tabou2.service.dto.ActionOperation;
+import rm.tabou2.service.dto.Amenageur;
+import rm.tabou2.service.dto.ConsommationEspace;
+import rm.tabou2.service.dto.Contribution;
+import rm.tabou2.service.dto.Decision;
+import rm.tabou2.service.dto.DescriptionConcertation;
+import rm.tabou2.service.dto.DescriptionFinancementOperation;
+import rm.tabou2.service.dto.DescriptionFoncier;
+import rm.tabou2.service.dto.EntiteReferente;
+import rm.tabou2.service.dto.Etape;
+import rm.tabou2.service.dto.Evenement;
+import rm.tabou2.service.dto.InformationProgrammation;
+import rm.tabou2.service.dto.MaitriseOuvrage;
+import rm.tabou2.service.dto.ModeAmenagement;
+import rm.tabou2.service.dto.Nature;
+import rm.tabou2.service.dto.OutilAmenagement;
+import rm.tabou2.service.dto.OutilFoncier;
+import rm.tabou2.service.dto.Plh;
+import rm.tabou2.service.dto.Plui;
+import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.dto.ProjetUrbain;
+import rm.tabou2.service.dto.TiersAmenagement;
+import rm.tabou2.service.dto.TypeOccupation;
+import rm.tabou2.service.dto.Vocation;
+import rm.tabou2.service.dto.VocationZA;
 
 @Getter
 @Setter
@@ -47,25 +51,33 @@ public class OperationIntermediaire {
 
     private String operation;
 
+    private Long parentId;
+
     private String description;
 
     private Boolean diffusionRestreinte;
 
     private Boolean secteur;
 
-    private Date annulationDate;
+    private LocalDateTime annulationDate;
 
-    private Date autorisationDate;
+    private LocalDateTime autorisationDate;
 
-    private Date operationnelDate;
+    private LocalDateTime operationnelDate;
 
-    private Date livraisonDate;
+    private LocalDateTime livraisonDate;
 
-    private Date clotureDate;
+    private LocalDateTime clotureDate;
 
     private BigDecimal surfaceTotale;
 
+    private float aireGeoHa;
+
+    private float aireGeoHaParent;
+
     private Integer nbLogementsPrevu;
+
+    private Integer nbLogementsHFV;
 
     private String ql1;
 
@@ -135,6 +147,8 @@ public class OperationIntermediaire {
 
     private OutilFoncier outilFoncier;
 
+    private OutilAmenagement outilAmenagement;
+
     private Set<Amenageur> amenageurs;
 
     private DescriptionConcertation concertation;
@@ -183,7 +197,9 @@ public class OperationIntermediaire {
                 ", livraisonDate=" + livraisonDate +
                 ", clotureDate=" + clotureDate +
                 ", surfaceTotale=" + surfaceTotale +
+                ", aireGeoHa=" + aireGeoHa +
                 ", nbLogementsPrevu=" + nbLogementsPrevu +
+                ", nbLogementsHFV=" + nbLogementsHFV +
                 ", ql1='" + ql1 + '\'' +
                 ", scot=" + scot +
                 ", densiteScot=" + densiteScot +

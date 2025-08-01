@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 
 @Service
@@ -254,7 +256,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     }
 
     @Override
-    public AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, Date dateDocument, MultipartFile file) throws AppServiceException {
+    public AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, LocalDateTime dateDocument, MultipartFile file) throws AppServiceException {
 
         //Construction de l'uri du document
         String documentUri = DOCUMENT_START_URI + tabouNodeId + CHILDREN_URI + "?autoRename=true";
@@ -277,7 +279,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
         DocumentMetadata documentMetadata = new DocumentMetadata();
         documentMetadata.setLibelleTypeDocument(libelleTypeDocument);
-        documentMetadata.setDateDocument(dateDocument);
+        documentMetadata.setDateDocument(dateDocument.atOffset(ZoneOffset.UTC));
 
         //Mise à jour des métadonnées
         updateDocumentMetadata(objectType, objectId, document.getEntry().getId(), documentMetadata, true);

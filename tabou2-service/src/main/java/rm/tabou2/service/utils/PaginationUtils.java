@@ -49,18 +49,23 @@ public class PaginationUtils {
             }
         }
 
+        // Si rien n'est trouvé avec @OrderBy, chercher s'il y a un champ order dans l'entité
+        if (orderBy == null || orderBy.isEmpty()) {
+            orderBy = "order";
+        }
+
         return PageRequest.of(start, resultsNumber, Sort.by(direction, orderBy));
 
     }
 
     /**
-     * Construiction de la pagination pour Alfresco.
+     * Construction de la pagination pour Alfresco.
      *
      * @param start numéro du premier élément à retourner
      * @param resultsNumber nombre de résulats par page
      * @param orderBy colonne de tri
      * @param asc true si ascendant, false sino
-     * @return
+     * @return pagination
      */
     public static Pageable buildPageableForAlfresco(Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
 
@@ -77,7 +82,7 @@ public class PaginationUtils {
         }
 
         if (null == orderBy) {
-           //Par défaut, on tri par id
+           //Par défaut, on trie par id
             orderBy = ALFRESCO_DEFAULT_SORT_BY_ID;
         }
 

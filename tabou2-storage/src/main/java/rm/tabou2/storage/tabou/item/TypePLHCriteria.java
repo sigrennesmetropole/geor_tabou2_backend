@@ -1,17 +1,17 @@
 package rm.tabou2.storage.tabou.item;
 
-import lombok.Data;
+import java.time.LocalDateTime;
 
-import java.util.Date;
+import lombok.Data;
 
 @Data
 public class TypePLHCriteria {
 
     private String libelle;
 
-    private Date dateDebut;
+    private LocalDateTime dateDebut;
 
-    private Date dateFin;
+    private LocalDateTime dateFin;
 
     private Long programmeId;
 

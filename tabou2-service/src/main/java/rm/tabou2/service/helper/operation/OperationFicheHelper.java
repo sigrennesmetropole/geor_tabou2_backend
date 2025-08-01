@@ -2,12 +2,18 @@ package rm.tabou2.service.helper.operation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
+import rm.tabou2.service.st.generator.DocumentGenerator;
 import rm.tabou2.service.st.generator.model.GenerationModel;
+import rm.tabou2.storage.sig.dao.CommuneCustomDao;
+import rm.tabou2.storage.sig.dao.SecteurCustomDao;
+import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
+import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
+import rm.tabou2.storage.tabou.dao.operation.MosCustomDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.operation.VocationDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
@@ -22,8 +28,7 @@ public class OperationFicheHelper extends AbstractOperationFicheHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationFicheHelper.class);
 
-    @Autowired
-    private VocationDao vocationDao;
+    private final VocationDao vocationDao;
 
     @Value("${fiche.template.operation.activite}")
     private String pathTemplateActiviteOperation;
@@ -40,6 +45,15 @@ public class OperationFicheHelper extends AbstractOperationFicheHelper {
     private final Map<VocationEntity, String> defaultTemplatesPath = new HashMap<>();
 
     private final Map<VocationEntity, String> configuredTemplatesPath = new HashMap<>();
+
+    public OperationFicheHelper(DocumentGenerator documentGenerator, OperationDao operationDao,
+            SecteurCustomDao secteurCustomDao, CommuneCustomDao communeCustomDao, MosCustomDao mosCustomDao,
+            TypeEvenementDao typeEvenementDao, EvenementOperationCustomDao evenementOperationCustomDao,
+            VocationDao vocationDao) {
+        super(documentGenerator, operationDao, secteurCustomDao, communeCustomDao, mosCustomDao, typeEvenementDao,
+                evenementOperationCustomDao);
+        this.vocationDao = vocationDao;
+    }
 
     @PostConstruct
     private void initDefaultTemplatesPath(){

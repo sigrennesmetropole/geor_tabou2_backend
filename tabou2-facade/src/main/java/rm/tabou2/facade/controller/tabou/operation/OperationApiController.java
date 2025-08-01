@@ -1,6 +1,8 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.OffsetDateTime;
+import java.util.List;
+
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,17 +10,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.facade.api.OperationsApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
-import rm.tabou2.service.dto.TiersTypeTiers;
-import rm.tabou2.service.dto.PageResult;
+import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.dto.Emprise;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.EtapeRestricted;
-import rm.tabou2.service.dto.ProgrammeLight;
 import rm.tabou2.service.dto.Evenement;
-import rm.tabou2.service.dto.DocumentMetadata;
+import rm.tabou2.service.dto.PageResult;
+import rm.tabou2.service.dto.ProgrammeLight;
+import rm.tabou2.service.dto.TiersTypeTiers;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.helper.operation.OperationEmpriseHelper;
 import rm.tabou2.service.tabou.evenement.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.EtapeOperationService;
@@ -34,179 +39,196 @@ import rm.tabou2.storage.tabou.item.EtapeCriteria;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
-import java.util.Date;
-import java.util.List;
-
-
 @RestController
+@RequiredArgsConstructor
 public class OperationApiController extends AbstractExportDocumentApi implements OperationsApi {
 
-    @Autowired
-    private OperationService operationService;
+	private final OperationService operationService;
 
-    @Autowired
-    private ProgrammeService programmeService;
+	private final ProgrammeService programmeService;
 
-    @Autowired
-    private OperationTiersService operationTiersService;
+	private final OperationTiersService operationTiersService;
 
-    @Autowired
-    private EtapeOperationService etapeOperationService;
+	private final EtapeOperationService etapeOperationService;
 
-    @Autowired
-    private EvenementOperationService evenementOperationService;
+	private final EvenementOperationService evenementOperationService;
 
-    @Autowired
-    private OperationEmpriseHelper operationEmpriseHelper;
+	private final OperationEmpriseHelper operationEmpriseHelper;
 
-    @Override
-    public ResponseEntity<Void> deleteTiersFromOperation(Long operationId, Long associationTiersId) throws Exception {
-        operationTiersService.deleteTiersByOperationId(operationId, associationTiersId);
-        return new ResponseEntity<>(HttpStatus.OK);
+	private final DateHelper dateHelper;
 
-    }
+	@Override
+	public ResponseEntity<Void> deleteTiersFromOperation(Long operationId, Long associationTiersId) throws Exception {
+		operationTiersService.deleteTiersByOperationId(operationId, associationTiersId);
+		return new ResponseEntity<>(HttpStatus.OK);
 
-    @Override
-    public ResponseEntity<AssociationTiersTypeTiers> updateTiersByOperationId(Long operationId, Long associationTiersId, TiersTypeTiers associationTiers) throws Exception {
-        return new ResponseEntity<>(operationTiersService.updateTiersAssociation(operationId, associationTiersId, associationTiers), HttpStatus.OK);
-    }
+	}
 
-    @Override
-    public ResponseEntity<PageResult> getAvailableOperationEmprises(Long natureId, Boolean estSecteur, String nom, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+	@Override
+	public ResponseEntity<AssociationTiersTypeTiers> updateTiersByOperationId(Long operationId, Long associationTiersId,
+			TiersTypeTiers associationTiers) throws Exception {
+		return new ResponseEntity<>(
+				operationTiersService.updateTiersAssociation(operationId, associationTiersId, associationTiers),
+				HttpStatus.OK);
+	}
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationTiersEntity.class);
+	@Override
+	public ResponseEntity<PageResult> getAvailableOperationEmprises(Long natureId, Boolean estSecteur, String nom,
+			Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
-        Page<Emprise> page = operationEmpriseHelper.getAvailableEmprises(natureId, estSecteur, pageable, nom);
+		Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc,
+				OperationTiersEntity.class);
 
-        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
-    }
+		Page<Emprise> page = operationEmpriseHelper.getAvailableEmprises(natureId, estSecteur, pageable, nom);
 
-    @Override
-    public ResponseEntity<List<Etape>> getEtapesByOperationId(Long operationId) throws Exception {
-        return new ResponseEntity<>(etapeOperationService.getEtapesForOperationById(operationId), HttpStatus.OK);
-    }
+		return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+	}
 
-    @Override
-    public ResponseEntity<PageResult> searchTiersByOperationId(Long operationId, String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+	@Override
+	public ResponseEntity<List<Etape>> getEtapesByOperationId(Long operationId) throws Exception {
+		return new ResponseEntity<>(etapeOperationService.getEtapesForOperationById(operationId), HttpStatus.OK);
+	}
 
-        TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
-        criteria.setAsc(asc);
-        criteria.setOrderBy(orderBy);
-        criteria.setLibelle(libelle);
-        criteria.setOperationId(operationId);
+	@Override
+	public ResponseEntity<PageResult> searchTiersByOperationId(Long operationId, String libelle, Integer start,
+			Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, criteria.getOrderBy(), criteria.isAsc(), OperationTiersEntity.class);
+		TiersAmenagementCriteria criteria = new TiersAmenagementCriteria();
+		criteria.setAsc(asc);
+		criteria.setOrderBy(orderBy);
+		criteria.setLibelle(libelle);
+		criteria.setOperationId(operationId);
 
-        Page<AssociationTiersTypeTiers> page = operationTiersService.searchOperationTiers(criteria, pageable);
+		Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, criteria.getOrderBy(), criteria.isAsc(),
+				OperationTiersEntity.class);
 
-        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+		Page<AssociationTiersTypeTiers> page = operationTiersService.searchOperationTiers(criteria, pageable);
 
-    }
+		return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
-    @Override
-    public ResponseEntity<PageResult> searchOperationsEtapes(String code, String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+	}
 
-        EtapeCriteria etapeCriteria = new EtapeCriteria();
+	@Override
+	public ResponseEntity<PageResult> searchOperationsEtapes(String code, String libelle, Integer start,
+			Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
-        etapeCriteria.setCode(code);
-        etapeCriteria.setLibelle(libelle);
+		EtapeCriteria etapeCriteria = new EtapeCriteria();
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EtapeOperationEntity.class);
+		etapeCriteria.setCode(code);
+		etapeCriteria.setLibelle(libelle);
 
-        Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
+		Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc,
+				EtapeOperationEntity.class);
 
-        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
-    }
+		Page<EtapeRestricted> page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
 
-    @Override
-    public ResponseEntity<PageResult> searchProgrammesOfOperation(Long operationId, String nom, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+		return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+	}
 
-        ProgrammeCriteria programmeCriteria = new ProgrammeCriteria();
-        programmeCriteria.setOperationId(operationId);
-        programmeCriteria.setNom(nom);
+	@Override
+	public ResponseEntity<PageResult> searchProgrammesOfOperation(Long operationId, String nom, Integer start,
+			Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeRmEntity.class);
+		ProgrammeCriteria programmeCriteria = new ProgrammeCriteria();
+		programmeCriteria.setOperationId(operationId);
+		programmeCriteria.setNom(nom);
 
-        Page<ProgrammeLight> page = programmeService.searchProgrammesOfOperation(programmeCriteria, pageable);
+		Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ProgrammeRmEntity.class);
 
-        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+		Page<ProgrammeLight> page = programmeService.searchProgrammesOfOperation(programmeCriteria, pageable);
 
-    }
+		return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
-    @Override
-    public ResponseEntity<PageResult> getEvenementsByOperationId(Long operationId, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+	}
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EvenementOperationEntity.class);
+	@Override
+	public ResponseEntity<PageResult> getEvenementsByOperationId(Long operationId, Integer start, Integer resultsNumber,
+			String orderBy, Boolean asc) throws Exception {
 
-        Page<Evenement> page = evenementOperationService.searchEvenementsOperations(operationId, pageable);
+		Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc,
+				EvenementOperationEntity.class);
 
-        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+		Page<Evenement> page = evenementOperationService.searchEvenementsOperations(operationId, pageable);
 
-    }
+		return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 
-    @Override
-    public ResponseEntity<DocumentMetadata> addOperationDocument(Long operationId, String nom, String libelle, Date dateDocument, MultipartFile fileToUpload) throws Exception {
-        return new ResponseEntity<>(operationService.addDocument(operationId, nom, libelle, dateDocument , fileToUpload), HttpStatus.OK);
-    }
+	}
 
-    @Override
-    public ResponseEntity<Evenement> addEvenementByOperationId(Long operationId, Evenement evenement) throws Exception {
-        return new ResponseEntity<>(operationService.addEvenementByOperationId(operationId, evenement), HttpStatus.OK);
-    }
+	@Override
+	public ResponseEntity<DocumentMetadata> addOperationDocument(Long operationId, String nom, String libelle,
+			OffsetDateTime dateDocument, MultipartFile fileToUpload) throws Exception {
+		return new ResponseEntity<>(
+				operationService.addDocument(operationId, nom, libelle, dateHelper.convert(dateDocument), fileToUpload),
+				HttpStatus.OK);
+	}
 
-    @Override
-    public ResponseEntity<Evenement> updateEvenementByOperationId(Long operationId, Evenement evenement) throws Exception {
-        return new ResponseEntity<>(operationService.updateEvenementByOperationId(operationId, evenement), HttpStatus.OK);
-    }
+	@Override
+	public ResponseEntity<Evenement> addEvenementByOperationId(Long operationId, Evenement evenement) throws Exception {
+		return new ResponseEntity<>(operationService.addEvenementByOperationId(operationId, evenement), HttpStatus.OK);
+	}
 
-    @Override
-    public ResponseEntity<AssociationTiersTypeTiers> associateTiersToOperation(Long operationId, TiersTypeTiers tiersTypeTiers) throws Exception {
-        return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationId, tiersTypeTiers.getTiersId(), tiersTypeTiers.getTypeTiersId()), HttpStatus.OK);
-    }
+	@Override
+	public ResponseEntity<Evenement> updateEvenementByOperationId(Long operationId, Evenement evenement)
+			throws Exception {
+		return new ResponseEntity<>(operationService.updateEvenementByOperationId(operationId, evenement),
+				HttpStatus.OK);
+	}
 
+	@Override
+	public ResponseEntity<AssociationTiersTypeTiers> associateTiersToOperation(Long operationId,
+			TiersTypeTiers tiersTypeTiers) throws Exception {
+		return new ResponseEntity<>(operationTiersService.associateTiersToOperation(operationId,
+				tiersTypeTiers.getTiersId(), tiersTypeTiers.getTypeTiersId()), HttpStatus.OK);
+	}
 
-    @Override
-    public ResponseEntity<DocumentMetadata> getOperationDocumentMetadata(Long operationId, String documentId) throws Exception {
-        return new ResponseEntity<>(operationService.getDocumentMetadata(operationId, documentId), HttpStatus.OK);
-    }
+	@Override
+	public ResponseEntity<DocumentMetadata> getOperationDocumentMetadata(Long operationId, String documentId)
+			throws Exception {
+		return new ResponseEntity<>(operationService.getDocumentMetadata(operationId, documentId), HttpStatus.OK);
+	}
 
-    @Override
-    public ResponseEntity<DocumentMetadata> updateOperationDocumentMetadata(Long operationId, String documentId, DocumentMetadata documentMetadata) throws Exception {
-        return new ResponseEntity<>(operationService.updateDocumentMetadata(operationId, documentId, documentMetadata), HttpStatus.OK);
-    }
+	@Override
+	public ResponseEntity<DocumentMetadata> updateOperationDocumentMetadata(Long operationId, String documentId,
+			DocumentMetadata documentMetadata) throws Exception {
+		return new ResponseEntity<>(operationService.updateDocumentMetadata(operationId, documentId, documentMetadata),
+				HttpStatus.OK);
+	}
 
-    @Override
-    public ResponseEntity<Resource> getOperationDocumentContent(Long operationId, String documentId) throws Exception {
-        return downloadDocument(operationService.downloadDocument(operationId, documentId));
-    }
+	@Override
+	public ResponseEntity<Resource> getOperationDocumentContent(Long operationId, String documentId) throws Exception {
+		return downloadDocument(operationService.downloadDocument(operationId, documentId));
+	}
 
-    @Override
-    public ResponseEntity<Void> deleteOperationDocument(Long operationId, String documentId) throws Exception {
-        operationService.deleteDocument(operationId, documentId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	@Override
+	public ResponseEntity<Void> deleteOperationDocument(Long operationId, String documentId) throws Exception {
+		operationService.deleteDocument(operationId, documentId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
-    @Override
-    public ResponseEntity<DocumentMetadata> updateOperationDocumentContent(Long operationId, String documentId, MultipartFile fileToUpload) throws Exception {
+	@Override
+	public ResponseEntity<DocumentMetadata> updateOperationDocumentContent(Long operationId, String documentId,
+			MultipartFile fileToUpload) throws Exception {
 
-        operationService.updateDocumentContent(operationId, documentId, fileToUpload);
+		operationService.updateDocumentContent(operationId, documentId, fileToUpload);
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
-    @Override
-    public ResponseEntity<PageResult> searchOperationDocuments(Long operationId, String nom, String libelleTypeDocument, String typeMime, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+	@Override
+	public ResponseEntity<PageResult> searchOperationDocuments(Long operationId, String nom, String libelleTypeDocument,
+			String typeMime, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
-        Pageable pageable = PaginationUtils.buildPageableForAlfresco(start, resultsNumber, orderBy, asc);
+		Pageable pageable = PaginationUtils.buildPageableForAlfresco(start, resultsNumber, orderBy, asc);
 
-        Page<rm.tabou2.service.dto.DocumentMetadata> page = operationService.searchDocuments(operationId, nom, libelleTypeDocument, typeMime, pageable);
+		Page<rm.tabou2.service.dto.DocumentMetadata> page = operationService.searchDocuments(operationId, nom,
+				libelleTypeDocument, typeMime, pageable);
 
-        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
-    }
+		return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+	}
 
-    @Override
-    public ResponseEntity<Resource> downloadOperationFicheSuivi(Long operationId) throws Exception {
-        return downloadDocument(operationService.generateFicheSuivi(operationId));
-    }
+	@Override
+	public ResponseEntity<Resource> downloadOperationFicheSuivi(Long operationId) throws Exception {
+		return downloadDocument(operationService.generateFicheSuivi(operationId));
+	}
 
 }

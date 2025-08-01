@@ -8,10 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.apache.commons.lang3.StringUtils;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.dto.TiersV1;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", 	uses= { LocaDateTimeMapper.class })
 public interface TiersV1Mapper {
 
     @Mapping(source="adresse", target ="adresseRue")

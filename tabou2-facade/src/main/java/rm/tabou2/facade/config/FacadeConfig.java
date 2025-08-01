@@ -23,5 +23,6 @@ public class FacadeConfig {
 	@PostConstruct
 	public void jsonCustomizer() {
 		applicationConversionService.addConverter(new StringToDateConverter());
+		applicationConversionService.addConverter(new StringToOfssetDateTimeConverter());
 	}
 }

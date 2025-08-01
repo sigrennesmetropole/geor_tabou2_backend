@@ -22,7 +22,15 @@ public class SecteurGeometryViewEntity {
     @Basic
     @Column(name = "id_tabou")
     private int idTabou;
-    
+
+    @Basic
+    @Column(name = "aire_geo_ha")
+    private float aireGeoHa;
+
+    @Basic
+    @Column(name = "aire_geo_ha_parent")
+    private float aireGeoHaParent;
+
     @Basic
     @Column(name = "shape", columnDefinition = "Geometry")
     private Geometry shape;

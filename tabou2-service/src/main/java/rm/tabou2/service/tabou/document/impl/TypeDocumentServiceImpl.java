@@ -1,6 +1,8 @@
 package rm.tabou2.service.tabou.document.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +10,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.service.dto.TypeDocument;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
@@ -18,24 +22,19 @@ import rm.tabou2.storage.tabou.dao.document.TypeDocumentDao;
 import rm.tabou2.storage.tabou.entity.document.TypeDocumentEntity;
 import rm.tabou2.storage.tabou.item.TypeDocumentCriteria;
 
-import java.util.Date;
-
 @Service
 @Validated
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class TypeDocumentServiceImpl implements TypeDocumentService {
 
-    @Autowired
-    private TypeDocumentDao typeDocumentDao;
+    private final TypeDocumentDao typeDocumentDao;
 
-    @Autowired
-    private TypeDocumentCustomDao typeDocumentCustomDao;
+    private final TypeDocumentCustomDao typeDocumentCustomDao;
 
-    @Autowired
-    private TypeDocumentMapper typeDocumentMapper;
+    private final TypeDocumentMapper typeDocumentMapper;
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final AuthentificationHelper authentificationHelper;
 
     @Override
     @Transactional
@@ -92,7 +91,7 @@ public class TypeDocumentServiceImpl implements TypeDocumentService {
 
         TypeDocumentEntity typeDocumentEntity = typeDocumentDao.findOneById(typeDocumentId);
 
-        typeDocumentEntity.setDateInactif(new Date());
+        typeDocumentEntity.setDateInactif(LocalDateTime.now(ZoneId.of("UTC")));
 
         // Enregistrement en BDD
         try {

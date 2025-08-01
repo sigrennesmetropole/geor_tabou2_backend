@@ -1,96 +1,96 @@
 package rm.tabou2.service.tabou.tiers.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import rm.tabou2.service.tabou.tiers.TypeTiersService;
-import rm.tabou2.service.dto.TypeTiers;
-import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
-import rm.tabou2.storage.tabou.dao.tiers.TypeTiersCustomDao;
-import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
-import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
-
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+import rm.tabou2.service.dto.TypeTiers;
+import rm.tabou2.service.helper.date.DateHelper;
+import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
+import rm.tabou2.service.tabou.tiers.TypeTiersService;
+import rm.tabou2.storage.tabou.dao.tiers.TypeTiersCustomDao;
+import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
+import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
+
 @Service
+@RequiredArgsConstructor
 public class TypeTiersServiceImpl implements TypeTiersService {
 
-    @Autowired
-    private TypeTiersDao typeTiersDao;
+	private final TypeTiersDao typeTiersDao;
 
-    @Autowired
-    private TypeTiersCustomDao typeTiersCustomDao;
+	private final TypeTiersCustomDao typeTiersCustomDao;
 
-    @Autowired
-    private TypeTiersMapper typeTiersMapper;
+	private final TypeTiersMapper typeTiersMapper;
+	
+	private final DateHelper dateHelper;
 
-    @Override
-    public TypeTiers createTypeTiers(TypeTiers typeTiers) {
+	@Override
+	public TypeTiers createTypeTiers(TypeTiers typeTiers) {
 
-        TypeTiersEntity typeTiersEntity = typeTiersMapper.dtoToEntity(typeTiers);
+		TypeTiersEntity typeTiersEntity = typeTiersMapper.dtoToEntity(typeTiers);
 
-        typeTiersEntity = typeTiersDao.save(typeTiersEntity);
+		typeTiersEntity = typeTiersDao.save(typeTiersEntity);
 
-        return typeTiersMapper.entityToDto(typeTiersEntity);
+		return typeTiersMapper.entityToDto(typeTiersEntity);
 
-    }
+	}
 
-    @Override
-    public TypeTiers getById(long typeTiersId) {
+	@Override
+	public TypeTiers getById(long typeTiersId) {
 
-        Optional<TypeTiersEntity> typeTiersOpt = typeTiersDao.findById(typeTiersId);
-        if (typeTiersOpt.isEmpty()) {
-            throw new NoSuchElementException("Le type tiers  n'existe pas, id=" + typeTiersId);
-        }
+		Optional<TypeTiersEntity> typeTiersOpt = typeTiersDao.findById(typeTiersId);
+		if (typeTiersOpt.isEmpty()) {
+			throw new NoSuchElementException("Le type tiers  n'existe pas, id=" + typeTiersId);
+		}
 
-        return typeTiersMapper.entityToDto(typeTiersOpt.get());
+		return typeTiersMapper.entityToDto(typeTiersOpt.get());
 
-    }
+	}
 
+	@Override
+	public TypeTiers updateTypeTiers(TypeTiers typeTiers) {
 
-    @Override
-    public TypeTiers updateTypeTiers(TypeTiers typeTiers) {
+		Optional<TypeTiersEntity> typeTiersOpt = typeTiersDao.findById(typeTiers.getId());
+		if (typeTiersOpt.isEmpty()) {
+			throw new NoSuchElementException("Le type tiers demandé n'existe pas , id=" + typeTiers.getId());
+		}
 
-        Optional<TypeTiersEntity> typeTiersOpt = typeTiersDao.findById(typeTiers.getId());
-        if (typeTiersOpt.isEmpty()) {
-            throw new NoSuchElementException("Le type tiers demandé n'existe pas , id=" + typeTiers.getId());
-        }
+		TypeTiersEntity typeTiersEntity = typeTiersOpt.get();
+		typeTiersEntity.setLibelle(typeTiers.getLibelle());
 
-        TypeTiersEntity typeTiersEntity = typeTiersOpt.get();
-        typeTiersEntity.setLibelle(typeTiers.getLibelle());
+		typeTiersDao.save(typeTiersEntity);
 
-        typeTiersDao.save(typeTiersEntity);
+		return typeTiersMapper.entityToDto(typeTiersOpt.get());
 
-        return typeTiersMapper.entityToDto(typeTiersOpt.get());
+	}
 
-    }
+	@Override
+	public TypeTiers inactivateTypeTiers(Long typeTiersId) {
 
-    @Override
-    public TypeTiers inactivateTypeTiers(Long typeTiersId) {
+		Optional<TypeTiersEntity> typeTiersOpt = typeTiersDao.findById(typeTiersId);
+		if (typeTiersOpt.isEmpty()) {
+			throw new NoSuchElementException("Le type tiers demandé n'existe pas, id=" + typeTiersId);
+		}
 
-        Optional<TypeTiersEntity> typeTiersOpt = typeTiersDao.findById(typeTiersId);
-        if (typeTiersOpt.isEmpty()) {
-            throw new NoSuchElementException("Le type tiers demandé n'existe pas, id=" + typeTiersId);
-        }
+		TypeTiersEntity typeTiers = typeTiersOpt.get();
+		typeTiers.setDateInactif(dateHelper.now());
 
-        TypeTiersEntity typeTiers = typeTiersOpt.get();
-        typeTiers.setDateInactif(new Date());
+		typeTiersDao.save(typeTiers);
 
-        typeTiersDao.save(typeTiers);
+		return typeTiersMapper.entityToDto(typeTiers);
 
-        return typeTiersMapper.entityToDto(typeTiers);
+	}
 
-    }
+	@Override
+	public Page<TypeTiers> searchTypeTiers(String libelle, Boolean inacatif, Pageable pageable) {
 
-    @Override
-    public Page<TypeTiers> searchTypeTiers(String libelle, Boolean inacatif, Pageable pageable) {
+		return typeTiersMapper.entitiesToDto(typeTiersCustomDao.searchTypeTiers(libelle, inacatif, pageable), pageable);
 
-        return typeTiersMapper.entitiesToDto(typeTiersCustomDao.searchTypeTiers(libelle, inacatif, pageable), pageable);
-
-    }
-
+	}
 
 }

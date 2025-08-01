@@ -1,23 +1,23 @@
 package rm.tabou2.storage.tabou.item;
 
-import lombok.Data;
+import java.time.LocalDateTime;
 
-import java.util.Date;
+import lombok.Data;
 
 @Data
 public class PermisConstruireSuiviHabitat {
 
-    private Date adsDate;
+    private LocalDateTime adsDate;
 
-    private Date docDate;
+    private LocalDateTime docDate;
 
-    private Date datDate;
+    private LocalDateTime datDate;
 
     public PermisConstruireSuiviHabitat() {
 
     }
 
-    public PermisConstruireSuiviHabitat(Date adsDate, Date docDate, Date datDate) {
+    public PermisConstruireSuiviHabitat(LocalDateTime adsDate, LocalDateTime docDate, LocalDateTime datDate) {
         this.adsDate = adsDate;
         this.docDate = docDate;
         this.datDate = datDate;

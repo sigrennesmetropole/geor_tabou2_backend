@@ -1,11 +1,17 @@
 package rm.tabou2.service.tabou.programme.impl;
 
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -14,13 +20,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.service.alfresco.AlfrescoService;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
@@ -35,8 +42,10 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.helper.plh.TypePlhHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
+import rm.tabou2.service.helper.programme.ProgrammeFicheHelper;
 import rm.tabou2.service.helper.programme.ProgrammePlannerHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.helper.programme.ProgrammeValidator;
@@ -49,14 +58,12 @@ import rm.tabou2.service.mapper.tabou.programme.ProgrammeLightMapper;
 import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
 import rm.tabou2.service.st.generator.DocumentGenerator;
 import rm.tabou2.service.st.generator.model.DocumentContent;
-import rm.tabou2.service.st.generator.model.FicheSuiviProgrammeDataModel;
 import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.sig.dao.ProgrammeRmCustomDao;
 import rm.tabou2.storage.sig.dao.ProgrammeRmDao;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
-import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
@@ -66,8 +73,6 @@ import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
-import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersDao;
-import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
@@ -76,24 +81,14 @@ import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
-import rm.tabou2.storage.tabou.item.AgapeoSuiviHabitat;
-import rm.tabou2.storage.tabou.item.PermisConstruireSuiviHabitat;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
-
-import java.io.File;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
 @Validated
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ProgrammeServiceImpl implements ProgrammeService {
 
     //Logger
@@ -105,86 +100,57 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     public static final String ERROR_DELETE_DOCUMENT = "Impossible de supprimer le document ";
     private static final String USER_PROGRAM_NOT_ALLOWED = "L'utilisateur n'a pas les droits de modification du programme ";
 
-    @Autowired
-    private ProgrammeDao programmeDao;
+    private final ProgrammeDao programmeDao;
 
-    @Autowired
-    private ProgrammeCustomDao programmeCustomDao;
+    private final ProgrammeCustomDao programmeCustomDao;
 
-    @Autowired
-    private ProgrammeTiersCustomDao programmeTiersCustomDao;
+    private final ProgrammeTiersCustomDao programmeTiersCustomDao;
 
-    @Autowired
-    private ProgrammeRmCustomDao programmeRmCustomDao;
+    private final ProgrammeRmCustomDao programmeRmCustomDao;
 
-    @Autowired
-    private ProgrammeRmDao programmeRmDao;
+    private final ProgrammeRmDao programmeRmDao;
 
-    @Autowired
-    private EtapeProgrammeDao etapeProgrammeDao;
+    private final EtapeProgrammeDao etapeProgrammeDao;
 
-    @Autowired
-    private EvenementProgrammeDao evenementProgrammeDao;
+    private final EvenementProgrammeDao evenementProgrammeDao;
 
-    @Autowired
-    private TypeEvenementDao typeEvenementDao;
+    private final TypeEvenementDao typeEvenementDao;
 
-    @Autowired
-    private OperationDao operationDao;
+    private final OperationDao operationDao;
 
-    @Autowired
-    private AgapeoDao agapeoDao;
+    private final PermisConstruireDao permisConstruireDao;
 
-    @Autowired
-    private PermisConstruireDao permisConstruireDao;
+    private final TypePLHDao typePLHDao;
 
-    @Autowired
-    private ProgrammeTiersDao programmeTiersDao;
+    private final EvenementProgrammeMapper evenementProgrammeMapper;
 
-    @Autowired
-    private TypePLHDao typePLHDao;
+    private final ProgrammeMapper programmeMapper;
 
-    @Autowired
-    private EvenementProgrammeMapper evenementProgrammeMapper;
+    private final ProgrammeLightMapper programmeLightMapper;
 
-    @Autowired
-    private ProgrammeMapper programmeMapper;
+    private final EtapeProgrammeMapper etapeProgrammeMapper;
 
-    @Autowired
-    private ProgrammeLightMapper programmeLightMapper;
+    private final ProgrammeRmMapper programmeRmMapper;
 
-    @Autowired
-    private EtapeProgrammeMapper etapeProgrammeMapper;
+    private final TypePLHMapper typePLHMapper;
 
-    @Autowired
-    private ProgrammeRmMapper programmeRmMapper;
+    private final AuthentificationHelper authentificationHelper;
 
-    @Autowired
-    private TypePLHMapper typePLHMapper;
+    private final ProgrammeRightsHelper programmeRightsHelper;
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final ProgrammeValidator programmeValidator;
 
-    @Autowired
-    private ProgrammeRightsHelper programmeRightsHelper;
+    private final EvenementProgrammeRigthsHelper evenementProgrammeRigthsHelper;
 
-    @Autowired
-    private ProgrammeValidator programmeValidator;
+    private final ProgrammePlannerHelper programmePlannerHelper;
 
-    @Autowired
-    private EvenementProgrammeRigthsHelper evenementProgrammeRigthsHelper;
+    private final TypePlhHelper typePlhHelper;
 
-    @Autowired
-    private ProgrammePlannerHelper programmePlannerHelper;
+    private final DocumentGenerator documentGenerator;
 
-    @Autowired
-    private TypePlhHelper typePlhHelper;
+    private final ProgrammeService me;
 
-    @Autowired
-    private DocumentGenerator documentGenerator;
-
-    @Autowired
-    private ProgrammeService me;
+    private final ProgrammeFicheHelper programmeFicheHelper;
 
     @Value("${typeevenement.changementetape.code}")
     private String etapeUpdatedCode;
@@ -192,14 +158,11 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Value("${typeevenement.changementetape.message}")
     private String etapeUpdatedMessage;
 
-    @Value("${fiche.template.programme}")
-    private String pathTemplate;
+    private final AlfrescoService alfrescoService;
 
-    @Autowired
-    private AlfrescoService alfrescoService;
-
-    @Autowired
-    private DocumentMapper documentMapper;
+    private final DocumentMapper documentMapper;
+    
+    private final DateHelper dateHelper;
 
     @Override
     @Transactional(readOnly = false)
@@ -412,7 +375,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new NoSuchElementException("Le type d'événement de modification d'étape n'est pas défini.");
         }
         EvenementProgrammeEntity evenementProgrammeEntity = new EvenementProgrammeEntity();
-        evenementProgrammeEntity.setEventDate(new Date());
+        evenementProgrammeEntity.setEventDate(dateHelper.now());
         evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
         evenementProgrammeEntity.setDescription(evenementDescription);
         evenementProgrammeEntity.setSysteme(true);
@@ -512,7 +475,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     public DocumentContent generateFicheSuivi(Long programmeId) throws AppServiceException {
 
         ProgrammeEntity programmeEntity = getProgrammeEntityById(programmeId);
-        GenerationModel generationModel = buildGenerationModelByProgrammeId(programmeEntity);
+        GenerationModel generationModel = programmeFicheHelper.buildGenerationModel(programmeEntity);
 
         DocumentContent documentContent = documentGenerator.generateDocument(generationModel);
         documentContent.setFileName(buildRapportFileName(programmeEntity));
@@ -553,50 +516,6 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
 
-    }
-
-    private GenerationModel buildGenerationModelByProgrammeId(ProgrammeEntity programmeEntity) throws AppServiceException {
-
-        String path = pathTemplate;
-
-        File templateFile = new File(pathTemplate);
-        if(!templateFile.exists()) {
-            LOGGER.warn("Le chemin de template spécifié ({}) n'existe pas, utilisation du chemin par défaut", pathTemplate);
-            path = "template/programme/template_fiche_suivi.odt";
-        }
-
-        FicheSuiviProgrammeDataModel ficheSuiviProgrammeDataModel = new FicheSuiviProgrammeDataModel();
-        ficheSuiviProgrammeDataModel.setProgramme(programmeEntity);
-        ficheSuiviProgrammeDataModel.setOperation(programmeEntity.getOperation());
-        ficheSuiviProgrammeDataModel.setNature(programmeEntity.getOperation().getNature());
-        ficheSuiviProgrammeDataModel.setEtape(programmeEntity.getEtapeProgramme());
-        ficheSuiviProgrammeDataModel.setIllustration(documentGenerator.generatedImgForTemplate(AlfrescoTabouType.PROGRAMME, programmeEntity.getId()));
-        ficheSuiviProgrammeDataModel.setNomFichier(buildRapportFileName(programmeEntity));
-
-        if (StringUtils.isNotEmpty(programmeEntity.getNumAds())) { // traiter le cas où le numAds ne retourne rien / est vide
-
-            AgapeoSuiviHabitat agapeoSuiviHabitat = agapeoDao.getAgapeoSuiviHabitatByNumAds(programmeEntity.getNumAds());
-            if (agapeoSuiviHabitat != null) ficheSuiviProgrammeDataModel.setAgapeoSuiviHabitat(agapeoSuiviHabitat);
-
-            List<AgapeoEntity> agapeos = agapeoDao.findAllByNumAds(programmeEntity.getNumAds());
-            if (agapeos != null) ficheSuiviProgrammeDataModel.setAgapeos(agapeos);
-
-            List<PermisConstruireEntity> permis = permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds());
-            if (permis != null) {
-                ficheSuiviProgrammeDataModel.setPermis(permis);
-
-                PermisConstruireSuiviHabitat permisConstruireSuiviHabitat = new PermisConstruireSuiviHabitat();
-                permisConstruireSuiviHabitat.setAdsDate(programmePlannerHelper.computeAdsDate(permis));
-                permisConstruireSuiviHabitat.setDatDate(programmePlannerHelper.computeDatDate(permis));
-                permisConstruireSuiviHabitat.setDocDate(programmePlannerHelper.computeDocDate(permis));
-                ficheSuiviProgrammeDataModel.setPermisSuiviHabitat(permisConstruireSuiviHabitat);
-            }
-        }
-
-        ficheSuiviProgrammeDataModel.setEvenements(List.copyOf(programmeEntity.getEvenements()));
-        ficheSuiviProgrammeDataModel.setProgrammeTiers(programmeTiersDao.findByProgrammeId(programmeEntity.getId()));
-
-        return new GenerationModel(ficheSuiviProgrammeDataModel, path, MediaType.APPLICATION_PDF.getSubtype());
     }
 
     private ProgrammeEntity getProgrammeEntityById(long programmeId) {
@@ -649,7 +568,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, Object file, Date dateDocument) throws AppServiceException {
+    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, Object file, LocalDateTime dateDocument) throws AppServiceException {
 
         //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
         Programme programme = getProgrammeById(programmeId);
@@ -835,17 +754,17 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         List<PermisConstruireEntity> permis = permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds());
 
-        Date dateDebut = null;
-        Date dateFin = null;
+        LocalDateTime dateDebut = null;
+        LocalDateTime dateFin = null;
         if (CollectionUtils.isNotEmpty(permis)) {
-			dateDebut = programmePlannerHelper.computeDocDate(permis);
-			dateFin = programmePlannerHelper.computeDatDate(permis);
+			dateDebut = dateHelper.convert(programmePlannerHelper.computeDocDate(permis));
+			dateFin = dateHelper.convert(programmePlannerHelper.computeDatDate(permis));
 		}
 
         boolean dateDebutCompatible = dateDebut == null
-                || !typePLHEntity.getDateFin().before(dateDebut);
+                || !typePLHEntity.getDateFin().isBefore(dateDebut);
         boolean dateFinCompatible = dateFin == null
-                || !typePLHEntity.getDateDebut().after(dateFin);
+                || !typePLHEntity.getDateDebut().isAfter(dateFin);
 
         return dateDebutCompatible && dateFinCompatible;
     }

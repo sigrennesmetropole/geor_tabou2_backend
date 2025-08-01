@@ -4,11 +4,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+
 import rm.tabou2.service.dto.PermisConstruire;
 import rm.tabou2.service.mapper.AbstractMapper;
+import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", 	uses= { LocaDateTimeMapper.class })
 public interface PermisConstuireMapper extends AbstractMapper<PermisConstruireEntity, PermisConstruire> {
 
     @Mapping(source = "depotDossier", target = "dateDepotDossier")

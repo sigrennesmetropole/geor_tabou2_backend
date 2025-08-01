@@ -3,7 +3,6 @@ package rm.tabou2.storage.tabou.dao.operation.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +46,7 @@ public class VocationCustomDaoImpl extends AbstractCustomDaoImpl implements Voca
         CriteriaQuery<VocationEntity> searchQuery = builder.createQuery(VocationEntity.class);
         Root<VocationEntity> searchRoot = searchQuery.from(VocationEntity.class);
 
-        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
+        assignOrder(pageable, searchQuery, searchRoot, builder, VocationEntity.class);
 
         TypedQuery<VocationEntity> typedQuery = entityManager.createQuery(searchQuery);
 

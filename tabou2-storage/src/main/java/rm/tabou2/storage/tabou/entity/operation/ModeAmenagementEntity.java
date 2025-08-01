@@ -8,20 +8,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import rm.tabou2.storage.tabou.entity.common.AbstractOrderEntity;
 
 @Data
 @Entity
 @Table(name = "tabou_mode_amenagement")
-public class ModeAmenagementEntity {
+public class ModeAmenagementEntity extends AbstractOrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
-    @OrderBy
     @Basic
     @Column(name = "libelle")
     private String libelle;

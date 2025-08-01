@@ -1,8 +1,8 @@
 package rm.tabou2.storage.tabou.item;
 
-import lombok.Data;
+import java.time.LocalDateTime;
 
-import java.util.Date;
+import lombok.Data;
 
 
 @Data
@@ -34,21 +34,21 @@ public class OperationsCriteria {
 
     private String numAds;
 
-    private Date autorisationDateDebut;
+    private LocalDateTime autorisationDateDebut;
 
-    private Date autorisationDateFin;
+    private LocalDateTime autorisationDateFin;
 
-    private Date operationnelDateDebut;
+    private LocalDateTime operationnelDateDebut;
 
-    private Date operationnelDateFin;
+    private LocalDateTime operationnelDateFin;
 
-    private Date livraisonDateDebut;
+    private LocalDateTime livraisonDateDebut;
 
-    private Date livraisonDateFin;
+    private LocalDateTime livraisonDateFin;
 
-    private Date clotureDateDebut;
+    private LocalDateTime clotureDateDebut;
 
-    private Date clotureDateFin;
+    private LocalDateTime clotureDateFin;
 
     private String tiers;
 

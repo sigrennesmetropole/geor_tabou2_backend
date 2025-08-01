@@ -1,12 +1,10 @@
 package rm.tabou2.service.tabou.programme.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,10 +12,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.service.dto.AssociationTiersTypeTiers;
 import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
 import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeTiersService;
@@ -33,33 +33,28 @@ import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 @Service
+@RequiredArgsConstructor
 public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
 
     public static final String ERROR_NON_TROUVEE = " n'a été trouvée";
 
-    @Autowired
-    private ProgrammeDao programmeDao;
+    private final ProgrammeDao programmeDao;
 
-    @Autowired
-    private TypeTiersDao typeTiersDao;
+    private final  TypeTiersDao typeTiersDao;
 
-    @Autowired
-    private TiersDao tiersDao;
+    private final  TiersDao tiersDao;
 
-    @Autowired
-    private ProgrammeTiersDao programmeTiersDao;
+    private final ProgrammeTiersDao programmeTiersDao;
 
-    @Autowired
-    private ProgrammeTiersCustomDao programmeTiersCustomDao;
+    private final ProgrammeTiersCustomDao programmeTiersCustomDao;
 
-    @Autowired
-    private TiersMapper tiersMapper;
+    private final TiersMapper tiersMapper;
 
-    @Autowired
-    private TypeTiersMapper typeTiersMapper;
-
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final TypeTiersMapper typeTiersMapper;
+    
+    private final AuthentificationHelper authentificationHelper;
+    
+    private final DateHelper dateHelper;
 
     @Override
     public AssociationTiersTypeTiers associateTiersToProgramme(long programmeId, long tiersId, long typeTiersId) throws AppServiceException {
@@ -88,7 +83,7 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
         programmeTiersEntity.setProgramme(programmeEntityOpt.get());
 
         //DATE
-        programmeTiersEntity.setCreateDate(new Date());
+        programmeTiersEntity.setCreateDate(dateHelper.now());
 
         //Utilisateur
         programmeTiersEntity.setCreateUser(authentificationHelper.getConnectedUsername());
@@ -157,7 +152,7 @@ public class ProgrammeTiersServiceImpl implements ProgrammeTiersService {
         }
         programmeTiersEntity.setTiers(tiersEntityOpt.get());
 
-        programmeTiersEntity.setModifDate(new Date());
+        programmeTiersEntity.setModifDate(dateHelper.now());
         programmeTiersEntity.setModifUser(authentificationHelper.getConnectedUsername());
 
         //Enregistrement des modifications

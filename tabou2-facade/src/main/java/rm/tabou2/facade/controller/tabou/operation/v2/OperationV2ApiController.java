@@ -1,15 +1,19 @@
 package rm.tabou2.facade.controller.tabou.operation.v2;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.OffsetDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.facade.api.v2.OperationsApi;
 import rm.tabou2.facade.controller.common.AbstractExportDocumentApi;
 import rm.tabou2.service.dto.Operation;
 import rm.tabou2.service.dto.PageResult;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.mapper.tabou.operation.OperationV2Mapper;
 import rm.tabou2.service.tabou.evenement.EvenementOperationService;
 import rm.tabou2.service.tabou.operation.OperationService;
@@ -17,96 +21,97 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
-import java.util.Date;
-
 @RestController
+@RequiredArgsConstructor
 public class OperationV2ApiController extends AbstractExportDocumentApi implements OperationsApi {
 
-    @Autowired
-    private OperationService operationService;
+	private final OperationService operationService;
 
-    @Autowired
-    private EvenementOperationService evenementOperationService;
+	private final EvenementOperationService evenementOperationService;
 
-    @Autowired
-    private OperationV2Mapper mapper;
+	private final OperationV2Mapper mapper;
 
-    @Override
-    public ResponseEntity<Operation> createOperation(Operation operation) throws Exception {
+	private final DateHelper dateHelper;
 
-        return new ResponseEntity<>(mapper.entityToDto(operationService.createOperation(mapper.dtoToEntity(operation))), HttpStatus.OK);
+	@Override
+	public ResponseEntity<Operation> createOperation(Operation operation) throws Exception {
 
-    }
+		return new ResponseEntity<>(mapper.entityToDto(operationService.createOperation(mapper.dtoToEntity(operation))),
+				HttpStatus.OK);
 
-    @Override
-    public ResponseEntity<Operation> deleteEvenementByOperationId(Long evenementId, Long operationId) throws Exception {
-        evenementOperationService.deleteEvenementByOperationId(evenementId, operationId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	}
 
-    @Override
-    public ResponseEntity<Operation> updateOperation(Operation operation) throws Exception {
+	@Override
+	public ResponseEntity<Operation> deleteEvenementByOperationId(Long evenementId, Long operationId) throws Exception {
+		evenementOperationService.deleteEvenementByOperationId(evenementId, operationId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 
-        return new ResponseEntity<>(mapper.entityToDto(operationService.updateOperation(mapper.dtoToEntity(operation))), HttpStatus.OK);
+	@Override
+	public ResponseEntity<Operation> updateOperation(Operation operation) throws Exception {
 
-    }
+		return new ResponseEntity<>(mapper.entityToDto(operationService.updateOperation(mapper.dtoToEntity(operation))),
+				HttpStatus.OK);
 
-    @Override
-    public ResponseEntity<Operation> getOperationById(Long operationId) throws Exception {
+	}
 
-        return new ResponseEntity<>(mapper.entityToDto(operationService.getOperationById(operationId)), HttpStatus.OK);
+	@Override
+	public ResponseEntity<Operation> getOperationById(Long operationId) throws Exception {
 
-    }
+		return new ResponseEntity<>(mapper.entityToDto(operationService.getOperationById(operationId)), HttpStatus.OK);
 
-    @Override
-    public ResponseEntity<PageResult> searchOperations(String nom, String nature, String vocation, String decision,
-                                                       String modeAmenagement, String maitriseOuvrage, String consommationEspace,
-                                                       String etape, Boolean diffusionRestreinte, Boolean estSecteur,
-                                                       String code, String numAds, Date autorisationDateDebut,
-                                                       Date autorisationDateFin, Date operationnelDateDebut, Date operationnelDateFin,
-                                                       Date livraisonDateDebut, Date livraisonDateFin,
-                                                       Date clotureDateDebut, Date clotureDateFin, String tiers, Integer start,
-                                                       Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+	}
 
-        OperationsCriteria operationsCriteria = new OperationsCriteria();
+	@Override
+	public ResponseEntity<PageResult> searchOperations(String nom, String nature, String vocation, String decision,
+			String modeAmenagement, String maitriseOuvrage, String consommationEspace, String etape,
+			Boolean diffusionRestreinte, Boolean estSecteur, String code, String numAds,
+			OffsetDateTime autorisationDateDebut, OffsetDateTime autorisationDateFin,
+			OffsetDateTime operationnelDateDebut, OffsetDateTime operationnelDateFin, OffsetDateTime livraisonDateDebut,
+			OffsetDateTime livraisonDateFin, OffsetDateTime clotureDateDebut, OffsetDateTime clotureDateFin,
+			String tiers, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
 
-        operationsCriteria.setNom(nom);
-        operationsCriteria.setNature(nature);
-        operationsCriteria.setDecision(decision);
-        operationsCriteria.setVocation(vocation);
-        operationsCriteria.setMaitriseOuvrage(maitriseOuvrage);
-        operationsCriteria.setConsommationEspace(consommationEspace);
-        operationsCriteria.setModeAmenagement(modeAmenagement);
-        operationsCriteria.setEtape(etape);
-        operationsCriteria.setCode(code);
-        operationsCriteria.setNumAds(numAds);
+		OperationsCriteria operationsCriteria = new OperationsCriteria();
 
-        operationsCriteria.setDiffusionRestreinte(diffusionRestreinte);
-        operationsCriteria.setEstSecteur(estSecteur);
+		operationsCriteria.setNom(nom);
+		operationsCriteria.setNature(nature);
+		operationsCriteria.setDecision(decision);
+		operationsCriteria.setVocation(vocation);
+		operationsCriteria.setMaitriseOuvrage(maitriseOuvrage);
+		operationsCriteria.setConsommationEspace(consommationEspace);
+		operationsCriteria.setModeAmenagement(modeAmenagement);
+		operationsCriteria.setEtape(etape);
+		operationsCriteria.setCode(code);
+		operationsCriteria.setNumAds(numAds);
 
-        operationsCriteria.setTiers(tiers);
+		operationsCriteria.setDiffusionRestreinte(diffusionRestreinte);
+		operationsCriteria.setEstSecteur(estSecteur);
 
-        operationsCriteria.setAutorisationDateDebut(autorisationDateDebut);
-        operationsCriteria.setAutorisationDateFin(autorisationDateFin);
+		operationsCriteria.setTiers(tiers);
 
-        operationsCriteria.setOperationnelDateDebut(operationnelDateDebut);
-        operationsCriteria.setOperationnelDateFin(operationnelDateFin);
+		operationsCriteria.setAutorisationDateDebut(dateHelper.convert(autorisationDateDebut));
+		operationsCriteria.setAutorisationDateFin(dateHelper.convert(autorisationDateFin));
 
-        operationsCriteria.setLivraisonDateDebut(livraisonDateDebut);
-        operationsCriteria.setLivraisonDateFin(livraisonDateFin);
+		operationsCriteria.setOperationnelDateDebut(dateHelper.convert(operationnelDateDebut));
+		operationsCriteria.setOperationnelDateFin(dateHelper.convert(operationnelDateFin));
 
-        operationsCriteria.setClotureDateDebut(clotureDateDebut);
-        operationsCriteria.setClotureDateFin(clotureDateFin);
+		operationsCriteria.setLivraisonDateDebut(dateHelper.convert(livraisonDateDebut));
+		operationsCriteria.setLivraisonDateFin(dateHelper.convert(livraisonDateFin));
 
-        Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationEntity.class);
+		operationsCriteria.setClotureDateDebut(dateHelper.convert(clotureDateDebut));
+		operationsCriteria.setClotureDateFin(dateHelper.convert(clotureDateFin));
 
-        Page<Operation> page = mapper.entitiesToDto(operationService.searchOperations(operationsCriteria, pageable), pageable);
+		Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OperationEntity.class);
 
-        return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
-    }
+		Page<Operation> page = mapper.entitiesToDto(operationService.searchOperations(operationsCriteria, pageable),
+				pageable);
 
-    @Override
-    public ResponseEntity<Operation> updateEtapeByOperationId(Long operationId, Long etapeId) throws Exception {
-        return new ResponseEntity<>(mapper.entityToDto(operationService.updateEtapeOfOperationId(operationId, etapeId)), HttpStatus.OK);
-    }
+		return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<Operation> updateEtapeByOperationId(Long operationId, Long etapeId) throws Exception {
+		return new ResponseEntity<>(mapper.entityToDto(operationService.updateEtapeOfOperationId(operationId, etapeId)),
+				HttpStatus.OK);
+	}
 }

@@ -1,9 +1,6 @@
 package rm.tabou2.service.tabou;
 
-import java.util.Date;
 import java.util.List;
-
-import jakarta.validation.ConstraintViolationException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -14,8 +11,9 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import jakarta.validation.ConstraintViolationException;
 import rm.tabou2.service.StarterSpringBootTestApplication;
 import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
@@ -23,6 +21,7 @@ import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.dto.TypeEvenement;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
@@ -48,6 +47,9 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
 
     @Autowired
     private ProgrammeService programmeService;
+    
+	@Autowired
+	private DateHelper dateHelper;
 
     @MockitoBean
     private ProgrammeRightsHelper programmeRightsHelper;
@@ -85,17 +87,17 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
         typeEvenement.setId(1L);
 
         Evenement evenement1 = new Evenement();
-        evenement1.setEventDate(new Date());
+        evenement1.setEventDate(dateHelper.nowOffset());
         evenement1.setDescription("evenement1");
         evenement1.setTypeEvenement(typeEvenement);
 
         Evenement evenement2 = new Evenement();
-        evenement2.setEventDate(new Date());
+        evenement2.setEventDate(dateHelper.nowOffset());
         evenement2.setDescription("evenement2");
         evenement2.setTypeEvenement(typeEvenement);
 
         Evenement evenement3 = new Evenement();
-        evenement3.setEventDate(new Date());
+        evenement3.setEventDate(dateHelper.nowOffset());
         evenement3.setDescription("evenement3");
         evenement3.setTypeEvenement(typeEvenement);
 
@@ -160,7 +162,7 @@ class EvenementProgrammeServiceTest extends DatabaseInitializerTest implements E
         typeEvenement.setId(typeEvenements.get(0).getId());
 
         Evenement evenement1 = new Evenement();
-        evenement1.setEventDate(new Date());
+        evenement1.setEventDate(dateHelper.nowOffset());
         evenement1.setDescription("evenement1");
         evenement1.setTypeEvenement(typeEvenement);
 

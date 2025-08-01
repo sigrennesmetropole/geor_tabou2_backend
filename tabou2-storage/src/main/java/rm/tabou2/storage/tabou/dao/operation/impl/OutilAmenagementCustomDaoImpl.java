@@ -3,7 +3,6 @@ package rm.tabou2.storage.tabou.dao.operation.impl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +46,7 @@ public class OutilAmenagementCustomDaoImpl extends AbstractCustomDaoImpl impleme
         CriteriaQuery<OutilAmenagementEntity> searchQuery = builder.createQuery(OutilAmenagementEntity.class);
         Root<OutilAmenagementEntity> searchRoot = searchQuery.from(OutilAmenagementEntity.class);
 
-        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
+        assignOrder(pageable, searchQuery, searchRoot, builder, OutilAmenagementEntity.class);
 
         TypedQuery<OutilAmenagementEntity> typedQuery = entityManager.createQuery(searchQuery);
 
@@ -55,5 +54,5 @@ public class OutilAmenagementCustomDaoImpl extends AbstractCustomDaoImpl impleme
         return new PageImpl<>(entities, pageable, totalCount.intValue());
 
     }
-    
+
 }

@@ -3,6 +3,7 @@ package rm.tabou2.service.st.generator.model;
 import fr.opensagres.xdocreport.document.images.FileImageProvider;
 import fr.opensagres.xdocreport.document.images.IImageProvider;
 import org.apache.commons.collections4.CollectionUtils;
+import rm.tabou2.service.helper.programme.ProgrammeFicheHelper;
 import rm.tabou2.storage.tabou.entity.agapeo.AgapeoEntity;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
@@ -101,5 +102,9 @@ public class FicheSuiviProgrammeDataModel extends DataModel {
 
     public void setNomFichier(String nomFichier) {
         addContextData("nomFichier",nomFichier);
+    }
+
+    public void setHelper(ProgrammeFicheHelper helper) {
+        addContextData("helper", helper);
     }
 }
