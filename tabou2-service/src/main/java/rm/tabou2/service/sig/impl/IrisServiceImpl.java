@@ -1,6 +1,6 @@
 package rm.tabou2.service.sig.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,16 +13,14 @@ import rm.tabou2.storage.sig.entity.IrisEntity;
 import rm.tabou2.storage.sig.item.IrisCriteria;
 
 @Service
+@RequiredArgsConstructor
 public class IrisServiceImpl implements IrisService {
 
-    @Autowired
-    private IrisDao irisDao;
+    private final IrisDao irisDao;
 
-    @Autowired
-    private IrisCustomDao irisCustomDao;
+    private final IrisCustomDao irisCustomDao;
 
-    @Autowired
-    private IrisMapper irisMapper;
+    private final IrisMapper irisMapper;
 
     @Override
     public Page<Iris> searchIris(IrisCriteria irisCriteria, Pageable pageable) {

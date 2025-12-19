@@ -1,9 +1,9 @@
 package rm.tabou2.service.helper.programme;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.AuthentificationHelper;
@@ -14,21 +14,18 @@ import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 
 @Component
+@RequiredArgsConstructor
 public class ProgrammeRightsHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProgrammeRightsHelper.class);
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final AuthentificationHelper authentificationHelper;
 
-    @Autowired
-    private OperationRightsHelper operationRightsHelper;
+    private final OperationRightsHelper operationRightsHelper;
 
-    @Autowired
-    private ProgrammeDao programmeDao;
+    private final ProgrammeDao programmeDao;
 
-    @Autowired
-    private OperationDao operationDao;
+    private final OperationDao operationDao;
 
     /**
      * Vérifie si l'utilisateur a les droits d'ajouter un programme

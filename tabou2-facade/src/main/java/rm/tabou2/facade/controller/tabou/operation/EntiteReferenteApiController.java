@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,13 +15,13 @@ import rm.tabou2.storage.tabou.item.EntiteReferenteCriteria;
 import rm.tabou2.service.dto.EntiteReferente;
 
 @RestController
+@RequiredArgsConstructor
 public class EntiteReferenteApiController implements EntitesReferentesApi {
 
-    @Autowired
-    EntiteReferenteService entiteReferenteService;
+    private final EntiteReferenteService entiteReferenteService;
 
     @Override
-    public ResponseEntity<PageResult> searchEntitesReferentes(String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchEntitesReferentes(String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
         EntiteReferenteCriteria criteria = new EntiteReferenteCriteria();
         criteria.setCode(libelle);
 

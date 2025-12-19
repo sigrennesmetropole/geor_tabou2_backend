@@ -3,6 +3,7 @@ package rm.tabou2.facade.controller.tabou.programme;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -140,6 +141,9 @@ public class ProgrammeApiController extends AbstractExportDocumentApi implements
 		etapeCriteria.setCode(code);
 		etapeCriteria.setLibelle(libelle);
 
+		if (StringUtils.isEmpty(orderBy)) {
+			orderBy = "order_";
+		}
 		Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc,
 				EtapeProgrammeEntity.class);
 

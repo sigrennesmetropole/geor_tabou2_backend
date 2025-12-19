@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,10 +14,10 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
 
 @RestController
+@RequiredArgsConstructor
 public class VocationApiController implements VocationsApi {
 
-    @Autowired
-    private VocationService vocationService;
+    private final VocationService vocationService;
 
     @Override
     public ResponseEntity<PageResult> getVocations(Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {

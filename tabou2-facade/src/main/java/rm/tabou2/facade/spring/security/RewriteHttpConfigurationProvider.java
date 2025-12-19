@@ -25,6 +25,8 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 
 	private static final String TABOU2_OPERATION_PATH = "/operations/{path}";
 	private static final String TABOU2_OPERATION = "/operations";
+	private static final String TABOU2_ETAPES = "/etapes";
+	public static final String TABOU2_EVENEMENTS_EVENT_ID = "/evenements/{eventId}";
 
 	public RewriteHttpConfigurationProvider() {
 		super();
@@ -40,9 +42,9 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 				.addRule(Join.path("/v2" + TABOU2_TIERS_PATH).to("/v2" +  TABOU2_TIERS_PATH)).where("path").matches(".*").withPriority(0)
 				// /V2/operations** c'est la v2
 				.addRule(Join.path("/v2" + TABOU2_OPERATION).to("/v2" + TABOU2_OPERATION)).withPriority(0).perform(Log.message(Logger.Level.INFO, "Redirection /v2/operations -> /v2/operations"))
-				.addRule(Join.path("/v2" + TABOU2_OPERATION_PATH).to("/v2" + TABOU2_OPERATION_PATH)).where("path").matches("[0-9]*").withPriority(0)
-				.addRule(Join.path("/v2" + TABOU2_OPERATION_PATH + "/etapes").to("/v2" + TABOU2_OPERATION_PATH + "/etapes")).when(Method.isPut().and(Direction.isInbound()).and(DispatchType.isRequest())).withPriority(0)
-				.addRule(Join.path("/v2" + TABOU2_OPERATION_PATH + "/evenements/{eventId}").to("/v2" + TABOU2_OPERATION_PATH + "/evenements/{eventId}")).withPriority(0)
+				.addRule(Join.path("/v2" + TABOU2_OPERATION_PATH).to("/v2" + TABOU2_OPERATION_PATH)).where("path").matches("\\d*").withPriority(0)
+				.addRule(Join.path("/v2" + TABOU2_OPERATION_PATH + TABOU2_ETAPES).to("/v2" + TABOU2_OPERATION_PATH + TABOU2_ETAPES)).when(Method.isPut().and(Direction.isInbound()).and(DispatchType.isRequest())).withPriority(0)
+				.addRule(Join.path("/v2" + TABOU2_OPERATION_PATH + TABOU2_EVENEMENTS_EVENT_ID).to("/v2" + TABOU2_OPERATION_PATH + TABOU2_EVENEMENTS_EVENT_ID)).withPriority(0)
 				// V2/** -> c'est l'officiel
 				.addRule().when(Direction.isInbound().and(DispatchType.isRequest()).and(Path.matches("/v2/{path}")).andNot(Path.matches(SWAGGER_API_DOCS)))
 				.perform(Forward.to("/{path}").and(Log.message(Logger.Level.INFO, "Redirection /v2/{path} -> /{path}")))
@@ -53,9 +55,9 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 				.addRule(Join.path("/v1" + TABOU2_TIERS_PATH).to("/v1" +  TABOU2_TIERS_PATH)).where("path").matches(".*").withPriority(0)
 				//Gestion de la redirection des opérations
 				.addRule(Join.path("/v1" + TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION)).withPriority(0).perform(Log.message(Logger.Level.INFO, "Redirection /v1/operations -> /v1/operations"))
-				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH)).where("path").matches("[0-9]*").withPriority(0)
-				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH + "/etapes").to("/v1" + TABOU2_OPERATION_PATH + "/etapes")).withPriority(0)
-				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}").to("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}")).withPriority(0)
+				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH)).where("path").matches("\\d*").withPriority(0)
+				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH + TABOU2_ETAPES).to("/v1" + TABOU2_OPERATION_PATH + TABOU2_ETAPES)).withPriority(0)
+				.addRule(Join.path("/v1" + TABOU2_OPERATION_PATH + TABOU2_EVENEMENTS_EVENT_ID).to("/v1" + TABOU2_OPERATION_PATH + TABOU2_EVENEMENTS_EVENT_ID)).withPriority(0)
 
 				// V1/** -> c'est l'officiel
 				.addRule(Join.path("/v1/{path}").to("/{path}")).when(DispatchType.isRequest()).perform(Log.message(Logger.Level.INFO, "Redirection /v1/{path} -> /{path}")).where("path").matches(".*").withPriority(10)
@@ -65,9 +67,9 @@ public class RewriteHttpConfigurationProvider extends HttpConfigurationProvider 
 				.addRule(Join.path(TABOU2_TIERS_PATH).to("/v1" + TABOU2_TIERS_PATH)).where("path").matches(".*")
 				// Redirection des opérations actuelles vers la v1
 				.addRule(Join.path(TABOU2_OPERATION).to("/v1" + TABOU2_OPERATION)).when(Direction.isInbound().and(DispatchType.isRequest())).perform(Log.message(Logger.Level.INFO, "Redirection /operations -> /v1/operations"))
-				.addRule(Join.path(TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH)).when(Direction.isInbound().and(DispatchType.isRequest())).where("path").matches("[0-9]*")
-				.addRule(Join.path(TABOU2_OPERATION_PATH + "/etapes").to("/v1" + TABOU2_OPERATION_PATH + "/etapes")).when(Method.isPut().and(Direction.isInbound()).and(DispatchType.isRequest()))
-				.addRule(Join.path(TABOU2_OPERATION_PATH + "/evenements/{eventId}").to("/v1" + TABOU2_OPERATION_PATH + "/evenements/{eventId}")).when(Direction.isInbound().and(DispatchType.isRequest()));
+				.addRule(Join.path(TABOU2_OPERATION_PATH).to("/v1" + TABOU2_OPERATION_PATH)).when(Direction.isInbound().and(DispatchType.isRequest())).where("path").matches("\\d*")
+				.addRule(Join.path(TABOU2_OPERATION_PATH + TABOU2_ETAPES).to("/v1" + TABOU2_OPERATION_PATH + TABOU2_ETAPES)).when(Method.isPut().and(Direction.isInbound()).and(DispatchType.isRequest()))
+				.addRule(Join.path(TABOU2_OPERATION_PATH + TABOU2_EVENEMENTS_EVENT_ID).to("/v1" + TABOU2_OPERATION_PATH + TABOU2_EVENEMENTS_EVENT_ID)).when(Direction.isInbound().and(DispatchType.isRequest()));
 	}
 
 	@Override

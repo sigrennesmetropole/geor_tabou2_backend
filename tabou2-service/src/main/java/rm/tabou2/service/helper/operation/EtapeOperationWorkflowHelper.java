@@ -1,6 +1,6 @@
 package rm.tabou2.service.helper.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
@@ -8,16 +8,16 @@ import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class EtapeOperationWorkflowHelper {
 
-    @Autowired
-    private OperationDao operationDao;
+    private final OperationDao operationDao;
 
-    @Autowired
-    private EtapeOperationMapper etapeOperationMapper;
+    private final EtapeOperationMapper etapeOperationMapper;
 
     /**
      * Liste des étapes possible pour une opération
@@ -26,7 +26,8 @@ public class EtapeOperationWorkflowHelper {
      */
     public List<Etape> getAccessibleEtapesForOperation(Long idOperation) {
         OperationEntity operationEntity = operationDao.findOneById(idOperation);
-        List<EtapeOperationEntity> nextEtapes = List.copyOf(operationEntity.getEtapeOperation().getNextEtapes());
+        List<EtapeOperationEntity> nextEtapes = operationEntity.getEtapeOperation().getNextEtapes()
+                .stream().sorted(Comparator.comparing(EtapeOperationEntity::getOrder)).toList();
         return etapeOperationMapper.entitiesToDto(nextEtapes);
     }
 

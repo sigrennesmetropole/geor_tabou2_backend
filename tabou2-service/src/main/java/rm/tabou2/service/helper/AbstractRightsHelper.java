@@ -1,14 +1,15 @@
 package rm.tabou2.service.helper;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
+@RequiredArgsConstructor
 public abstract class AbstractRightsHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractRightsHelper.class);
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+
+    private final AuthentificationHelper authentificationHelper;
 
     public boolean checkCanAccess(){
         if(!authentificationHelper.hasViewAccess()){

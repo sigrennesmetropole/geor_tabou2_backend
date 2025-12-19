@@ -278,11 +278,18 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         Programme programme = programmeMapper.entityToDto(programmeEntity);
 
+        handleNextAdsProgrammation(programme);
+
         // mise à jour du programme avec les données de suivi
         programmePlannerHelper.computeSuiviHabitatOfProgramme(programme);
 
         return programme;
 
+    }
+
+    private void handleNextAdsProgrammation(Programme programme) {
+        LOGGER.debug("Programme (id={}) will be filled with nextAds in a next version", programme.getId());
+        // TODO: Hanle nextAds when specification will be provided
     }
 
     @Override

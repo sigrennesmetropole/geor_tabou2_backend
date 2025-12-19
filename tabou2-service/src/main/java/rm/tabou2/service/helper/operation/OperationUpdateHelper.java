@@ -1,6 +1,6 @@
 package rm.tabou2.service.helper.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.dto.*;
@@ -12,49 +12,36 @@ import rm.tabou2.storage.tabou.entity.operation.*;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class OperationUpdateHelper {
 
-	@Autowired
-	private TypeActeurDao typeActeurDao;
+	private final TypeActeurDao typeActeurDao;
 
-	@Autowired
-	private ActeurDao acteurDao;
+	private final ActeurDao acteurDao;
 
-	@Autowired
-	private ActionOperationDao actionOperationDao;
+	private final ActionOperationDao actionOperationDao;
 
-	@Autowired
-	private TypeActionOperationDao typeActionDao;
+	private final TypeActionOperationDao typeActionDao;
 
-	@Autowired
-	private AmenageurDao amenageurDao;
+	private final AmenageurDao amenageurDao;
 
-	@Autowired
-	private TypeAmenageurDao typeAmenageurDao;
+	private final TypeAmenageurDao typeAmenageurDao;
 
-	@Autowired
-	private ContributionDao contributionDao;
+	private final ContributionDao contributionDao;
 
-	@Autowired
-	private TypeContributionDao typeContributionDao;
+	private final TypeContributionDao typeContributionDao;
 
-	@Autowired
-	private DescriptionFoncierDao descriptionsFoncierDao;
+	private final DescriptionFoncierDao descriptionsFoncierDao;
 
-	@Autowired
-	private TypeFoncierDao typeFoncierDao;
+	private final TypeFoncierDao typeFoncierDao;
 
-	@Autowired
-	private DescriptionFinancementOperationDao financementDao;
+	private final DescriptionFinancementOperationDao financementDao;
 
-	@Autowired
-	private TypeFinancementOperationDao typeFinancementDao;
+	private final TypeFinancementOperationDao typeFinancementDao;
 
-	@Autowired
-	private InformationProgrammationDao programmationDao;
+	private final InformationProgrammationDao programmationDao;
 
-	@Autowired
-	private TypeProgrammationDao typeProgrammation;
+	private final TypeProgrammationDao typeProgrammation;
 
 	public void updateActeurs(OperationIntermediaire operation, OperationEntity actualOperation)
 			throws AppServiceException {

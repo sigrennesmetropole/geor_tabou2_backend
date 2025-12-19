@@ -1,11 +1,11 @@
 package rm.tabou2.facade.controller.sig;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.facade.api.QuartiersApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.Quartier;
@@ -15,11 +15,11 @@ import rm.tabou2.storage.sig.entity.QuartierEntity;
 import rm.tabou2.storage.sig.item.QuartierCriteria;
 
 @RestController
+@RequiredArgsConstructor
 public class QuartierApiController implements QuartiersApi {
 
 
-    @Autowired
-    private QuartierService quartierService;
+    private final QuartierService quartierService;
 
     @Override
     public ResponseEntity<PageResult> searchQuartiers(Integer codeInsee, Integer nuQuart, String nom, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {

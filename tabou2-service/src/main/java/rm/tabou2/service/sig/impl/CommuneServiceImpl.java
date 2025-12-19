@@ -1,6 +1,6 @@
 package rm.tabou2.service.sig.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,16 +17,14 @@ import java.util.NoSuchElementException;
  * Service des communes
  */
 @Service
+@RequiredArgsConstructor
 public class CommuneServiceImpl implements CommuneService {
 
-    @Autowired
-    private CommuneDao communeDao;
+    private final CommuneDao communeDao;
 
-    @Autowired
-    private CommuneCustomDao communeCustomDao;
+    private final CommuneCustomDao communeCustomDao;
 
-    @Autowired
-    private CommuneMapper communeMapper;
+    private final CommuneMapper communeMapper;
 
     @Override
     public Commune getCommuneById(int communeId) {

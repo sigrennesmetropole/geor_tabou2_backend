@@ -13,6 +13,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
+import rm.tabou2.storage.tabou.entity.common.AbstractOrderEntity;
+
 import java.util.Set;
 
 @Getter
@@ -22,7 +24,7 @@ import java.util.Set;
 @Table(name = "tabou_etape_operation")
 @NoArgsConstructor
 @AllArgsConstructor
-public class EtapeOperationEntity {
+public class EtapeOperationEntity extends AbstractOrderEntity {
 
     public EtapeOperationEntity(long id, String code, String libelle) {
         this.id = id;

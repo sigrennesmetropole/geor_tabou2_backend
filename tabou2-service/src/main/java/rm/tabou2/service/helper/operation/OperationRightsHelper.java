@@ -1,9 +1,9 @@
 package rm.tabou2.service.helper.operation;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
@@ -11,15 +11,14 @@ import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
 @Component
+@RequiredArgsConstructor
 public class OperationRightsHelper {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OperationRightsHelper.class);
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final AuthentificationHelper authentificationHelper;
 
-    @Autowired
-    private OperationDao operationDao;
+    private final OperationDao operationDao;
 
     /**
      * Vérifie si l'utilisateur a les droits d'ajouter une operation

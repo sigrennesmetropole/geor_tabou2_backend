@@ -1,7 +1,7 @@
 package rm.tabou2.service.alfresco.impl;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -30,6 +30,12 @@ import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
 import rm.tabou2.service.alfresco.helper.AlfrescoAuthenticationHelper;
 import rm.tabou2.service.dto.DocumentMetadata;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.st.ged.model.alfresco.AlfrescoContainer;
+import rm.tabou2.service.st.ged.model.alfresco.AlfrescoContainerEntry;
+import rm.tabou2.service.st.ged.model.alfresco.AlfrescoContainerRoot;
+import rm.tabou2.service.st.ged.model.alfresco.AlfrescoSite;
+import rm.tabou2.service.st.ged.model.alfresco.AlfrescoSiteEntry;
+import rm.tabou2.service.st.ged.model.alfresco.AlfrescoSiteRoot;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 
 import java.io.File;
@@ -41,23 +47,29 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AlfrescoServiceImpl implements AlfrescoService {
 
     private static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_AUTHENTIFICATION = "Basic ";
     private static final String CONTENT_TYPE = "cm:content";
+    public static final String DOCUMENT_LIBRARY = "documentLibrary";
     private static final String DOCUMENT_START_URI = "alfresco/versions/1/nodes/";
     public static final String DOWNLOAD_URI_END = "/content?attachment=true";
     public static final String DELETE_URI_END = "?permanent=false";
     public static final String SEARCH_URI = "search/versions/1/search";
     private static final String CONTENT_URI = "/content";
     private static final String CHILDREN_URI = "/children";
+    private static final String SITE_URI = "alfresco/versions/1/sites/";
+    private static final String CONTAINER_URI = "/containers";
 
     public static final String SEARCH_PARAM_PROPERTIES = "properties";
     public static final String SEARCH_PARAM_ID = "=tabou2:id:";
     public static final String SEARCH_PARAM_LIBELLE_TYPE_DOCUMENT = "tabou2:libelleTypeDocument:";
-    public static final String SEARCH_PARAM_OBJET = "=tabou2:objet:";
+    public static final String SEARCH_PARAM_OBJET = "tabou2:objet:";
     public static final String SEARCH_PARAM_MIME_TYPE = "=cm:content.mimetype:";
     public static final String SEARCH_PARAM_NAME = "cm:name:";
     public static final String ALFRESCO_SEARCH_CRITERIA_TYPE = "FIELD";
@@ -66,10 +78,11 @@ public class AlfrescoServiceImpl implements AlfrescoService {
     @Value("${alfresco.tabou.folder.node.id}")
     private String tabouNodeId;
 
+    private String rootGuid;
+
     private static final String ACCESS_RIGHTS_EXCEPTION = "L'utilisateur n'a pas les droits de récupérer le document id=";
 
-    @Autowired
-    private AlfrescoAuthenticationHelper alfrescoAuthenticationHelper;
+    private final AlfrescoAuthenticationHelper alfrescoAuthenticationHelper;
 
     @Value("${temporary.directory}")
     private String temporaryDirectory;
@@ -257,9 +270,12 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
     @Override
     public AlfrescoDocument addDocument(String nom, String libelleTypeDocument, AlfrescoTabouType objectType, long objectId, LocalDateTime dateDocument, MultipartFile file) throws AppServiceException {
-
-        //Construction de l'uri du document
-        String documentUri = DOCUMENT_START_URI + tabouNodeId + CHILDREN_URI + "?autoRename=true";
+		String guid = getRootGuid();
+		if (guid == null) {
+			throw new AppServiceException("Impossible de trouver le site tabou2");
+		}
+		//Construction de l'uri du document
+        String documentUri = DOCUMENT_START_URI + guid + CHILDREN_URI + "?autoRename=true";
 
 
         //Création du noeud tabou
@@ -292,7 +308,59 @@ public class AlfrescoServiceImpl implements AlfrescoService {
 
     }
 
-    @Override
+	private String getRootGuid() {
+		if (rootGuid != null) {
+			return rootGuid;
+		}
+		UriComponentsBuilder siteUri = UriComponentsBuilder.fromUriString(SITE_URI);
+		AlfrescoSiteRoot siteRoot = alfrescoAuthenticationHelper.getAlfrescoWebClient().get().uri(siteUri.toUriString())
+				.header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket()).retrieve()
+				.bodyToMono(AlfrescoSiteRoot.class).block();
+		AlfrescoSiteEntry entry = lookupRootSite(siteRoot);
+		if (entry != null) {
+			UriComponentsBuilder containerUri = UriComponentsBuilder.fromUriString(SITE_URI).path(entry.getId())
+					.path(CONTAINER_URI);
+			AlfrescoContainerRoot containerRoot = alfrescoAuthenticationHelper.getAlfrescoWebClient().get().uri(containerUri.toUriString())
+					.header(AUTHORIZATION, BASIC_AUTHENTIFICATION + alfrescoAuthenticationHelper.getAuthenticationTicket()).retrieve()
+					.bodyToMono(AlfrescoContainerRoot.class).block();
+			AlfrescoContainerEntry containerEntry = lookupRootContainer(containerRoot);
+			rootGuid = (containerEntry != null ? containerEntry.getId() : null);
+			return rootGuid;
+		}
+		return null;
+	}
+
+	protected AlfrescoContainerEntry lookupRootContainer(AlfrescoContainerRoot containerRoot) {
+		AlfrescoContainerEntry result = null;
+		if (containerRoot != null && containerRoot.getList() != null
+				&& CollectionUtils.isNotEmpty(containerRoot.getList().getEntries())) {
+			for (AlfrescoContainer item : containerRoot.getList().getEntries()) {
+				AlfrescoContainerEntry entry = item.getEntry();
+				if (entry.getFolderId().equalsIgnoreCase(DOCUMENT_LIBRARY)) {
+					result = entry;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	protected AlfrescoSiteEntry lookupRootSite(AlfrescoSiteRoot siteRoot) {
+		AlfrescoSiteEntry result = null;
+		if (siteRoot != null && siteRoot.getList() != null
+				&& CollectionUtils.isNotEmpty(siteRoot.getList().getEntries())) {
+			for (AlfrescoSite item : siteRoot.getList().getEntries()) {
+				AlfrescoSiteEntry entry = item.getEntry();
+				if (entry.getId().equalsIgnoreCase(tabouNodeId)) {
+					result = entry;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
     public AlfrescoDocument updateDocumentMetadata(AlfrescoTabouType objectType, long objectId, String documentId, DocumentMetadata documentMetadata, boolean isNewDocument) {
 
         AlfrescoDocument document = getDocumentMetadata(documentId);

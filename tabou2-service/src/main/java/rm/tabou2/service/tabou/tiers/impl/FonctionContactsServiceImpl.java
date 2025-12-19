@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.tiers.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -11,13 +11,12 @@ import rm.tabou2.storage.tabou.dao.tiers.FonctionContactsCustomDao;
 import rm.tabou2.storage.tabou.item.FonctionContactsCriteria;
 
 @Service
+@RequiredArgsConstructor
 public class FonctionContactsServiceImpl implements FonctionContactsService {
 
-    @Autowired
-    FonctionContactsMapper fonctionContactsMapper;
+    private final FonctionContactsMapper fonctionContactsMapper;
 
-    @Autowired
-    FonctionContactsCustomDao fonctionContactsCustomDao;
+    private final FonctionContactsCustomDao fonctionContactsCustomDao;
 
     @Override
     public Page<FonctionContacts> searchFonctionContacts(FonctionContactsCriteria criteria, Pageable pageable) {

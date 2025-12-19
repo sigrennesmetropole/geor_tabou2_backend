@@ -1,6 +1,5 @@
 package rm.tabou2.facade.controller.tabou.financement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,8 +16,11 @@ import rm.tabou2.storage.tabou.item.TypeFinancementCriteria;
 @RestController
 public class TypesFinancementsApiController implements TypesFinancementsApi {
 
-    @Autowired
-    TypeFinancementService typeFinancementService;
+    private final TypeFinancementService typeFinancementService;
+
+    public TypesFinancementsApiController(TypeFinancementService typeFinancementService) {
+        this.typeFinancementService = typeFinancementService;
+    }
 
     @Override
     public ResponseEntity<PageResult> searchTypesFinancements(String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {

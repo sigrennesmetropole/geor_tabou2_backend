@@ -1,6 +1,6 @@
 package rm.tabou2.service.helper.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.exception.AppServiceException;
@@ -11,13 +11,12 @@ import rm.tabou2.service.dto.Etape;
 import java.util.Objects;
 
 @Component
+@RequiredArgsConstructor
 public class OperationValidator {
 
-    @Autowired
-    private EtapeOperationWorkflowHelper etapeOperationWorkflowHelper;
+    private final EtapeOperationWorkflowHelper etapeOperationWorkflowHelper;
 
-    @Autowired
-    private EtapeOperationDao etapeOperationDao;
+    private final EtapeOperationDao etapeOperationDao;
 
     public void validateOperation(OperationIntermediaire operation) throws AppServiceException {
 

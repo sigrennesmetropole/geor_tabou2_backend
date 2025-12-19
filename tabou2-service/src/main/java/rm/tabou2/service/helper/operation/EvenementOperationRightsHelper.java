@@ -1,16 +1,16 @@
 package rm.tabou2.service.helper.operation;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 
 @Component
+@RequiredArgsConstructor
 public class EvenementOperationRightsHelper {
 
-    @Autowired
-    private OperationRightsHelper operationRightsHelper;
+    private final OperationRightsHelper operationRightsHelper;
 
     /**
      * Permet de savoir si l'utilisateur a le droit de modifier un événement d'une opération

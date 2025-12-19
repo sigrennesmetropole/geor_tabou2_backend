@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,10 +15,10 @@ import rm.tabou2.storage.tabou.entity.operation.TypeProgrammationEntity;
 import rm.tabou2.storage.tabou.item.TypeProgrammationCriteria;
 
 @RestController
+@RequiredArgsConstructor
 public class TypesProgrammationsApiController implements TypesProgrammationsApi {
 
-    @Autowired
-    TypeProgrammationService service;
+    private final TypeProgrammationService service;
 
     @Override
     public ResponseEntity<PageResult> searchTypesProgrammations(String libelle, Boolean inactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {

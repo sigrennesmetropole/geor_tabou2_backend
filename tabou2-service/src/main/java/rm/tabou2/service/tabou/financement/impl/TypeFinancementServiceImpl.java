@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.financement.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,14 +15,13 @@ import rm.tabou2.storage.tabou.item.TypeFinancementCriteria;
 
 @Service
 @Validated
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TypeFinancementServiceImpl implements TypeFinancementService {
 
-    @Autowired
-    TypeFinancementCustomDao typeFinancementCustomDao;
+    private final TypeFinancementCustomDao typeFinancementCustomDao;
 
-    @Autowired
-    TypeFinancementMapper typeFinancementMapper;
+    private final TypeFinancementMapper typeFinancementMapper;
 
 
     @Override

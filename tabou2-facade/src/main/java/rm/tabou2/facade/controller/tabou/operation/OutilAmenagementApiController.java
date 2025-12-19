@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,13 +14,13 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.operation.OutilAmenagementEntity;
 
 @RestController
+@RequiredArgsConstructor
 public class OutilAmenagementApiController implements OutilAmenagementApi {
 
-    @Autowired
-    private OutilAmenagementService outilAmenagementService;
+    private final OutilAmenagementService outilAmenagementService;
 
     @Override
-    public ResponseEntity<PageResult> searchOutilsAmenagement(Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchOutilsAmenagement(Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, OutilAmenagementEntity.class);
 

@@ -6,20 +6,20 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.service.helper.AuthentificationHelper;
 
 
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class FacadeAspect {
 
     private static final Logger LOG = LoggerFactory.getLogger(FacadeAspect.class);
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final AuthentificationHelper authentificationHelper;
 
     //Pour chaque entrée dans un controller
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")

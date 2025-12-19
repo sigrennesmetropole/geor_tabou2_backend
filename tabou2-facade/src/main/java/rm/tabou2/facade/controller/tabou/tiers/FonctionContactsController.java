@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.tiers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,10 +15,10 @@ import rm.tabou2.service.dto.FonctionContacts;
 import rm.tabou2.facade.api.FonctionsContactsApi;
 
 @RestController
+@RequiredArgsConstructor
 public class FonctionContactsController implements FonctionsContactsApi {
 
-    @Autowired
-    private FonctionContactsService fonctionContactsService;
+    private final FonctionContactsService fonctionContactsService;
 
     @Override
     public ResponseEntity<PageResult> searchFonctionsContacts(String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {

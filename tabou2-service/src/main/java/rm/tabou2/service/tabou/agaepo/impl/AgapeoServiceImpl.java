@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.agaepo.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,16 +15,14 @@ import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import java.util.ArrayList;
 
 @Service
+@RequiredArgsConstructor
 public class AgapeoServiceImpl implements AgapeoService {
 
-    @Autowired
-    private AgapeoMapper agapeoMapper;
+    private final AgapeoMapper agapeoMapper;
 
-    @Autowired
-    private AgapeoCustomDao agapeoCustomDao;
+    private final AgapeoCustomDao agapeoCustomDao;
 
-    @Autowired
-    ProgrammeDao programmeDao;
+    private final ProgrammeDao programmeDao;
 
     @Override
     public Page<Agapeo> getApapeosByProgrammeId(long programmeId, Pageable pageable) {

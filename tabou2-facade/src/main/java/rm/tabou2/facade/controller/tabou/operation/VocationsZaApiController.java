@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,10 +14,10 @@ import rm.tabou2.storage.tabou.entity.operation.VocationZAEntity;
 import rm.tabou2.storage.tabou.item.VocationZACriteria;
 
 @RestController
+@RequiredArgsConstructor
 public class VocationsZaApiController implements rm.tabou2.facade.api.VocationsZaApi {
 
-    @Autowired
-    VocationZAService vocationZAService;
+    private final VocationZAService vocationZAService;
 
     @Override
     public ResponseEntity<PageResult> searchVocationsZA(String libelle, Boolean inactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {

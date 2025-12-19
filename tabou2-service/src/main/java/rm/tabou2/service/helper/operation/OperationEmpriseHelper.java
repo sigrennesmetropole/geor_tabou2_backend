@@ -1,9 +1,9 @@
 package rm.tabou2.service.helper.operation;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,22 +30,18 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class OperationEmpriseHelper {
 
-    @Autowired
-    private ZacDao zacDao;
+    private final ZacDao zacDao;
 
-    @Autowired
-    private ZaDao zaDao;
+    private final ZaDao zaDao;
 
-    @Autowired
-    private SecteurDao secteurDao;
+    private final SecteurDao secteurDao;
 
-    @Autowired
-    private NatureDao natureDao;
+    private final NatureDao natureDao;
 
-    @Autowired
-    private EnDiffusDao enDiffusDao;
+    private final EnDiffusDao enDiffusDao;
 
     public void saveEmprise(OperationIntermediaire operationToSave, Long idEmprise) {
 
@@ -104,7 +100,7 @@ public class OperationEmpriseHelper {
 
         if (StringUtils.isEmpty(nom)) {
             nom = "%";
-        } else if (StringUtils.endsWith(nom, "*")) {
+        } else if (nom.endsWith("*")) {
             nom = nom.replace("*", "%");
         }
 

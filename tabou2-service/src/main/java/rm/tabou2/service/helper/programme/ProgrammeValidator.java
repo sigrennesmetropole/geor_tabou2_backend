@@ -1,6 +1,6 @@
 package rm.tabou2.service.helper.programme;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.dto.Programme;
@@ -10,13 +10,12 @@ import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 @Component
+@RequiredArgsConstructor
 public class ProgrammeValidator {
 
-    @Autowired
-    private EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
+    private final EtapeProgrammeWorkflowHelper etapeProgrammeWorkflowHelper;
 
-    @Autowired
-    private EtapeProgrammeDao etapeProgrammeDao;
+    private final EtapeProgrammeDao etapeProgrammeDao;
 
     /**
      * Vérifie si les contraintes métiers sont bien vérifiées

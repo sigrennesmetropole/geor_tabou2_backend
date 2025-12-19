@@ -103,53 +103,9 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
             predicateStringCriteria(operationsCriteria.getNom(), FIELD_NOM, predicates, builder, root);
 
 
-            //nature
-            if(operationsCriteria.getNature() != null){
-                Join<OperationEntity, NatureEntity> natureJoin = root.join(FIELD_NATURE);
-                predicateStringCriteriaForJoin(operationsCriteria.getNature(), FIELD_LIBELLE, predicates, builder, natureJoin);
-            }
+            predicateElementsOperation(operationsCriteria, builder, root, predicates);
 
-            // vocation
-            if(operationsCriteria.getVocation() != null) {
-                Join<OperationEntity, VocationEntity> vocationJoin = root.join(FIELD_VOCATION);
-                predicateStringCriteriaForJoin(operationsCriteria.getVocation(), FIELD_LIBELLE, predicates, builder, vocationJoin);
-            }
-
-            // decision
-            if(operationsCriteria.getDecision() != null) {
-                Join<OperationEntity, DecisionEntity> decisionJoin = root.join(FIELD_DECISION);
-                predicateStringCriteriaForJoin(operationsCriteria.getDecision(), FIELD_LIBELLE, predicates, builder, decisionJoin);
-            }
-
-            // maitrise d'ouvrage
-            if(operationsCriteria.getMaitriseOuvrage() != null) {
-                Join<OperationEntity, MaitriseOuvrageEntity> maitriseOuvrageJoin = root.join(FIELD_MAITRISE_OUVRAGE);
-                predicateStringCriteriaForJoin(operationsCriteria.getMaitriseOuvrage(), FIELD_LIBELLE, predicates, builder, maitriseOuvrageJoin);
-            }
-
-            // consommation d'espace
-            if(operationsCriteria.getConsommationEspace() != null) {
-                Join<OperationEntity, ConsommationEspaceEntity> consommationEspaceJoin = root.join(FIELD_CONSOMMATION_ESPACE);
-                predicateStringCriteriaForJoin(operationsCriteria.getConsommationEspace(), FIELD_LIBELLE, predicates, builder, consommationEspaceJoin);
-            }
-
-            // mode d'aménagement
-            if(operationsCriteria.getModeAmenagement() != null) {
-                Join<OperationEntity, ModeAmenagementEntity> modeAmenagementJoin = root.join(FIELD_MODE_AMENAGEMENT);
-                predicateStringCriteriaForJoin(operationsCriteria.getModeAmenagement(), FIELD_LIBELLE, predicates, builder, modeAmenagementJoin);
-            }
-
-            // outil d'aménagement
-            if(operationsCriteria.getOutilAmenagement() != null) {
-                Join<OperationEntity, OutilAmenagementEntity> outilAmenagementJoin = root.join(FIELD_LISTE_OUTIL_AMENAGEMENT);
-                predicateStringCriteriaForJoin(operationsCriteria.getOutilAmenagement(), FIELD_LIBELLE, predicates, builder, outilAmenagementJoin);
-            }
-
-            //etape
-            if(operationsCriteria.getEtape() != null) {
-                Join<OperationEntity, EtapeOperationEntity> etapeJoin = root.join(FIELD_ETAPE_OPERATION);
-                predicateStringCriteriaForJoin(operationsCriteria.getEtape(), FIELD_LIBELLE, predicates, builder, etapeJoin);
-            }
+            predicateElementsUrbanismes(operationsCriteria, builder, root, predicates);
 
 
             //code
@@ -176,17 +132,7 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
 
             }
 
-            //autorisationDate
-            predicateDateCriteria(operationsCriteria.getAutorisationDateDebut(), operationsCriteria.getAutorisationDateFin(), FIELD_AUTORISATION_DATE, predicates, builder, root);
-
-            //operationnelDate
-            predicateDateCriteria(operationsCriteria.getOperationnelDateDebut(), operationsCriteria.getOperationnelDateFin(), FIELD_OPERATIONNEL_DATE, predicates, builder, root);
-
-            //livraisonDate
-            predicateDateCriteria(operationsCriteria.getLivraisonDateDebut(), operationsCriteria.getLivraisonDateFin(), FIELD_LIVRAISON_DATE, predicates, builder, root);
-
-            //clotureDate
-            predicateDateCriteria(operationsCriteria.getClotureDateDebut(), operationsCriteria.getClotureDateFin(), FIELD_CLOTURE_DATE, predicates, builder, root);
+            predicateDates(operationsCriteria, builder, root, predicates);
 
 
             if (operationsCriteria.getTiers() != null) {
@@ -209,7 +155,71 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements Ope
         }
     }
 
+    private void predicateElementsOperation(OperationsCriteria operationsCriteria, CriteriaBuilder builder, Root<OperationEntity> root, List<Predicate> predicates) {
+        //nature
+        if(operationsCriteria.getNature() != null){
+            Join<OperationEntity, NatureEntity> natureJoin = root.join(FIELD_NATURE);
+            predicateStringCriteriaForJoin(operationsCriteria.getNature(), FIELD_LIBELLE, predicates, builder, natureJoin);
+        }
 
+        // vocation
+        if(operationsCriteria.getVocation() != null) {
+            Join<OperationEntity, VocationEntity> vocationJoin = root.join(FIELD_VOCATION);
+            predicateStringCriteriaForJoin(operationsCriteria.getVocation(), FIELD_LIBELLE, predicates, builder, vocationJoin);
+        }
+
+        // decision
+        if(operationsCriteria.getDecision() != null) {
+            Join<OperationEntity, DecisionEntity> decisionJoin = root.join(FIELD_DECISION);
+            predicateStringCriteriaForJoin(operationsCriteria.getDecision(), FIELD_LIBELLE, predicates, builder, decisionJoin);
+        }
+
+        //etape
+        if(operationsCriteria.getEtape() != null) {
+            Join<OperationEntity, EtapeOperationEntity> etapeJoin = root.join(FIELD_ETAPE_OPERATION);
+            predicateStringCriteriaForJoin(operationsCriteria.getEtape(), FIELD_LIBELLE, predicates, builder, etapeJoin);
+        }
+    }
+
+    private void predicateElementsUrbanismes(OperationsCriteria operationsCriteria, CriteriaBuilder builder, Root<OperationEntity> root, List<Predicate> predicates) {
+        // maitrise d'ouvrage
+        if(operationsCriteria.getMaitriseOuvrage() != null) {
+            Join<OperationEntity, MaitriseOuvrageEntity> maitriseOuvrageJoin = root.join(FIELD_MAITRISE_OUVRAGE);
+            predicateStringCriteriaForJoin(operationsCriteria.getMaitriseOuvrage(), FIELD_LIBELLE, predicates, builder, maitriseOuvrageJoin);
+        }
+
+        // consommation d'espace
+        if(operationsCriteria.getConsommationEspace() != null) {
+            Join<OperationEntity, ConsommationEspaceEntity> consommationEspaceJoin = root.join(FIELD_CONSOMMATION_ESPACE);
+            predicateStringCriteriaForJoin(operationsCriteria.getConsommationEspace(), FIELD_LIBELLE, predicates, builder, consommationEspaceJoin);
+        }
+
+        // mode d'aménagement
+        if(operationsCriteria.getModeAmenagement() != null) {
+            Join<OperationEntity, ModeAmenagementEntity> modeAmenagementJoin = root.join(FIELD_MODE_AMENAGEMENT);
+            predicateStringCriteriaForJoin(operationsCriteria.getModeAmenagement(), FIELD_LIBELLE, predicates, builder, modeAmenagementJoin);
+        }
+
+        // outil d'aménagement
+        if(operationsCriteria.getOutilAmenagement() != null) {
+            Join<OperationEntity, OutilAmenagementEntity> outilAmenagementJoin = root.join(FIELD_LISTE_OUTIL_AMENAGEMENT);
+            predicateStringCriteriaForJoin(operationsCriteria.getOutilAmenagement(), FIELD_LIBELLE, predicates, builder, outilAmenagementJoin);
+        }
+    }
+
+    private void predicateDates(OperationsCriteria operationsCriteria, CriteriaBuilder builder, Root<OperationEntity> root, List<Predicate> predicates) {
+        //autorisationDate
+        predicateDateCriteria(operationsCriteria.getAutorisationDateDebut(), operationsCriteria.getAutorisationDateFin(), FIELD_AUTORISATION_DATE, predicates, builder, root);
+
+        //operationnelDate
+        predicateDateCriteria(operationsCriteria.getOperationnelDateDebut(), operationsCriteria.getOperationnelDateFin(), FIELD_OPERATIONNEL_DATE, predicates, builder, root);
+
+        //livraisonDate
+        predicateDateCriteria(operationsCriteria.getLivraisonDateDebut(), operationsCriteria.getLivraisonDateFin(), FIELD_LIVRAISON_DATE, predicates, builder, root);
+
+        //clotureDate
+        predicateDateCriteria(operationsCriteria.getClotureDateDebut(), operationsCriteria.getClotureDateFin(), FIELD_CLOTURE_DATE, predicates, builder, root);
+    }
 
 
 }

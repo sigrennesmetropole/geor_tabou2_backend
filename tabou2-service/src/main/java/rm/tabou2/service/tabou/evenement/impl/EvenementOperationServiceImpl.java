@@ -3,7 +3,7 @@ package rm.tabou2.service.tabou.evenement.impl;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,26 +25,21 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EvenementOperationServiceImpl implements EvenementOperationService {
 
-    @Autowired
-    private EvenementOperationCustomDao evenementOperationCustomDao;
+    private final EvenementOperationCustomDao evenementOperationCustomDao;
 
-    @Autowired
-    private EvenementOperationMapper evenementOperationMapper;
+    private final EvenementOperationMapper evenementOperationMapper;
 
-    @Autowired
-    private OperationDao operationDao;
+    private final OperationDao operationDao;
 
-    @Autowired
-    private OperationMapper operationMapper;
+    private final OperationMapper operationMapper;
 
-    @Autowired
-    private EvenementOperationRightsHelper evenementOperationRigthsHelper;
+    private final EvenementOperationRightsHelper evenementOperationRigthsHelper;
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final AuthentificationHelper authentificationHelper;
 
     @Override
     public Page<Evenement> searchEvenementsOperations(long operationId, Pageable pageable) {

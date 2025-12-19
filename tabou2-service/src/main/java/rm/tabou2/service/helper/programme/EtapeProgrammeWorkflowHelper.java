@@ -1,6 +1,6 @@
 package rm.tabou2.service.helper.programme;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Etape;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
@@ -8,16 +8,16 @@ import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class EtapeProgrammeWorkflowHelper {
 
-    @Autowired
-    private ProgrammeDao programmeDao;
+    private final ProgrammeDao programmeDao;
 
-    @Autowired
-    private EtapeProgrammeMapper etapeProgrammeMapper;
+    private final EtapeProgrammeMapper etapeProgrammeMapper;
 
     /**
      * Liste des étapes possibles pour un programme
@@ -27,7 +27,8 @@ public class EtapeProgrammeWorkflowHelper {
      */
     public List<Etape> getAccessibleEtapesForProgramme(Long idProgramme) {
         ProgrammeEntity programmeEntity = programmeDao.findOneById(idProgramme);
-        List<EtapeProgrammeEntity> nextEtapes = List.copyOf(programmeEntity.getEtapeProgramme().getNextEtapes());
+        List<EtapeProgrammeEntity> nextEtapes = programmeEntity.getEtapeProgramme().getNextEtapes().stream()
+                .sorted(Comparator.comparing(EtapeProgrammeEntity::getOrder)).toList();
         return etapeProgrammeMapper.entitiesToDto(nextEtapes);
     }
 

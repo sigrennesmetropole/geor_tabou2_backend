@@ -694,8 +694,40 @@
             "items": {
               "$ref": "#/components/schemas/TypePLHBean"
             }
+          },
+          "programmation": {
+            "$ref": "#/components/schemas/Programmation"
+          },
+          "programmationNextAds": {
+            "$ref": "#/components/schemas/Programmation"
           }
         }
+      },
+      "Programmation": {
+        "type": "object",
+        "properties": {
+          "surfaceBureaux": {
+            "type": "double",
+            "description": "Surface de Bureaux"
+          },
+          "surfaceCommerces": {
+            "type": "double",
+            "description": "Surface de Commerces"
+          },
+          "surfaceIndustrie": {
+            "type": "double",
+            "description": "Surface d'Industrie et d'Artisanat"
+          },
+          "surfaceEquipements": {
+            "type": "double",
+            "description": "Surface d'Equipements"
+          },
+          "surfaceAutres": {
+            "type": "double",
+            "description": "Surface Autres"
+          }
+        },
+        "description": "Surfaces des programmations"
       },
       "TiersTypeTiers": {
         "type": "object",

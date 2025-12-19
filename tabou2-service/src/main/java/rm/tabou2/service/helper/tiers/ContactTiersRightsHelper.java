@@ -1,17 +1,17 @@
 package rm.tabou2.service.helper.tiers;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.helper.AuthentificationHelper;
 
 @Component
+@RequiredArgsConstructor
 public class ContactTiersRightsHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactTiersRightsHelper.class);
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final AuthentificationHelper authentificationHelper;
 
     /**
      * Vérifie si l'utilisateur est autorisé à créer un ContactTiers

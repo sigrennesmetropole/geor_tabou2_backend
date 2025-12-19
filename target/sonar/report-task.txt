@@ -1,7 +1,7 @@
 projectKey=rennes-metropole.tabou2.tabou2
 serverUrl=https://sonar.boost.open.global
-serverVersion=9.9.8.100196
-branch=v1.7.0
-dashboardUrl=https://sonar.boost.open.global/dashboard?id=rennes-metropole.tabou2.tabou2&branch=v1.7.0
-ceTaskId=AZhlxwqXDOVexzymCyse
-ceTaskUrl=https://sonar.boost.open.global/api/ce/task?id=AZhlxwqXDOVexzymCyse
+serverVersion=25.9.0.112764
+branch=v2.0.0
+dashboardUrl=https://sonar.boost.open.global/dashboard?id=rennes-metropole.tabou2.tabou2&branch=v2.0.0
+ceTaskId=e713d24f-c160-4ccf-8b76-3c0e9df38d12
+ceTaskUrl=https://sonar.boost.open.global/api/ce/task?id=e713d24f-c160-4ccf-8b76-3c0e9df38d12

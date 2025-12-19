@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,11 +14,10 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.operation.DecisionEntity;
 
 @RestController
+@RequiredArgsConstructor
 public class DecisionApiController implements DecisionsApi {
 
-    @Autowired
-    private DecisionService decisionService;
-
+    private final DecisionService decisionService;
 
     @Override
     public ResponseEntity<PageResult> getDecisions(Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {

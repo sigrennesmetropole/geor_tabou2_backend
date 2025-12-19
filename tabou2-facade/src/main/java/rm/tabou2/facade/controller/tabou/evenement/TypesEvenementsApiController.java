@@ -1,11 +1,11 @@
 package rm.tabou2.facade.controller.tabou.evenement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
 import rm.tabou2.facade.api.TypesEvenementsApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.TypeEvenement;
@@ -15,10 +15,10 @@ import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 @RestController
+@RequiredArgsConstructor
 public class TypesEvenementsApiController implements TypesEvenementsApi {
 
-    @Autowired
-    private TypeEvenementService typeEvenementService;
+    private final TypeEvenementService typeEvenementService;
 
     @Override
     public ResponseEntity<TypeEvenement> getTypeEvenementById(Long typeEvenementId) throws Exception {

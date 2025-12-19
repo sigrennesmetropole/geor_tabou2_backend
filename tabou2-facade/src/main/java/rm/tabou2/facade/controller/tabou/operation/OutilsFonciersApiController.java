@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,13 +15,13 @@ import rm.tabou2.storage.tabou.entity.operation.OutilFoncierEntity;
 import rm.tabou2.storage.tabou.item.OutilFoncierCriteria;
 
 @RestController
+@RequiredArgsConstructor
 public class OutilsFonciersApiController implements OutilsFonciersApi {
 
-    @Autowired
-    OutilsFonciersService outilsFonciersService;
+    private final OutilsFonciersService outilsFonciersService;
 
     @Override
-    public ResponseEntity<PageResult> searchOutilsFonciers(String libelle, Boolean inactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> searchOutilsFonciers(String libelle, Boolean inactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
         OutilFoncierCriteria criteria = new OutilFoncierCriteria();
         criteria.setLibelle(libelle);
         criteria.setInactif(inactif);

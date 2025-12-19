@@ -1,6 +1,5 @@
 package rm.tabou2.service.tabou.ddc.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,20 +17,19 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PermisConstruireServiceImpl implements PermisConstruireService {
 
-    @Autowired
-    PermisConstuireMapper permisConstuireMapper;
+    private final PermisConstuireMapper permisConstuireMapper;
 
-    @Autowired
-    PermisConstruireDao permisConstruireDao;
+    private final PermisConstruireDao permisConstruireDao;
 
-    @Autowired
-    PermisConstruireCustomDao permisConstruireCustomDao;
+    private final PermisConstruireCustomDao permisConstruireCustomDao;
 
-    @Autowired
-    ProgrammeDao programmeDao;
+    private final ProgrammeDao programmeDao;
 
     public PermisConstruire getPermisConstruireById(long permisConstruireId) {
 

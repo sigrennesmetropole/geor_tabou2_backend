@@ -1,6 +1,6 @@
 package rm.tabou2.service.sig.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -27,29 +27,23 @@ import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
 @Validated
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class SecteurSpeuServiceImpl implements SecteurSpeuService {
 
-    @Autowired
-    private SecteurSpeuCustomDao secteurSpeuCustomDao;
+    private final SecteurSpeuCustomDao secteurSpeuCustomDao;
 
-    @Autowired
-    private SecteurSpeuMapper secteurSpeuMapper;
+    private final SecteurSpeuMapper secteurSpeuMapper;
 
-    @Autowired
-    private OperationRightsHelper operationRightsHelper;
+    private final OperationRightsHelper operationRightsHelper;
 
-    @Autowired
-    private OperationDao operationDao;
+    private final OperationDao operationDao;
 
-    @Autowired
-    private OperationMapper operationMapper;
+    private final OperationMapper operationMapper;
 
-    @Autowired
-    private DocumentGenerator documentGenerator;
+    private final DocumentGenerator documentGenerator;
 
-    @Autowired
-    private SecteurFicheHelper secteurFicheHelper;
+    private final SecteurFicheHelper secteurFicheHelper;
 
     @Override
     public Page<SecteurSpeu> searchSecteursSpeu(Integer numSecteur, String nomSecteur, Pageable pageable) {

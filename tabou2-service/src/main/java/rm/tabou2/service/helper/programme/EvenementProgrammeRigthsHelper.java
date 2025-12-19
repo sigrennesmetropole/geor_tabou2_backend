@@ -1,16 +1,16 @@
 package rm.tabou2.service.helper.programme;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.BooleanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.Evenement;
 import rm.tabou2.service.dto.Programme;
 
 @Component
+@RequiredArgsConstructor
 public class EvenementProgrammeRigthsHelper {
 
-    @Autowired
-    private ProgrammeRightsHelper programmeRightsHelper;
+    private final ProgrammeRightsHelper programmeRightsHelper;
 
     /**
      * Permet de savoir si l'utilisateur a le droit de modifier un événement d'un programme

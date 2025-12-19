@@ -1,6 +1,6 @@
 package rm.tabou2.service.sig.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,13 +10,12 @@ import rm.tabou2.service.sig.SecteurFoncierService;
 import rm.tabou2.storage.sig.dao.SecteurFoncierCustomDao;
 
 @Service
+@RequiredArgsConstructor
 public class SecteurFoncierServiceImpl implements SecteurFoncierService {
 
-    @Autowired
-    private SecteurFoncierCustomDao secteurFoncierCustomDao;
+    private final SecteurFoncierCustomDao secteurFoncierCustomDao;
 
-    @Autowired
-    private SecteurFoncierMapper secteurFoncierMapper;
+    private final SecteurFoncierMapper secteurFoncierMapper;
 
     @Override
     public Page<SecteurFoncier> searchSecteursFonciers(String negociateur, Pageable pageable) {

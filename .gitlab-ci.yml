@@ -43,28 +43,17 @@ tabou2:build:
   script:
     - sh ./mvnw $MAVEN_CLI_OPTS -U clean package
   stage: build
-  except:
-    refs:
-      - master
-      - open/master 
   artifacts:
     paths:
+      - '**/target'
       - $CI_PROJECT_DIR/tabou2-facade/target/tabou2*.jar
       - $CI_PROJECT_DIR/tabou2-facade/target/tabou2*.war
-  interruptible: true
- 
-tabou2:build:master:
-  script:
-    - sh ./mvnw $MAVEN_CLI_OPTS -U clean package -DskipTests
-  stage: build  
-  only:
-    refs:
-      - master
-      - open/master   
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2*.jar
-      - $CI_PROJECT_DIR/tabou2-facade/target/tabou2*.war
+      - '**/target/jacoco.exec'
+      - '**/target/site/jacoco/**'
+    reports:
+      junit:
+        - '**/target/surefire-reports/TEST-*.xml'
+        - '**/target/surefire-reports/*.txt'      
   interruptible: true
   
 # Sonar code quality analysis - note a full test coverage report through a jacoco.exec merged file in base project folder
@@ -72,6 +61,8 @@ tabou2:sonar:
   stage: test
   image: maven:3.9.9-eclipse-temurin-17
   dependencies:
+    - tabou2:build
+  needs: 
     - tabou2:build
   except:
     refs:
@@ -94,7 +85,9 @@ tabou2:sonar:master:
   stage: test
   image: maven:3.9.9-eclipse-temurin-17
   dependencies:
-    - tabou2:build 
+    - tabou2:build
+  needs:
+    - tabou2:build    
   only:
     refs:
       - open/master
@@ -206,9 +199,16 @@ tabou2:deploy-karbon:prepare:dev:
   only:
     refs:
       - open/develop
-      - /.*karbonification.*/
   variables:
     TARGET_ENV: dev
+
+tabou2:deploy-karbon:prepare:qua:
+  extends: .tabou2:deploy-karbon:prepare
+  only:
+    refs:
+      - open/master
+  variables:
+    TARGET_ENV: qua
 
 .tabou2:deploy-karbon:
   stage: deploy
@@ -228,7 +228,6 @@ tabou2:deploy-karbon:dev:
   only:
     refs:
       - open/develop
-      - /.*karbonification.*/
   variables:
     TARGET_ENV: dev
     FORCE_POD: "true"
@@ -242,14 +241,13 @@ tabou2:deploy-karbon:dev:
 tabou2:deploy-karbon:qua:
   extends: .tabou2:deploy-karbon
   needs:
-    - job: tabou2:deploy-karbon:prepare:dev
+    - job: tabou2:deploy-karbon:prepare:qua
       artifacts: true
   only:
     refs:
       - open/master
-      - /.*karbonification.*/
   variables:
-    TARGET_ENV: dev
+    TARGET_ENV: qua
     FORCE_POD: "true"
     PARENT_COMMIT_BRANCH: $CI_COMMIT_BRANCH
     PARENT_SERVICE_LOGIN: $SERVICE_LOGIN
@@ -293,4 +291,3 @@ trivyscan:back:
     refs:
       - open/develop
   
- 

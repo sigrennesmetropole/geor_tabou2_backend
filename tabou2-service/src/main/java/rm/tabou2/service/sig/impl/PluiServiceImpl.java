@@ -1,6 +1,6 @@
 package rm.tabou2.service.sig.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,17 +13,15 @@ import rm.tabou2.storage.sig.entity.PluiEntity;
 
 
 @Service
+@RequiredArgsConstructor
 public class PluiServiceImpl implements PluiService {
 
 
-    @Autowired
-    private PluiCustomDao pluiCustomDao;
+    private final PluiCustomDao pluiCustomDao;
 
-    @Autowired
-    private PluiDao pluiDao;
+    private final PluiDao pluiDao;
 
-    @Autowired
-    private PluiMapper pluiMapper;
+    private final PluiMapper pluiMapper;
 
     @Override
     public Page<PluiZonage> searchPlui(String libelle, Pageable pageable) {

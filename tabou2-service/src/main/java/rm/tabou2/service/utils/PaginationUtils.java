@@ -20,12 +20,22 @@ public class PaginationUtils {
 
     private static int maxResultsStatic;
 
+    @SuppressWarnings("java:S2696")
     @Value("${pagination.default.max.results}")
     public void setMaxResults(int name) {
         maxResultsStatic = name;
     }
 
-
+    /**
+     * Builds a pageable object for pagination.
+     *
+     * @param start       the starting page index (if null, defaults to DEFAULT_START)
+     * @param resultsNumber the number of results per page (if null, defaults to maxResultsStatic)
+     * @param orderBy     the column name to sort by (if null, attempts to find a field annotated with @OrderBy)
+     * @param asc         true for ascending order, false for descending (if null, defaults to descending)
+     * @param classname   the class to inspect for @OrderBy annotations
+     * @return a Pageable object for pagination
+     */
     public static Pageable buildPageable(Integer start, Integer resultsNumber, String orderBy, Boolean asc, Class<?> classname) {
 
         if (null == start) {

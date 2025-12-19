@@ -6,9 +6,7 @@ import java.util.List;
 import org.ocpsoft.rewrite.servlet.RewriteFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -78,15 +76,6 @@ public class WebSecurityConfig {
 
 	private Filter createPreAuthenticationFilter() {
 		return new PreAuthenticationFilter();
-	}
-
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("admin").password("{noop}4dM1nApp!").roles("ADMIN");
-		auth.authenticationProvider(createPreAuthenticationProvider());
-	}
-
-	private AuthenticationProvider createPreAuthenticationProvider() {
-		return new PreAuthenticationProvider();
 	}
 
 	@Bean

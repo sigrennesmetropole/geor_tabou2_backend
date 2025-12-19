@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,10 +15,10 @@ import rm.tabou2.storage.tabou.item.TypeAmenageurCriteria;
 import rm.tabou2.service.dto.TypeAmenageur;
 
 @RestController
+@RequiredArgsConstructor
 public class TypesAmenageursApiController implements TypesAmenageursApi {
 
-    @Autowired
-    TypeAmenageurService typeAmenageurService;
+    private final TypeAmenageurService typeAmenageurService;
 
     @Override
     public ResponseEntity<PageResult> searchTypesAmenageurs(String libelle, Boolean inactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {

@@ -9,10 +9,10 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class DocumentGeneratorImpl implements DocumentGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DocumentGeneratorImpl.class);
@@ -51,8 +52,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
     @Value("${fiche.illustration.typesmime}")
     private String[] allowedMimeTypes;
 
-    @Autowired
-    private AlfrescoServiceImpl alfrescoService;
+    private final AlfrescoServiceImpl alfrescoService;
 
     @Override
     public DocumentContent generateDocument(GenerationModel generationModel) throws AppServiceException {
@@ -136,29 +136,21 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
     }
 
     private static IXDocReport getIxDocReport(GenerationModel generationModel) throws AppServiceException, IOException {
-        InputStream is = null;
-
         String path = generationModel.getTemplatePath();
 
         IXDocReport report;
-        try {
-            File file = new File(path);
-
-            if (!file.exists()) {
-                try {
-                    is = new ClassPathResource(path).getInputStream();
-                } catch (IOException e) {
-                    throw new AppServiceException("Erreur lors de la récupération du template", e);
-                }
-            } else {
-                is = new FileInputStream(file);
+        File file = new File(path);
+        if (file.exists()) {
+            try (InputStream is = new FileInputStream(file)) {
+                report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Freemarker);
+            } catch (Exception e) {
+                throw new AppServiceException("Erreur lors du chargement du template");
             }
-            report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Freemarker);
-        } catch (Exception e) {
-            throw new AppServiceException("Erreur lors du chargement du template");
-        } finally {
-            if (is != null) {
-                is.close();
+        } else {
+            try (InputStream is = new ClassPathResource(path).getInputStream()) {
+                report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Freemarker);
+            } catch (Exception e) {
+                throw new AppServiceException("Erreur lors du chargement du template");
             }
         }
         return report;

@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.operation;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,10 +15,10 @@ import rm.tabou2.storage.tabou.entity.operation.TypeFoncierEntity;
 import rm.tabou2.storage.tabou.item.TypeFoncierCriteria;
 
 @RestController
+@RequiredArgsConstructor
 public class TypesFonciersApiController implements TypesFonciersApi {
 
-    @Autowired
-    TypeFoncierService service;
+    private final TypeFoncierService service;
 
     @Override
     public ResponseEntity<PageResult> searchTypesFonciers(String libelle, Boolean inactif, Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {

@@ -13,7 +13,7 @@ import org.locationtech.jts.geom.Geometry;
 
 @Data
 @Entity
-@ToString(exclude = {"geom"})
+@ToString(exclude = {"geometry"})
 @Table(name = "tabou_mos") // Correspond au nom de la table SQL
 public class MosEntity {
 

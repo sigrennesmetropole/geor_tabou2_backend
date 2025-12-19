@@ -1,6 +1,6 @@
 package rm.tabou2.facade.controller.tabou.tiers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -14,10 +14,10 @@ import rm.tabou2.service.utils.PaginationUtils;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
 
 @RestController
+@RequiredArgsConstructor
 public class TypeTiersApiController implements TypesTiersApi {
 
-    @Autowired
-    private TypeTiersService typeTiersService;
+    private final TypeTiersService typeTiersService;
 
     @Override
     public ResponseEntity<TypeTiers> createTypeTiers(TypeTiers typeTiers) throws Exception {

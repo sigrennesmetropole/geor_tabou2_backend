@@ -1,6 +1,6 @@
 package rm.tabou2.service.tabou.evenement.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,28 +24,22 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EvenementProgrammeServiceImpl implements EvenementProgrammeService {
 
-    @Autowired
-    private EvenementProgrammeCustomDao evenementProgrammeCustomDao;
+    private final EvenementProgrammeCustomDao evenementProgrammeCustomDao;
 
-    @Autowired
-    private EvenementProgrammeDao evenementProgrammeDao;
+    private final EvenementProgrammeDao evenementProgrammeDao;
 
-    @Autowired
-    private EvenementProgrammeMapper evenementProgrammeMapper;
+    private final EvenementProgrammeMapper evenementProgrammeMapper;
 
-    @Autowired
-    private ProgrammeMapper programmeMapper;
+    private final ProgrammeMapper programmeMapper;
 
-    @Autowired
-    private ProgrammeDao programmeDao;
+    private final ProgrammeDao programmeDao;
 
-    @Autowired
-    private EvenementProgrammeRigthsHelper evenementProgrammeRigthsHelper;
+    private final EvenementProgrammeRigthsHelper evenementProgrammeRigthsHelper;
 
-    @Autowired
-    private AuthentificationHelper authentificationHelper;
+    private final AuthentificationHelper authentificationHelper;
 
     @Override
     public Page<Evenement> searchEvenementsProgramme(long programmeId, Pageable pageable) {
