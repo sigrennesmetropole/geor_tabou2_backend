@@ -11,4 +11,8 @@ public class EtapeCriteria {
 
     private String mode;
 
+    private String type;
+
+    private Boolean secteur;
+
 }

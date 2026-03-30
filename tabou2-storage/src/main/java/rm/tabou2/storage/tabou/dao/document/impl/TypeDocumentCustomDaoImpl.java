@@ -24,7 +24,7 @@ import java.util.List;
 
 
 @Repository
-public class TypeDocumentCustomDaoImpl extends AbstractCustomDaoImpl implements TypeDocumentCustomDao {
+public class TypeDocumentCustomDaoImpl extends AbstractCustomDaoImpl<TypeDocumentEntity> implements TypeDocumentCustomDao {
 
     public static final String FIELD_ID= "id";
     public static final String FIELD_LIBELLE = "libelle";

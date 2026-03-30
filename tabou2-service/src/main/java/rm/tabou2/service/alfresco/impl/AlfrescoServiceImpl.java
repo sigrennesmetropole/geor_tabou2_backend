@@ -193,7 +193,7 @@ public class AlfrescoServiceImpl implements AlfrescoService {
         AlfrescoSearchQuery searchQuery = new AlfrescoSearchQuery();
 
         //Dans tous les cas, on filtre sur le type d'objet
-        StringBuilder query = new StringBuilder();
+        StringBuilder query = new StringBuilder(250);
         query.append(SEARCH_PARAM_OBJET).append(objectType);
         if (!StringUtils.isEmpty(nom)) {
             query.append(AND);
@@ -385,7 +385,9 @@ public class AlfrescoServiceImpl implements AlfrescoService {
                 .path(documentId);
 
         properties.setLibelleTypeDocument(documentMetadata.getLibelleTypeDocument());
-        properties.setDateDocument(documentMetadata.getDateDocument());
+		if (documentMetadata.getDateDocument() != null) {
+			properties.setDateDocument(Date.from(documentMetadata.getDateDocument().toInstant()));
+		}
         AlfrescoMetadata alfrescoMetadata = new AlfrescoMetadata();
         alfrescoMetadata.setProperties(properties);
         alfrescoMetadata.setName(documentMetadata.getNom());

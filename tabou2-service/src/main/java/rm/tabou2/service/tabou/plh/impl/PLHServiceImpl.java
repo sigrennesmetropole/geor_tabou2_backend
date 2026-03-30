@@ -161,8 +161,8 @@ public class PLHServiceImpl implements PLHService {
 	}
 
 	private void assignProgrammeDates(TypePLHCriteria criteria) throws AppServiceNotFoundException {
-		ProgrammeEntity programmeEntity = programmeDao.findById(criteria.getProgrammeId()).orElseThrow(
-				AppServiceNotFoundException::new);
+		ProgrammeEntity programmeEntity = programmeDao.findById(criteria.getProgrammeId())
+				.orElseThrow(() -> new AppServiceNotFoundException(ProgrammeEntity.class));
 
 		List<PermisConstruireEntity> permis = permisConstruireDao.findAllByNumAds(programmeEntity.getNumAds());
 

@@ -25,7 +25,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NUM_ADS;
 
 @Repository
-public class PermisConstruireCustomDaoImpl extends AbstractCustomDaoImpl implements PermisConstruireCustomDao {
+public class PermisConstruireCustomDaoImpl extends AbstractCustomDaoImpl<PermisConstruireEntity> implements PermisConstruireCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

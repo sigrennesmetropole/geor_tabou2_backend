@@ -1,6 +1,5 @@
 package rm.tabou2.storage.tabou.dao.evenement.impl;
 
-import jakarta.persistence.criteria.Subquery;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
 import rm.tabou2.storage.tabou.entity.operation.EvenementOperationEntity;
-import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.item.TypeEvenementCriteria;
 
 import jakarta.persistence.EntityManager;
@@ -28,7 +26,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
-public class EvenementOperationCustomDaoImpl extends AbstractCustomDaoImpl implements EvenementOperationCustomDao {
+public class EvenementOperationCustomDaoImpl extends AbstractCustomDaoImpl<EvenementOperationEntity> implements EvenementOperationCustomDao {
 
 
     @PersistenceContext(unitName = "tabouPU")
@@ -72,7 +70,7 @@ public class EvenementOperationCustomDaoImpl extends AbstractCustomDaoImpl imple
         List<Predicate> predicates = new ArrayList<>();
 
         //id de l'operation
-        predicateOperationCriteria(operationId, builder, criteriaQuery, root, predicates);
+        predicateLongCriteriaForJoin(operationId, FIELD_ID, predicates, builder, root.join(FIELD_OPERATION));
 
         if(typeEventCriteria != null) {
 
@@ -100,15 +98,5 @@ public class EvenementOperationCustomDaoImpl extends AbstractCustomDaoImpl imple
         }
     }
 
-    void predicateOperationCriteria(Long operationId, CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery,
-                                    Root<EvenementOperationEntity> root, List<Predicate> predicates) {
-        Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
-
-        Root<OperationEntity> subRoot = subquery.from(OperationEntity.class);
-        subquery.where(builder.equal(subRoot.get(FIELD_ID), operationId));
-        subquery.select(subRoot.join(FIELD_EVENEMENTS).get(FIELD_ID));
-
-        predicates.add(builder.in(root.get(FIELD_ID)).value(subquery));
-    }
 
 }

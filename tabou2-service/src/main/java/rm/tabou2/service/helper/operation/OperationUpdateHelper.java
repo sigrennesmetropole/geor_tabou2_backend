@@ -13,6 +13,7 @@ import java.util.*;
 
 @Component
 @RequiredArgsConstructor
+@SuppressWarnings("creedengo-java:GCI1")
 public class OperationUpdateHelper {
 
 	private final TypeActeurDao typeActeurDao;

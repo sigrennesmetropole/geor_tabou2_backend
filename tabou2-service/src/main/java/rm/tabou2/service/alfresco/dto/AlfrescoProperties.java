@@ -1,6 +1,6 @@
 package rm.tabou2.service.alfresco.dto;
 
-import java.time.OffsetDateTime;
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,6 +22,6 @@ public class AlfrescoProperties {
     @JsonProperty("tabou2:libelleTypeDocument")
     public String libelleTypeDocument;
     @JsonProperty("tabou2:dateDocument")
-    public OffsetDateTime dateDocument;
+    public Date dateDocument;
 
 }

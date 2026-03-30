@@ -24,7 +24,7 @@ public class ServiceAspect {
         final long start = System.currentTimeMillis();
         final Object output = pjp.proceed();
         final long elapsedTime = System.currentTimeMillis() - start;
-        LOG.info(elapsedTime + " - " + pjp.getSignature().getDeclaringTypeName() + " " + pjp.getSignature().getName());
+        LOG.info("{} - {} {}", elapsedTime, pjp.getSignature().getDeclaringTypeName(), pjp.getSignature().getName());
         return output;
     }
 

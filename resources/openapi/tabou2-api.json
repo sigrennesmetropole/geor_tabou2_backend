@@ -986,6 +986,24 @@
 					},
 					{
 						"in": "query",
+						"name": "type",
+						"description": "Recherche par type",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "secteur",
+						"description": "Recherche pour les secteurs",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
 						"name": "start",
 						"description": "Index de début - démarre à 0",
 						"required": false,

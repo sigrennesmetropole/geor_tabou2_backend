@@ -30,7 +30,7 @@ public interface ProgrammeService {
      * @param programme programme à ajouter
      * @return programme ajouté
      */
-    Programme createProgramme(@ValidProgrammeCreation Programme programme);
+    Programme createProgramme(@ValidProgrammeCreation Programme programme) throws AppServiceException;
 
     /**
      * Mise à jour d'un programme.

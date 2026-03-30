@@ -31,7 +31,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TIERS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_TIERS;
 
 @Repository
-public class OperationTiersCustomDaoImpl extends AbstractCustomDaoImpl implements OperationTiersCustomDao {
+public class OperationTiersCustomDaoImpl extends AbstractCustomDaoImpl<OperationTiersEntity> implements OperationTiersCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

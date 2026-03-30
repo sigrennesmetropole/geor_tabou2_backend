@@ -1243,6 +1243,14 @@
                   "PUBLIC",
                   "NONE"
                 ]
+              },
+              "prospectif": {
+                "type": "boolean",
+                "description": "Indicateur permettant de savoir si l'étape est une étape prospective (opérations uniquement)"
+              },
+              "secteur": {
+                "type": "boolean",
+                "description": "Indicateur permettant de savoir si l'étape est disponible pour les secteurs"
               }
             }
           }

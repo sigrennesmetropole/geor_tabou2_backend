@@ -27,7 +27,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_COMMUN
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM;
 
 @Repository
-public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements CommuneCustomDao {
+public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl<CommuneEntity> implements CommuneCustomDao {
 
 
     @PersistenceContext(unitName = "sigPU")
@@ -68,7 +68,7 @@ public class CommuneCustomDaoImpl extends AbstractCustomDaoImpl implements Commu
     public List<CommuneEntity> searchCommunesByOperationId(Long operationId, boolean estSecteur, boolean estZac) {
         // La requête est faite en dure car les shapes ne sont pas mappées
 
-        StringBuilder query = new StringBuilder();
+        StringBuilder query = new StringBuilder(100);
         query.append("SELECT com.* ");
         if(estSecteur){ //L'opération est un secteur
             query.append("FROM urba_foncier.oa_secteur op ");

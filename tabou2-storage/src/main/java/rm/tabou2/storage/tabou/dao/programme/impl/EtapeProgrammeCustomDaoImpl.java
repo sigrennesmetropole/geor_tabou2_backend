@@ -26,7 +26,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
-public class EtapeProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements EtapeProgrammeCustomDao {
+public class EtapeProgrammeCustomDaoImpl extends AbstractCustomDaoImpl<EtapeProgrammeEntity> implements EtapeProgrammeCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

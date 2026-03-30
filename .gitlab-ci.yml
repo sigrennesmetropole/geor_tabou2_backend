@@ -18,9 +18,19 @@ include:
   - project: 'boost/template-ci/pipelines/common'
     file: 'docker/docker-template.yml'
   - project: 'boost/template-ci/pipelines/common'
-    file: 'securite/oss-index/oss-index-template.yml'	
-  - project: 'bots/trivy-script'
-    file: '/trivy-template-job.yml' 
+    file: 'securite/oss-index/oss-index-template.yml'
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/dependency-track@2.0.0
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/cdxgen-sbom@2.0.1
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/syft-docker-sbom@2.0.0
+    inputs:
+      image_docker: 'glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/rennes-metropole:open-develop'
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/trivy-docker-sbom@2.0.0
+    inputs:
+      image_docker: 'glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/proxy:open-develop'
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/trivy-docker-sbom@2.0.0
+    inputs:
+      image_docker: 'glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/tabou2:open-develop'
+
 
 default:
   image: maven:3.9.0-eclipse-temurin-17
@@ -37,6 +47,7 @@ stages:
   - deploy
   - delivering
   - sast
+  - post_sast
 
 # Build job with maven plugin execution policies define in parent pom
 tabou2:build:
@@ -275,19 +286,4 @@ push-to-github:
     # Les variables GITHUB_RM_ACCOUNT, GITHUB_RM_LOGIN et GIT_TOKEN sont à définir manuellement avant de lancer le job
     GIT_REMOTE: "https://$GITHUB_RM_ACCOUNT:$GIT_TOKEN@github.com/sigrennesmetropole/geor_tabou2_backend.git"
     COMMIT_MESSAGE: $GITHUB_COMMIT_MESSAGE
-
-## Trivy
-trivyscan:back:
-  extends: 
-    - .trivy-scan
-  stage: docker
-  needs:
-    - tabou2:docker2:build
-  dependencies:
-    - tabou2:docker2:build
-  variables:
-    TRIVY_DOCKER_SCAN: glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/rennes-metropole:open-develop
-  only:
-    refs:
-      - open/develop
   

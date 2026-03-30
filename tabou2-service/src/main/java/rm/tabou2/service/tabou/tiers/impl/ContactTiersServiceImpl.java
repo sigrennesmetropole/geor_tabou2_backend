@@ -69,7 +69,7 @@ public class ContactTiersServiceImpl implements ContactTiersService {
     }
 
     @Override
-    public ContactTiers createContactTiers(Long tiersId, ContactTiers contactTiers) {
+    public ContactTiers createContactTiers(Long tiersId, ContactTiers contactTiers) throws AppServiceException {
         if (!contactTiersRightsHelper.checkCanCreateContactTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un contact de tiers");
         }
@@ -93,7 +93,7 @@ public class ContactTiersServiceImpl implements ContactTiersService {
     }
 
     @Override
-    public ContactTiers updateContactTiers(Long tiersId, ContactTiers contactTiers) {
+    public ContactTiers updateContactTiers(Long tiersId, ContactTiers contactTiers) throws AppServiceException {
         if (!contactTiersRightsHelper.checkCanUpdateContactTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits d'éditer un contact de tiers");
         }
@@ -129,8 +129,12 @@ public class ContactTiersServiceImpl implements ContactTiersService {
     }
 
 
-    private void applyFonctionToContact(ContactTiersEntity entity, ContactTiers contactTiers){
+    private void applyFonctionToContact(ContactTiersEntity entity, ContactTiers contactTiers)
+            throws AppServiceException {
 
+        if (contactTiers.getFonctionContact() == null || contactTiers.getFonctionContact().getId() == null) {
+            throw new AppServiceException("L'id de la fonction du contact est obligatoire");
+        }
         Optional<FonctionContactsEntity> fonction = fonctionContactsDao.findById(contactTiers.getFonctionContact().getId());
 
         if(fonction.isEmpty()){

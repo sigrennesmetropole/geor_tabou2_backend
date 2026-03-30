@@ -110,13 +110,16 @@ public class OperationApiController extends AbstractExportDocumentApi implements
 	}
 
 	@Override
-	public ResponseEntity<PageResult> searchOperationsEtapes(String code, String libelle, Integer start,
-			Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+	public ResponseEntity<PageResult> searchOperationsEtapes(String code, String libelle, String type, Boolean secteur,
+															 Integer start, Integer resultsNumber, String orderBy,
+															 Boolean asc) throws Exception {
 
 		EtapeCriteria etapeCriteria = new EtapeCriteria();
 
 		etapeCriteria.setCode(code);
 		etapeCriteria.setLibelle(libelle);
+		etapeCriteria.setType(type);
+		etapeCriteria.setSecteur(secteur);
 
 		if (StringUtils.isEmpty(orderBy)) {
 			orderBy = "order_";

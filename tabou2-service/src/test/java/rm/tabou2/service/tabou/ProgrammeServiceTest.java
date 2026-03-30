@@ -81,7 +81,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
 
     @DisplayName("testSearchProgramme: Test de la recherche de programmes")
     @Test
-    void testSearchProgramme() {
+    void testSearchProgramme() throws AppServiceException {
 
         OperationEntity operationEntity = new OperationEntity();
         operationEntity.setNom("test");

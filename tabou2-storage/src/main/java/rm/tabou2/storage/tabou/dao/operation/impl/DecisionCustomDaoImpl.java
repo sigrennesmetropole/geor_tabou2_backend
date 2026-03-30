@@ -22,7 +22,7 @@ import java.util.List;
 
 
 @Repository
-public class DecisionCustomDaoImpl extends AbstractCustomDaoImpl implements DecisionCustomDao {
+public class DecisionCustomDaoImpl extends AbstractCustomDaoImpl<DecisionEntity> implements DecisionCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

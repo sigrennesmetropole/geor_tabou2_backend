@@ -166,7 +166,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     @Transactional(readOnly = false)
-    public Programme createProgramme(Programme programme) {
+    public Programme createProgramme(Programme programme) throws AppServiceException {
 
 
         // Vérification des droits utilisateur
@@ -177,6 +177,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
 
+        if (programme.getEtape() == null || programme.getEtape().getId() == null) {
+            throw new AppServiceException("L'étapeId est obligatoire");
+        }
         EtapeProgrammeEntity etapProgramme = etapeProgrammeDao.findById(programme.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape id= " + programme.getId() + " n'a été trouvée pour les programmes"));
 
         //Vérification des autorisations sur l'étape
@@ -206,6 +209,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         // mise à jour du programme avec les données de suivi
         programmePlannerHelper.computeSuiviHabitatOfProgramme(programmeSaved);
+        programmePlannerHelper.computeAdsProgrammeData(programmeSaved);
 
         //mise à jour de l'id de l'emprise dans la table des programmes RM
         programmeRm.setIdTabou(programmeSaved.getId().intValue());
@@ -226,9 +230,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
-        programmeValidator.validateUpdateProgramme(programme, programmeEntity);
+        programmeValidator.validateUpdateProgramme(programme);
 
         // Récupération de la prochaine étape
+        if (programme.getEtape() == null || programme.getEtape().getId() == null) {
+            throw new AppServiceException("L'étapeId est obligatoire");
+        }
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(programme.getEtape().getId());
 
         // Mise à jour de la diffusion restreinte à partir de l'étape
@@ -257,6 +264,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         // mise à jour du programme avec les données de suivi
         programmePlannerHelper.computeSuiviHabitatOfProgramme(programmeSaved);
+        programmePlannerHelper.computeAdsProgrammeData(programmeSaved);
 
         return programmeSaved;
     }
@@ -278,18 +286,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         Programme programme = programmeMapper.entityToDto(programmeEntity);
 
-        handleNextAdsProgrammation(programme);
-
         // mise à jour du programme avec les données de suivi
         programmePlannerHelper.computeSuiviHabitatOfProgramme(programme);
+        programmePlannerHelper.computeAdsProgrammeData(programme);
 
         return programme;
 
-    }
-
-    private void handleNextAdsProgrammation(Programme programme) {
-        LOGGER.debug("Programme (id={}) will be filled with nextAds in a next version", programme.getId());
-        // TODO: Hanle nextAds when specification will be provided
     }
 
     @Override
@@ -306,6 +308,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
+    @SuppressWarnings("creedengo-java:GCI1")
     public Page<ProgrammeLight> searchProgrammesOfOperation(ProgrammeCriteria programmeCriteria, Pageable pageable) {
 
         // Si l'utilisateur n'a pas le droit de voir les programmes en diffusion restreinte, on filtre sur false
@@ -417,6 +420,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         //type evenement
+        if (evenement.getTypeEvenement() == null || evenement.getTypeEvenement().getId() == null) {
+            throw new AppServiceException("Le typeEvenementId est obligatoire");
+        }
         TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         if (typeEvenementEntity.isSysteme()) {
             throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
@@ -450,6 +456,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ProgrammeEntity programmeEntity = programmeDao.findOneById(idProgramme);
         Programme programme = programmeMapper.entityToDto(programmeEntity);
 
+        if (evenement == null || evenement.getId() == null) {
+            throw new AppServiceException("L'id de l'événement est obligatoire");
+        }
         Optional<EvenementProgrammeEntity> optionalEvenementProgrammeEntity = programmeEntity.lookupEvenementById(evenement.getId());
         if (optionalEvenementProgrammeEntity.isEmpty()) {
             throw new AppServiceException("L'événement id = " + evenement.getId() + " n'existe pas pour le programme id = " + programmeEntity.getId());
@@ -462,6 +471,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         // type evenement
+        if (evenement.getTypeEvenement() == null || evenement.getTypeEvenement().getId() == null) {
+            throw new AppServiceException("Le typeEvenementId est obligatoire");
+        }
         TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
         evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
 
@@ -781,7 +793,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         //type plh
         TypePLHEntity typePLHEntity = typePLHDao.findOneById(typePLHid);
         if (typePLHEntity == null) {
-            throw new AppServiceNotFoundException();
+            throw new AppServiceNotFoundException(TypePLHEntity.class);
         }
         return typePLHEntity;
     }

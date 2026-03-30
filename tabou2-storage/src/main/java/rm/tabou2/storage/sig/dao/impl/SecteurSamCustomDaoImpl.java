@@ -25,7 +25,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM_SECTEUR;
 
 @Repository
-public class SecteurSamCustomDaoImpl extends AbstractCustomDaoImpl implements SecteurSamCustomDao {
+public class SecteurSamCustomDaoImpl extends AbstractCustomDaoImpl<SecteurSamEntity> implements SecteurSamCustomDao {
 
 
     @PersistenceContext(unitName = "sigPU")

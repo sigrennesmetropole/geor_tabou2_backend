@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class VocationCustomDaoImpl extends AbstractCustomDaoImpl implements VocationCustomDao {
+public class VocationCustomDaoImpl extends AbstractCustomDaoImpl<VocationEntity> implements VocationCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

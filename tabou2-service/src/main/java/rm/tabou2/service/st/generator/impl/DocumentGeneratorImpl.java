@@ -29,6 +29,7 @@ import rm.tabou2.service.st.generator.model.GenerationModel;
 import rm.tabou2.service.utils.PaginationUtils;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -141,7 +142,7 @@ public class DocumentGeneratorImpl implements DocumentGenerator {
         IXDocReport report;
         File file = new File(path);
         if (file.exists()) {
-            try (InputStream is = new FileInputStream(file)) {
+            try (InputStream is = Files.newInputStream(file.toPath())) {
                 report = XDocReportRegistry.getRegistry().loadReport(is, TemplateEngineKind.Freemarker);
             } catch (Exception e) {
                 throw new AppServiceException("Erreur lors du chargement du template");

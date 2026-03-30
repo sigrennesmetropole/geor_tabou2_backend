@@ -25,7 +25,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 
 @Repository
-public class PluiCustomDaoImpl extends AbstractCustomDaoImpl implements PluiCustomDao {
+public class PluiCustomDaoImpl extends AbstractCustomDaoImpl<PluiEntity> implements PluiCustomDao {
 
     @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;

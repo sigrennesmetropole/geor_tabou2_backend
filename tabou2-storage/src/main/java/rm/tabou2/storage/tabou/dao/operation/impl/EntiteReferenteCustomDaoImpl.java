@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class EntiteReferenteCustomDaoImpl extends AbstractCustomDaoImpl implements EntiteReferenteCustomDao {
+public class EntiteReferenteCustomDaoImpl extends AbstractCustomDaoImpl<EntiteReferenteEntity> implements EntiteReferenteCustomDao {
     private static final String FIELD_LIBELLE = "libelle";
     private static final String FIELD_CODE = "code";
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class NatureCustomDaoImpl extends AbstractCustomDaoImpl implements NatureCustomDao {
+public class NatureCustomDaoImpl extends AbstractCustomDaoImpl<NatureEntity> implements NatureCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

@@ -25,7 +25,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NUM_ADS;
 
 @Repository
-public class AgapeoCustomDaoImpl extends AbstractCustomDaoImpl implements AgapeoCustomDao {
+public class AgapeoCustomDaoImpl extends AbstractCustomDaoImpl<AgapeoEntity> implements AgapeoCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

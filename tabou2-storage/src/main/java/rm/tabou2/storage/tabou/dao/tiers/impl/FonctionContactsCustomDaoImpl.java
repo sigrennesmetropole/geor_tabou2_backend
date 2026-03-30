@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class FonctionContactsCustomDaoImpl extends AbstractCustomDaoImpl implements FonctionContactsCustomDao {
+public class FonctionContactsCustomDaoImpl extends AbstractCustomDaoImpl<FonctionContactsEntity> implements FonctionContactsCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

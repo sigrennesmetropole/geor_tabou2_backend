@@ -58,6 +58,14 @@ public class EtapeOperationEntity extends AbstractOrderEntity {
     @Column(name = "remove_restriction")
     private boolean removeRestriction;
 
+    @Basic
+    @Column(name = "prospectif")
+    private boolean prospectif;
+
+    @Basic
+    @Column(name = "secteur")
+    private boolean secteur;
+
     @ManyToMany
     @JoinTable(
             name = "tabou_etape_operation_workflow",

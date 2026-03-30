@@ -15,7 +15,8 @@ public class ValidProgrammeCreationValidator implements CustomConstraintValidato
         constraintValidatorContext.disableDefaultConstraintViolation();
 
         // etape validation
-        boolean etapeValidation = programme.getEtape() != null && programme.getEtape().getId() > 0;
+        boolean etapeValidation = programme.getEtape() != null
+                && programme.getEtape().getId() != null && programme.getEtape().getId() > 0;
         if (!etapeValidation) {
             addConstraintErrorProperty(constraintValidatorContext, "L'étape du programme est invalide", "etape");
         }

@@ -7,7 +7,6 @@ import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
-import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 @Component
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ public class ProgrammeValidator {
      */
     public void validateProgramme(Programme programme) throws AppServiceException {
         Etape etape = programme.getEtape();
-        if(etape.getId() == null && etape.getCode() == null){
+        if(etape == null || (etape.getId() == null && etape.getCode() == null)){
             throw new AppServiceException("L'étape passée en paramètre ne contient ni code, ni id", AppServiceExceptionsStatus.BADREQUEST);
         }
 
@@ -38,7 +37,7 @@ public class ProgrammeValidator {
         }
     }
 
-    public void validateUpdateProgramme(Programme programme, ProgrammeEntity actualProgramme) throws AppServiceException {
+    public void validateUpdateProgramme(Programme programme) throws AppServiceException {
         validateProgramme(programme);
     }
 

@@ -90,17 +90,33 @@ where tep1.code = 'ANNULE_PUBLIC' and tep2.code = 'CLOTURE_PUBLIC';
 
 -- Insertion des étapes d'une opération
 
-INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('En projet', 'EN_PROJET_OFF', 'OFF', 'START', false);
-INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('En étude', 'EN_ETUDE_OFF', 'OFF', 'NORMAL', false);
-INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('Annulé', 'ANNULE_OFF', 'OFF', 'END', false);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction, prospectif, secteur) VALUES ('En réflexion', 'EN_REFLEXION_OFF', 'OFF', 'START', false, true, false);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction, prospectif, secteur) VALUES ('En projet', 'EN_PROJET_OFF', 'OFF', 'NORMAL', false, true, false);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction, prospectif, secteur) VALUES ('En étude', 'EN_ETUDE_OFF', 'OFF', 'NORMAL', false, false, true);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction, prospectif, secteur) VALUES ('Annulé', 'ANNULE_OFF', 'OFF', 'END', false, false, true);
 
-INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('En projet', 'EN_PROJET_PUBLIC', 'PUBLIC', 'START', true);
-INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('En étude', 'EN_ETUDE_PUBLIC', 'PUBLIC', 'NORMAL', true);
-INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('Opérationnel', 'OPERATIONNEL_PUBLIC', 'PUBLIC', 'NORMAL', false);
-INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('Clôturé', 'CLOTURE_PUBLIC', 'PUBLIC', 'END', false);
-INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction) VALUES ('Annulé', 'ANNULE_PUBLIC', 'PUBLIC', 'NORMAL', false);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction, prospectif, secteur) VALUES ('En projet', 'EN_PROJET_PUBLIC', 'PUBLIC', 'START', true, false, true);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction, prospectif, secteur) VALUES ('En étude', 'EN_ETUDE_PUBLIC', 'PUBLIC', 'NORMAL', true, false, true);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction, prospectif, secteur) VALUES ('Opérationnel', 'OPERATIONNEL_PUBLIC', 'PUBLIC', 'NORMAL', false, false, true);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction, prospectif, secteur) VALUES ('Clôturé', 'CLOTURE_PUBLIC', 'PUBLIC', 'END', false, false, true);
+INSERT INTO tabou_etape_operation (libelle, code, mode, type, remove_restriction, prospectif, secteur) VALUES ('Annulé', 'ANNULE_PUBLIC', 'PUBLIC', 'NORMAL', false, false, true);
 
--- Insertion des étapes suivants pour une étape programme
+-- Insertion des étapes suivants pour une étape opération
+
+INSERT INTO tabou_etape_operation_workflow (id_etape_operation, id_etape_operation_next)
+select teo1.id_etape_operation as id_etape_operation, teo2.id_etape_operation as id_etape_operation_next
+from tabou_etape_operation teo1, tabou_etape_operation teo2
+where teo1.code = 'EN_REFLEXION_OFF' and teo2.code = 'EN_PROJET_OFF';
+
+INSERT INTO tabou_etape_operation_workflow (id_etape_operation, id_etape_operation_next)
+select teo1.id_etape_operation as id_etape_operation, teo2.id_etape_operation as id_etape_operation_next
+from tabou_etape_operation teo1, tabou_etape_operation teo2
+where teo1.code = 'EN_REFLEXION_OFF' and teo2.code = 'EN_PROJET_PUBLIC';
+
+INSERT INTO tabou_etape_operation_workflow (id_etape_operation, id_etape_operation_next)
+select teo1.id_etape_operation as id_etape_operation, teo2.id_etape_operation as id_etape_operation_next
+from tabou_etape_operation teo1, tabou_etape_operation teo2
+where teo1.code = 'EN_REFLEXION_OFF' and teo2.code = 'ANNULE_OFF';
 
 INSERT INTO tabou_etape_operation_workflow (id_etape_operation, id_etape_operation_next)
 select teo1.id_etape_operation as id_etape_operation, teo2.id_etape_operation as id_etape_operation_next

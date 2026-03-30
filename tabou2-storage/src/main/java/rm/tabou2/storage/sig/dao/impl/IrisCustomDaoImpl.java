@@ -26,7 +26,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
-public class IrisCustomDaoImpl extends AbstractCustomDaoImpl implements IrisCustomDao {
+public class IrisCustomDaoImpl extends AbstractCustomDaoImpl<IrisEntity> implements IrisCustomDao {
 
     @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;

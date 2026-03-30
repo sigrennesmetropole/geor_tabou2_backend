@@ -81,7 +81,8 @@ public class StorageTabouBeanConfiguration {
 
 	@Bean
 	public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
-		return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
+		return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(),
+				dataSource -> new HashMap<>(), null);
 	}
 
 	@Bean(name = "tabouEntityManager")

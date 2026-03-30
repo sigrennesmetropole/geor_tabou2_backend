@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class TypeOccupationCustomDaoImpl extends AbstractCustomDaoImpl implements TypeOccupationCustomDao {
+public class TypeOccupationCustomDaoImpl extends AbstractCustomDaoImpl<TypeOccupationEntity> implements TypeOccupationCustomDao {
     private static final String FIELD_LIBELLE = "libelle";
     private static final String FIELD_CODE = "code";
 

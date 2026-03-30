@@ -109,7 +109,6 @@
 					<configOptions>
 						<interfaceOnly>true</interfaceOnly>
 						<useSpringBoot3>true</useSpringBoot3>
-						<!--<dateLibrary>legacy</dateLibrary>-->
 						<dateLibrary>java8</dateLibrary>
 						<useSwaggerUI>true</useSwaggerUI>
 						<useJakartaEe>true</useJakartaEe>
@@ -278,10 +277,6 @@
 									<directory>${project.build.directory}</directory>
 									<include>${finalName}.jar</include>
 								</resource>
-								<!-- <resource>
-								<targetPath>/etc/georchestra</targetPath>
-								<directory>${project.build.directory}/datadir</directory> 
-									<include>${project.artifactId}/**</include> </resource> -->
 							</resources>
 							<!-- This will require to set up the docker-hub
 							credentials correctly 

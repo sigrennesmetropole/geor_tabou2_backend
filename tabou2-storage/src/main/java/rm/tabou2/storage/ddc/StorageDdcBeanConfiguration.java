@@ -76,7 +76,8 @@ public class StorageDdcBeanConfiguration {
 
     @Bean(name = "entityManagerDdcFactoryBuilder")
     public EntityManagerFactoryBuilder entityManagerDdcFactoryBuilder() {
-        return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(), new HashMap<>(), null);
+		return new EntityManagerFactoryBuilder(new HibernateJpaVendorAdapter(),
+				dataSource -> new HashMap<>(), null);
     }
 
     @Bean(name = "ddcTransactionManager")
@@ -84,7 +85,7 @@ public class StorageDdcBeanConfiguration {
         return new JpaTransactionManager(entityManagerFactory);
     }
 
-    private Map hibernateProperties() {
+    private Map<String, String> hibernateProperties() {
 
 
         HashMap<String, String> hibernateProperties = new HashMap<>();

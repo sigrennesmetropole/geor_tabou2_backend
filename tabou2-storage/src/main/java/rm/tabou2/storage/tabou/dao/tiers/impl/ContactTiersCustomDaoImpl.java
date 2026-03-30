@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ContactTiersCustomDaoImpl extends AbstractCustomDaoImpl implements ContactTiersCustomDao {
+public class ContactTiersCustomDaoImpl extends AbstractCustomDaoImpl<ContactTiersEntity> implements ContactTiersCustomDao {
     private static final String FIELD_NOM = "nom";
     private static final String FIELD_INACTIF = "inactif";
     private static final String FIELD_TIERS = "id";

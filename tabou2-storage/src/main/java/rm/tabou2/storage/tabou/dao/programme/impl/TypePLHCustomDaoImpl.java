@@ -35,7 +35,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_PLHS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_SELECTIONNABLE;
 
 @Repository
-public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl implements TypePLHCustomDao {
+public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl<TypePLHEntity> implements TypePLHCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

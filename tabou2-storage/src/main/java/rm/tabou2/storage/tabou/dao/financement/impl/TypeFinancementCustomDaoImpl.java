@@ -24,7 +24,7 @@ import java.util.List;
 
 
 @Repository
-public class TypeFinancementCustomDaoImpl extends AbstractCustomDaoImpl implements TypeFinancementCustomDao {
+public class TypeFinancementCustomDaoImpl extends AbstractCustomDaoImpl<TypeFinancementEntity> implements TypeFinancementCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

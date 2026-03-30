@@ -22,7 +22,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
-public class TypeAmenageurCustomDaoImpl extends AbstractCustomDaoImpl implements TypeAmenageurCustomDao{
+public class TypeAmenageurCustomDaoImpl extends AbstractCustomDaoImpl<TypeAmenageurEntity> implements TypeAmenageurCustomDao{
 
     @PersistenceContext(unitName="tabouPU")
     EntityManager entityManager;

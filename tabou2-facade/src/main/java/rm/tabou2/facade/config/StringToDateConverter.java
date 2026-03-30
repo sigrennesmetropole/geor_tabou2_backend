@@ -5,10 +5,10 @@ package rm.tabou2.facade.config;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.convert.converter.Converter;
@@ -23,17 +23,15 @@ public class StringToDateConverter implements Converter<String, Date> {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(StringToDateConverter.class);
 
-	private static final List<ThreadLocal<SimpleDateFormat>> FORMATTERS = new ArrayList<>();
-
-	static {
-		FORMATTERS.add(ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")));
-		FORMATTERS.add(ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")));
-		FORMATTERS.add(ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd")));
-	}
+	private final List<ThreadLocal<SimpleDateFormat>> formatters = List.of(
+			ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")),
+			ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")),
+			ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"))
+	);
 
 	@Override
-	public Date convert(String source) {
-		for (ThreadLocal<SimpleDateFormat> threadLocal : FORMATTERS) {
+	public Date convert(@Nonnull String source) {
+		for (ThreadLocal<SimpleDateFormat> threadLocal : formatters) {
 			try {
 				return threadLocal.get().parse(source);
 			} catch (ParseException e) {

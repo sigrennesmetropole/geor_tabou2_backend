@@ -65,12 +65,15 @@ public class TiersServiceImpl implements TiersService {
     }
 
     @Override
-    public Tiers updateTiers(Tiers tiers) {
+    public Tiers updateTiers(Tiers tiers) throws AppServiceException {
 
         if (!tiersRightsHelper.checkCanUpdateTiers()) {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits d'éditer un tiers");
         }
 
+        if (tiers.getId() == null) {
+            throw new AppServiceException("L'id du tiers est obligatoire");
+        }
         Optional<TiersEntity> tiersEntity = tiersDao.findById(tiers.getId());
         if (tiersEntity.isEmpty()) {
             throw new NoSuchElementException("Le tiers d'id=" + tiers.getId() + " n'existe pas.");

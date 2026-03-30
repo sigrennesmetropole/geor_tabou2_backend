@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class TiersCustomDaoImpl extends AbstractCustomDaoImpl implements TiersCustomDao {
+public class TiersCustomDaoImpl extends AbstractCustomDaoImpl<TiersEntity> implements TiersCustomDao {
 
     //Champs utilisés pour le filtrage
     public static final String FIELD_NOM = "nom";

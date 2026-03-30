@@ -26,7 +26,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
-public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl implements EtapeOperationCustomDao {
+public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl<EtapeOperationEntity> implements EtapeOperationCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;
@@ -80,6 +80,13 @@ public class EtapeOperationCustomDaoImpl extends AbstractCustomDaoImpl implement
                 predicateStringCriteria(etapeCriteria.getMode(), FIELD_MODE, predicates, builder, root);
             }
 
+            if (etapeCriteria.getType() != null) {
+                predicateStringCriteria(etapeCriteria.getType(), FIELD_TYPE, predicates, builder, root);
+            }
+
+            if (etapeCriteria.getSecteur() != null) {
+                predicateBooleanCriteria(etapeCriteria.getSecteur(), FIELD_SECTEUR, predicates, builder, root);
+            }
             if (CollectionUtils.isNotEmpty(predicates)) {
                 criteriaQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
             }

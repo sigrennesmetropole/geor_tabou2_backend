@@ -139,11 +139,7 @@
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateApis>false</generateApis>
                             <generateModels>true</generateModels>
-							<!--<typeMappings>
-								<typeMapping>OffsetDateTime=java.time.LocalDateTime</typeMapping>
-							</typeMappings>-->
                             <configOptions>
-                                <!--<dateLibrary>legacy</dateLibrary>-->
                                 <dateLibrary>java8</dateLibrary>
                                 <useJakartaEe>true</useJakartaEe>
                             </configOptions>

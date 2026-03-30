@@ -139,6 +139,9 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         }
 
         // Vérification si type tiers existe
+        if (tiersTypeTiers.getTypeTiersId() == null) {
+            throw new AppServiceException("Le typeTiersId est obligatoire");
+        }
         Optional<TypeTiersEntity> typeTiersEntityOpt = typeTiersDao.findById(tiersTypeTiers.getTypeTiersId());
         if (typeTiersEntityOpt.isEmpty()) {
             throw new NoSuchElementException("Le typeTiersId = " + tiersTypeTiers.getTypeTiersId() + ERROR_NOT_EXIST);
@@ -146,6 +149,9 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         operationTiersEntity.setTypeTiers(typeTiersEntityOpt.get());
 
         // Vérification si tiers existe
+        if (tiersTypeTiers.getTiersId() == null) {
+            throw new AppServiceException("Le tiersId est obligatoire");
+        }
         Optional<TiersEntity> tiersEntityOpt = tiersDao.findById(tiersTypeTiers.getTiersId());
         if (tiersEntityOpt.isEmpty()) {
             throw new NoSuchElementException("Le tiersId = " + tiersTypeTiers.getTiersId() + ERROR_NOT_EXIST);

@@ -25,7 +25,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
-public class TypeFinancementOperationCustomDaoImpl extends AbstractCustomDaoImpl implements TypeFinancementOperationCustomDao{
+public class TypeFinancementOperationCustomDaoImpl extends AbstractCustomDaoImpl<TypeFinancementOperationEntity> implements TypeFinancementOperationCustomDao{
 
     @PersistenceContext(unitName = "tabouPU")
     EntityManager entityManager;

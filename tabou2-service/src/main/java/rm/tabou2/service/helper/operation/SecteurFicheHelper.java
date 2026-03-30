@@ -80,13 +80,13 @@ public class SecteurFicheHelper extends AbstractOperationFicheHelper {
         String path;
         VocationEntity vocation = operationEntity.getVocation();
         if(vocation == null){
-            throw new AppServiceNotFoundException();
+            throw new AppServiceNotFoundException(VocationEntity.class);
         }
 
         path = configuredTemplatesSecteurPath.get(vocation);
 
         if(path == null){
-            throw new AppServiceNotFoundException();
+            throw new AppServiceNotFoundException("Aucun template configuré pour la vocation : " + vocation.getCode());
         }
 
         File file = new File(path);

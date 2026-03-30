@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class TypeTiersCustomDaoImpl extends AbstractCustomDaoImpl implements TypeTiersCustomDao {
+public class TypeTiersCustomDaoImpl extends AbstractCustomDaoImpl<TypeTiersEntity> implements TypeTiersCustomDao {
 
     private static final String FIELD_LIBELLE = "libelle";
     private static final String FIELD_DATE_INACTIF = "dateInactif";

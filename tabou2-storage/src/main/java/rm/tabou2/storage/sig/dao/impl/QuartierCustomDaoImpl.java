@@ -26,7 +26,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.*;
 
 @Repository
-public class QuartierCustomDaoImpl  extends AbstractCustomDaoImpl implements QuartierCustomDao {
+public class QuartierCustomDaoImpl  extends AbstractCustomDaoImpl<QuartierEntity> implements QuartierCustomDao {
 
     @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;

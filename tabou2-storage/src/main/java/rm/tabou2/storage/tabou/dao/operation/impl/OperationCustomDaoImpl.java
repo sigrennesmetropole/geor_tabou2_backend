@@ -55,7 +55,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_VOCATI
 
 
 @Repository
-public class OperationCustomDaoImpl extends AbstractCustomDaoImpl implements OperationCustomDao {
+public class OperationCustomDaoImpl extends AbstractCustomDaoImpl<OperationEntity> implements OperationCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

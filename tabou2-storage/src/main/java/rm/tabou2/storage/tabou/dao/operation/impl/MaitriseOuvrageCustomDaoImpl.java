@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MaitriseOuvrageCustomDaoImpl extends AbstractCustomDaoImpl implements MaitriseOuvrageCustomDao {
+public class MaitriseOuvrageCustomDaoImpl extends AbstractCustomDaoImpl<MaitriseOuvrageEntity> implements MaitriseOuvrageCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

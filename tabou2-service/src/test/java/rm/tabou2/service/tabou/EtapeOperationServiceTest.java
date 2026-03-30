@@ -47,65 +47,75 @@ class EtapeOperationServiceTest {
 	private EtapeOperationEntity etape6;
 	private EtapeOperationEntity etape7;
 	private EtapeOperationEntity etape8;
+	private EtapeOperationEntity etape9;
 
 	@BeforeEach
-	public void init() {
+	void init() {
 
 		etape1 = new EtapeOperationEntity();
-		etape1.setCode("EN_PROJET_OFF");
-		etape1.setLibelle("En projet");
+		etape1.setCode("EN_REFLEXION_OFF");
+		etape1.setLibelle("En réflexion");
 		etape1.setMode("OFF");
 		etape1.setType("START");
 		etape1.setRemoveRestriction(false);
+		etape1.setProspectif(true);
 
 		etape2 = new EtapeOperationEntity();
-		etape2.setCode("EN_ETUDE_OFF");
-		etape2.setLibelle("En étude");
+		etape2.setCode("EN_PROJET_OFF");
+		etape2.setLibelle("En projet");
 		etape2.setMode("OFF");
 		etape2.setType("NORMAL");
 		etape2.setRemoveRestriction(false);
+		etape2.setProspectif(true);
 
 		etape3 = new EtapeOperationEntity();
-		etape3.setCode("ANNULE_OFF");
-		etape3.setLibelle("Annulé");
+		etape3.setCode("EN_ETUDE_OFF");
+		etape3.setLibelle("En étude");
 		etape3.setMode("OFF");
-		etape3.setType("END");
+		etape3.setType("NORMAL");
 		etape3.setRemoveRestriction(false);
 
 		etape4 = new EtapeOperationEntity();
-		etape4.setCode("EN_PROJET_PUBLIC");
-		etape4.setLibelle("En projet");
-		etape4.setMode(Etape.ModeEnum.PUBLIC.toString());
-		etape4.setType("START");
-		etape4.setRemoveRestriction(true);
+		etape4.setCode("ANNULE_OFF");
+		etape4.setLibelle("Annulé");
+		etape4.setMode("OFF");
+		etape4.setType("END");
+		etape4.setRemoveRestriction(false);
 
 		etape5 = new EtapeOperationEntity();
-		etape5.setCode("EN_ETUDE_PUBLIC");
-		etape5.setLibelle("En étude");
+		etape5.setCode("EN_PROJET_PUBLIC");
+		etape5.setLibelle("En projet");
 		etape5.setMode(Etape.ModeEnum.PUBLIC.toString());
-		etape5.setType("NORMAL");
+		etape5.setType("START");
 		etape5.setRemoveRestriction(true);
 
 		etape6 = new EtapeOperationEntity();
-		etape6.setCode("OPERATIONNEL_PUBLIC");
-		etape6.setLibelle("Opérationnel");
+		etape6.setCode("EN_ETUDE_PUBLIC");
+		etape6.setLibelle("En étude");
 		etape6.setMode(Etape.ModeEnum.PUBLIC.toString());
 		etape6.setType("NORMAL");
-		etape6.setRemoveRestriction(false);
+		etape6.setRemoveRestriction(true);
 
 		etape7 = new EtapeOperationEntity();
-		etape7.setCode("CLOTURE_PUBLIC");
-		etape7.setLibelle("Clôturé");
+		etape7.setCode("OPERATIONNEL_PUBLIC");
+		etape7.setLibelle("Opérationnel");
 		etape7.setMode(Etape.ModeEnum.PUBLIC.toString());
-		etape7.setType("END");
+		etape7.setType("NORMAL");
 		etape7.setRemoveRestriction(false);
 
 		etape8 = new EtapeOperationEntity();
-		etape8.setCode("ANNULE_PUBLIC");
-		etape8.setLibelle("Annulé");
+		etape8.setCode("CLOTURE_PUBLIC");
+		etape8.setLibelle("Clôturé");
 		etape8.setMode(Etape.ModeEnum.PUBLIC.toString());
-		etape8.setType("NORMAL");
+		etape8.setType("END");
 		etape8.setRemoveRestriction(false);
+
+		etape9 = new EtapeOperationEntity();
+		etape9.setCode("ANNULE_PUBLIC");
+		etape9.setLibelle("Annulé");
+		etape9.setMode(Etape.ModeEnum.PUBLIC.toString());
+		etape9.setType("NORMAL");
+		etape9.setRemoveRestriction(false);
 
 		etape1 = etapeOperationDao.save(etape1);
 		etape2 = etapeOperationDao.save(etape2);
@@ -115,10 +125,11 @@ class EtapeOperationServiceTest {
 		etape6 = etapeOperationDao.save(etape6);
 		etape7 = etapeOperationDao.save(etape7);
 		etape8 = etapeOperationDao.save(etape8);
+		etape9 = etapeOperationDao.save(etape9);
 	}
 
 	@AfterEach
-	public void after() {
+	void after() {
 		etapeOperationDao.deleteAll();
 	}
 
@@ -176,8 +187,8 @@ class EtapeOperationServiceTest {
 		etapeCriteria.setCode(null);
 		etapeCriteria.setLibelle("En*");
 		page = etapeOperationService.searchEtapesOperation(etapeCriteria, pageable);
-		assertEquals(4, page.getNumberOfElements(),
-				"Toutes les 4 etapes avec le libelle 'En*' sont visibles aux users réferents");
+		assertEquals(5, page.getNumberOfElements(),
+				"Toutes les 5 etapes avec le libelle 'En*' sont visibles aux users réferents");
 
 		// Sans filtre
 		etapeCriteria.setLibelle(null);

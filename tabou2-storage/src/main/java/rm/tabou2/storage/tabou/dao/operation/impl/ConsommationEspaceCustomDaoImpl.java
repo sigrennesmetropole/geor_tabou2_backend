@@ -22,7 +22,7 @@ import java.util.List;
 
 
 @Repository
-public class ConsommationEspaceCustomDaoImpl extends AbstractCustomDaoImpl implements ConsommationEspaceCustomDao {
+public class ConsommationEspaceCustomDaoImpl extends AbstractCustomDaoImpl<ConsommationEspaceEntity> implements ConsommationEspaceCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

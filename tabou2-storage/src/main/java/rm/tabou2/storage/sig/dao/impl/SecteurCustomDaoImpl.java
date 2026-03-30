@@ -6,10 +6,12 @@ import rm.tabou2.storage.sig.dao.SecteurCustomDao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import rm.tabou2.storage.sig.entity.SecteurEntity;
+
 import java.util.List;
 
 @Repository
-public class SecteurCustomDaoImpl extends AbstractCustomDaoImpl implements SecteurCustomDao {
+public class SecteurCustomDaoImpl extends AbstractCustomDaoImpl<SecteurEntity> implements SecteurCustomDao {
 
     @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;

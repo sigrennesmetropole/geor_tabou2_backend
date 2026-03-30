@@ -15,7 +15,6 @@ import rm.tabou2.service.validator.operation.ValidOperationUpdate;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 

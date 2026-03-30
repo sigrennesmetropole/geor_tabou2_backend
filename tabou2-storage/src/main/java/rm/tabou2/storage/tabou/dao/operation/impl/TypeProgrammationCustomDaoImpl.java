@@ -26,7 +26,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_INACTI
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 
 @Repository
-public class TypeProgrammationCustomDaoImpl extends AbstractCustomDaoImpl implements TypeProgrammationCustomDao {
+public class TypeProgrammationCustomDaoImpl extends AbstractCustomDaoImpl<TypeProgrammationEntity> implements TypeProgrammationCustomDao {
     @PersistenceContext(unitName = "tabouPU")
     EntityManager entityManager;
 

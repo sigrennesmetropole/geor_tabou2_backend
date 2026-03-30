@@ -55,7 +55,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TIERS;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_TIERS;
 
 @Repository
-public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements ProgrammeCustomDao {
+public class ProgrammeCustomDaoImpl extends AbstractCustomDaoImpl<ProgrammeEntity> implements ProgrammeCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

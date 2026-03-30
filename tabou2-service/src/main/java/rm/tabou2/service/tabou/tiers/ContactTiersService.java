@@ -23,7 +23,7 @@ public interface ContactTiersService {
      * @param contactTiers contact à ajoter
      * @return le ContactTiers créé
      */
-    ContactTiers createContactTiers(Long tiersId, ContactTiers contactTiers);
+    ContactTiers createContactTiers(Long tiersId, ContactTiers contactTiers) throws AppServiceException;
 
     /**
      * Mise à jour d'un contact de tiers
@@ -31,7 +31,7 @@ public interface ContactTiersService {
      * @param contactTiers contact à éditer
      * @return le ContactTiers modifié
      */
-    ContactTiers updateContactTiers(Long tiersId, ContactTiers contactTiers);
+    ContactTiers updateContactTiers(Long tiersId, ContactTiers contactTiers) throws AppServiceException;
 
     /**
      * Rends inactif un contact de tiers

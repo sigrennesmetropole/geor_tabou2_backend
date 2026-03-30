@@ -2,6 +2,7 @@ package rm.tabou2.service.helper.programme;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import rm.tabou2.service.dto.Programmation;
 import rm.tabou2.service.dto.Programme;
 import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.storage.tabou.dao.agapeo.AgapeoDao;
@@ -37,6 +39,7 @@ public class ProgrammePlannerHelper {
     public void computeSuiviHabitatOfProgramme(Page<Programme> programmes) {
         for (Programme programme : programmes.getContent()) {
             computeSuiviHabitatOfProgramme(programme);
+            computeAdsProgrammeData(programme);
         }
     }
 
@@ -62,6 +65,35 @@ public class ProgrammePlannerHelper {
 
         programme.setAdsDate(computeAdsDate(permis));
 
+    }
+
+    public void computeAdsProgrammeData(Programme programme) {
+        List<PermisConstruireEntity> permis = permisConstruireDao.findAllByNumAds(programme.getNumAds());
+
+        //On regarde d'abord les permis modificatifs
+        PermisConstruireEntity permisConstruireEntity = permis.stream()
+                .filter(p -> p.getVersionAds().toLowerCase().contains(PERMIS_MODIFICATIF))
+                .filter(p -> p.getDecision() != null && !decisionsExclues.contains(p.getDecision()))
+                .max(Comparator.comparing(PermisConstruireEntity::getAdsDate)).orElse(null);
+
+        //Si il n'y en a pas on cherche parmis les permis initiaux
+        if (permisConstruireEntity == null) {
+            permisConstruireEntity = permis.stream()
+                    .filter(p -> p.getVersionAds() == null)
+                    .filter(p -> p.getDecision() != null && !decisionsExclues.contains(p.getDecision()))
+                    .max(Comparator.comparing(PermisConstruireEntity::getAdsDate)).orElse(null);
+        }
+
+        //Si on a trouvé un permis de construire, alors on build la progrmmation
+        if (permisConstruireEntity != null) {
+            Programmation programmation = new Programmation();
+            programmation.setSurfaceEquipements(permisConstruireEntity.getSurfEquipPub());
+            programmation.setSurfaceIndustrie(permisConstruireEntity.getSurfIndustries());
+            programmation.setSurfaceCommerces(permisConstruireEntity.getSurfCommerces());
+            programmation.setSurfaceBureaux(permisConstruireEntity.getSurfBureaux());
+            programmation.setSurfaceAutres(permisConstruireEntity.getSurfAutre());
+            programme.setProgrammationNextAds(programmation);
+        }
     }
 
     /** Gestion de la date Doc

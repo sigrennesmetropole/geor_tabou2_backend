@@ -193,7 +193,7 @@ public abstract class AbstractOperationFicheHelper extends AbstractFicheHelper {
         if (operationEntity.getOperationnelDate() != null) {
             stringBuilder.append(operationEntity.getOperationnelDate().getYear());
         } else {
-            stringBuilder.append("Non précisée");
+            stringBuilder.append("Non précisé");
         }
 
         stringBuilder.append(" - ");
@@ -204,7 +204,7 @@ public abstract class AbstractOperationFicheHelper extends AbstractFicheHelper {
         if (endDate != null) {
             stringBuilder.append(endDate.getYear());
         } else {
-            stringBuilder.append("Non précisée");
+            stringBuilder.append("Non précisé");
         }
 
         return stringBuilder.toString();

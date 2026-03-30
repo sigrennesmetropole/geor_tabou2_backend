@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class OutilAmenagementCustomDaoImpl extends AbstractCustomDaoImpl implements OutilAmenagementCustomDao {
+public class OutilAmenagementCustomDaoImpl extends AbstractCustomDaoImpl<OutilAmenagementEntity> implements OutilAmenagementCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

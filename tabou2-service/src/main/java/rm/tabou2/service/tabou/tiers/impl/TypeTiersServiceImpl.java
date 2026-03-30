@@ -1,6 +1,5 @@
 package rm.tabou2.service.tabou.tiers.impl;
 
-import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -55,6 +54,9 @@ public class TypeTiersServiceImpl implements TypeTiersService {
 	@Override
 	public TypeTiers updateTypeTiers(TypeTiers typeTiers) {
 
+		if (typeTiers.getId() == null) {
+			throw new IllegalArgumentException("L'id du type tiers est obligatoire");
+		}
 		Optional<TypeTiersEntity> typeTiersOpt = typeTiersDao.findById(typeTiers.getId());
 		if (typeTiersOpt.isEmpty()) {
 			throw new NoSuchElementException("Le type tiers demandé n'existe pas , id=" + typeTiers.getId());

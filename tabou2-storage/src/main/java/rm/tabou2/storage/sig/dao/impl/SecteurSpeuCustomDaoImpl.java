@@ -26,7 +26,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NOM_SE
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NUM_SECTEUR;
 
 @Repository
-public class SecteurSpeuCustomDaoImpl extends AbstractCustomDaoImpl implements SecteurSpeuCustomDao {
+public class SecteurSpeuCustomDaoImpl extends AbstractCustomDaoImpl<SecteurSpeuEntity> implements SecteurSpeuCustomDao {
 
 
     @PersistenceContext(unitName = "sigPU")

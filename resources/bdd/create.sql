@@ -33,6 +33,8 @@ create table tabou_etape_operation (
                                  mode varchar(255),
                                  type varchar(255),
                                  remove_restriction boolean,
+                                 prospectif boolean not null default false,
+                                 secteur boolean not null default true,
                                  primary key (id_etape_operation)
 );
 

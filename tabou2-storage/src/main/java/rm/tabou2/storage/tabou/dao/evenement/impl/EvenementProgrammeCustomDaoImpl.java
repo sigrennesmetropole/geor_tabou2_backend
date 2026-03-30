@@ -32,7 +32,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_SYSTEM
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_TYPE_EVENEMENT;
 
 @Repository
-public class EvenementProgrammeCustomDaoImpl extends AbstractCustomDaoImpl implements EvenementProgrammeCustomDao {
+public class EvenementProgrammeCustomDaoImpl extends AbstractCustomDaoImpl<EvenementProgrammeEntity> implements EvenementProgrammeCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     private EntityManager entityManager;

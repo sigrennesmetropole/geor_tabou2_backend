@@ -23,7 +23,7 @@ import java.util.List;
 
 
 @Repository
-public class TypeEvenementCustomDaoImpl extends AbstractCustomDaoImpl implements TypeEvenementCustomDao {
+public class TypeEvenementCustomDaoImpl extends AbstractCustomDaoImpl<TypeEvenementEntity> implements TypeEvenementCustomDao {
 
     public static final String FIELD_LIBELLE = "libelle";
     public static final String FIELD_SYSTEME = "systeme";

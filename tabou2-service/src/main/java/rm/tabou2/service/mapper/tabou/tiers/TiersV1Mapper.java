@@ -31,7 +31,7 @@ public interface TiersV1Mapper {
         if(StringUtils.isEmpty(s.getAdresseNum()) && StringUtils.isEmpty(s.getAdresseRue())){
             return null;
         }
-        StringBuilder result = new StringBuilder();
+        StringBuilder result = new StringBuilder(128);
         if(!StringUtils.isEmpty(s.getAdresseNum())){
             result.append(s.getAdresseNum());
         }

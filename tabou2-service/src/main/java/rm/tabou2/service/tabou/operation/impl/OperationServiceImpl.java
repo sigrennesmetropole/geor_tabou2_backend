@@ -319,12 +319,12 @@ public class OperationServiceImpl implements OperationService {
 	public OperationIntermediaire updateEtapeOfOperationId(long operationId, long etapeId) throws AppServiceException {
 		EtapeOperationEntity etapeOperationEntity = etapeOperationDao.findOneById(etapeId);
 		if (etapeOperationEntity == null) {
-			throw new AppServiceNotFoundException();
+			throw new AppServiceNotFoundException(EtapeOperationEntity.class);
 		}
 
 		OperationEntity operationEntity = operationDao.findOneById(operationId);
 		if (operationEntity == null) {
-			throw new AppServiceNotFoundException();
+			throw new AppServiceNotFoundException(OperationEntity.class);
 		}
 
 		if (CollectionUtils.isEmpty(operationEntity.getEtapeOperation().getNextEtapes()) || operationEntity
@@ -370,8 +370,8 @@ public class OperationServiceImpl implements OperationService {
 					.orElseThrow(() -> new NoSuchElementException(
 							"Aucune vocation id = " + operation.getVocation().getId() + ERROR_NON_TROUVEE));
 			operationEntity.setVocation(vocation);
-		} else if (operation.getVocation() == null) {
-			operationEntity.setVocation(null);
+		} else {
+			throw new AppServiceException("Une opération doit obligatoirement avoir une vocation");
 		}
 
 		if (operation.getVocationZa() != null && operation.getVocationZa().getId() != null) {
@@ -552,6 +552,9 @@ public class OperationServiceImpl implements OperationService {
 		}
 
 		// type evenement
+		if (evenement.getTypeEvenement() == null || evenement.getTypeEvenement().getId() == null) {
+			throw new AppServiceException("Pas de type évenment fourni");
+		}
 		TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
 		if (typeEvenementEntity.isSysteme()) {
 			throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
@@ -600,6 +603,9 @@ public class OperationServiceImpl implements OperationService {
 		}
 
 		// type evenement
+		if (evenement.getTypeEvenement() == null || evenement.getTypeEvenement().getId() == null) {
+			throw new AppServiceException("Le type d'événement est obligatoire");
+		}
 		TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
 		evenementOperationEntity.setTypeEvenement(typeEvenementEntity);
 

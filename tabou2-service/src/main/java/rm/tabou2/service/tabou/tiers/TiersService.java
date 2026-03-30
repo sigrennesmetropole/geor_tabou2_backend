@@ -12,7 +12,7 @@ public interface TiersService {
 
     Tiers createTiers(Tiers tiers);
 
-    Tiers updateTiers(Tiers tiers);
+    Tiers updateTiers(Tiers tiers) throws AppServiceException;
 
     Tiers inactivateTiers(long tiersId) throws AppServiceException;
 

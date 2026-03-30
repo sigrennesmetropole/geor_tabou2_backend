@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
-public class MosCustomDaoImpl extends AbstractCustomDaoImpl implements MosCustomDao {
+public class MosCustomDaoImpl extends AbstractCustomDaoImpl<MosEntity> implements MosCustomDao {
 
 	@PersistenceContext(unitName = "tabouPU")
 	private EntityManager entityManager;

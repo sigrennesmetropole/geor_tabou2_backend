@@ -26,7 +26,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_INACTI
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 
 @Repository
-public class TypeActionOperationCustomDaoImpl extends AbstractCustomDaoImpl implements TypeActionOperationCustomDao {
+public class TypeActionOperationCustomDaoImpl extends AbstractCustomDaoImpl<TypeActionOperationEntity> implements TypeActionOperationCustomDao {
 
     @PersistenceContext(unitName = "tabouPU")
     EntityManager entityManager;
@@ -64,7 +64,7 @@ public class TypeActionOperationCustomDaoImpl extends AbstractCustomDaoImpl impl
         List<Predicate> predicates = new ArrayList<>();
 
         //Libelle du type tiers associé
-        if (!StringUtils.isEmpty(criteria.getLibelle())) {
+        if (StringUtils.hasLength(criteria.getLibelle())) {
             predicateStringCriteria(criteria.getLibelle(), FIELD_LIBELLE, predicates, builder, root);
         }
 

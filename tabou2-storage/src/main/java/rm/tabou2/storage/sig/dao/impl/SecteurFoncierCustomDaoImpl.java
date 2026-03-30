@@ -25,7 +25,7 @@ import java.util.List;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_NEGOCIATEUR;
 
 @Repository
-public class SecteurFoncierCustomDaoImpl extends AbstractCustomDaoImpl implements SecteurFoncierCustomDao {
+public class SecteurFoncierCustomDaoImpl extends AbstractCustomDaoImpl<SecteurFoncierEntity> implements SecteurFoncierCustomDao {
 
     @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;

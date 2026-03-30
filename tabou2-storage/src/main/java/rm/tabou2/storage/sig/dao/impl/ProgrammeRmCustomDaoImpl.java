@@ -28,7 +28,7 @@ import java.util.List;
  * Implémentation du DAO d'accès aux Programme Rennes Metropole (oa_programme).
  */
 @Repository
-public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl implements ProgrammeRmCustomDao {
+public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl<ProgrammeRmEntity> implements ProgrammeRmCustomDao {
 
     @PersistenceContext(unitName = "sigPU")
     private EntityManager entityManager;
@@ -152,21 +152,5 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl implements P
 
 
         return new PageImpl<>(results, pageable, totalCount.intValue());
-    }
-
-
-    private void buildQuery(CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<ProgrammeRmEntity> root) {
-
-        List<Predicate> predicates = new ArrayList<>();
-
-        //Id tabou null
-        predicateCriteriaNullOrNot(true, FieldsConstants.FIELD_ID_TABOU, predicates, builder, root);
-
-        //Définition de la clause Where
-        if (CollectionUtils.isNotEmpty(predicates)) {
-            criteriaQuery.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
-        }
-
-
     }
 }

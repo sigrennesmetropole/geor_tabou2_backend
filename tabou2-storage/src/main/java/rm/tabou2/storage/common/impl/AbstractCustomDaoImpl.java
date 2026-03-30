@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Classe abstraite des customDao.
  */
-public abstract class AbstractCustomDaoImpl {
+public abstract class AbstractCustomDaoImpl<E> {
 
     /**
      * Ajout d'un prédicat sur la requ
@@ -145,8 +145,8 @@ public abstract class AbstractCustomDaoImpl {
         }
     }
 
-    protected void assignOrder(Pageable pageable, CriteriaQuery searchQuery, Root searchRoot,
-                               CriteriaBuilder builder, Class entityClass) {
+    protected void assignOrder(Pageable pageable, CriteriaQuery<E> searchQuery, Root<E> searchRoot,
+                               CriteriaBuilder builder, Class<E> entityClass) {
         if (AbstractOrderEntity.class.isAssignableFrom(entityClass) && Sort.unsorted().equals(pageable.getSort())) {
             searchQuery.orderBy(
                     QueryUtils.toOrders(Sort.by(FieldsConstants.FIELD_DEFAULT_ORDERED_SORT), searchRoot, builder));
