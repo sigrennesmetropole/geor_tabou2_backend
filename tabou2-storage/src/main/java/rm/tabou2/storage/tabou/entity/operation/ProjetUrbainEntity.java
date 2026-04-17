@@ -35,4 +35,7 @@ public class ProjetUrbainEntity {
 
 	@Column(name = "savoir")
 	private String savoir;
+
+	@Column(name = "plus_informations")
+	private String plusInformations;
 }

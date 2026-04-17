@@ -26,6 +26,7 @@ import lombok.Setter;
 import lombok.ToString;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.ProjetUrbainEntity;
 import rm.tabou2.storage.tabou.entity.plh.AttributPLHEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 
@@ -169,6 +170,10 @@ public class ProgrammeEntity extends GenericAuditableEntity {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_programmation")
 	private ProgrammationEntity programmation;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_projet_urbain")
+    private ProjetUrbainEntity projetUrbain;
 
     public void addEvenementProgramme(EvenementProgrammeEntity evenementProgrammeEntity) {
         this.evenements.add(evenementProgrammeEntity);

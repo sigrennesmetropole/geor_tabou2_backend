@@ -450,6 +450,9 @@
           },
           "savoir": {
             "type": "string"
+          },
+          "plusInformations": {
+            "type": "string"
           }
         },
         "description": "Projet urbain"
@@ -700,6 +703,9 @@
           },
           "programmationNextAds": {
             "$ref": "#/components/schemas/Programmation"
+          },
+          "projetUrbain": {
+            "$ref": "#/components/schemas/ProjetUrbain"
           }
         }
       },

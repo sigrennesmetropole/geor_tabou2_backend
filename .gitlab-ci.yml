@@ -19,15 +19,15 @@ include:
     file: 'docker/docker-template.yml'
   - project: 'boost/template-ci/pipelines/common'
     file: 'securite/oss-index/oss-index-template.yml'
-  - component: $CI_SERVER_FQDN/boost/ci-component/security/dependency-track@2.0.0
-  - component: $CI_SERVER_FQDN/boost/ci-component/security/cdxgen-sbom@2.0.1
-  - component: $CI_SERVER_FQDN/boost/ci-component/security/syft-docker-sbom@2.0.0
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/dependency-track@~latest
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/cdxgen-sbom@~latest
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/syft-docker-sbom@~latest
     inputs:
       image_docker: 'glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/rennes-metropole:open-develop'
-  - component: $CI_SERVER_FQDN/boost/ci-component/security/trivy-docker-sbom@2.0.0
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/trivy-docker-sbom@~latest
     inputs:
       image_docker: 'glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/proxy:open-develop'
-  - component: $CI_SERVER_FQDN/boost/ci-component/security/trivy-docker-sbom@2.0.0
+  - component: $CI_SERVER_FQDN/boost/ci-component/security/trivy-docker-sbom@~latest
     inputs:
       image_docker: 'glregistry.boost.open.global/rennes-metropole/tabou2/tabou2/tabou2:open-develop'
 
