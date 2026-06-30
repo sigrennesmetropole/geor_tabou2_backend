@@ -24,13 +24,13 @@ import java.util.List;
 public abstract class AbstractCustomDaoImpl<E> {
 
     /**
-     * Ajout d'un prédicat sur la requ
+     * Ajout d'un prédicat sur la requête.
      *
-     * @param criteria
-     * @param type
-     * @param predicates
-     * @param builder
-     * @param root
+     * @param criteria   valeur du critère de recherche
+     * @param type       nom du champ de l'entité
+     * @param predicates liste des prédicats à enrichir
+     * @param builder    criteria builder
+     * @param root       root de la requête
      */
     protected void predicateStringCriteria(String criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
        predicateStringCriteria(criteria, root.get(type), predicates, builder);
@@ -117,6 +117,29 @@ public abstract class AbstractCustomDaoImpl<E> {
 
         predicateBetweenCriteria(anneeDebut, anneeFin, type, predicates, builder, root);
 
+    }
+
+    /**
+     * Ajoute un prédicat de filtrage sur les entités actives basé sur les dates de validité.
+     * <p>Une entité est considérée active si dateDebut <= maintenant ET (dateFin IS NULL OU dateFin >= maintenant).</p>
+     * <p>Si actifUniquement est true, seules les entités actives sont retournées.
+     * Si actifUniquement est null ou false, aucun filtre sur les dates n'est appliqué (tous les éléments sont retournés).</p>
+     *
+     * @param actifUniquement si true, filtre sur les dates de validité pour ne garder que les actifs
+     * @param predicates      liste des prédicats à enrichir
+     * @param builder         criteria builder
+     * @param root            root de la requête
+     */
+    protected void predicateActifCriteria(Boolean actifUniquement, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {
+        if (Boolean.TRUE.equals(actifUniquement)) {
+            LocalDateTime now = LocalDateTime.now();
+
+            predicates.add(builder.lessThanOrEqualTo(root.get(FieldsConstants.FIELD_DATE_DEBUT), now));
+
+            Predicate dateFinNull = builder.isNull(root.get(FieldsConstants.FIELD_DATE_FIN));
+            Predicate dateFinFuture = builder.greaterThan(root.get(FieldsConstants.FIELD_DATE_FIN), now);
+            predicates.add(builder.or(dateFinNull, dateFinFuture));
+        }
     }
 
     protected void predicateLongCriteria(Long criteria, String type, List<Predicate> predicates, CriteriaBuilder builder, Root<?> root) {

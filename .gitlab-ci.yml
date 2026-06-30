@@ -1,11 +1,12 @@
 # Pipeline variables
 variables:
   MAVEN_CLI_OPTS: "-s .m2/settings.xml -Dmaven.repo.local=.m2/repository --batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
+  MAVEN_CLI_OPTS_VERSION: "help:evaluate -Dexpression=project.version -q -DforceStdout -s .m2/settings.xml -Dmaven.repo.local=.m2/repository"
+  MVN_ARGS: "-s /builds/rennes-metropole/tabou2/tabou2/.m2/settings.xml"
   DOCKER_DISABLE: "true"
   GITHUB_COMMIT_MESSAGE:
     description: "Message du commit poussé vers le GitHub (cf job push-to-github). Par défaut : $CI_COMMIT_REF_NAME (nom de la branche ou du tag)."
     value: $CI_COMMIT_REF_NAME
-  OSS_NPM_DISABLE: "true"
 
 # Cache policy - Share target folders between jobs - Note that key is related to a commit and is purged automatically after pipeline execution
 cache:
@@ -17,8 +18,6 @@ cache:
 include:
   - project: 'boost/template-ci/pipelines/common'
     file: 'docker/docker-template.yml'
-  - project: 'boost/template-ci/pipelines/common'
-    file: 'securite/oss-index/oss-index-template.yml'
   - component: $CI_SERVER_FQDN/boost/ci-component/security/dependency-track@~latest
   - component: $CI_SERVER_FQDN/boost/ci-component/security/cdxgen-sbom@~latest
   - component: $CI_SERVER_FQDN/boost/ci-component/security/syft-docker-sbom@~latest
@@ -33,7 +32,7 @@ include:
 
 
 default:
-  image: maven:3.9.0-eclipse-temurin-17
+  image: maven:3.9.6-eclipse-temurin-17
   before_script:
     - apt update && apt install -y gettext-base
     - envsubst '${MVN_GROUP} ${MVN_RELEASE} ${MVN_SNAPSHOTS}' < pom.xml > pom.subst && mv -f pom.subst pom.xml
@@ -52,7 +51,10 @@ stages:
 # Build job with maven plugin execution policies define in parent pom
 tabou2:build:
   script:
-    - sh ./mvnw $MAVEN_CLI_OPTS -U clean package
+    - PROJET_VERSION=$(mvn $MAVEN_CLI_OPTS_VERSION)
+    - echo "PROJET_VERSION=$PROJET_VERSION" >> build.env
+    - echo $PROJET_VERSION
+    - mvn $MAVEN_CLI_OPTS -U clean package
   stage: build
   artifacts:
     paths:
@@ -82,7 +84,7 @@ tabou2:sonar:
   allow_failure: true
   script:
     - >
-      sh ./mvnw $MAVEN_CLI_OPTS -U compile sonar:sonar
+      mvn $MAVEN_CLI_OPTS -U compile sonar:sonar
       -Dsonar.host.url=$SONAR_URL
       -Dsonar.login=$SONAR_TOKEN
       -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA
@@ -105,7 +107,7 @@ tabou2:sonar:master:
   allow_failure: true
   script:
     - >
-      sh ./mvnw $MAVEN_CLI_OPTS -U compile sonar:sonar
+      mvn $MAVEN_CLI_OPTS -U compile sonar:sonar
       -Dsonar.host.url=$SONAR_URL
       -Dsonar.login=$SONAR_TOKEN
       -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA
@@ -200,6 +202,9 @@ tabou2:deploy:master:
   stage: pre_docker
   script:
     - echo "send automation to georchestra deploiement"
+    - PROJET_VERSION=$(mvn $MAVEN_CLI_OPTS_VERSION)
+    - echo "PROJET_VERSION=$PROJET_VERSION" >> build.env
+    - echo $PROJET_VERSION
   artifacts:
     name: tabou2-karbon-${TARGET_ENV}
     paths:

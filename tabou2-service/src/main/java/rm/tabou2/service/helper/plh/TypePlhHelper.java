@@ -1,20 +1,22 @@
 package rm.tabou2.service.helper.plh;
 
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.exception.AppServiceNotFoundException;
 import rm.tabou2.storage.tabou.dao.plh.AttributPLHDao;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.plh.AttributPLHEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypeAttributPLH;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
-
-import java.util.List;
-import java.util.Set;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Component
@@ -25,46 +27,70 @@ public class TypePlhHelper {
     private final AttributPLHDao attributPLHDao;
 
     /**
-     * Peuple de façon récursive un type PLH avec ses valeurs associées dans le programme
-     * @param typePLH   type PLH à peupler
+     * Récupère un type PLH par son identifiant.
+     *
+     * @param typePLHId identifiant du type PLH
+     * @return l'entité type PLH
+     * @throws AppServiceNotFoundException si le type PLH n'existe pas
+     */
+    public TypePLHEntity getTypePLHEntity(long typePLHId) throws AppServiceException {
+        return typePlhDao.findById(typePLHId)
+                .orElseThrow(() -> new AppServiceNotFoundException(TypePLHEntity.class));
+    }
+
+    /**
+     * Peuple de façon récursive un type PLH avec ses valeurs associées dans le
+     * programme
+     *
+     * @param typePLH         type PLH à peupler
      * @param programmeEntity le programmeEntity duquel est rattaché le typePLH
      * @return le typePLH peuplé
      */
-    public TypePLH populateTypePlh (TypePLH typePLH, ProgrammeEntity programmeEntity) {
+    public TypePLH populateTypePLH(TypePLH typePLH, ProgrammeEntity programmeEntity) {
+        return populateTypePLH(typePLH, programmeEntity == null ? null : programmeEntity.getAttributsPLH());
+    }
+
+    /**
+     * Peuple de façon récursive un type PLH avec ses valeurs associées dans
+     * l'opération
+     *
+     * @param typePLH         type PLH à peupler
+     * @param operationEntity le operationEntity duquel est rattaché le typePLH
+     * @return le typePLH peuplé
+     */
+    public TypePLH populateTypePLH(TypePLH typePLH, OperationEntity operationEntity) {
+        return populateTypePLH(typePLH, operationEntity == null ? null : operationEntity.getAttributsPLH());
+    }
+
+    private TypePLH populateTypePLH(TypePLH typePLH, Set<AttributPLHEntity> attributsPLH) {
         if (typePLH == null) {
             return null;
         }
-        // Si c'est une catégorie
         if (typePLH.getTypeAttributPLH() == TypePLH.TypeAttributPLHEnum.CATEGORY) {
-            populateTypeCategoryPLH(typePLH, programmeEntity);
-
-        }
-        // sinon, c'est donc un type VALUE
-        else {
-            populateTypeValuePLH(typePLH, programmeEntity);
+            populateTypeCategoryPLH(typePLH, attributsPLH);
+        } else {
+            populateTypeValuePLH(typePLH, attributsPLH);
         }
         return typePLH;
     }
 
-    private void populateTypeCategoryPLH(TypePLH typePLH, ProgrammeEntity programmeEntity) {
+    private void populateTypeCategoryPLH(TypePLH typePLH, Set<AttributPLHEntity> attributsPLH) {
         if (CollectionUtils.isNotEmpty(typePLH.getFils())) {
-            List<TypePLH> fils = typePLH.getFils();
-            // Alors, on réutilise récursivement populateTypePlh pour voir si les fils sont à peupler
-            for (TypePLH typePLHFils : fils) {
+            // Alors, on réutilise récursivement populateTypePlh pour voir si les fils sont
+            // à peupler
+            for (TypePLH typePLHFils : typePLH.getFils()) {
                 if (typePLHFils != null) {
-                    populateTypePlh(typePLHFils, programmeEntity);
+                    populateTypePLH(typePLHFils, attributsPLH);
                 }
             }
         }
     }
 
-    private void populateTypeValuePLH(TypePLH typePLH, ProgrammeEntity programmeEntity) {
-        if (programmeEntity == null || CollectionUtils.isEmpty(programmeEntity.getAttributsPLH())) {
+    private void populateTypeValuePLH(TypePLH typePLH, Set<AttributPLHEntity> attributsPLH) {
+        if (CollectionUtils.isEmpty(attributsPLH)) {
             return;
         }
-        Set<AttributPLHEntity> attributPLHEntities = programmeEntity.getAttributsPLH();
-        // on fait setValue() si on trouve un attribut correspondant à notre type PLH
-        for (AttributPLHEntity attributPLHEntity : attributPLHEntities) {
+        for (AttributPLHEntity attributPLHEntity : attributsPLH) {
             if (attributPLHEntity != null && attributPLHEntity.getType() != null &&
                     Objects.equals(attributPLHEntity.getType().getId(), typePLH.getId())) {
                 typePLH.setValue(attributPLHEntity.getValue());
@@ -73,10 +99,12 @@ public class TypePlhHelper {
     }
 
     /**
-     * Vérification récursive qu'un TypePLH et ses fils ne possède pas de fils s'ils sont du type attribut VALUE
-     * @param typePLH   type PLH à vérifier
+     * Vérification récursive qu'un TypePLH et ses fils ne possède pas de fils s'ils
+     * sont du type attribut VALUE
+     *
+     * @param typePLH type PLH à vérifier
      */
-    public void checkTypeAttributPLH (TypePLHEntity typePLH) throws AppServiceException {
+    public void checkTypeAttributPLH(TypePLHEntity typePLH) throws AppServiceException {
         if (typePLH == null) {
             return;
         }
@@ -94,11 +122,13 @@ public class TypePlhHelper {
     }
 
     /**
-     * Met à jour de façon récursive toutes les valeurs qui auraient changé dans l'arborescence du type PLH
-     * @param typePLH   type PLH à mettre à jour
+     * Met à jour de façon récursive toutes les valeurs qui auraient changé dans
+     * l'arborescence du type PLH pour un programme
+     *
+     * @param typePLH         type PLH à mettre à jour
      * @param programmeEntity le programmeEntity duquel est rattaché le typePLH
      */
-    public void updateValuesTypePlh (TypePLH typePLH, ProgrammeEntity programmeEntity) {
+    public void updateValuesTypePLH(TypePLH typePLH, ProgrammeEntity programmeEntity) {
         if (typePLH == null) {
             return;
         }
@@ -139,54 +169,65 @@ public class TypePlhHelper {
 
     private void updateValuesTypeCategoryPLH(TypePLH typePLH, ProgrammeEntity programmeEntity) {
         if (CollectionUtils.isNotEmpty(typePLH.getFils())) {
-            List<TypePLH> fils = typePLH.getFils();
-            // Alors, on réutilise récursivement updateValuesTypePlh pour voir si les fils sont à mettre à jour
-            for (TypePLH typePLHFils : fils) {
+            // Alors, on réutilise récursivement updateValuesTypePlh pour voir si les fils
+            // sont à mettre à jour
+            for (TypePLH typePLHFils : typePLH.getFils()) {
                 if (typePLHFils != null) {
-                    updateValuesTypePlh(typePLHFils, programmeEntity);
+                    updateValuesTypePLH(typePLHFils, programmeEntity);
                 }
             }
         }
     }
 
     /**
-     * Supprime de façon récursive l'attribut d'un type PLH ET les attributs de ses fils de la liste du programme
-     * @param typePLH   type PLH à supprimer
-     * @param programmeEntity le programmeEntity duquel est rattaché le typePLH
+     * Met à jour de façon récursive toutes les valeurs qui auraient changé dans
+     * l'arborescence du type PLH pour une opération
+     *
+     * @param typePLH         type PLH à mettre à jour
+     * @param operationEntity le operationEntity duquel est rattaché le typePLH
      */
-    public void removeValuesTypePlh (TypePLH typePLH, ProgrammeEntity programmeEntity) {
+    public void updateValuesTypePLH(TypePLH typePLH, OperationEntity operationEntity) {
         if (typePLH == null) {
             return;
         }
         if (typePLH.getTypeAttributPLH() == TypePLH.TypeAttributPLHEnum.CATEGORY) {
-            removeCategoryValues(typePLH, programmeEntity);
+            updateValuesTypeCategoryPLH(typePLH, operationEntity);
         } else {
-            removeValueTypeValue(typePLH, programmeEntity);
+            updateValuesTypeValuePLH(typePLH, operationEntity);
         }
     }
 
-    private void removeCategoryValues(TypePLH typePLH, ProgrammeEntity programmeEntity) {
-        // et qu'elle a des fils
+    private void updateValuesTypeValuePLH(TypePLH typePLH, OperationEntity operationEntity) {
+        if (operationEntity == null) {
+            return;
+        }
+        Set<AttributPLHEntity> attributsPLH = operationEntity.getAttributsPLH();
+        Optional<AttributPLHEntity> attributExistant = CollectionUtils.isEmpty(attributsPLH) ? Optional.empty()
+                : attributsPLH.stream()
+                        .filter(a -> a != null && a.getType() != null
+                                && Objects.equals(a.getType().getId(), typePLH.getId()))
+                        .findFirst();
+        if (attributExistant.isPresent()) {
+            AttributPLHEntity attributPLHExistant = attributExistant.get();
+            attributPLHExistant.setValue(typePLH.getValue());
+            attributPLHDao.save(attributPLHExistant);
+            return;
+        }
+        // sinon, on la créé et on l'ajoute
+        AttributPLHEntity attributPLHEntity = new AttributPLHEntity();
+        attributPLHEntity.setValue(typePLH.getValue());
+        attributPLHEntity.setType(typePlhDao.findOneById(typePLH.getId()));
+        attributPLHEntity = attributPLHDao.save(attributPLHEntity);
+        operationEntity.addAttributPLHOperation(attributPLHEntity);
+    }
+
+    private void updateValuesTypeCategoryPLH(TypePLH typePLH, OperationEntity operationEntity) {
         if (CollectionUtils.isNotEmpty(typePLH.getFils())) {
-            List<TypePLH> fils = typePLH.getFils();
-            // Alors, on supprime récursivement les attributs de ses fils
-            for (TypePLH typePLHFils : fils) {
+            for (TypePLH typePLHFils : typePLH.getFils()) {
                 if (typePLHFils != null) {
-                    removeValuesTypePlh(typePLHFils, programmeEntity);
+                    updateValuesTypePLH(typePLHFils, operationEntity);
                 }
             }
         }
     }
-
-    private void removeValueTypeValue(TypePLH typePLH, ProgrammeEntity programmeEntity) {
-        // on récupère les attributs du programme
-        if (programmeEntity == null || CollectionUtils.isEmpty(programmeEntity.getAttributsPLH())) {
-            return;
-        }
-        Set<AttributPLHEntity> attributPLHEntities = programmeEntity.getAttributsPLH();
-        // on supprime si on trouve un attribut correspondant à notre type PLH
-        attributPLHEntities.removeIf(attributPLHEntity -> attributPLHEntity != null && attributPLHEntity.getType() != null &&
-                Objects.equals(attributPLHEntity.getType().getId(), typePLH.getId()));
-    }
-
 }

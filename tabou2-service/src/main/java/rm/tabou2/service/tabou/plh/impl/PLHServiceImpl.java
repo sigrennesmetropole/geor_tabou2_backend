@@ -49,7 +49,7 @@ public class PLHServiceImpl implements PLHService {
 	private final ProgrammePlannerHelper programmePlannerHelper;
 
 	private final PermisConstruireDao permisConstruireDao;
-	
+
 	private final DateHelper dateHelper;
 
 	@Override
@@ -130,14 +130,14 @@ public class PLHServiceImpl implements PLHService {
 
 		// Vérification qu'aucun programmes ne possède le type PLH à supprimer
 		List<ProgrammeEntity> programmes = programmeDao.findAll();
-		for(ProgrammeEntity programmeEntity : programmes) {
-			if (programmeEntity.lookupOptionalTypePLHById(id).isEmpty()) {
+		for (ProgrammeEntity programmeEntity : programmes) {
+			if (programmeEntity.lookupTypePLHById(id).isEmpty()) {
 				throw new AppServiceException("Suppression du Type PLH id = " + id +
 						"interdite car toujours rattaché à un ou des programmes", AppServiceExceptionsStatus.FORBIDDEN);
 			}
 		}
 
-		//Suppression du type PLH
+		// Suppression du type PLH
 		TypePLHEntity typePLHEntity = typePLHDao.findOneById(id);
 		typePLHDao.delete(typePLHEntity);
 	}

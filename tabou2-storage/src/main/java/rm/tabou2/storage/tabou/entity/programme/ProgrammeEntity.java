@@ -30,10 +30,9 @@ import rm.tabou2.storage.tabou.entity.operation.ProjetUrbainEntity;
 import rm.tabou2.storage.tabou.entity.plh.AttributPLHEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 
-
 @Getter
 @Setter
-@ToString(exclude = {"evenements", "etapeProgramme", "operation"})
+@ToString(exclude = { "evenements", "etapeProgramme", "operation" })
 @Entity
 @Table(name = "tabou_programme")
 public class ProgrammeEntity extends GenericAuditableEntity {
@@ -136,8 +135,32 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     private int logementsAccessLibrePrevu;
 
     @Basic
+    @Column(name = "prix_logts_libres_m2_shab_prevu")
+    private Double prixLogtsLibresM2ShabPrevu;
+
+    @Basic
+    @Column(name = "prix_logts_libres_m2_shab_realise")
+    private Double prixLogtsLibresM2ShabRealise;
+
+    @Basic
+    @Column(name = "prix_terrain_batir_m2_prevu")
+    private Double prixTerrainBatirM2Prevu;
+
+    @Basic
+    @Column(name = "prix_terrain_batir_m2_realise")
+    private Double prixTerrainBatirM2Realise;
+
+    @Basic
     @Column(name = "logements_habitat_favorable_vieillissement")
     private Integer nbLogementsHFV;
+
+    @Basic
+    @Column(name = "hebergement_resid_senior_prevu")
+    private Integer hebergementResidSeniorPrevu;
+
+    @Basic
+    @Column(name = "hebergement_resid_senior_realise")
+    private Integer hebergementResidSeniorRealise;
 
     @Basic
     @Column(name = "surface_shab")
@@ -151,25 +174,25 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @JoinColumn(name = "id_operation")
     private OperationEntity operation;
 
-    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-    @JoinTable(
-            name = "tabou_programme_type_plh",
-            joinColumns = @JoinColumn(name = "id_programme", referencedColumnName = "id_programme"),
-            inverseJoinColumns = @JoinColumn(name = "id_type_plh", referencedColumnName = "id_type_plh")
-    )
+    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinTable(name = "tabou_programme_type_plh", joinColumns = @JoinColumn(name = "id_programme", referencedColumnName = "id_programme"), inverseJoinColumns = @JoinColumn(name = "id_type_plh", referencedColumnName = "id_type_plh"))
     private Set<TypePLHEntity> plhs;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_programme")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "tabou_programme_attribut_plh", joinColumns = @JoinColumn(name = "id_programme", referencedColumnName = "id_programme"), inverseJoinColumns = @JoinColumn(name = "id_attribut_plh", referencedColumnName = "id_attribut_plh"))
     private Set<AttributPLHEntity> attributsPLH;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_programme")
     private Set<EvenementProgrammeEntity> evenements = new HashSet<>();
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_programmation")
-	private ProgrammationEntity programmation;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_programmation")
+    private ProgrammationEntity programmation;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_programmation_habitat")
+    private ProgrammationHabitatEntity programmationHabitat;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_projet_urbain")
@@ -198,12 +221,12 @@ public class ProgrammeEntity extends GenericAuditableEntity {
         }
     }
 
-    public Optional<TypePLHEntity> lookupOptionalTypePLHById(long typePLHid) {
+    public Optional<TypePLHEntity> lookupTypePLHById(long typePLHid) {
         if (this.plhs == null) {
             return Optional.empty();
         }
         return this.plhs.stream()
-                .filter(typePLH -> typePLH.getId()== typePLHid)
+                .filter(typePLH -> typePLH.getId() == typePLHid)
                 .findFirst();
     }
 
@@ -216,8 +239,12 @@ public class ProgrammeEntity extends GenericAuditableEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ProgrammeEntity that = (ProgrammeEntity) o;
         return getId() == that.getId() && getCode().equals(that.getCode()) && getNom().equals(that.getNom());
     }

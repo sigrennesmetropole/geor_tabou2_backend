@@ -8,9 +8,11 @@ import rm.tabou2.service.mapper.AbstractMapper;
 import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 
+import rm.tabou2.service.mapper.tabou.logement.LogementsSpecifiquesMapper;
+
 @Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class, VocationMapper.class,
         DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, OutilAmenagementMapper.class, ConsommationEspaceMapper.class,
-        OperationEmpriseHelper.class, ProjetUrbainMapper.class, LocaDateTimeMapper.class})
+        OperationEmpriseHelper.class, ProjetUrbainMapper.class, LocaDateTimeMapper.class, LogementsSpecifiquesMapper.class})
 public interface OperationMapper extends AbstractMapper<OperationEntity, OperationIntermediaire> {
 
     @Mapping(target = "etapeOperation", ignore = true)
@@ -26,6 +28,7 @@ public interface OperationMapper extends AbstractMapper<OperationEntity, Operati
     @Mapping(target = "entiteReferente", ignore = true)
     @Mapping(target = "outilFoncier", ignore = true)
     @Mapping(target = "typeOccupation", ignore = true)
+    @Mapping(target = "logementsSpecifiques", ignore = true)
     @Override
     OperationEntity dtoToEntity(OperationIntermediaire dto);
 
@@ -58,6 +61,7 @@ public interface OperationMapper extends AbstractMapper<OperationEntity, Operati
     @Mapping(target = "concertation", ignore = true)
     @Mapping(target = "entiteReferente", ignore = true)
     @Mapping(target = "outilFoncier", ignore = true)
+    @Mapping(target = "logementsSpecifiques", ignore = true)
     @Mapping(target = "secteur",
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Override

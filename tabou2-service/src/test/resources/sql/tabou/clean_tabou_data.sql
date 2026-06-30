@@ -1,3 +1,9 @@
+delete from tabou_operation_attribut_plh;
+delete from tabou_programme_attribut_plh;
+delete from tabou_attribut_plh;
+delete from tabou_operation_type_plh;
+delete from tabou_type_plh;
+
 delete from tabou_operation;
 delete from tabou_programme;
 

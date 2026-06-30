@@ -10,5 +10,5 @@ import rm.tabou2.service.dto.Operation;
 @Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class, VocationMapper.class,
         DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, OutilAmenagementMapper.class, ConsommationEspaceMapper.class,
 		ProjetUrbainMapper.class, LocaDateTimeMapper.class})
-public interface OperationV2Mapper extends AbstractMapper<OperationIntermediaire, Operation> {
+public interface OperationDtoMapper extends AbstractMapper<OperationIntermediaire, Operation> {
 }

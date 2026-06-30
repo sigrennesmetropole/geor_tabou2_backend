@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>tabou2</artifactId>
 		<groupId>rm</groupId>
-		<version>2.2.0</version>
+		<version>2.3.0</version>
 		<relativePath>../</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -125,28 +125,6 @@
 							<apiPackage>rm.tabou2.facade.api</apiPackage>
 							<inputSpec>./resources/openapi/tabou2-api.json</inputSpec>
 							<serverVariableOverrides>basePath=</serverVariableOverrides>
-						</configuration>
-					</execution>
-					<execution>
-						<id>generate-api-v1</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<apiPackage>rm.tabou2.facade.api.v1</apiPackage>
-							<inputSpec>./resources/openapi/tabou2-api-v1.json</inputSpec>
-							<serverVariableOverrides>basePath=v1</serverVariableOverrides>
-						</configuration>
-					</execution>
-					<execution>
-						<id>generate-api-v2</id>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<apiPackage>rm.tabou2.facade.api.v2</apiPackage>
-							<inputSpec>./resources/openapi/tabou2-api-v2.json</inputSpec>
-							<serverVariableOverrides>basePath=v2</serverVariableOverrides>
 						</configuration>
 					</execution>
 				</executions>

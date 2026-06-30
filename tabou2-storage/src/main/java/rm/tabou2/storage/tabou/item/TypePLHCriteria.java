@@ -17,4 +17,6 @@ public class TypePLHCriteria {
 
     private Boolean selectionnable;
 
+    private Long operationId;
+
 }

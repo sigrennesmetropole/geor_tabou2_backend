@@ -1,13 +1,6 @@
 package rm.tabou2.service.tabou.programme.impl;
 
-import java.text.MessageFormat;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
@@ -26,23 +19,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-
-import lombok.RequiredArgsConstructor;
 import rm.tabou2.service.alfresco.AlfrescoService;
 import rm.tabou2.service.alfresco.dto.AlfrescoDocumentRoot;
 import rm.tabou2.service.alfresco.dto.AlfrescoTabouType;
-import rm.tabou2.service.dto.DocumentMetadata;
-import rm.tabou2.service.dto.Emprise;
-import rm.tabou2.service.dto.Etape;
-import rm.tabou2.service.dto.Evenement;
-import rm.tabou2.service.dto.Programme;
-import rm.tabou2.service.dto.ProgrammeLight;
-import rm.tabou2.service.dto.TypePLH;
+import rm.tabou2.service.dto.*;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.date.DateHelper;
+import rm.tabou2.service.helper.logement.LogementSpecifiqueHelper;
 import rm.tabou2.service.helper.plh.TypePlhHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammeFicheHelper;
@@ -52,10 +38,7 @@ import rm.tabou2.service.helper.programme.ProgrammeValidator;
 import rm.tabou2.service.mapper.sig.ProgrammeRmMapper;
 import rm.tabou2.service.mapper.tabou.document.DocumentMapper;
 import rm.tabou2.service.mapper.tabou.plh.TypePLHMapper;
-import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
-import rm.tabou2.service.mapper.tabou.programme.EvenementProgrammeMapper;
-import rm.tabou2.service.mapper.tabou.programme.ProgrammeLightMapper;
-import rm.tabou2.service.mapper.tabou.programme.ProgrammeMapper;
+import rm.tabou2.service.mapper.tabou.programme.*;
 import rm.tabou2.service.st.generator.DocumentGenerator;
 import rm.tabou2.service.st.generator.model.DocumentContent;
 import rm.tabou2.service.st.generator.model.GenerationModel;
@@ -68,21 +51,21 @@ import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
-import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
-import rm.tabou2.storage.tabou.dao.programme.EvenementProgrammeDao;
-import rm.tabou2.storage.tabou.dao.programme.ProgrammeCustomDao;
-import rm.tabou2.storage.tabou.dao.programme.ProgrammeDao;
-import rm.tabou2.storage.tabou.dao.programme.ProgrammeTiersCustomDao;
+import rm.tabou2.storage.tabou.dao.programme.*;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
+import rm.tabou2.storage.tabou.entity.logement.LogementsSpecifiquesEntity;
+import rm.tabou2.storage.tabou.entity.logement.PorteeAccessionLogement;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
-import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
-import rm.tabou2.storage.tabou.entity.programme.EvenementProgrammeEntity;
-import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
-import rm.tabou2.storage.tabou.entity.programme.ProgrammeTiersEntity;
+import rm.tabou2.storage.tabou.entity.programme.*;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
+
+import java.text.MessageFormat;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON, proxyMode = ScopedProxyMode.INTERFACES)
@@ -91,10 +74,10 @@ import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 @RequiredArgsConstructor
 public class ProgrammeServiceImpl implements ProgrammeService {
 
-    //Logger
+    // Logger
     private static final Logger LOGGER = LoggerFactory.getLogger(ProgrammeServiceImpl.class);
 
-    //Message d'erreur
+    // Message d'erreur
     public static final String ERROR_RETRIEVE_METADATA_DOCUMENT = "Impossible de récupérer les métadonnées du document ";
     public static final String ERROR_RETRIEVE_DOCUMENT_CONTENT = "Impossible de télécharger le contenu du document ";
     public static final String ERROR_DELETE_DOCUMENT = "Impossible de supprimer le document ";
@@ -127,6 +110,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private final ProgrammeMapper programmeMapper;
 
     private final ProgrammeLightMapper programmeLightMapper;
+
+    private final ProgrammationHabitatMapper programmationHabitatMapper;
+
+    private final ProgrammationHabitatDao programmationHabitatDao;
 
     private final EtapeProgrammeMapper etapeProgrammeMapper;
 
@@ -161,31 +148,37 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private final AlfrescoService alfrescoService;
 
     private final DocumentMapper documentMapper;
-    
+
     private final DateHelper dateHelper;
+
+    private final LogementSpecifiqueHelper logementSpecifiqueHelper;
 
     @Override
     @Transactional(readOnly = false)
     public Programme createProgramme(Programme programme) throws AppServiceException {
 
-
         // Vérification des droits utilisateur
         if (!programmeRightsHelper.checkCanCreateProgramme(programme)) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de création du programme " + programme.getNom());
+            throw new AccessDeniedException(
+                    "L'utilisateur n'a pas les droits de création du programme " + programme.getNom());
         }
-
 
         ProgrammeEntity programmeEntity = programmeMapper.dtoToEntity(programme);
 
-        if (programme.getEtape() == null || programme.getEtape().getId() == null) {
+        Etape etape = programme.getEtape();
+        if (etape == null || etape.getId() == null) {
             throw new AppServiceException("L'étapeId est obligatoire");
         }
-        EtapeProgrammeEntity etapProgramme = etapeProgrammeDao.findById(programme.getEtape().getId()).orElseThrow(() -> new NoSuchElementException("Aucune étape id= " + programme.getId() + " n'a été trouvée pour les programmes"));
+        EtapeProgrammeEntity etapProgramme = etapeProgrammeDao.findById(Objects.requireNonNull(etape.getId()))
+                .orElseThrow(() -> new NoSuchElementException(
+                        "Aucune étape id= " + programme.getId() + " n'a été trouvée pour les programmes"));
 
-        //Vérification des autorisations sur l'étape
-        if (etapProgramme.getCode().equals(Etape.ModeEnum.OFF.toString()) && !authentificationHelper.hasRestreintAccess()) {
-            LOGGER.warn("L'utilisateur n'ayant pas au moins le rôle référent ne peut pas créer un programme avec une etape en diffusion restreinte");
-            //TODO : throw new AppServiceException()
+        // Vérification des autorisations sur l'étape
+        if (etapProgramme.getCode().equals(Etape.ModeEnum.OFF.toString())
+                && !authentificationHelper.hasRestreintAccess()) {
+            LOGGER.warn(
+                    "L'utilisateur n'ayant pas au moins le rôle référent ne peut pas créer un programme avec une etape en diffusion restreinte");
+            // TODO : throw new AppServiceException()
 
         } else {
             programmeEntity.setDiffusionRestreinte(etapProgramme.getMode().equals(Etape.ModeEnum.OFF.toString()));
@@ -198,10 +191,17 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // Ajout de l'opération associée
         programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
 
+        // Gestion de la programmation habitat
+        updateProgrammationHabitat(programme.getProgrammationHabitat(), programmeEntity);
+
+        // Initialisation des logements spécifiques avec les types actifs si non fournis
+        initializeLogementsSpecifiquesIfNeeded(programmeEntity);
+
         // Vérification que l'id emprise existe bien
         ProgrammeRmEntity programmeRm = programmeRmDao.findOneById(programme.getIdEmprise());
         if (programmeRm == null) {
-            throw new NoSuchElementException("L'emprise de programme avec id " + programme.getIdEmprise() + " n'existe pas");
+            throw new NoSuchElementException(
+                    "L'emprise de programme avec id " + programme.getIdEmprise() + " n'existe pas");
         }
 
         programmeEntity = programmeDao.save(programmeEntity);
@@ -211,8 +211,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         programmePlannerHelper.computeSuiviHabitatOfProgramme(programmeSaved);
         programmePlannerHelper.computeAdsProgrammeData(programmeSaved);
 
-        //mise à jour de l'id de l'emprise dans la table des programmes RM
-        programmeRm.setIdTabou(programmeSaved.getId().intValue());
+        // mise à jour de l'id de l'emprise dans la table des programmes RM
+        programmeRm.setIdTabou(Objects.requireNonNull(programmeSaved.getId()).intValue());
         programmeRmDao.save(programmeRm);
 
         return programmeSaved;
@@ -220,7 +220,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Programme updateProgramme(Programme programme) throws AppServiceException {
 
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programme.getId());
@@ -233,10 +233,11 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         programmeValidator.validateUpdateProgramme(programme);
 
         // Récupération de la prochaine étape
-        if (programme.getEtape() == null || programme.getEtape().getId() == null) {
+        Etape etapeDto = programme.getEtape();
+        if (etapeDto == null || etapeDto.getId() == null) {
             throw new AppServiceException("L'étapeId est obligatoire");
         }
-        EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(programme.getEtape().getId());
+        EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(etapeDto.getId());
 
         // Mise à jour de la diffusion restreinte à partir de l'étape
         programme.setDiffusionRestreinte(null);
@@ -251,13 +252,17 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         // Ajout d'un événement système en cas de changement d'étape
         if (etapeChanged) {
-            programmeEntity.addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
+            programmeEntity
+                    .addEvenementProgramme(buildEvenementProgrammeEtapeUpdated(etapeProgrammeEntity.getLibelle()));
         }
 
         // Mise à jour de l'opération associée
         if (programme.getOperationId() != null) {
             programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
         }
+
+        // Gestion de la programmation habitat (création, mise à jour ou suppression)
+        updateProgrammationHabitat(programme.getProgrammationHabitat(), programmeEntity);
 
         programmeEntity = programmeDao.save(programmeEntity);
         Programme programmeSaved = programmeMapper.entityToDto(programmeEntity);
@@ -270,7 +275,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Programme updateEtapeOfProgrammeId(long programmeId, long etapeId) throws AppServiceException {
         EtapeProgrammeEntity etapeProgrammeEntity = etapeProgrammeDao.findOneById(etapeId);
 
@@ -296,12 +301,15 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     @Override
     public Page<Programme> searchProgrammes(ProgrammeCriteria programmeCriteria, Pageable pageable) {
-        // Si l'utilisateur n'a pas le droit de voir les programmes en diffusion restreinte, on filtre sur false
-        if (BooleanUtils.isTrue(programmeCriteria.getDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
+        // Si l'utilisateur n'a pas le droit de voir les programmes en diffusion
+        // restreinte, on filtre sur false
+        if (BooleanUtils.isTrue(programmeCriteria.getDiffusionRestreinte())
+                && !authentificationHelper.hasRestreintAccess()) {
             programmeCriteria.setDiffusionRestreinte(false);
             LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
-        Page<Programme> programmes = programmeMapper.entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
+        Page<Programme> programmes = programmeMapper
+                .entitiesToDto(programmeCustomDao.searchProgrammes(programmeCriteria, pageable), pageable);
         programmePlannerHelper.computeSuiviHabitatOfProgramme(programmes);
 
         return programmes;
@@ -311,8 +319,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @SuppressWarnings("creedengo-java:GCI1")
     public Page<ProgrammeLight> searchProgrammesOfOperation(ProgrammeCriteria programmeCriteria, Pageable pageable) {
 
-        // Si l'utilisateur n'a pas le droit de voir les programmes en diffusion restreinte, on filtre sur false
-        if (BooleanUtils.isTrue(programmeCriteria.getDiffusionRestreinte()) && !authentificationHelper.hasRestreintAccess()) {
+        // Si l'utilisateur n'a pas le droit de voir les programmes en diffusion
+        // restreinte, on filtre sur false
+        if (BooleanUtils.isTrue(programmeCriteria.getDiffusionRestreinte())
+                && !authentificationHelper.hasRestreintAccess()) {
             programmeCriteria.setDiffusionRestreinte(false);
             LOGGER.warn("Accès non autorisé à des programmes d'accès restreint");
         }
@@ -323,7 +333,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         OperationEntity operation = operationDao.findOneById(programmeCriteria.getOperationId());
 
-        Page<ProgrammeLight> results = null;
+        Page<ProgrammeLight> results;
 
         if (Boolean.FALSE.equals(operation.getSecteur())) {
 
@@ -334,26 +344,29 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
             List<ProgrammeLight> resultsList = new ArrayList<>();
 
-            Page<ProgrammeRmEntity> programmes = programmeRmCustomDao.searchProgrammesWithinOperation(programmeCriteria, pageable);
+            Page<ProgrammeRmEntity> programmes = programmeRmCustomDao.searchProgrammesWithinOperation(programmeCriteria,
+                    pageable);
             for (ProgrammeRmEntity p : programmes.getContent()) {
 
                 ProgrammeEntity programme = programmeDao.findOneById(p.getIdTabou().longValue());
 
-                //On cherche les maitres d'oeuvres de chaque programme
-                Page<ProgrammeTiersEntity> programmeTiers = programmeTiersCustomDao.searchProgrammesTiers(tiersAmenagementCriteria, PaginationUtils.buildPageable(0, null, null, true, ProgrammeTiersEntity.class));
+                // On cherche les maitres d'oeuvres de chaque programme
+                Page<ProgrammeTiersEntity> programmeTiers = programmeTiersCustomDao.searchProgrammesTiers(
+                        tiersAmenagementCriteria,
+                        PaginationUtils.buildPageable(0, null, null, true, ProgrammeTiersEntity.class));
 
-                //On construit la chaine de caractère avec tous les noms des MA
+                // On construit la chaine de caractère avec tous les noms des MA
                 String nomMaitresOeuvre = programmeTiers.stream()
-                        .filter(programmeTiersEntity -> programmeTiersEntity.getTypeTiers().getCode().equals("MAITRE_OEUVRE"))
+                        .filter(programmeTiersEntity -> programmeTiersEntity.getTypeTiers().getCode()
+                                .equals("MAITRE_OEUVRE"))
                         .map(programmeTiersEntity -> programmeTiersEntity.getTiers().getNom())
                         .collect(Collectors.joining(", "));
 
                 ProgrammeLight programmeLight = programmeLightMapper.entityToDto(programme);
                 programmeLight.setPromoteur(nomMaitresOeuvre);
 
-                //Ajout du programme light à la liste de résultats
+                // Ajout du programme light à la liste de résultats
                 resultsList.add(programmeLight);
-
 
             }
 
@@ -408,22 +421,106 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         return MessageFormat.format(etapeUpdatedMessage, libelleEtape);
     }
 
+    /**
+     * Mise à jour de la programmation habitat d'un programme.
+     * Crée, met à jour ou supprime la programmation habitat selon les données
+     * reçues.
+     *
+     * @param programmationHabitat DTO de la programmation habitat (peut être null
+     *                             pour suppression)
+     * @param programmeEntity      entité programme à mettre à jour
+     */
+    private void updateProgrammationHabitat(ProgrammationHabitat programmationHabitat,
+            ProgrammeEntity programmeEntity) {
+        if (programmationHabitat != null) {
+            // Création ou mise à jour de la programmation habitat
+            ProgrammationHabitatEntity programmationHabitatEntity;
+            if (programmeEntity.getProgrammationHabitat() != null) {
+                // Mise à jour de l'entité existante
+                programmationHabitatEntity = programmeEntity.getProgrammationHabitat();
+                programmationHabitatMapper.dtoToEntity(programmationHabitat, programmationHabitatEntity);
+            } else {
+                // Création d'une nouvelle entité
+                programmationHabitatEntity = programmationHabitatMapper.dtoToEntity(programmationHabitat);
+            }
+            programmationHabitatEntity = programmationHabitatDao.save(programmationHabitatEntity);
+
+            // Gestion manuelle de la cascade des logementsSpecifiques (ignorés par le
+            // mapper)
+            updateLogementsSpecifiques(programmationHabitat.getLogementsSpecifiques(), programmationHabitatEntity);
+            programmationHabitatEntity = programmationHabitatDao.save(programmationHabitatEntity);
+
+            programmeEntity.setProgrammationHabitat(programmationHabitatEntity);
+        } else if (programmeEntity.getProgrammationHabitat() != null) {
+            // Suppression de la programmation habitat si elle existait
+            programmationHabitatDao.delete(programmeEntity.getProgrammationHabitat());
+            programmeEntity.setProgrammationHabitat(null);
+        }
+    }
+
+    /**
+     * Gestion manuelle de la cascade des logementsSpecifiques pour la programmation
+     * habitat.
+     */
+    private void updateLogementsSpecifiques(List<LogementsSpecifiques> logementsSpecifiquesDtos,
+            ProgrammationHabitatEntity habitatEntity) {
+        logementSpecifiqueHelper.updateLogementsSpecifiques(logementsSpecifiquesDtos,
+                habitatEntity.getLogementsSpecifiques());
+    }
+
+    /**
+     * Initialise les logements spécifiques du programme avec les types actifs si aucun n'est déjà présent.
+     * Crée la programmation habitat si elle n'existe pas et qu'il y a des types actifs à initialiser.
+     *
+     * @param programmeEntity entité programme à initialiser
+     */
+    private void initializeLogementsSpecifiquesIfNeeded(ProgrammeEntity programmeEntity) {
+        ProgrammationHabitatEntity habitatEntity = programmeEntity.getProgrammationHabitat();
+
+        if (habitatEntity != null && !habitatEntity.getLogementsSpecifiques().isEmpty()) {
+            // Des logements spécifiques existent déjà, rien à faire
+            return;
+        }
+
+        // Initialiser dans une liste temporaire pour savoir s'il y a des types actifs
+        List<LogementsSpecifiquesEntity> initialized = new ArrayList<>();
+        logementSpecifiqueHelper.initializeLogementsSpecifiques(PorteeAccessionLogement.PROGRAMME, initialized);
+
+        if (initialized.isEmpty()) {
+            // Pas de types actifs, rien à créer
+            return;
+        }
+
+        // Créer la programmation habitat si elle n'existe pas
+        if (habitatEntity == null) {
+            habitatEntity = new ProgrammationHabitatEntity();
+            habitatEntity = programmationHabitatDao.save(habitatEntity);
+            programmeEntity.setProgrammationHabitat(habitatEntity);
+        }
+
+        habitatEntity.getLogementsSpecifiques().addAll(initialized);
+        programmationHabitatDao.save(habitatEntity);
+    }
+
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Evenement addEvenementByProgrammeId(Long programmeId, Evenement evenement) throws AppServiceException {
 
         // Programme
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
         Programme programme = programmeMapper.entityToDto(programmeEntity);
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un évènement pour le programme id = " + programmeId);
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme,
+                BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+            throw new AccessDeniedException(
+                    "L'utilisateur n'a pas les droits de créer un évènement pour le programme id = " + programmeId);
         }
 
-        //type evenement
-        if (evenement.getTypeEvenement() == null || evenement.getTypeEvenement().getId() == null) {
+        // type evenement
+        rm.tabou2.service.dto.TypeEvenement typeEvt = evenement.getTypeEvenement();
+        if (typeEvt == null || typeEvt.getId() == null) {
             throw new AppServiceException("Le typeEvenementId est obligatoire");
         }
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(typeEvt.getId());
         if (typeEvenementEntity.isSysteme()) {
             throw new AccessDeniedException("Un utilisateur ne peut pas créer d'événement système");
         }
@@ -449,7 +546,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public Evenement updateEvenementByProgrammeId(long idProgramme, Evenement evenement) throws AppServiceException {
 
         // Récupération du programme et recherche de l'évènement à modifier
@@ -459,22 +556,27 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         if (evenement == null || evenement.getId() == null) {
             throw new AppServiceException("L'id de l'événement est obligatoire");
         }
-        Optional<EvenementProgrammeEntity> optionalEvenementProgrammeEntity = programmeEntity.lookupEvenementById(evenement.getId());
+        Optional<EvenementProgrammeEntity> optionalEvenementProgrammeEntity = programmeEntity
+                .lookupEvenementById(evenement.getId());
         if (optionalEvenementProgrammeEntity.isEmpty()) {
-            throw new AppServiceException("L'événement id = " + evenement.getId() + " n'existe pas pour le programme id = " + programmeEntity.getId());
+            throw new AppServiceException("L'événement id = " + evenement.getId()
+                    + " n'existe pas pour le programme id = " + programmeEntity.getId());
         }
         EvenementProgrammeEntity evenementProgrammeEntity = optionalEvenementProgrammeEntity.get();
 
-        if (!evenementProgrammeRigthsHelper.checkCanUpdateEvenementProgramme(programme, evenementProgrammeMapper.entityToDto(evenementProgrammeEntity))) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de modifier l'évènement id = " + evenementProgrammeEntity.getId()
-                    + " du programme id = " + idProgramme);
+        if (!evenementProgrammeRigthsHelper.checkCanUpdateEvenementProgramme(programme,
+                evenementProgrammeMapper.entityToDto(evenementProgrammeEntity))) {
+            throw new AccessDeniedException(
+                    "L'utilisateur n'a pas les droits de modifier l'évènement id = " + evenementProgrammeEntity.getId()
+                            + " du programme id = " + idProgramme);
         }
 
         // type evenement
-        if (evenement.getTypeEvenement() == null || evenement.getTypeEvenement().getId() == null) {
+        rm.tabou2.service.dto.TypeEvenement typeEvtUpdate = evenement.getTypeEvenement();
+        if (typeEvtUpdate == null || typeEvtUpdate.getId() == null) {
             throw new AppServiceException("Le typeEvenementId est obligatoire");
         }
-        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(evenement.getTypeEvenement().getId());
+        TypeEvenementEntity typeEvenementEntity = typeEvenementDao.findOneById(typeEvtUpdate.getId());
         evenementProgrammeEntity.setTypeEvenement(typeEvenementEntity);
 
         evenementProgrammeMapper.dtoToEntity(evenement, evenementProgrammeEntity);
@@ -509,7 +611,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AccessDeniedException("L'utilisateur n'a pas les droits de consultation des programmes");
         }
 
-        Page<ProgrammeRmEntity> programmeRmEntities = programmeRmCustomDao.searchEmprisesNonSuivies(operationId, nom, pageable);
+        Page<ProgrammeRmEntity> programmeRmEntities = programmeRmCustomDao.searchEmprisesNonSuivies(operationId, nom,
+                pageable);
 
         return programmeRmMapper.entitiesToDto(programmeRmEntities, pageable);
 
@@ -518,11 +621,13 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Override
     public DocumentContent downloadDocument(long programmeId, String documentId) throws AppServiceException {
 
-        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        // On vérifie que le programme existe et que l'utilisateur a bien les droits de
+        // consultation dessus
         Programme programme = getProgrammeById(programmeId);
 
         if (!programmeRightsHelper.checkCanGetProgramme(programme)) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le programme id = " + programmeId);
+            throw new AccessDeniedException(
+                    "L'utilisateur n'a pas les droits de récupérer le programme id = " + programmeId);
         }
 
         try {
@@ -534,7 +639,6 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AppServiceException(ERROR_RETRIEVE_DOCUMENT_CONTENT + documentId, e);
         }
 
-
     }
 
     private ProgrammeEntity getProgrammeEntityById(long programmeId) {
@@ -542,7 +646,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
 
         if (!programmeRightsHelper.checkCanGetProgramme(programmeMapper.entityToDto(programmeEntity))) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de récupérer le programme id = " + programmeId);
+            throw new AccessDeniedException(
+                    "L'utilisateur n'a pas les droits de récupérer le programme id = " + programmeId);
         }
 
         return programmeEntity;
@@ -550,32 +655,31 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     private String buildRapportFileName(ProgrammeEntity programme) {
-
-        StringBuilder fileName = new StringBuilder("FicheSuivi_");
-        fileName.append(programme.getId());
-        fileName.append("_");
-        fileName.append(programme.getCode());
-        fileName.append("_");
-        fileName.append(programme.getNom());
-        fileName.append("_");
-        fileName.append(System.nanoTime());
-
-        return fileName.toString();
+        return "FicheSuivi_" +
+                programme.getId() +
+                "_" +
+                programme.getCode() +
+                "_" +
+                programme.getNom() +
+                "_" +
+                System.nanoTime();
 
     }
 
     @Override
     public DocumentMetadata getDocumentMetadata(long programmeId, String documentId) throws AppServiceException {
 
-        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        // On vérifie que le programme existe et que l'utilisateur a bien les droits de
+        // consultation dessus
         Programme programme = getProgrammeById(programmeId);
 
         if (!programmeRightsHelper.checkCanGetProgramme(programme)) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de création du programme " + programme.getNom());
+            throw new AccessDeniedException(
+                    "L'utilisateur n'a pas les droits de création du programme " + programme.getNom());
         }
 
         try {
-            //Récupération du document Dans alfresco
+            // Récupération du document Dans alfresco
             return documentMapper.entityToDto(alfrescoService.getDocumentMetadata(documentId));
 
         } catch (WebClientResponseException.NotFound e) {
@@ -587,33 +691,37 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, Object file, LocalDateTime dateDocument) throws AppServiceException {
+    public DocumentMetadata addDocument(long programmeId, String nom, String libelleTypeDocument, Object file,
+            LocalDateTime dateDocument) throws AppServiceException {
 
-        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        // On vérifie que le programme existe et que l'utilisateur a bien les droits de
+        // consultation dessus
         Programme programme = getProgrammeById(programmeId);
 
         if (!programmeRightsHelper.checkCanGetProgramme(programme)) {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
-        //Récupération du document Dans alfresco
-        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument, AlfrescoTabouType.PROGRAMME, programmeId, dateDocument, (MultipartFile) file));
+        // Récupération du document Dans alfresco
+        return documentMapper.entityToDto(alfrescoService.addDocument(nom, libelleTypeDocument,
+                AlfrescoTabouType.PROGRAMME, programmeId, dateDocument, (MultipartFile) file));
 
     }
 
     @Override
     public void deleteDocument(long programmeId, String documentId) throws AppServiceException {
 
-        //On vérifie que le programme existe
+        // On vérifie que le programme existe
         Programme programmeToDelete = getProgrammeById(programmeId);
 
         // Vérification des droits utilisateur
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, BooleanUtils.isTrue(programmeToDelete.getDiffusionRestreinte()))) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete,
+                BooleanUtils.isTrue(programmeToDelete.getDiffusionRestreinte()))) {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programmeToDelete.getNom());
         }
 
         try {
-            //Suppression du document Dans alfresco
+            // Suppression du document Dans alfresco
             alfrescoService.deleteDocument(AlfrescoTabouType.PROGRAMME, programmeId, documentId);
 
         } catch (WebClientResponseException.NotFound e) {
@@ -624,51 +732,59 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     }
 
-
     @Override
-    public DocumentMetadata updateDocumentMetadata(long programmeId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException {
+    public DocumentMetadata updateDocumentMetadata(long programmeId, String documentId,
+            DocumentMetadata documentMetadata) {
 
-        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        // On vérifie que le programme existe et que l'utilisateur a bien les droits de
+        // consultation dessus
         Programme programme = getProgrammeById(programmeId);
 
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme,
+                BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
-        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.PROGRAMME, programmeId, documentId, documentMetadata, false));
+        return documentMapper.entityToDto(alfrescoService.updateDocumentMetadata(AlfrescoTabouType.PROGRAMME,
+                programmeId, documentId, documentMetadata, false));
 
     }
-
 
     @Override
     public void updateDocumentContent(long programmeId, String documentId, Object file) throws AppServiceException {
 
-        //On vérifie que le programme existe et que l'utilisateur a bien les droits de consultation dessus
+        // On vérifie que le programme existe et que l'utilisateur a bien les droits de
+        // consultation dessus
         Programme programme = getProgrammeById(programmeId);
 
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme,
+                BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
-        alfrescoService.updateDocumentContent(AlfrescoTabouType.PROGRAMME, programmeId, documentId, (MultipartFile) file);
+        alfrescoService.updateDocumentContent(AlfrescoTabouType.PROGRAMME, programmeId, documentId,
+                (MultipartFile) file);
 
     }
 
     @Override
-    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable)
-            throws AppServiceException {
+    public Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument,
+            String typeMime, Pageable pageable) {
 
-        //On vérifie que le programme existe
+        // On vérifie que le programme existe
         Programme programmeToDelete = getProgrammeById(programmeId);
 
         // Vérification des droits utilisateur
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete, BooleanUtils.isTrue(programmeToDelete.getDiffusionRestreinte()))) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programmeToDelete,
+                BooleanUtils.isTrue(programmeToDelete.getDiffusionRestreinte()))) {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programmeToDelete.getNom());
         }
 
-        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.PROGRAMME, programmeId, nom, libelleTypeDocument, typeMime, pageable);
+        AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.PROGRAMME, programmeId,
+                nom, libelleTypeDocument, typeMime, pageable);
 
-        List<DocumentMetadata> results = documentMapper.entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
+        List<DocumentMetadata> results = documentMapper
+                .entitiesToDto(new ArrayList<>(documentRoot.getList().getEntries()));
 
         return new PageImpl<>(results, pageable, documentRoot.getList().getPagination().getTotalItems());
 
@@ -678,9 +794,10 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     @Transactional
     public TypePLH getPLHProgramme(long programmeId, long typePLHid) throws AppServiceException {
 
-        // Récupération du programme et recherche s'il y a des PLH rattachés à ce programme
+        // Récupération du programme et recherche s'il y a des PLH rattachés à ce
+        // programme
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
-        if (CollectionUtils.isEmpty(programmeEntity.getPlhs())){
+        if (CollectionUtils.isEmpty(programmeEntity.getPlhs())) {
             throw new AppServiceException("Impossible de récupérer le TypePLH id = " + typePLHid +
                     " Aucun TypePLH n'est rattaché au programme id = " + programmeId);
         }
@@ -688,19 +805,25 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         // Vérification si l'utilisateur a le droit de consulter un programme
         if (!programmeRightsHelper.checkCanGetProgramme(programmeEntity)) {
-            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programmeEntity.getNom());}
+            throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programmeEntity.getNom());
+        }
 
-        //Récupération du type PLH
+        // Récupération du type PLH
         TypePLH typePLH = typePLHMapper.entityToDto(typePLHEntity);
-        return typePlhHelper.populateTypePlh(typePLH, programmeEntity);
+        return typePlhHelper.populateTypePLH(typePLH, programmeEntity);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public TypePLH updatePLHProgramme(long programmeId, TypePLH typePLH) throws AppServiceException {
 
         if (typePLH.getTypeAttributPLH() == null) {
             throw new AppServiceException("Le typePLH est incomplet (id obligatoire)",
+                    AppServiceExceptionsStatus.BADREQUEST);
+        }
+
+        if (typePLH.getId() == null) {
+            throw new AppServiceException("L'id du typePLH est obligatoire",
                     AppServiceExceptionsStatus.BADREQUEST);
         }
 
@@ -709,17 +832,18 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         Programme programme = programmeMapper.entityToDto(programmeEntity);
 
         // Vérification si l'utilisateur a le droit de modifier un programme
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme,
+                BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
-        
-        //On vérifie que le TypePLH existe vraiment
+
+        // On vérifie que le TypePLH existe vraiment
         getTypePLHEntity(typePLH.getId());
 
-        //Et qu'il est bien présent sur le programme
+        // Et qu'il est bien présent sur le programme
         lookupTypePLHById(programmeEntity, typePLH.getId());
 
-        typePlhHelper.updateValuesTypePlh(typePLH, programmeEntity);
+        typePlhHelper.updateValuesTypePLH(typePLH, programmeEntity);
 
         try {
             programmeEntity = programmeDao.save(programmeEntity);
@@ -727,18 +851,21 @@ public class ProgrammeServiceImpl implements ProgrammeService {
             throw new AppServiceException("Impossible de mettre à jour le type de PLH = " + programmeId, e);
         }
 
-        //Récupération du type PLH
-        return typePlhHelper.populateTypePlh(typePLHMapper.entityToDto(lookupTypePLHById(programmeEntity, typePLH.getId())), programmeEntity);
+        // Récupération du type PLH
+        return typePlhHelper.populateTypePLH(
+                typePLHMapper.entityToDto(lookupTypePLHById(programmeEntity, typePLH.getId())), programmeEntity);
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public TypePLH addPLHProgrammeById(long programmeId, long typePLHid) throws AppServiceException {
         // Programme
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
         Programme programme = programmeMapper.entityToDto(programmeEntity);
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
-            throw new AccessDeniedException("L'utilisateur n'a pas les droits de créer un type PLH pour le programme id = " + programmeId);
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme,
+                BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+            throw new AccessDeniedException(
+                    "L'utilisateur n'a pas les droits de créer un type PLH pour le programme id = " + programmeId);
         }
 
         TypePLHEntity typePLHEntity = getTypePLHEntity(typePLHid);
@@ -755,7 +882,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         if (!typePLHEntity.isSelectionnable()) {
             throw new AppServiceException("Le typePLH n'est pas sélectionnable");
         }
-        
+
         // Enregistrement en BDD
         programmeEntity.addTypePLHProgramme(typePLHEntity);
         try {
@@ -766,7 +893,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         }
 
         TypePLH typePLH = typePLHMapper.entityToDto(typePLHEntity);
-        return typePlhHelper.populateTypePlh(typePLH, programmeEntity);
+        return typePlhHelper.populateTypePLH(typePLH, programmeEntity);
     }
 
     private boolean isTypePLHCompatible(TypePLHEntity typePLHEntity, ProgrammeEntity programmeEntity) {
@@ -776,9 +903,9 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         LocalDateTime dateDebut = null;
         LocalDateTime dateFin = null;
         if (CollectionUtils.isNotEmpty(permis)) {
-			dateDebut = dateHelper.convert(programmePlannerHelper.computeDocDate(permis));
-			dateFin = dateHelper.convert(programmePlannerHelper.computeDatDate(permis));
-		}
+            dateDebut = dateHelper.convert(programmePlannerHelper.computeDocDate(permis));
+            dateFin = dateHelper.convert(programmePlannerHelper.computeDatDate(permis));
+        }
 
         boolean dateDebutCompatible = dateDebut == null
                 || !typePLHEntity.getDateFin().isBefore(dateDebut);
@@ -790,7 +917,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     private TypePLHEntity getTypePLHEntity(long typePLHid)
             throws AppServiceException {
-        //type plh
+        // type plh
         TypePLHEntity typePLHEntity = typePLHDao.findOneById(typePLHid);
         if (typePLHEntity == null) {
             throw new AppServiceNotFoundException(TypePLHEntity.class);
@@ -799,7 +926,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional
     public void removePLHProgrammeById(long programmeId, long typePLHid) throws AppServiceException {
         // Récupération du programme et recherche du type PLH à modifier
         ProgrammeEntity programmeEntity = programmeDao.findOneById(programmeId);
@@ -807,7 +934,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         TypePLHEntity typePLHEntity = lookupTypePLHById(programmeEntity, typePLHid);
 
         // Vérification si l'utilisateur a le droit de modifier un programme
-        if (!programmeRightsHelper.checkCanUpdateProgramme(programme, BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
+        if (!programmeRightsHelper.checkCanUpdateProgramme(programme,
+                BooleanUtils.isTrue(programme.getDiffusionRestreinte()))) {
             throw new AccessDeniedException(USER_PROGRAM_NOT_ALLOWED + programme.getNom());
         }
 
@@ -817,10 +945,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         programmeDao.save(programmeEntity);
     }
 
-    private TypePLHEntity lookupTypePLHById(ProgrammeEntity programmeEntity, long typePLHid) throws AppServiceException {
-        Optional<TypePLHEntity> optionalTypePLHEntity = programmeEntity.lookupOptionalTypePLHById(typePLHid);
+    private TypePLHEntity lookupTypePLHById(ProgrammeEntity programmeEntity, long typePLHid)
+            throws AppServiceException {
+        Optional<TypePLHEntity> optionalTypePLHEntity = programmeEntity.lookupTypePLHById(typePLHid);
         if (optionalTypePLHEntity.isEmpty()) {
-            throw new AppServiceException("Le type PLH id = " + typePLHid + " n'existe pas pour le programme id = " + programmeEntity.getId());
+            throw new AppServiceException("Le type PLH id = " + typePLHid + " n'existe pas pour le programme id = "
+                    + programmeEntity.getId());
         }
         return optionalTypePLHEntity.get();
     }

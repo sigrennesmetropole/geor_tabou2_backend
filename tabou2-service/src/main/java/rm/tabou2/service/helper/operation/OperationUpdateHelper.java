@@ -6,6 +6,7 @@ import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.dto.*;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
+import rm.tabou2.service.helper.logement.LogementSpecifiqueHelper;
 import rm.tabou2.storage.tabou.dao.operation.*;
 import rm.tabou2.storage.tabou.entity.operation.*;
 
@@ -44,6 +45,8 @@ public class OperationUpdateHelper {
 
 	private final TypeProgrammationDao typeProgrammation;
 
+	private final LogementSpecifiqueHelper logementSpecifiqueHelper;
+
 	public void updateActeurs(OperationIntermediaire operation, OperationEntity actualOperation)
 			throws AppServiceException {
 		List<Acteur> acteurs = new ArrayList<>(operation.getActeurs());
@@ -68,18 +71,19 @@ public class OperationUpdateHelper {
 		});
 
 		acteurs.forEach(acteur -> {
+			long typeActeurId = Objects.requireNonNull(Objects.requireNonNull(acteur.getTypeActeur()).getId());
 			Optional<ActeurEntity> first = actualActeurs.stream()
 					.filter(entity -> Long.valueOf(entity.getId()).equals(acteur.getId()))
 					.findFirst();
 			if (first.isPresent()) {
 				ActeurEntity toUpdate = first.get();
 				toUpdate.setDescription(acteur.getDescription());
-				toUpdate.setTypeActeur(typeActeurDao.getReferenceById(acteur.getTypeActeur().getId()));
+				toUpdate.setTypeActeur(typeActeurDao.getReferenceById(typeActeurId));
 				acteurDao.save(toUpdate);
 			} else {
 				ActeurEntity toAdd = new ActeurEntity();
 				toAdd.setDescription(acteur.getDescription());
-				toAdd.setTypeActeur(typeActeurDao.getReferenceById(acteur.getTypeActeur().getId()));
+				toAdd.setTypeActeur(typeActeurDao.getReferenceById(typeActeurId));
 				toAdd = acteurDao.save(toAdd);
 				actualOperation.getActeurs().add(toAdd);
 			}
@@ -117,17 +121,18 @@ public class OperationUpdateHelper {
 		}
 
 		for (ActionOperation action : actions) {
+			long typeActionId = Objects.requireNonNull(Objects.requireNonNull(action.getTypeAction()).getId());
 			Optional<ActionOperationEntity> first = actualActions.stream()
 					.filter(entity -> Long.valueOf(entity.getId()).equals(action.getId())).findFirst();
 			if (first.isPresent()) {
 				ActionOperationEntity toUpdate = first.get();
 				toUpdate.setDescription(action.getDescription());
-				toUpdate.setTypeAction(typeActionDao.getReferenceById(action.getTypeAction().getId()));
+				toUpdate.setTypeAction(typeActionDao.getReferenceById(typeActionId));
 				actionOperationDao.save(toUpdate);
 			} else {
 				ActionOperationEntity toAdd = new ActionOperationEntity();
 				toAdd.setDescription(action.getDescription());
-				toAdd.setTypeAction(typeActionDao.getReferenceById(action.getTypeAction().getId()));
+				toAdd.setTypeAction(typeActionDao.getReferenceById(typeActionId));
 				toAdd = actionOperationDao.save(toAdd);
 				actualOperation.getActions().add(toAdd);
 			}
@@ -146,7 +151,7 @@ public class OperationUpdateHelper {
 		List<Amenageur> amenageurs = new ArrayList<>(operation.getAmenageurs());
 		List<AmenageurEntity> actualAmenageurs = new ArrayList<>(actualOperation.getAmenageurs());
 
-		if (amenageurs.stream().anyMatch(a -> a.getTypeAmenageur() == null && a.getTypeAmenageur().getId() == null)) {
+		if (amenageurs.stream().anyMatch(a -> a.getTypeAmenageur() == null || a.getTypeAmenageur().getId() == null)) {
 			throw new AppServiceException("Il faut nécessairement préciser le type d'aménageur",
 					AppServiceExceptionsStatus.BADREQUEST);
 		}
@@ -165,18 +170,19 @@ public class OperationUpdateHelper {
 		}
 
 		for (Amenageur amenageur : amenageurs) {
+			long typeAmenageurId = Objects.requireNonNull(Objects.requireNonNull(amenageur.getTypeAmenageur()).getId());
 			Optional<AmenageurEntity> first = actualAmenageurs.stream()
 					.filter(entity -> Long.valueOf(entity.getId()).equals(amenageur.getId()))
 					.findFirst();
 			if (first.isPresent()) {
 				AmenageurEntity toUpdate = first.get();
 				toUpdate.setNom(amenageur.getNom());
-				toUpdate.setTypeAmenageur(typeAmenageurDao.getReferenceById(amenageur.getTypeAmenageur().getId()));
+				toUpdate.setTypeAmenageur(typeAmenageurDao.getReferenceById(typeAmenageurId));
 				amenageurDao.save(toUpdate);
 			} else {
 				AmenageurEntity toAdd = new AmenageurEntity();
 				toAdd.setNom(amenageur.getNom());
-				toAdd.setTypeAmenageur(typeAmenageurDao.getReferenceById(amenageur.getTypeAmenageur().getId()));
+				toAdd.setTypeAmenageur(typeAmenageurDao.getReferenceById(typeAmenageurId));
 				toAdd = amenageurDao.save(toAdd);
 				actualOperation.getAmenageurs().add(toAdd);
 			}
@@ -216,17 +222,18 @@ public class OperationUpdateHelper {
 		}
 
 		for (Contribution contribution : contributions) {
+			long typeContributionId = Objects.requireNonNull(Objects.requireNonNull(contribution.getTypeContribution()).getId());
 			Optional<ContributionEntity> first = actualContributions.stream()
 					.filter(entity -> Long.valueOf(entity.getId()).equals(contribution.getId())).findFirst();
 			if (first.isPresent()) {
 				ContributionEntity toUpdate = first.get();
 				toUpdate.setDescription(contribution.getDescription());
-				toUpdate.setTypeContribution(typeContributionDao.getReferenceById(contribution.getTypeContribution().getId()));
+				toUpdate.setTypeContribution(typeContributionDao.getReferenceById(typeContributionId));
 				contributionDao.save(toUpdate);
 			} else {
 				ContributionEntity toAdd = new ContributionEntity();
 				toAdd.setDescription(contribution.getDescription());
-				toAdd.setTypeContribution(typeContributionDao.getReferenceById(contribution.getTypeContribution().getId()));
+				toAdd.setTypeContribution(typeContributionDao.getReferenceById(typeContributionId));
 				toAdd = contributionDao.save(toAdd);
 				actualOperation.getContributions().add(toAdd);
 			}
@@ -267,19 +274,20 @@ public class OperationUpdateHelper {
 		}
 
 		for (DescriptionFoncier descriptionFoncier : descriptionsFoncier) {
+			long typeFoncierId = Objects.requireNonNull(Objects.requireNonNull(descriptionFoncier.getTypeFoncier()).getId());
 			Optional<DescriptionFoncierEntity> first = actualDescriptionsFoncier.stream()
 					.filter(entity -> Long.valueOf(entity.getId()).equals(descriptionFoncier.getId()))
 					.findFirst();
 			if (first.isPresent()) {
 				DescriptionFoncierEntity toUpdate = first.get();
 				toUpdate.setDescription(descriptionFoncier.getDescription());
-				toUpdate.setTypeFoncier(typeFoncierDao.getReferenceById(descriptionFoncier.getTypeFoncier().getId()));
+				toUpdate.setTypeFoncier(typeFoncierDao.getReferenceById(typeFoncierId));
 				toUpdate.setTaux(descriptionFoncier.getTaux());
 				descriptionsFoncierDao.save(toUpdate);
 			} else {
 				DescriptionFoncierEntity toAdd = new DescriptionFoncierEntity();
 				toAdd.setDescription(descriptionFoncier.getDescription());
-				toAdd.setTypeFoncier(typeFoncierDao.getReferenceById(descriptionFoncier.getTypeFoncier().getId()));
+				toAdd.setTypeFoncier(typeFoncierDao.getReferenceById(typeFoncierId));
 				toAdd.setTaux(descriptionFoncier.getTaux());
 				toAdd = descriptionsFoncierDao.save(toAdd);
 				actualOperation.getDescriptionsFoncier().add(toAdd);
@@ -321,18 +329,19 @@ public class OperationUpdateHelper {
 		}
 
 		for (DescriptionFinancementOperation financement : financements) {
+			long typeFinancementId = Objects.requireNonNull(Objects.requireNonNull(financement.getTypeFinancement()).getId());
 			Optional<DescriptionFinancementOperationEntity> first = actualFinancements.stream()
 					.filter(entity -> Long.valueOf(entity.getId()).equals(financement.getId()))
 					.findFirst();
 			if (first.isPresent()) {
 				DescriptionFinancementOperationEntity toUpdate = first.get();
 				toUpdate.setDescription(financement.getDescription());
-				toUpdate.setTypeFinancement(typeFinancementDao.getReferenceById(financement.getTypeFinancement().getId()));
+				toUpdate.setTypeFinancement(typeFinancementDao.getReferenceById(typeFinancementId));
 				financementDao.save(toUpdate);
 			} else {
 				DescriptionFinancementOperationEntity toAdd = new DescriptionFinancementOperationEntity();
 				toAdd.setDescription(financement.getDescription());
-				toAdd.setTypeFinancement(typeFinancementDao.getReferenceById(financement.getTypeFinancement().getId()));
+				toAdd.setTypeFinancement(typeFinancementDao.getReferenceById(typeFinancementId));
 				toAdd = financementDao.save(toAdd);
 				actualOperation.getFinancements().add(toAdd);
 			}
@@ -373,18 +382,19 @@ public class OperationUpdateHelper {
 		}
 
 		for (InformationProgrammation programmation : programmations) {
+			long typeProgrammationId = Objects.requireNonNull(Objects.requireNonNull(programmation.getTypeProgrammation()).getId());
 			Optional<InformationProgrammationEntity> first = actualProgrammations.stream()
 					.filter(entity -> Long.valueOf(entity.getId()).equals(programmation.getId()))
 					.findFirst();
 			if (first.isPresent()) {
 				InformationProgrammationEntity toUpdate = first.get();
 				toUpdate.setDescription(programmation.getDescription());
-				toUpdate.setTypeProgrammation(typeProgrammation.getReferenceById(programmation.getTypeProgrammation().getId()));
+				toUpdate.setTypeProgrammation(typeProgrammation.getReferenceById(typeProgrammationId));
 				programmationDao.save(toUpdate);
 			} else {
 				InformationProgrammationEntity toAdd = new InformationProgrammationEntity();
 				toAdd.setDescription(programmation.getDescription());
-				toAdd.setTypeProgrammation(typeProgrammation.getReferenceById(programmation.getTypeProgrammation().getId()));
+				toAdd.setTypeProgrammation(typeProgrammation.getReferenceById(typeProgrammationId));
 				toAdd = programmationDao.save(toAdd);
 				actualOperation.getInformationsProgrammation().add(toAdd);
 			}
@@ -397,5 +407,12 @@ public class OperationUpdateHelper {
 			throw new AppServiceException("Un type programmation ne peut être utilisé qu'une seule fois",
 					AppServiceExceptionsStatus.BADREQUEST);
 		}
+	}
+
+	public void updateLogementsSpecifiques(OperationIntermediaire operation, OperationEntity actualOperation) {
+		logementSpecifiqueHelper.updateLogementsSpecifiques(
+				new ArrayList<>(operation.getLogementsSpecifiques()),
+				actualOperation.getLogementsSpecifiques()
+		);
 	}
 }

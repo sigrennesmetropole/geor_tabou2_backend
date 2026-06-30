@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import rm.tabou2.storage.common.impl.AbstractCustomDaoImpl;
 import rm.tabou2.storage.tabou.dao.programme.TypePLHCustomDao;
+import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 import rm.tabou2.storage.tabou.item.TypePLHCriteria;
@@ -69,33 +70,47 @@ public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl<TypePLHEntity> i
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
-        //Requête pour compter le nombre de résultats total
+        // Requête pour compter le nombre de résultats total
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
         Root<TypePLHEntity> countRoot = countQuery.from(TypePLHEntity.class);
         buildQuery(typePLHCriteria, builder, countQuery, countRoot);
         countQuery.select(builder.countDistinct(countRoot));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
-        //Si aucun résultat
+        // Si aucun résultat
         if (totalCount == 0) {
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
 
-        //Requête de recherche
+        // Requête de recherche
         CriteriaQuery<TypePLHEntity> searchQuery = builder.createQuery(TypePLHEntity.class);
         Root<TypePLHEntity> searchRoot = searchQuery.from(TypePLHEntity.class);
         buildQuery(typePLHCriteria, builder, searchQuery, searchRoot);
 
-        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
+        searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
 
         TypedQuery<TypePLHEntity> typedQuery = entityManager.createQuery(searchQuery);
-        List<TypePLHEntity> etapeProgrammeEntities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
+        List<TypePLHEntity> etapeProgrammeEntities = typedQuery.setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize()).getResultList();
         return new PageImpl<>(etapeProgrammeEntities, pageable, totalCount.intValue());
     }
 
+    /**
+     * Construit dynamiquement les prédicats de filtrage pour la recherche de
+     * TypePLH.
+     * - Filtre sur le libellé (recherche textuelle)
+     * - Filtre sur les dates de début et de fin
+     * - Exclut les TypePLH déjà associés au programme (si programmeId renseigné)
+     * - Exclut les TypePLH déjà associés à l'opération (si operationId renseigné)
+     * - Filtre sur le booléen selectionnable
+     * 
+     * @param typePLHCriteria critères de recherche
+     * @param builder         le CriteriaBuilder JPA
+     * @param criteriaQuery   la requête en cours de construction
+     * @param root            la racine de la requête sur TypePLHEntity
+     */
     private void buildQuery(TypePLHCriteria typePLHCriteria, CriteriaBuilder builder,
-                            CriteriaQuery<?> criteriaQuery, Root<TypePLHEntity> root
-    ) {
+            CriteriaQuery<?> criteriaQuery, Root<TypePLHEntity> root) {
         if (typePLHCriteria != null) {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -114,12 +129,22 @@ public class TypePLHCustomDaoImpl extends AbstractCustomDaoImpl<TypePLHEntity> i
                 Root<ProgrammeEntity> subRoot = subquery.from(ProgrammeEntity.class);
                 subquery.where(builder.equal(subRoot.get(FIELD_ID), typePLHCriteria.getProgrammeId()));
                 subquery.select(subRoot.join(FIELD_PLHS).get(FIELD_ID));
-                
+
+                predicates.add(builder.not(root.get(FIELD_ID).in(subquery)));
+            }
+
+            // Exclure les TypePLH associés à une opération spécifique
+            if (typePLHCriteria.getOperationId() != null) {
+                Subquery<Long> subquery = criteriaQuery.subquery(Long.class);
+                Root<OperationEntity> subRoot = subquery.from(OperationEntity.class);
+                subquery.where(builder.equal(subRoot.get(FIELD_ID), typePLHCriteria.getOperationId()));
+                subquery.select(subRoot.join(FIELD_PLHS).get(FIELD_ID));
                 predicates.add(builder.not(root.get(FIELD_ID).in(subquery)));
             }
 
             if (typePLHCriteria.getSelectionnable() != null) {
-                predicateBooleanCriteria(typePLHCriteria.getSelectionnable(), FIELD_SELECTIONNABLE, predicates, builder, root);
+                predicateBooleanCriteria(typePLHCriteria.getSelectionnable(), FIELD_SELECTIONNABLE, predicates, builder,
+                        root);
             }
 
             if (CollectionUtils.isNotEmpty(predicates)) {

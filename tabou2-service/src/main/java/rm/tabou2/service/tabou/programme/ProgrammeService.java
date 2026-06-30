@@ -173,9 +173,8 @@ public interface ProgrammeService {
      * @param documentId       identifiant du document
      * @param documentMetadata métadonnées du document
      * @return métadonnées
-     * @throws AppServiceException
      */
-    DocumentMetadata updateDocumentMetadata(long programmeId, String documentId, DocumentMetadata documentMetadata) throws AppServiceException;
+    DocumentMetadata updateDocumentMetadata(long programmeId, String documentId, DocumentMetadata documentMetadata);
 
     /**
      * Mise à jour du contenu d'un document.
@@ -183,7 +182,7 @@ public interface ProgrammeService {
      * @param programmeId identifiant d'un programme
      * @param documentId identifiant du document
      * @param file fichier à mettre à jour
-     * @throws AppServiceException
+     * @throws AppServiceException en cas d'erreur lors de la mise à jour
      */
     void updateDocumentContent(long programmeId, String documentId, Object file) throws AppServiceException;
 
@@ -197,8 +196,7 @@ public interface ProgrammeService {
      * @param pageable paramètres de pagination
      * @return liste des documents
      */
-    Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable)
-            throws AppServiceException;
+    Page<DocumentMetadata> searchDocuments(long programmeId, String nom, String libelleTypeDocument, String typeMime, Pageable pageable);
 
     /**
      * Permet de récupérer un PLH d'un programme

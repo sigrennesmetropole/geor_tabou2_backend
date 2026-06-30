@@ -47,146 +47,6 @@
           }
         }
       },
-      "OperationV1": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Identificateur unique. Clé primaire",
-            "format": "int64"
-          },
-          "nature": {
-            "$ref": "#/components/schemas/Nature"
-          },
-          "vocation": {
-            "$ref": "#/components/schemas/Vocation"
-          },
-          "decision": {
-            "$ref": "#/components/schemas/Decision"
-          },
-          "maitriseOuvrage": {
-            "$ref": "#/components/schemas/MaitriseOuvrage"
-          },
-          "modeAmenagement": {
-            "$ref": "#/components/schemas/ModeAmenagement"
-          },
-          "outilAmenagement": {
-            "$ref": "#/components/schemas/OutilAmenagement"
-          },
-          "consommationEspace": {
-            "$ref": "#/components/schemas/ConsommationEspace"
-          },
-          "etape": {
-            "$ref": "#/components/schemas/Etape"
-          },
-          "secteur": {
-            "type": "boolean",
-            "description": "Indique que l'opération est un secteur"
-          },
-          "diffusionRestreinte": {
-            "type": "boolean",
-            "description": "Indique si l'opération est en diffusion restreinte (en off)",
-            "default": false
-          },
-          "code": {
-            "type": "string",
-            "description": "Code de l'opératin"
-          },
-          "nom": {
-            "type": "string",
-            "description": "Nom de l'opération"
-          },
-          "operation": {
-            "type": "string",
-            "description": "Description textuelle du programme de l'opération (nombre de logement, type habitat…)"
-          },
-          "description": {
-            "type": "string",
-            "description": "Description de l'opération pour des besoins de la communication (par ex: Panorama des ZAC)"
-          },
-          "idEmprise": {
-            "type": "integer",
-            "description": "Identifiant de l'emprise de l'opération",
-            "format": "int64"
-          },
-          "autorisationDate": {
-            "type": "string",
-            "description": "Date d'autorisation (liée à un document d'urbanisme)",
-            "format": "date-time"
-          },
-          "operationnelDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "livraisonDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "clotureDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "numAds": {
-            "type": "string",
-            "description": " numéro d'autorisation des droits des sols"
-          },
-          "surfaceTotale": {
-            "type": "number",
-            "format": "int64"
-          },
-          "nbLogementsPrevu": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "plhLogementsPrevus": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "plhLogementsLivres": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "ql1": {
-            "type": "string",
-            "description": "Renouvellement ou en extension"
-          },
-          "ql2": {
-            "type": "boolean",
-            "description": "Compatible ou non avec le SCOT"
-          },
-          "ql3": {
-            "type": "string",
-            "description": "ZA productive = Structurante, pole tertiaire, proximité"
-          },
-          "nbEntreprise": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "nbSalarie": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "createUser": {
-            "type": "string",
-            "description": "Utilisateur qui a créé l'entité"
-          },
-          "createDate": {
-            "type": "string",
-            "description": "Date d'ajout de l'entité",
-            "format": "date-time"
-          },
-          "modifUser": {
-            "type": "string",
-            "description": "Dernier utilisateur ayant modifié l'entité"
-          },
-          "modifDate": {
-            "type": "string",
-            "description": "Date de dernière modification de l'entité",
-            "format": "date-time"
-          }
-        },
-        "description": "Opération d'amménagement"
-      },
       "Operation": {
         "type": "object",
         "properties": {
@@ -292,6 +152,18 @@
           "nbLogementsHFV": {
             "type": "integer",
             "description": "Nombre de logements adaptés favorables au vieillissement",
+            "format": "int64"
+          },
+          "hebergementResidSeniorPrevu": {
+            "type": "integer",
+            "description": "Nombre d'hebergements en residence senior prevus",
+            "minimum": 0,
+            "format": "int64"
+          },
+          "hebergementResidSeniorRealise": {
+            "type": "integer",
+            "description": "Nombre d'hebergements en residence senior realises",
+            "minimum": 0,
             "format": "int64"
           },
           "scot": {
@@ -425,6 +297,12 @@
           },
           "projetUrbain": {
             "$ref": "#/components/schemas/ProjetUrbain"
+          },
+          "logementsSpecifiques": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogementsSpecifiques"
+            }
           }
         },
         "description": "Opération d'amménagement"
@@ -660,9 +538,45 @@
             "description": "Nombre de logements en accession libre prévu",
             "format": "int32"
           },
+          "prixLogtsLibresM2ShabPrevu": {
+            "type": "number",
+            "description": "Prix des logements libres prévu en euros par m2 de SHAB",
+            "minimum": 0,
+            "format": "double"
+          },
+          "prixLogtsLibresM2ShabRealise": {
+            "type": "number",
+            "description": "Prix des logements libres réalisé en euros par m2 de SHAB",
+            "minimum": 0,
+            "format": "double"
+          },
+          "prixTerrainBatirM2Prevu": {
+            "type": "number",
+            "description": "Prix des terrains à bâtir prévu en euros par m2 de terrain",
+            "minimum": 0,
+            "format": "double"
+          },
+          "prixTerrainBatirM2Realise": {
+            "type": "number",
+            "description": "Prix des terrains à bâtir réalisé en euros par m2 de terrain",
+            "minimum": 0,
+            "format": "double"
+          },
           "nbLogementsHFV": {
             "type": "integer",
             "description": "Nombre de logements adaptés favorables au vieillissement",
+            "format": "int32"
+          },
+          "hebergementResidSeniorPrevu": {
+            "type": "integer",
+            "description": "Nombre d'hebergements en residence senior prevus",
+            "minimum": 0,
+            "format": "int32"
+          },
+          "hebergementResidSeniorRealise": {
+            "type": "integer",
+            "description": "Nombre d'hebergements en residence senior realises",
+            "minimum": 0,
             "format": "int32"
           },
           "surfaceSHAB": {
@@ -706,6 +620,9 @@
           },
           "projetUrbain": {
             "$ref": "#/components/schemas/ProjetUrbain"
+          },
+          "programmationHabitat": {
+            "$ref": "#/components/schemas/ProgrammationHabitat"
           }
         }
       },
@@ -713,27 +630,191 @@
         "type": "object",
         "properties": {
           "surfaceBureaux": {
-            "type": "double",
+            "type": "number",
+            "format": "double",
             "description": "Surface de Bureaux"
           },
           "surfaceCommerces": {
-            "type": "double",
+            "type": "number",
+            "format": "double",
             "description": "Surface de Commerces"
           },
           "surfaceIndustrie": {
-            "type": "double",
+            "type": "number",
+            "format": "double",
             "description": "Surface d'Industrie et d'Artisanat"
           },
           "surfaceEquipements": {
-            "type": "double",
+            "type": "number",
+            "format": "double",
             "description": "Surface d'Equipements"
           },
           "surfaceAutres": {
-            "type": "double",
+            "type": "number",
+            "format": "double",
             "description": "Surface Autres"
           }
         },
         "description": "Surfaces des programmations"
+      },
+      "TypeAccessionLogement": {
+        "type": "object",
+        "required": ["ordre"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type d'accession"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du type d'accession"
+          },
+          "dateDebut": {
+            "type": "string",
+            "description": "Date de début de validité",
+            "format": "date-time"
+          },
+          "dateFin": {
+            "type": "string",
+            "description": "Date de fin de validité",
+            "format": "date-time"
+          },
+          "ordre": {
+            "type": "integer",
+            "description": "Ordre d'affichage",
+            "format": "int32"
+          },
+          "portees": {
+            "type": "array",
+            "description": "Portées du type d'accession (OPERATION, PROGRAMME, SECTEUR)",
+            "items": {
+              "type": "string",
+              "enum": ["OPERATION", "PROGRAMME", "SECTEUR"]
+            }
+          }
+        },
+        "description": "Type d'accession au logement"
+      },
+      "TypeLogement": {
+        "type": "object",
+        "required": ["ordre"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique",
+            "format": "int64"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du type de logement"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du type de logement"
+          },
+          "dateDebut": {
+            "type": "string",
+            "description": "Date de début de validité",
+            "format": "date-time"
+          },
+          "dateFin": {
+            "type": "string",
+            "description": "Date de fin de validité",
+            "format": "date-time"
+          },
+          "ordre": {
+            "type": "integer",
+            "description": "Ordre d'affichage",
+            "format": "int32"
+          }
+        },
+        "description": "Type de logement spécifique"
+      },
+      "LogementSpecifique": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique",
+            "format": "int64"
+          },
+          "typeLogement": {
+            "$ref": "#/components/schemas/TypeLogement"
+          },
+          "valeurPrevue": {
+            "type": "integer",
+            "description": "Valeur prévue",
+            "format": "int32"
+          },
+          "valeurRealisee": {
+            "type": "integer",
+            "description": "Valeur réalisée",
+            "format": "int32"
+          }
+        },
+        "description": "Ligne de détail d'un logement spécifique"
+      },
+      "LogementsSpecifiques": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique",
+            "format": "int64"
+          },
+          "typeAccessionLogement": {
+            "$ref": "#/components/schemas/TypeAccessionLogement"
+          },
+          "valeur": {
+            "type": "integer",
+            "description": "Valeur associée au groupe de logements spécifiques",
+            "format": "int32"
+          },
+          "logements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogementSpecifique"
+            }
+          }
+        },
+        "description": "Groupe de logements spécifiques pour un type d'accession donné"
+      },
+      "ProgrammationHabitat": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique",
+            "format": "int64"
+          },
+          "nbLogements": {
+            "type": "integer",
+            "description": "Nombre total de logements",
+            "format": "int32"
+          },
+          "nbLogementsHFV": {
+            "type": "integer",
+            "description": "Nombre de logements favorables au vieillissement",
+            "format": "int32"
+          },
+          "surfaceSHAB": {
+            "type": "number",
+            "description": "Surface habitable totale en m²",
+            "format": "double"
+          },
+          "logementsSpecifiques": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LogementsSpecifiques"
+            }
+          }
+        },
+        "description": "Programmation habitat d'un programme"
       },
       "TiersTypeTiers": {
         "type": "object",
@@ -954,65 +1035,6 @@
           "siteWeb": {
             "type": "string",
             "description": "Site Web du tiers"
-          },
-          "estPrive": {
-            "type": "boolean",
-            "description": "True si le tiers est un privé, false si société"
-          },
-          "dateInactif": {
-            "type": "string",
-            "description": "Date de mise en inactivité du tiers",
-            "format": "date-time"
-          }
-        }
-      },
-      "TiersV1": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Identificateur unique. Clé primaire",
-            "format": "int64"
-          },
-          "nom": {
-            "type": "string",
-            "description": "Nom du tiers (raison sociale)"
-          },
-          "adresseNum": {
-            "type": "string",
-            "description": "Numéro de rue de l'adresse du tiers"
-          },
-          "adresseRue": {
-            "type": "string",
-            "description": "Nom de la rue de l'adresse du tiers"
-          },
-          "adresseCp": {
-            "type": "string",
-            "description": "Code postal de l'adresse du tiers"
-          },
-          "adresseVille": {
-            "type": "string",
-            "description": "Ville du tiers"
-          },
-          "telephone": {
-            "type": "string",
-            "description": "Numéro de téléphone du tiers"
-          },
-          "telecopie": {
-            "type": "string",
-            "description": "Numéro de télécopie du tiers"
-          },
-          "email": {
-            "type": "string",
-            "description": "Adresse email du tiers"
-          },
-          "siteWeb": {
-            "type": "string",
-            "description": "Site Web du tiers"
-          },
-          "contact": {
-            "type": "string",
-            "description": "Nom du contact"
           },
           "estPrive": {
             "type": "boolean",

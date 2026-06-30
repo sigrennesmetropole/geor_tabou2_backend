@@ -1,10 +1,14 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Basic;
@@ -17,6 +21,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
@@ -24,6 +30,9 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
+import rm.tabou2.storage.tabou.entity.logement.LogementsSpecifiquesEntity;
+import rm.tabou2.storage.tabou.entity.plh.AttributPLHEntity;
+import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
 @Getter
@@ -97,6 +106,14 @@ public class OperationEntity extends GenericAuditableEntity {
     @Basic
     @Column(name = "logements_habitat_favorable_vieillissement")
     private Integer nbLogementsHFV;
+
+    @Basic
+    @Column(name = "hebergement_resid_senior_prevu")
+    private Integer hebergementResidSeniorPrevu;
+
+    @Basic
+    @Column(name = "hebergement_resid_senior_realise")
+    private Integer hebergementResidSeniorRealise;
 
     @Basic
     @Column(name = "QL1")
@@ -265,11 +282,23 @@ public class OperationEntity extends GenericAuditableEntity {
     @JoinColumn(name = "fk_projet_urbain")
     private ProjetUrbainEntity projetUrbain;
 
+    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+    @JoinTable(name = "tabou_operation_logements_sp", joinColumns = @JoinColumn(name = "id_operation"), inverseJoinColumns = @JoinColumn(name = "id_logements_specifiques"))
+    private List<LogementsSpecifiquesEntity> logementsSpecifiques = new ArrayList<>();
+
     @Embedded
     @AttributeOverride(name = "densiteOap", column = @Column(name = "densite_oap"))
     @AttributeOverride(name = "pluiDisposition", column = @Column(name = "plui_disposition"))
     @AttributeOverride(name = "pluiAdaptation", column = @Column(name = "plui_adaptation"))
     private Plui plui;
+
+    @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.REFRESH })
+    @JoinTable(name = "tabou_operation_type_plh", joinColumns = @JoinColumn(name = "id_operation", referencedColumnName = "id_operation"), inverseJoinColumns = @JoinColumn(name = "id_type_plh", referencedColumnName = "id_type_plh"))
+    private Set<TypePLHEntity> plhs;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinTable(name = "tabou_operation_attribut_plh", joinColumns = @JoinColumn(name = "id_operation", referencedColumnName = "id_operation"), inverseJoinColumns = @JoinColumn(name = "id_attribut_plh", referencedColumnName = "id_attribut_plh"))
+    private Set<AttributPLHEntity> attributsPLH;
 
     public void addEvenementOperation(EvenementOperationEntity evenementOperationEntity) {
         this.evenements.add(evenementOperationEntity);
@@ -283,8 +312,12 @@ public class OperationEntity extends GenericAuditableEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         OperationEntity that = (OperationEntity) o;
         return getId() == that.getId() && getCode().equals(that.getCode()) && getNom().equals(that.getNom());
     }
@@ -311,6 +344,8 @@ public class OperationEntity extends GenericAuditableEntity {
                 ", surfaceTotale=" + surfaceTotale +
                 ", nbLogementsPrevu=" + nbLogementsPrevu +
                 ", nbLogementsHFV=" + nbLogementsHFV +
+                ", hebergementResidSeniorPrevu=" + hebergementResidSeniorPrevu +
+                ", hebergementResidSeniorRealise=" + hebergementResidSeniorRealise +
                 ", ql1='" + ql1 + '\'' +
                 ", scot=" + scot +
                 ", densiteScot=" + densiteScot +
@@ -328,5 +363,26 @@ public class OperationEntity extends GenericAuditableEntity {
                 ", environnement='" + environnement + '\'' +
                 ", surfaceRealisee=" + surfaceRealisee +
                 '}';
+    }
+
+    public Optional<TypePLHEntity> lookupTypePLHById(long typePLHid) {
+        if (CollectionUtils.isEmpty(this.plhs)) {
+            return Optional.empty();
+        }
+        return this.plhs.stream().filter(candidate -> candidate.getId() == typePLHid).findFirst();
+    }
+
+    public void addTypePLHOperation(TypePLHEntity typePLHEntity) {
+        if (this.plhs == null) {
+            this.plhs = new HashSet<>();
+        }
+        this.plhs.add(typePLHEntity);
+    }
+
+    public void addAttributPLHOperation(AttributPLHEntity attributPLHEntity) {
+        if (this.attributsPLH == null) {
+            this.attributsPLH = new HashSet<>();
+        }
+        this.attributsPLH.add(attributPLHEntity);
     }
 }

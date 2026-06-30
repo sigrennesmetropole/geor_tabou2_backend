@@ -55,6 +55,9 @@ public class TypePLHEntity {
 	@Column(name = "order_")
 	private int order;
 
+	@Column(name = "sync_field")
+	private String synchronizedField;
+
 	public void addTypePLHToFils(TypePLHEntity typePLHEntity) {
 		if (this.fils == null) {
 			this.fils = new HashSet<>();

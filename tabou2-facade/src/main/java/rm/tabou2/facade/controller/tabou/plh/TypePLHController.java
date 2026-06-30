@@ -52,11 +52,12 @@ public class TypePLHController implements TypePlhApi {
 	}
 
 	@Override
-	public ResponseEntity<PageResult> searchTypePLHs(Long programmeId, String libelle, OffsetDateTime dateDebut,
+	public ResponseEntity<PageResult> searchTypePLHs(Long programmeId, Long operationId, String libelle, OffsetDateTime dateDebut,
 			OffsetDateTime dateFin, Integer start, Integer resultsNumber, String orderBy, Boolean asc)
 			throws Exception {
 		TypePLHCriteria criteria = new TypePLHCriteria();
 		criteria.setProgrammeId(programmeId);
+		criteria.setOperationId(operationId);
 		criteria.setLibelle(libelle);
 		criteria.setDateDebut(dateHelper.convert(dateDebut));
 		criteria.setDateFin(dateHelper.convert(dateFin));

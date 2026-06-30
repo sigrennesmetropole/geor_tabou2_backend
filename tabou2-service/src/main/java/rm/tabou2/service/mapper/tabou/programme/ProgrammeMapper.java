@@ -10,7 +10,7 @@ import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.service.mapper.tabou.operation.ProjetUrbainMapper;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
-@Mapper(componentModel = "spring", uses = {EtapeProgrammeMapper.class, ProgrammeEmpriseHelper.class, LocaDateTimeMapper.class, ProgrammationMapper.class, ProjetUrbainMapper.class})
+@Mapper(componentModel = "spring", uses = {EtapeProgrammeMapper.class, ProgrammeEmpriseHelper.class, LocaDateTimeMapper.class, ProgrammationMapper.class, ProjetUrbainMapper.class, ProgrammationHabitatMapper.class})
 public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Programme> {
 
     @Mapping(source = "etape", target = "etapeProgramme")
@@ -20,6 +20,7 @@ public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Program
     @Mapping(source = "annulationDate", target = "dateAnnulation")
     @Mapping(source = "livraisonDate", target = "dateLivraison")
     @Mapping(target = "plhs", ignore = true)
+    @Mapping(target = "programmationHabitat", ignore = true)
     ProgrammeEntity dtoToEntity(Programme dto);
 
     @Mapping(source = "etapeProgramme", target = "etape")
@@ -38,6 +39,7 @@ public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Program
     @Mapping(target = "plhs", ignore = true)
     @Mapping(target = "operation", ignore = true)
     @Mapping(target = "surfaceTotale", ignore = true)
+    @Mapping(target = "programmationHabitat", ignore = true)
     void dtoToEntity(Programme dto, @MappingTarget ProgrammeEntity entity);
 
 }

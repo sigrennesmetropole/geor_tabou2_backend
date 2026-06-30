@@ -35,6 +35,840 @@
 		}
 	],
 	"paths": {
+		"/tiers": {
+			"get": {
+				"summary": "Recherche des tiers",
+				"operationId": "searchTiers",
+				"parameters": [
+					{
+						"name": "nom",
+						"in": "query",
+						"description": "Recherche par nom du tiers",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "tiersPrive",
+						"in": "query",
+						"description": "Recherche par tiers privé si true, false si société",
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"name": "adresseVille",
+						"in": "query",
+						"description": "Recherche par adresse / ville du tiers",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "inactif",
+						"in": "query",
+						"description": "Recherche par tiers inactif",
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"name": "start",
+						"in": "query",
+						"description": "Index de début - démarre à 0",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "resultsNumber",
+						"in": "query",
+						"description": "Nombre de résultats à remonter",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "orderBy",
+						"in": "query",
+						"description": "Nom du champ sur lequel trier les résultats",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "asc",
+						"in": "query",
+						"description": "Indique si le tri doit être fait par ordre ascendant",
+						"schema": {
+							"type": "boolean",
+							"default": true
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/PageResult"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"summary": "Modification d'un tiers",
+				"operationId": "updateTiers",
+				"requestBody": {
+					"description": "Tiers à modifier",
+					"content": {
+						"*/*": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/Tiers"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/Tiers"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas",
+						"content": {}
+					}
+				},
+				"x-codegen-request-body-name": "tiers"
+			},
+			"post": {
+				"summary": "Ajout d'un tiers",
+				"operationId": "createTiers",
+				"requestBody": {
+					"description": "Nouveau tiers",
+					"content": {
+						"*/*": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/Tiers"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/Tiers"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "tiers"
+			}
+		},
+		"/tiers/{tiersId}": {
+			"get": {
+				"summary": "Récupération d'un tiers",
+				"operationId": "getTiersById",
+				"parameters": [
+					{
+						"name": "tiersId",
+						"in": "path",
+						"description": "Identifiant du tiers",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/Tiers"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/tiers/{tiersId}/inactivate": {
+			"put": {
+				"summary": "Rends un tiers inactif",
+				"operationId": "inactivateTiers",
+				"parameters": [
+					{
+						"name": "tiersId",
+						"in": "path",
+						"description": "Identifiant du tiers",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/Tiers"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/tiers/{tiersId}/contacts": {
+			"get": {
+				"summary": "Recherche les contacts tiers",
+				"operationId": "searchContactTiers",
+				"parameters": [
+					{
+						"name": "tiersId",
+						"in": "path",
+						"description": "Identifiant du tiers",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "nom",
+						"in": "query",
+						"description": "Recherche par nom du contact",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "inactif",
+						"in": "query",
+						"description": "Recherche par contact tiers inactif",
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"name": "start",
+						"in": "query",
+						"description": "Index de début - démarre à 0",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "resultsNumber",
+						"in": "query",
+						"description": "Nombre de résultats à remonter",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "orderBy",
+						"in": "query",
+						"description": "Nom du champ sur lequel trier les résultats",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "asc",
+						"in": "query",
+						"description": "Indique si le tri doit être fait par ordre ascendant",
+						"schema": {
+							"type": "boolean",
+							"default": true
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/PageResult"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"summary": "Modification d'un contact tiers",
+				"operationId": "updateContactTiers",
+				"parameters": [
+					{
+						"name": "tiersId",
+						"in": "path",
+						"description": "Identifiant du tiers",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Contact tiers à modifier",
+					"content": {
+						"*/*": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/ContactTiers"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/ContactTiers"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas",
+						"content": {}
+					}
+				},
+				"x-codegen-request-body-name": "contactTiers"
+			},
+			"post": {
+				"summary": "Ajout d'un contact tiers",
+				"operationId": "createContactTiers",
+				"parameters": [
+					{
+						"name": "tiersId",
+						"in": "path",
+						"description": "Identifiant du tiers",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Nouveau contact tiers",
+					"content": {
+						"*/*": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/ContactTiers"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/ContactTiers"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "contactTiers"
+			}
+		},
+		"/tiers/{tiersId}/contacts/{contactTiersId}": {
+			"get": {
+				"summary": "Récupération du détail d'un contact tiers",
+				"operationId": "getContactTiersById",
+				"parameters": [
+					{
+						"name": "tiersId",
+						"in": "path",
+						"description": "Identifiant du tiers",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "contactTiersId",
+						"in": "path",
+						"description": "Identifiant du contact tiers",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/ContactTiers"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/tiers/{tiersId}/contacts/{contactTiersId}/inactivate": {
+			"put": {
+				"summary": "Rends un contact tiers inactif",
+				"operationId": "inactivateContactTiers",
+				"parameters": [
+					{
+						"name": "tiersId",
+						"in": "path",
+						"description": "Identifiant du tiers",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "contactTiersId",
+						"in": "path",
+						"description": "Identifiant du contact tiers",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/ContactTiers"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/operations": {
+			"get": {
+				"summary": "Recherche des operations",
+				"description": "Ensemble des opérations",
+				"operationId": "searchOperations",
+				"parameters": [
+					{
+						"name": "nom",
+						"in": "query",
+						"description": "Recherche par nom",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "nature",
+						"in": "query",
+						"description": "Recherche par nature",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "vocation",
+						"in": "query",
+						"description": "Recherche par vocation",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "decision",
+						"in": "query",
+						"description": "Recherche par decision",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "modeAmenagement",
+						"in": "query",
+						"description": "Recherche par mode d'aménagement",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "maitriseOuvrage",
+						"in": "query",
+						"description": "Recherche par maitrise d'ouvrage",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "consommationEspace",
+						"in": "query",
+						"description": "Recherche par consommation d'espace",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "etape",
+						"in": "query",
+						"description": "Recherche par étape",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "diffusionRestreinte",
+						"in": "query",
+						"description": "Indique si les opérations à diffusion restreinte doivent être affichés si les droits le permettent",
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"name": "estSecteur",
+						"in": "query",
+						"description": "True si recherche sur les secteur, false si recherche par opération",
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"name": "code",
+						"in": "query",
+						"description": "Recherche par code",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "numAds",
+						"in": "query",
+						"description": "Recherche par numéro ADS",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "autorisationDateDebut",
+						"in": "query",
+						"description": "Borne inférieure de recherche par date d'autorisation",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "autorisationDateFin",
+						"in": "query",
+						"description": "Borne supérieure de recherche par date d'autorisation",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "operationnelDateDebut",
+						"in": "query",
+						"description": "Borne inférieure de recherche par date opérationnelle",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "operationnelDateFin",
+						"in": "query",
+						"description": "Borne supérieure de recherche par date opérationnelle",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "livraisonDateDebut",
+						"in": "query",
+						"description": "Borne inférieure de recherche par date de livraison (date de réalisation)",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "livraisonDateFin",
+						"in": "query",
+						"description": "Borne supérieure de recherche par date de livraison (date de réalisation)",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "clotureDateDebut",
+						"in": "query",
+						"description": "Borne inférieure de recherche par date de cloture",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "clotureDateFin",
+						"in": "query",
+						"description": "Borne supérieure de recherche par date de cloture",
+						"schema": {
+							"type": "string",
+							"format": "date-time"
+						}
+					},
+					{
+						"name": "tiers",
+						"in": "query",
+						"description": "Recherche par tiers",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "start",
+						"in": "query",
+						"description": "Index de début - démarre à 0",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "resultsNumber",
+						"in": "query",
+						"description": "Nombre de résultats à remonter",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "orderBy",
+						"in": "query",
+						"description": "Nom du champ sur lequel trier les résultats",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "asc",
+						"in": "query",
+						"description": "Indique si le tri doit être fait par ordre ascendant",
+						"schema": {
+							"type": "boolean",
+							"default": true
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/PageResult"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"summary": "Modification d'une opération",
+				"operationId": "updateOperation",
+				"requestBody": {
+					"description": "Opération à modifier",
+					"content": {
+						"*/*": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/Operation"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/Operation"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "operation"
+			},
+			"post": {
+				"summary": "Ajout d'une opération",
+				"operationId": "createOperation",
+				"requestBody": {
+					"description": "Nouvelle opération",
+					"content": {
+						"*/*": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/Operation"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/Operation"
+								}
+							}
+						}
+					}
+				},
+				"x-codegen-request-body-name": "operation"
+			}
+		},
+		"/operations/{operationId}": {
+			"get": {
+				"summary": "Récupération du détail d'une opération d'aménagement",
+				"operationId": "getOperationById",
+				"parameters": [
+					{
+						"name": "operationId",
+						"in": "path",
+						"description": "Identifiant de l'opération",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/Operation"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas",
+						"content": {}
+					}
+				}
+			}
+		},
+		"/operations/{operationId}/evenements/{evenementId}": {
+			"delete": {
+				"summary": "Suppression d'un évènement d'une opération d'aménagement",
+				"operationId": "deleteEvenementByOperationId",
+				"parameters": [
+					{
+						"name": "evenementId",
+						"in": "path",
+						"description": "Evènement à supprimer",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "operationId",
+						"in": "path",
+						"description": "Identifiant de l'opération",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/Operation"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas",
+						"content": {}
+					}
+				}
+			}
+		},
 		"/configuration/{id}": {
 			"get": {
 				"tags": [
@@ -592,6 +1426,48 @@
 					},
 					"404": {
 						"description": "La resource demandée n'existe pas"
+					}
+				}
+			},
+			"put": {
+				"summary": "Modification de l'étape d'avancement d'une opération d'aménagement",
+				"operationId": "updateEtapeByOperationId",
+				"parameters": [
+					{
+						"name": "operationId",
+						"in": "path",
+						"description": "Identifiant de l'opération",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "etapeId",
+						"in": "query",
+						"description": "Identifiant de la nouvelle étape",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/Operation"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas",
+						"content": {}
 					}
 				}
 			}
@@ -1161,6 +2037,211 @@
 							"application/json": {
 								"schema": {
 									"$ref": "tabou2-model.json#/components/schemas/PageResult"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
+		"/operations/{operationId}/plh/{typePLHId}": {
+			"post": {
+				"summary": "Ajout d'un PLH à une opération",
+				"operationId": "addPLHOperation",
+				"parameters": [
+					{
+						"name": "operationId",
+						"in": "path",
+						"description": "Identifiant de l'opération",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "typePLHId",
+						"in": "path",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"summary": "Mise à jour du PLH d'une opération",
+				"operationId": "updatePLHOperation",
+				"parameters": [
+					{
+						"name": "operationId",
+						"in": "path",
+						"description": "Identifiant de l'opération",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "typePLHId",
+						"in": "path",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Type PLH à mettre à jour",
+					"content": {
+						"*/*": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				},
+				"x-codegen-request-body-name": "typePLH"
+			},
+			"get": {
+				"summary": "Récupération du PLH d'une opération",
+				"operationId": "getPLHOperation",
+				"parameters": [
+					{
+						"name": "operationId",
+						"in": "path",
+						"description": "Identifiant de l'opération",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "typePLHId",
+						"in": "path",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypePLH"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			},
+			"delete": {
+				"summary": "Suppression du lien entre une opération et un type PLH",
+				"operationId": "removePLHOperationById",
+				"parameters": [
+					{
+						"name": "operationId",
+						"in": "path",
+						"description": "Identifiant de l'opération",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "typePLHId",
+						"in": "path",
+						"description": "Identifiant du type PLH",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
+		"/operations/{operationId}/plhs": {
+			"get": {
+				"summary": "Récupération des PLH d'une opération",
+				"operationId": "getPLHsOperation",
+				"parameters": [
+					{
+						"name": "operationId",
+						"in": "path",
+						"description": "Identifiant de l'opération",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "tabou2-model.json#/components/schemas/TypePLHBean"
+									}
 								}
 							}
 						}
@@ -3607,6 +4688,406 @@
 				}
 			}
 		},
+		"/types-accession-logement": {
+			"get": {
+				"summary": "Recherche des types d'accession logement",
+				"operationId": "searchTypeAccessionLogements",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "libelle",
+						"description": "Libellé du type d'accession logement",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "actifUniquement",
+						"description": "Si true, ne retourne que les types d'accession logement actifs (dateDebut <= maintenant <= dateFin)",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"name": "start",
+						"in": "query",
+						"required": false,
+						"description": "Index de début - démarre à 0",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "resultsNumber",
+						"in": "query",
+						"required": false,
+						"description": "Nombre de résultats à remonter",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "orderBy",
+						"in": "query",
+						"required": false,
+						"description": "Nom du champ sur lequel trier les résultats",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "asc",
+						"in": "query",
+						"required": false,
+						"description": "Indique si le tri doit être fait par ordre ascendant",
+						"schema": {
+							"type": "boolean",
+							"default": true
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/PageResult"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Ajout d'un type d'accession logement",
+				"operationId": "createTypeAccessionLogement",
+				"requestBody": {
+					"description": "Nouveau type d'accession logement",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/TypeAccessionLogement"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypeAccessionLogement"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"summary": "Modification d'un type d'accession logement",
+				"operationId": "updateTypeAccessionLogement",
+				"requestBody": {
+					"description": "Type d'accession logement à modifier",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/TypeAccessionLogement"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypeAccessionLogement"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
+		"/types-accession-logement/{typeAccessionLogementId}": {
+			"get": {
+				"summary": "Récupération du détail d'un type d'accession logement",
+				"operationId": "getTypeAccessionLogementById",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "typeAccessionLogementId",
+						"description": "Identifiant du type d'accession logement",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypeAccessionLogement"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
+		"/types-accession-logement/{typeAccessionLogementId}/inactivate": {
+			"put": {
+				"summary": "Rend un type d'accession logement inactif",
+				"operationId": "inactivateTypeAccessionLogement",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "typeAccessionLogementId",
+						"description": "Identifiant du type d'accession logement",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypeAccessionLogement"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
+		"/types-logement": {
+			"get": {
+				"summary": "Recherche des types de logement",
+				"operationId": "searchTypeLogements",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "libelle",
+						"description": "Libellé du type de logement",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "actifUniquement",
+						"description": "Si true, ne retourne que les types de logement actifs (dateDebut <= maintenant <= dateFin)",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"name": "start",
+						"in": "query",
+						"required": false,
+						"description": "Index de début - démarre à 0",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "resultsNumber",
+						"in": "query",
+						"required": false,
+						"description": "Nombre de résultats à remonter",
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "orderBy",
+						"in": "query",
+						"required": false,
+						"description": "Nom du champ sur lequel trier les résultats",
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "asc",
+						"in": "query",
+						"required": false,
+						"description": "Indique si le tri doit être fait par ordre ascendant",
+						"schema": {
+							"type": "boolean",
+							"default": true
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/PageResult"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"summary": "Ajout d'un type de logement",
+				"operationId": "createTypeLogement",
+				"requestBody": {
+					"description": "Nouveau type de logement",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/TypeLogement"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypeLogement"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"summary": "Modification d'un type de logement",
+				"operationId": "updateTypeLogement",
+				"requestBody": {
+					"description": "Type de logement à modifier",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "tabou2-model.json#/components/schemas/TypeLogement"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypeLogement"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
+		"/types-logement/{typeLogementId}": {
+			"get": {
+				"summary": "Récupération du détail d'un type de logement",
+				"operationId": "getTypeLogementById",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "typeLogementId",
+						"description": "Identifiant du type de logement",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypeLogement"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
+		"/types-logement/{typeLogementId}/inactivate": {
+			"put": {
+				"summary": "Rend un type de logement inactif",
+				"operationId": "inactivateTypeLogement",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "typeLogementId",
+						"description": "Identifiant du type de logement",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "tabou2-model.json#/components/schemas/TypeLogement"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "La resource demandée n'existe pas"
+					}
+				}
+			}
+		},
 		"/fonctions-contacts": {
 			"get": {
 				"summary": "Recherche les fonctions de contacts",
@@ -5734,6 +7215,16 @@
 						"in": "query",
 						"name": "programmeId",
 						"description": "Recherche des plhs compatibles avec un programme",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"in": "query",
+						"name": "operationId",
+						"description": "Recherche des plhs compatibles avec une opération",
 						"required": false,
 						"schema": {
 							"type": "integer",

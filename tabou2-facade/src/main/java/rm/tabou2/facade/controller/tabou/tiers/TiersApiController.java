@@ -1,4 +1,4 @@
-package rm.tabou2.facade.controller.tabou.tiers.v2;
+package rm.tabou2.facade.controller.tabou.tiers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import rm.tabou2.facade.api.v2.TiersApi;
+import rm.tabou2.facade.api.TiersApi;
 import rm.tabou2.service.dto.PageResult;
 import rm.tabou2.service.dto.Tiers;
 import rm.tabou2.service.dto.ContactTiers;
@@ -21,7 +21,7 @@ import rm.tabou2.storage.tabou.item.TiersCriteria;
 
 @RestController
 @RequiredArgsConstructor
-public class TiersV2ApiController implements TiersApi {
+public class TiersApiController implements TiersApi {
 
     private final TiersService tiersService;
     private final ContactTiersService contactTiersService;
