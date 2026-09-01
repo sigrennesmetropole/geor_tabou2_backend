@@ -27,7 +27,10 @@ public class EtapeOperationWorkflowHelper {
     public List<Etape> getAccessibleEtapesForOperation(Long idOperation) {
         OperationEntity operationEntity = operationDao.findOneById(idOperation);
         List<EtapeOperationEntity> nextEtapes = operationEntity.getEtapeOperation().getNextEtapes()
-                .stream().sorted(Comparator.comparing(EtapeOperationEntity::getOrder)).toList();
+                .stream()
+                .filter(etape -> !operationEntity.getSecteur() || etape.isSecteur())
+                .sorted(Comparator.comparing(EtapeOperationEntity::getOrder))
+                .toList();
         return etapeOperationMapper.entitiesToDto(nextEtapes);
     }
 

@@ -84,4 +84,8 @@ public class FicheSuiviOperationDataModel extends DataModel{
         addContextData("helper", abstractOperationFicheHelper);
     }
 
+    public void setSecteurGeo(SecteurGeometryViewEntity secteurGeo){addContextData("secteurGeo", secteurGeo);}
+
+    public void setOperationGeo(OperationGeometryViewEntity operationGeo){addContextData("operationGeo", operationGeo);}
+
 }

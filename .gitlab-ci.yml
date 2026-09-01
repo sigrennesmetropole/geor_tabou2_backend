@@ -246,7 +246,7 @@ tabou2:deploy-karbon:dev:
       - open/develop
   variables:
     TARGET_ENV: dev
-    FORCE_POD: "true"
+    FORCE_PODS: "true"
     PARENT_COMMIT_BRANCH: $CI_COMMIT_BRANCH
     PARENT_SERVICE_LOGIN: $SERVICE_LOGIN
     PARENT_SERVICE_TOKEN: $SERVICE_TOKEN
@@ -264,7 +264,7 @@ tabou2:deploy-karbon:qua:
       - open/master
   variables:
     TARGET_ENV: qua
-    FORCE_POD: "true"
+    FORCE_PODS: "true"
     PARENT_COMMIT_BRANCH: $CI_COMMIT_BRANCH
     PARENT_SERVICE_LOGIN: $SERVICE_LOGIN
     PARENT_SERVICE_TOKEN: $SERVICE_TOKEN

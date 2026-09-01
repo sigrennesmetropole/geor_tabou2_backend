@@ -6,4 +6,6 @@ import rm.tabou2.storage.tabou.entity.operation.TypeFinancementOperationEntity;
 
 public interface TypeFinancementOperationDao extends CrudRepository<TypeFinancementOperationEntity, Long>,
         JpaRepository<TypeFinancementOperationEntity, Long> {
+
+	TypeFinancementOperationEntity findByCode(String code);
 }

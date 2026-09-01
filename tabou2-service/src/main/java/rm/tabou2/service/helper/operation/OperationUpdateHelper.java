@@ -1,6 +1,7 @@
 package rm.tabou2.service.helper.operation;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import rm.tabou2.service.bean.tabou.operation.OperationIntermediaire;
 import rm.tabou2.service.dto.*;
@@ -46,6 +47,9 @@ public class OperationUpdateHelper {
 	private final TypeProgrammationDao typeProgrammation;
 
 	private final LogementSpecifiqueHelper logementSpecifiqueHelper;
+
+	@Value("${default-type-financement.code:ZAC}")
+	private String defaultTypeFinancementCode;
 
 	public void updateActeurs(OperationIntermediaire operation, OperationEntity actualOperation)
 			throws AppServiceException {
@@ -308,6 +312,16 @@ public class OperationUpdateHelper {
 		List<DescriptionFinancementOperation> financements = new ArrayList<>(operation.getFinancements());
 		List<DescriptionFinancementOperationEntity> actualFinancements = new ArrayList<>(
 				actualOperation.getFinancements());
+
+
+		// TODO : Voir avec le client si on maintient cette valeur par défaut
+		financements.forEach(financement -> {
+			if (financement.getTypeFinancement() == null || financement.getTypeFinancement().getId() == null) {
+				TypeFinancementOperation typeFinancementOperation = new TypeFinancementOperation();
+				typeFinancementOperation.setId(typeFinancementDao.findByCode(defaultTypeFinancementCode).getId());
+				financement.setTypeFinancement(typeFinancementOperation);
+			}
+		});
 
 		if (financements.stream()
 				.anyMatch(f -> f.getTypeFinancement() == null || f.getTypeFinancement().getId() == null)) {

@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import rm.tabou2.service.exception.AppServiceException;
@@ -106,6 +107,12 @@ public class AppExceptionHandler {
     protected ResponseEntity<Object> handleMultipartException(final MultipartException ex, final WebRequest request){
         LOGGER.error(ex.getMessage());
         return new ResponseEntity<>("La requête est trop volumineuse", HttpStatus.PAYLOAD_TOO_LARGE);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResponseEntity<Object> handleMissingServletRequestParameterException(final MissingServletRequestParameterException ex, final WebRequest request) {
+        LOGGER.error("Paramètre requis manquant : {}", ex.getParameterName());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

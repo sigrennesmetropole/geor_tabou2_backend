@@ -14,6 +14,8 @@ import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.MosCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationGeometryViewDao;
+import rm.tabou2.storage.tabou.dao.operation.SecteurGeometryViewDao;
 import rm.tabou2.storage.tabou.dao.operation.VocationDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
@@ -49,9 +51,11 @@ public class OperationFicheHelper extends AbstractOperationFicheHelper {
     public OperationFicheHelper(DocumentGenerator documentGenerator, OperationDao operationDao,
             SecteurCustomDao secteurCustomDao, CommuneCustomDao communeCustomDao, MosCustomDao mosCustomDao,
             TypeEvenementDao typeEvenementDao, EvenementOperationCustomDao evenementOperationCustomDao,
+            SecteurGeometryViewDao secteurGeometryViewDao,
+            OperationGeometryViewDao operationGeometryViewDao,
             VocationDao vocationDao) {
         super(documentGenerator, operationDao, secteurCustomDao, communeCustomDao, mosCustomDao, typeEvenementDao,
-                evenementOperationCustomDao);
+                evenementOperationCustomDao, secteurGeometryViewDao, operationGeometryViewDao);
         this.vocationDao = vocationDao;
     }
 

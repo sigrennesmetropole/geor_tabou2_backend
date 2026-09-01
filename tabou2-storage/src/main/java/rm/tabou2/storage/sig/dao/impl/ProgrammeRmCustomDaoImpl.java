@@ -1,6 +1,8 @@
 package rm.tabou2.storage.sig.dao.impl;
 
-import org.apache.commons.collections4.CollectionUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,14 +15,6 @@ import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.dao.constants.FieldsConstants;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,52 +29,53 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl<ProgrammeRmE
 
 
     @Override
+    @SuppressWarnings("unchecked")
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Page<ProgrammeRmEntity> searchEmprisesNonSuivies(Long operationId, String nom, Pageable pageable) {
 
-        boolean hasOperationIdParam = (operationId != null && operationId > 0) ;
+        boolean hasOperationIdParam = (operationId != null && operationId > 0);
         boolean hasNomParam = nom != null && !nom.equals("");
 
         String baseQuery =
                 "FROM " +
-                    "urba_foncier.oa_programme PA " +
-                    "INNER JOIN (" +
+                        "urba_foncier.oa_programme PA " +
+                        "INNER JOIN (" +
                         "SELECT " +
-                            "OAe.shape " +
+                        "OAe.shape " +
                         "FROM (" +
-                            "SELECT zac.id_Tabou, zac.shape " +
-                            "FROM urba_foncier.zac zac " +
+                        "SELECT zac.id_Tabou, zac.shape " +
+                        "FROM urba_foncier.zac zac " +
                         "UNION ALL " +
-                            "SELECT za.id_Tabou, za.shape " +
-                            "FROM economie.za za " +
+                        "SELECT za.id_Tabou, za.shape " +
+                        "FROM economie.za za " +
                         "UNION ALL " +
-                            "SELECT oa_1.id_Tabou, oa_1.shape " +
-                            "FROM urba_foncier.oa_limite_intervention oa_1) OAe " ;
-                if (hasOperationIdParam) {
-                    baseQuery = baseQuery + "WHERE OAe.id_Tabou = :idTabou";
-                }
-                baseQuery = baseQuery + ") OA " +
-                        "ON st_intersects(PA.shape, OA.shape) " +
+                        "SELECT oa_1.id_Tabou, oa_1.shape " +
+                        "FROM urba_foncier.oa_limite_intervention oa_1) OAe ";
+        if (hasOperationIdParam) {
+            baseQuery = baseQuery + "WHERE OAe.id_Tabou = :idTabou";
+        }
+        baseQuery = baseQuery + ") OA " +
+                "ON st_intersects(PA.shape, OA.shape) " +
                 "WHERE PA.id_tabou is null";
 
-                if (hasNomParam) {
-                    baseQuery = baseQuery + " AND PA.programme = :nomProgramme";
-                }
+        if (hasNomParam) {
+            baseQuery = baseQuery + " AND PA.programme = :nomProgramme";
+        }
 
         //Requête pour compter le nombre de résultats
         final String countQuery = "select count(*) " + baseQuery;
 
-        Query totalCountQuery =  entityManager.createNativeQuery(countQuery);
+        Query totalCountQuery = entityManager.createNativeQuery(countQuery, Long.class);
         if (hasOperationIdParam) {
             totalCountQuery.setParameter(FieldsConstants.FIELD_ID_TABOU, operationId);
         }
         if (hasNomParam) {
             totalCountQuery.setParameter("nomProgramme", nom);
         }
-        BigInteger totalCount = (BigInteger)totalCountQuery.getSingleResult();
+        long totalCount = (long) totalCountQuery.getSingleResult();
 
         //Si aucun résultat
-        if (totalCount.intValue() == 0) {
+        if (totalCount == 0) {
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
 
@@ -97,10 +92,9 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl<ProgrammeRmE
                 .setFirstResult((int) pageable.getOffset())
                 .setMaxResults(pageable.getPageSize()).getResultList();
 
-        return new PageImpl<>(results, pageable, totalCount.intValue());
+        return new PageImpl<>(results, pageable, totalCount);
 
     }
-
 
 
     /**
@@ -111,6 +105,7 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl<ProgrammeRmE
      * @return Programmes correspondants à la recherche
      */
     @Override
+    @SuppressWarnings("unchecked")
     public Page<ProgrammeRmEntity> searchProgrammesWithinOperation(ProgrammeCriteria programmeCriteria, Pageable pageable) {
 
         //Appel à la procédure stockée programmes_of_operation : retourne les programmesRm contenu dans l'opération
@@ -130,16 +125,15 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl<ProgrammeRmE
 
         //Requête pour compter le nombre de résultats
         final String countQuery = "select count(*) " + baseQuery;
-        BigInteger totalCount = (BigInteger) entityManager.createNativeQuery(countQuery)
-                .setParameter("idOperationParam", programmeCriteria.getOperationId())
-                .setParameter("nomParam", nom)
-                .getSingleResult();
+        Query countTypedQuery = entityManager.createNativeQuery(countQuery, Long.class);
+        countTypedQuery.setParameter("idOperationParam", programmeCriteria.getOperationId());
+        countTypedQuery.setParameter("nomParam", nom);
+        long totalCount = (long) countTypedQuery.getSingleResult();
 
         //Si aucun résultat
-        if (totalCount.intValue() == 0) {
+        if (totalCount == 0) {
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
-
 
 
         String sqlQuery = "SELECT zp.objectid, zp.programme, zp.id_tabou " + baseQuery;
@@ -151,6 +145,6 @@ public class ProgrammeRmCustomDaoImpl extends AbstractCustomDaoImpl<ProgrammeRmE
                 .setMaxResults(pageable.getPageSize()).getResultList();
 
 
-        return new PageImpl<>(results, pageable, totalCount.intValue());
+        return new PageImpl<>(results, pageable, totalCount);
     }
 }

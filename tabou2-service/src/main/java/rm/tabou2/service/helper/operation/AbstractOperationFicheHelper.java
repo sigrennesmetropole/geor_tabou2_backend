@@ -27,6 +27,10 @@ import rm.tabou2.storage.tabou.dao.evenement.EvenementOperationCustomDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.MosCustomDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.OperationGeometryViewDao;
+import rm.tabou2.storage.tabou.dao.operation.SecteurGeometryViewDao;
+import rm.tabou2.storage.tabou.entity.operation.OperationGeometryViewEntity;
+import rm.tabou2.storage.tabou.entity.operation.SecteurGeometryViewEntity;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.ContributionEntity;
 import rm.tabou2.storage.tabou.entity.operation.DescriptionFoncierEntity;
@@ -65,6 +69,10 @@ public abstract class AbstractOperationFicheHelper extends AbstractFicheHelper {
     private final TypeEvenementDao typeEvenementDao;
 
     private final EvenementOperationCustomDao evenementOperationCustomDao;
+
+    private final SecteurGeometryViewDao secteurGeometryViewDao;
+
+    private final OperationGeometryViewDao operationGeometryViewDao;
 
     @Value("${typeevenement.commentaire.montage}")
     private String typeCommentaireMontage;
@@ -135,6 +143,21 @@ public abstract class AbstractOperationFicheHelper extends AbstractFicheHelper {
 	public GenerationModel buildGenerationModel(OperationEntity operationEntity, VocationEntity vocation, String path) throws AppServiceException {
 
         FicheSuiviOperationDataModel ficheSuiviOperationDataModel = new FicheSuiviOperationDataModel();
+
+        // Récupération des surfaces calculées depuis la géométrie SIG
+        // afin que le PDF affiche les mêmes valeurs que le site web
+        if (Boolean.TRUE.equals(operationEntity.getSecteur())) {
+            SecteurGeometryViewEntity secteurGeo = secteurGeometryViewDao.findByIdTabou(Math.toIntExact(operationEntity.getId()));
+            if (secteurGeo != null) {
+                ficheSuiviOperationDataModel.setSecteurGeo(secteurGeo);
+            }
+        } else {
+            OperationGeometryViewEntity operationGeo = operationGeometryViewDao.findByIdTabou(Math.toIntExact(operationEntity.getId()));
+            if (operationGeo != null) {
+                ficheSuiviOperationDataModel.setOperationGeo(operationGeo);
+            }
+        }
+
         ficheSuiviOperationDataModel.setOperation(operationEntity);
         ficheSuiviOperationDataModel.setEntiteReferente(operationEntity.getEntiteReferente());
         ficheSuiviOperationDataModel.setParent(operationEntity.getParent());
