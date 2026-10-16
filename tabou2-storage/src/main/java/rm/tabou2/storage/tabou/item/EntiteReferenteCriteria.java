@@ -7,4 +7,6 @@ public class EntiteReferenteCriteria {
     String code;
 
     String libelle;
+
+    Boolean actifUniquement;
 }

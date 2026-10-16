@@ -2,11 +2,15 @@ package rm.tabou2.service.common.factory;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import rm.tabou2.service.constant.VocationCode;
 import rm.tabou2.service.dto.Programme;
+import rm.tabou2.service.dto.Vocation;
+import rm.tabou2.service.mapper.tabou.operation.VocationMapper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
 import rm.tabou2.storage.sig.dao.ProgrammeRmDao;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.VocationDao;
 import rm.tabou2.storage.tabou.dao.programme.EtapeProgrammeDao;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.programme.EtapeProgrammeEntity;
@@ -23,6 +27,15 @@ public class ProgrammeDataFactory {
     private final ProgrammeRmDao programmeRmDao;
     private final EtapeProgrammeDao etapeProgrammeDao;
     private final EtapeProgrammeMapper etapeProgrammeMapper;
+    private final VocationDao vocationDao;
+    private final VocationMapper vocationMapper;
+
+    /**
+     * Récupère une vocation de référence par son code.
+     */
+    public Vocation getVocation(String code) {
+        return vocationMapper.entityToDto(vocationDao.findByCode(code));
+    }
 
     /**
      * Crée une opération de test en base.
@@ -62,6 +75,7 @@ public class ProgrammeDataFactory {
         programme.setOperationId(operationEntity.getId());
         programme.setEtape(etapeProgrammeMapper.entityToDto(etapePublic));
         programme.setIdEmprise(programmeRm.getId());
+        programme.setVocation(getVocation(VocationCode.ESPACE_VERT));
         return programme;
     }
 }

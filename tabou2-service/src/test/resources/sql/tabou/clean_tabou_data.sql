@@ -19,6 +19,8 @@ delete from tabou_vocation;
 delete from tabou_maitrise_ouvrage;
 delete from tabou_mode_amenagement;
 delete from tabou_consommation_espace;
+delete from tabou_vocation_plae;
+delete from tabou_renouvellement_eco_plae;
 
 delete from tabou_evenement_programme;
 delete from tabou_evenement_operation;

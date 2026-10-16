@@ -12,6 +12,7 @@ import rm.tabou2.service.mapper.tabou.logement.LogementsSpecifiquesMapper;
 
 @Mapper(componentModel = "spring", uses = {EtapeOperationMapper.class, NatureMapper.class, VocationMapper.class,
         DecisionMapper.class, MaitriseOuvrageMapper.class, ModeAmenagementMapper.class, OutilAmenagementMapper.class, ConsommationEspaceMapper.class,
+        VocationPlaeMapper.class, RenouvellementEconomiquePlaeMapper.class,
         OperationEmpriseHelper.class, ProjetUrbainMapper.class, LocaDateTimeMapper.class, LogementsSpecifiquesMapper.class})
 public interface OperationMapper extends AbstractMapper<OperationEntity, OperationIntermediaire> {
 
@@ -19,6 +20,8 @@ public interface OperationMapper extends AbstractMapper<OperationEntity, Operati
     @Mapping(target = "nature", ignore = true)
     @Mapping(target = "vocation", ignore = true)
     @Mapping(target = "vocationZa", ignore = true)
+    @Mapping(target = "vocationPlae", ignore = true)
+    @Mapping(target = "renouvellementEconomiquePlae", ignore = true)
     @Mapping(target = "decision", ignore = true)
     @Mapping(target = "maitriseOuvrage", ignore = true)
     @Mapping(target = "modeAmenagement", ignore = true)
@@ -42,6 +45,8 @@ public interface OperationMapper extends AbstractMapper<OperationEntity, Operati
     @Mapping(target = "nature", ignore = true)
     @Mapping(target = "vocation", ignore = true)
     @Mapping(target = "vocationZa", ignore = true)
+    @Mapping(target = "vocationPlae", ignore = true)
+    @Mapping(target = "renouvellementEconomiquePlae", ignore = true)
     @Mapping(target = "decision", ignore = true)
     @Mapping(target = "maitriseOuvrage", ignore = true)
     @Mapping(target = "modeAmenagement", ignore = true)

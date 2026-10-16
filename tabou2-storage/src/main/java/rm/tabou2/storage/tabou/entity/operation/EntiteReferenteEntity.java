@@ -32,6 +32,10 @@ public class EntiteReferenteEntity extends GenericCreateAuditableEntity {
     private String code;
 
     @Basic
-    @Column(name = "date_inactif")
-    private LocalDateTime dateInactif;
+    @Column(name = "date_debut", nullable = false)
+    private LocalDateTime dateDebut;
+
+    @Basic
+    @Column(name = "date_fin")
+    private LocalDateTime dateFin;
 }

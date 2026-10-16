@@ -134,6 +134,26 @@ create table tabou_consommation_espace (
                         id bigserial,
                         libelle varchar(255),
                         code varchar(255) unique,
+                        date_debut timestamp not null default now(),
+                        date_fin timestamp,
+                        primary key (id)
+);
+
+create table tabou_vocation_plae (
+                        id bigserial,
+                        libelle varchar(255) not null,
+                        code varchar(255) unique not null,
+                        date_debut timestamp not null default now(),
+                        date_fin timestamp,
+                        primary key (id)
+);
+
+create table tabou_renouvellement_eco_plae (
+                        id bigserial,
+                        libelle varchar(255) not null,
+                        code varchar(255) unique not null,
+                        date_debut timestamp not null default now(),
+                        date_fin timestamp,
                         primary key (id)
 );
 
@@ -171,6 +191,8 @@ create table tabou_operation (
                            id_entite_referente bigint,
                            objectifs text,
                            id_vocation_za bigint,
+                           id_vocation_plae bigint,
+                           id_renouvellement_eco_plae bigint,
                            paf_taux double precision,
                            id_type_occupation bigint,
                            id_outil_foncier bigint,
@@ -356,6 +378,7 @@ create table tabou_programme (
                            id_programme bigserial,
                            id_etape_programme bigint,
                            id_operation bigint,
+                           id_vocation bigint,
                            code varchar(255) unique,
                            nom varchar(255),
                            programme text,
@@ -385,6 +408,24 @@ create table tabou_programme (
                            hebergement_resid_senior_prevu integer,
                            hebergement_resid_senior_realise integer,
                            surface_shab double precision,
+                           id_vocation_plae bigint,
+                           id_renouvellement_eco_plae bigint,
+                           id_vocation_za_suivi bigint,
+                           id_renouvellement_eco_za_suivi bigint,
+                           entreprises_deveco text,
+                           statut_propriete varchar(20),
+                           prix_vente integer,
+                           prix_redevance_annuelle integer,
+                           surface_previsionnelle integer,
+                           surface_construite double precision,
+                           date_option_reservation_prevue timestamp,
+                           date_option_reservation_reelle timestamp,
+                           date_option_cession_prevue timestamp,
+                           date_option_cession_reelle timestamp,
+                           date_signature_acte_cession_prevue timestamp,
+                           date_signature_acte_cession_reelle timestamp,
+                           duree_bail_prevue integer,
+                           duree_bail_reelle integer,
                            create_date timestamp,
                            create_user varchar(255),
                            modif_date timestamp,
@@ -542,7 +583,8 @@ create table if not exists tabou_entite_referente(
     id_entite_referente bigserial,
     code varchar(20) unique not null,
     libelle varchar(50) not null,
-    date_inactif timestamp,
+    date_debut timestamp not null,
+    date_fin timestamp,
     create_date timestamp,
     create_user varchar(20),
     primary key(id_entite_referente)
@@ -599,6 +641,30 @@ alter table if exists tabou_programme
     add constraint fk_tabou_programme_tabou_operation
         foreign key (id_operation)
             references tabou_operation;
+
+alter table if exists tabou_programme
+    add constraint fk_tabou_programme_tabou_vocation
+        foreign key (id_vocation) references tabou_vocation;
+
+alter table if exists tabou_programme
+    add constraint fk_tabou_programme_tabou_vocation_plae
+        foreign key (id_vocation_plae) references tabou_vocation_plae;
+
+alter table if exists tabou_programme
+    add constraint fk_tabou_programme_tabou_renouvellement_eco_plae
+        foreign key (id_renouvellement_eco_plae) references tabou_renouvellement_eco_plae;
+
+alter table if exists tabou_programme
+    add constraint fk_tabou_programme_vocation_za_suivi
+        foreign key (id_vocation_za_suivi) references tabou_vocation_plae;
+
+alter table if exists tabou_programme
+    add constraint fk_tabou_programme_renouvellement_eco_za_suivi
+        foreign key (id_renouvellement_eco_za_suivi) references tabou_renouvellement_eco_plae;
+
+alter table if exists tabou_programme
+    add constraint enum_statut_propriete_programme
+        check ( statut_propriete in ('CESSION', 'BAC') );
 
 alter table if exists tabou_evenement_operation
     add constraint fk_tabou_evenement_operation_tabou_operation
@@ -672,6 +738,16 @@ alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_vocation_za
         foreign key (id_vocation_za)
             references tabou_vocation_za;
+
+alter table if exists tabou_operation
+    add constraint fk_tabou_operation_tabou_vocation_plae
+        foreign key (id_vocation_plae)
+            references tabou_vocation_plae;
+
+alter table if exists tabou_operation
+    add constraint fk_tabou_operation_tabou_renouvellement_eco_plae
+        foreign key (id_renouvellement_eco_plae)
+            references tabou_renouvellement_eco_plae;
 
 alter table if exists tabou_operation
     add constraint fk_tabou_operation_tabou_type_occupation
@@ -819,12 +895,19 @@ alter table if exists tabou_acteur
 
 CREATE INDEX "idx_tabou_programme_id_operation_fk" on tabou_programme(id_operation);
 CREATE INDEX "idx_tabou_programme_id_etape_programme_fk" on tabou_programme(id_etape_programme);
+CREATE INDEX "idx_tabou_programme_id_vocation_fk" on tabou_programme(id_vocation);
+CREATE INDEX "idx_tabou_programme_id_vocation_plae_fk" on tabou_programme(id_vocation_plae);
+CREATE INDEX "idx_tabou_programme_id_renouvellement_eco_plae_fk" on tabou_programme(id_renouvellement_eco_plae);
+CREATE INDEX "idx_tabou_programme_id_vocation_za_suivi_fk" on tabou_programme(id_vocation_za_suivi);
+CREATE INDEX "idx_tabou_programme_id_renouvellement_eco_za_suivi_fk" on tabou_programme(id_renouvellement_eco_za_suivi);
 
 CREATE INDEX "idx_tabou_programme_tiers_id_programme_fk" on tabou_programme_tiers(id_programme);
 CREATE INDEX "idx_tabou_programme_tiers_id_tier_fk" on tabou_programme_tiers(id_tiers);
 
 CREATE INDEX "idx_tabou_operation_id_nature_fk" on tabou_operation(id_nature);
 CREATE INDEX "idx_tabou_operation_id_etape_operation_fk" on tabou_operation(id_etape_operation);
+CREATE INDEX "idx_tabou_operation_id_vocation_plae_fk" on tabou_operation(id_vocation_plae);
+CREATE INDEX "idx_tabou_operation_id_renouvellement_eco_plae_fk" on tabou_operation(id_renouvellement_eco_plae);
 
 CREATE INDEX "idx_tabou_operation_tiers_id_operation_fk" on tabou_operation_tiers(id_operation);
 CREATE INDEX "idx_tabou_operation_tiers_id_tiers_fk" on tabou_operation_tiers(id_tiers);

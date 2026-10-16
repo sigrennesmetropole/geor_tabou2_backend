@@ -18,7 +18,7 @@ public class ConsommationEspaceServiceImpl implements ConsommationEspaceService 
     private final ConsommationEspaceMapper consommationEspaceMapper;
 
     @Override
-    public Page<ConsommationEspace> searchConsommationsEspace(Pageable pageable) {
-        return consommationEspaceMapper.entitiesToDto(consommationEspaceCustomDao.searchConsommationEspace(pageable), pageable);
+    public Page<ConsommationEspace> searchConsommationsEspace(Boolean actifUniquement, Pageable pageable) {
+        return consommationEspaceMapper.entitiesToDto(consommationEspaceCustomDao.searchConsommationEspace(actifUniquement, pageable), pageable);
     }
 }

@@ -200,6 +200,12 @@
           "vocationZa": {
             "$ref": "#/components/schemas/VocationZA"
           },
+          "vocationPlae": {
+            "$ref": "#/components/schemas/VocationPlae"
+          },
+          "renouvellementEconomiquePlae": {
+            "$ref": "#/components/schemas/RenouvellementEconomiquePlae"
+          },
           "contributions": {
             "type": "array",
             "items": {
@@ -388,6 +394,9 @@
             "type": "integer",
             "description": "Identifiant de l'opération",
             "format": "int64"
+          },
+          "vocation": {
+            "$ref": "#/components/schemas/Vocation"
           },
           "diffusionRestreinte": {
             "type": "boolean",
@@ -623,6 +632,94 @@
           },
           "programmationHabitat": {
             "$ref": "#/components/schemas/ProgrammationHabitat"
+          },
+          "vocationPlae": {
+            "$ref": "#/components/schemas/VocationPlae"
+          },
+          "renouvellementEconomiquePlae": {
+            "$ref": "#/components/schemas/RenouvellementEconomiquePlae"
+          },
+          "vocationZaSuivi": {
+            "$ref": "#/components/schemas/VocationPlae"
+          },
+          "renouvellementEconomiqueZaSuivi": {
+            "$ref": "#/components/schemas/RenouvellementEconomiquePlae"
+          },
+          "entreprisesDeveco": {
+            "type": "string",
+            "description": "Entreprise(s) de la zone d'activité, alimentées par DevEco (non modifiable via l'API)",
+            "readOnly": true
+          },
+          "statutPropriete": {
+            "type": "string",
+            "description": "Statut de propriété : cession ou bail à construire (BAC)",
+            "enum": ["CESSION", "BAC"]
+          },
+          "prixVente": {
+            "type": "integer",
+            "description": "Prix de vente (cession)",
+            "minimum": 0,
+            "format": "int32"
+          },
+          "prixRedevanceAnnuelle": {
+            "type": "integer",
+            "description": "Prix de la redevance annuelle (BAC)",
+            "minimum": 0,
+            "format": "int32"
+          },
+          "surfacePrevisionnelle": {
+            "type": "integer",
+            "description": "Surface prévisionnelle du terrain en hectares",
+            "minimum": 0,
+            "format": "int32"
+          },
+          "surfaceConstruite": {
+            "type": "number",
+            "description": "Surface construite en mètres carrés",
+            "minimum": 0,
+            "format": "double"
+          },
+          "dateOptionReservationPrevue": {
+            "type": "string",
+            "description": "Date d'option de réservation prévue",
+            "format": "date-time"
+          },
+          "dateOptionReservationReelle": {
+            "type": "string",
+            "description": "Date d'option de réservation réelle",
+            "format": "date-time"
+          },
+          "dateOptionCessionPrevue": {
+            "type": "string",
+            "description": "Date d'option de cession prévue",
+            "format": "date-time"
+          },
+          "dateOptionCessionReelle": {
+            "type": "string",
+            "description": "Date d'option de cession réelle",
+            "format": "date-time"
+          },
+          "dateSignatureActeCessionPrevue": {
+            "type": "string",
+            "description": "Date de signature de l'acte de cession prévue",
+            "format": "date-time"
+          },
+          "dateSignatureActeCessionReelle": {
+            "type": "string",
+            "description": "Date de signature de l'acte de cession réelle",
+            "format": "date-time"
+          },
+          "dureeBailPrevue": {
+            "type": "integer",
+            "description": "Durée du bail à construire prévue, en années",
+            "minimum": 0,
+            "format": "int32"
+          },
+          "dureeBailReelle": {
+            "type": "integer",
+            "description": "Durée du bail à construire réelle, en années",
+            "minimum": 0,
+            "format": "int32"
           }
         }
       },
@@ -1069,6 +1166,10 @@
             "description": "Identifiant unique du type de tiers",
             "format": "int64"
           },
+          "code": {
+            "type": "string",
+            "description": "Code du type de tiers (ex : CHARGE_OPERATION, OCCUPANT, OPERATEUR_INVESTISSEUR)"
+          },
           "libelle": {
             "type": "string",
             "description": "Libellé du type de tiers"
@@ -1465,6 +1566,72 @@
           "code": {
             "type": "string",
             "description": "Code de la consommation d'espace"
+          },
+          "dateDebut": {
+            "type": "string",
+            "description": "Date de début de validité de la consommation d'espace",
+            "format": "date-time"
+          },
+          "dateFin": {
+            "type": "string",
+            "description": "Date de fin de validité de la consommation d'espace",
+            "format": "date-time"
+          }
+        }
+      },
+      "VocationPlae": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique de la vocation PLAE",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé de la vocation PLAE"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code de la vocation PLAE"
+          },
+          "dateDebut": {
+            "type": "string",
+            "description": "Date de début de validité de la vocation PLAE",
+            "format": "date-time"
+          },
+          "dateFin": {
+            "type": "string",
+            "description": "Date de fin de validité de la vocation PLAE",
+            "format": "date-time"
+          }
+        }
+      },
+      "RenouvellementEconomiquePlae": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Identifiant unique du renouvellement économique PLAE",
+            "format": "int64"
+          },
+          "libelle": {
+            "type": "string",
+            "description": "Libellé du renouvellement économique PLAE"
+          },
+          "code": {
+            "type": "string",
+            "description": "Code du renouvellement économique PLAE"
+          },
+          "dateDebut": {
+            "type": "string",
+            "description": "Date de début de validité du renouvellement économique PLAE",
+            "format": "date-time"
+          },
+          "dateFin": {
+            "type": "string",
+            "description": "Date de fin de validité du renouvellement économique PLAE",
+            "format": "date-time"
           }
         }
       },
@@ -1725,9 +1892,14 @@
             "type": "string",
             "description": "Libelle de l'entité Rennes Métropole"
           },
-          "dateInactif": {
+          "dateDebut": {
             "type": "string",
-            "description": "Date de mise en inactivité de l'entité Rennes Métropole",
+            "description": "Date de début de validité de l'entité Rennes Métropole",
+            "format": "date-time"
+          },
+          "dateFin": {
+            "type": "string",
+            "description": "Date de fin de validité de l'entité Rennes Métropole",
             "format": "date-time"
           },
           "createUser": {

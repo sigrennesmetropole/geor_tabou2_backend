@@ -242,6 +242,14 @@ public class OperationEntity extends GenericAuditableEntity {
     @JoinColumn(name = "id_vocation_za")
     private VocationZAEntity vocationZa;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_vocation_plae")
+    private VocationPlaeEntity vocationPlae;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_renouvellement_eco_plae")
+    private RenouvellementEconomiquePlaeEntity renouvellementEconomiquePlae;
+
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_operation")
     private Set<ContributionEntity> contributions;

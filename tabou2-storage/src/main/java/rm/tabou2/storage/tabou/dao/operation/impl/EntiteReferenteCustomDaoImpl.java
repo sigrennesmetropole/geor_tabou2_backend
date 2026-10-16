@@ -81,6 +81,9 @@ public class EntiteReferenteCustomDaoImpl extends AbstractCustomDaoImpl<EntiteRe
                 predicateStringCriteria(criteria.getCode(), FIELD_CODE, predicates, builder, root);
             }
 
+            //dates de validité (date_debut <= now et date_fin nulle ou future)
+            predicateActifCriteria(criteria.getActifUniquement(), predicates, builder, root);
+
             if (CollectionUtils.isNotEmpty(predicates)) {
                 criteriaQuery.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
             }

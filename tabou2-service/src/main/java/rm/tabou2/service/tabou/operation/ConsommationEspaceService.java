@@ -10,9 +10,10 @@ public interface ConsommationEspaceService {
     /**
      * Retourne la liste des consommations d'espace.
      *
+     * @param actifUniquement si true, ne retourne que les consommations d'espace actives
      * @param pageable paramètres de pagination
      * @return liste des consommations d'espace
      */
-    Page<ConsommationEspace> searchConsommationsEspace(Pageable pageable);
+    Page<ConsommationEspace> searchConsommationsEspace(Boolean actifUniquement, Pageable pageable);
 
 }

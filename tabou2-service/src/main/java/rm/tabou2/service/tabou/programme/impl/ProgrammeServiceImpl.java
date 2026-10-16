@@ -50,6 +50,9 @@ import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.dao.ddc.PermisConstruireDao;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.RenouvellementEconomiquePlaeDao;
+import rm.tabou2.storage.tabou.dao.operation.VocationDao;
+import rm.tabou2.storage.tabou.dao.operation.VocationPlaeDao;
 import rm.tabou2.storage.tabou.dao.plh.TypePLHDao;
 import rm.tabou2.storage.tabou.dao.programme.*;
 import rm.tabou2.storage.tabou.entity.ddc.PermisConstruireEntity;
@@ -57,6 +60,9 @@ import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.logement.LogementsSpecifiquesEntity;
 import rm.tabou2.storage.tabou.entity.logement.PorteeAccessionLogement;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.entity.operation.RenouvellementEconomiquePlaeEntity;
+import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
+import rm.tabou2.storage.tabou.entity.operation.VocationPlaeEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 import rm.tabou2.storage.tabou.entity.programme.*;
 import rm.tabou2.storage.tabou.item.ProgrammeCriteria;
@@ -100,6 +106,12 @@ public class ProgrammeServiceImpl implements ProgrammeService {
     private final TypeEvenementDao typeEvenementDao;
 
     private final OperationDao operationDao;
+
+    private final VocationDao vocationDao;
+
+    private final VocationPlaeDao vocationPlaeDao;
+
+    private final RenouvellementEconomiquePlaeDao renouvellementEconomiquePlaeDao;
 
     private final PermisConstruireDao permisConstruireDao;
 
@@ -191,6 +203,13 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         // Ajout de l'opération associée
         programmeEntity.setOperation(operationDao.findOneById(programme.getOperationId()));
 
+        if (programme.getVocation() == null || programme.getVocation().getId() == null) {
+            throw new AppServiceException("La vocation principale du programme est obligatoire",
+                    AppServiceExceptionsStatus.BADREQUEST);
+        }
+        programmeEntity.setVocation(findVocation(programme.getVocation()));
+        updateReferentielsActivite(programme, programmeEntity);
+
         // Gestion de la programmation habitat
         updateProgrammationHabitat(programme.getProgrammationHabitat(), programmeEntity);
 
@@ -232,6 +251,14 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         programmeValidator.validateUpdateProgramme(programme);
 
+        // Une vocation nulle n'est tolérée que sur les programmes existants qui n'en ont pas encore
+        if (programme.getVocation() != null && programme.getVocation().getId() != null) {
+            programmeEntity.setVocation(findVocation(programme.getVocation()));
+        } else if (programmeEntity.getVocation() != null) {
+            throw new AppServiceException("La vocation principale du programme ne peut pas être supprimée",
+                    AppServiceExceptionsStatus.BADREQUEST);
+        }
+
         // Récupération de la prochaine étape
         Etape etapeDto = programme.getEtape();
         if (etapeDto == null || etapeDto.getId() == null) {
@@ -249,6 +276,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
         boolean etapeChanged = programmeEntity.getEtapeProgramme().getId() != etapeProgrammeEntity.getId();
 
         programmeMapper.dtoToEntity(programme, programmeEntity);
+        updateReferentielsActivite(programme, programmeEntity);
 
         // Ajout d'un événement système en cas de changement d'étape
         if (etapeChanged) {
@@ -419,6 +447,40 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     private String formatEtapeUpdatedMessage(String libelleEtape) {
         return MessageFormat.format(etapeUpdatedMessage, libelleEtape);
+    }
+
+    private VocationEntity findVocation(Vocation vocation) {
+        return vocationDao.findById(Objects.requireNonNull(vocation.getId()))
+                .orElseThrow(() -> new NoSuchElementException(
+                        "Aucune vocation id = " + vocation.getId() + " n'a été trouvée"));
+    }
+
+    private void updateReferentielsActivite(Programme programme, ProgrammeEntity programmeEntity) {
+        programmeEntity.setVocationPlae(findVocationPlae(programme.getVocationPlae()));
+        programmeEntity.setRenouvellementEconomiquePlae(
+                findRenouvellementEconomiquePlae(programme.getRenouvellementEconomiquePlae()));
+        programmeEntity.setVocationZaSuivi(findVocationPlae(programme.getVocationZaSuivi()));
+        programmeEntity.setRenouvellementEconomiqueZaSuivi(
+                findRenouvellementEconomiquePlae(programme.getRenouvellementEconomiqueZaSuivi()));
+    }
+
+    private VocationPlaeEntity findVocationPlae(VocationPlae vocationPlae) {
+        if (vocationPlae == null || vocationPlae.getId() == null) {
+            return null;
+        }
+        return vocationPlaeDao.findById(vocationPlae.getId())
+                .orElseThrow(() -> new NoSuchElementException(
+                        "Aucune vocation PLAE id = " + vocationPlae.getId() + " n'a été trouvée"));
+    }
+
+    private RenouvellementEconomiquePlaeEntity findRenouvellementEconomiquePlae(
+            RenouvellementEconomiquePlae renouvellementEconomiquePlae) {
+        if (renouvellementEconomiquePlae == null || renouvellementEconomiquePlae.getId() == null) {
+            return null;
+        }
+        return renouvellementEconomiquePlaeDao.findById(renouvellementEconomiquePlae.getId())
+                .orElseThrow(() -> new NoSuchElementException("Aucun renouvellement économique PLAE id = "
+                        + renouvellementEconomiquePlae.getId() + " n'a été trouvé"));
     }
 
     /**

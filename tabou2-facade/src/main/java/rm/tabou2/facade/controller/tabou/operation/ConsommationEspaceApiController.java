@@ -20,11 +20,11 @@ public class ConsommationEspaceApiController implements ConsommationEspaceApi {
     private final ConsommationEspaceService consommationEspaceService;
 
     @Override
-    public ResponseEntity<PageResult> getConsommationsEspace(Integer start, Integer resultsNumber, String orderBy, Boolean asc) throws Exception {
+    public ResponseEntity<PageResult> getConsommationsEspace(Boolean actifUniquement, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, ConsommationEspaceEntity.class);
 
-        Page<ConsommationEspace> page = consommationEspaceService.searchConsommationsEspace(pageable);
+        Page<ConsommationEspace> page = consommationEspaceService.searchConsommationsEspace(actifUniquement, pageable);
 
         return new ResponseEntity<>(PaginationUtils.buildPageResult(page), HttpStatus.OK);
 

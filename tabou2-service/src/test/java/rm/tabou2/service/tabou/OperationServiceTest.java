@@ -38,7 +38,9 @@ import rm.tabou2.service.mapper.tabou.operation.EtapeOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.MaitriseOuvrageMapper;
 import rm.tabou2.service.mapper.tabou.operation.ModeAmenagementMapper;
 import rm.tabou2.service.mapper.tabou.operation.NatureMapper;
+import rm.tabou2.service.mapper.tabou.operation.RenouvellementEconomiquePlaeMapper;
 import rm.tabou2.service.mapper.tabou.operation.VocationMapper;
+import rm.tabou2.service.mapper.tabou.operation.VocationPlaeMapper;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.storage.sig.dao.SecteurDao;
 import rm.tabou2.storage.sig.entity.SecteurEntity;
@@ -49,7 +51,9 @@ import rm.tabou2.storage.tabou.dao.operation.MaitriseOuvrageDao;
 import rm.tabou2.storage.tabou.dao.operation.ModeAmenagementDao;
 import rm.tabou2.storage.tabou.dao.operation.NatureDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.RenouvellementEconomiquePlaeDao;
 import rm.tabou2.storage.tabou.dao.operation.VocationDao;
+import rm.tabou2.storage.tabou.dao.operation.VocationPlaeDao;
 import rm.tabou2.storage.tabou.entity.operation.ConsommationEspaceEntity;
 import rm.tabou2.storage.tabou.entity.operation.DecisionEntity;
 import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
@@ -112,6 +116,18 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
 
     @Autowired
     private ConsommationEspaceMapper consommationEspaceMapper;
+
+    @Autowired
+    private VocationPlaeDao vocationPlaeDao;
+
+    @Autowired
+    private RenouvellementEconomiquePlaeDao renouvellementEconomiquePlaeDao;
+
+    @Autowired
+    private VocationPlaeMapper vocationPlaeMapper;
+
+    @Autowired
+    private RenouvellementEconomiquePlaeMapper renouvellementEconomiquePlaeMapper;
 
     @Autowired
     private OperationService operationService;
@@ -256,6 +272,42 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
 
         Assertions.assertFalse(operation.getDiffusionRestreinte());
 
+    }
+
+    @DisplayName("testCreateAndUpdateSecteurWithIndicateursPlae: Test de la création puis de la modification " +
+            "des indicateurs Vocation (PLAE) et Renouvellement économique (PLAE) d'un secteur")
+    @Test
+    void testCreateAndUpdateSecteurWithIndicateursPlae() throws AppServiceException {
+
+        SecteurEntity secteurEntity = new SecteurEntity();
+        secteurEntity.setId(2);
+        secteurDao.save(secteurEntity);
+
+        OperationIntermediaire operation = new OperationIntermediaire();
+        operation.setNom("nomPlae");
+        operation.setCode("codePlae");
+        operation.setSecteur(true);
+        operation.setEtape(etapeMapper.entityToDto(etapeOperationDao.findByCode("EN_PROJET_PUBLIC")));
+        operation.setNature(natureMapper.entityToDto(natureDao.findByLibelle(NatureLibelle.ZAC)));
+        operation.setVocation(vocationMapper.entityToDto(vocationDao.findByCode("ACTIVITE")));
+        operation.setVocationPlae(vocationPlaeMapper.entityToDto(vocationPlaeDao.findByCode("PRODUCTIVE")));
+        operation.setRenouvellementEconomiquePlae(renouvellementEconomiquePlaeMapper.entityToDto(
+                renouvellementEconomiquePlaeDao.findByCode("EN_ETUDE")));
+        operation.setIdEmprise(secteurEntity.getId().longValue());
+
+        operation = operationService.createOperation(operation);
+
+        Assertions.assertEquals("PRODUCTIVE", operation.getVocationPlae().getCode());
+        Assertions.assertEquals("EN_ETUDE", operation.getRenouvellementEconomiquePlae().getCode());
+
+        operation.setVocationPlae(null);
+        operation.setRenouvellementEconomiquePlae(renouvellementEconomiquePlaeMapper.entityToDto(
+                renouvellementEconomiquePlaeDao.findByCode("OPERATIONNELLE")));
+
+        operation = operationService.updateOperation(operation);
+
+        Assertions.assertNull(operation.getVocationPlae());
+        Assertions.assertEquals("OPERATIONNELLE", operation.getRenouvellementEconomiquePlae().getCode());
     }
 
 }

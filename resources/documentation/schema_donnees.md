@@ -58,6 +58,7 @@ La base de données Tabou a vocation à héberger les données métiers du plugi
 - tabou_programme_tiers
 - tabou_programme_type_plh
 - tabou_projet_urbain
+- tabou_renouvellement_eco_plae
 - tabou_tiers
 - tabou_type_accession_logement
 - tabou_type_accession_logement_portee
@@ -76,6 +77,7 @@ La base de données Tabou a vocation à héberger les données métiers du plugi
 - tabou_type_programmation
 - tabou_type_tiers
 - tabou_vocation
+- tabou_vocation_plae
 - tabou_vocation_za
 - v_oa_operation
 - v_oa_secteur
@@ -99,6 +101,10 @@ erDiagram
     tabou_nature ||--o{ tabou_operation : ""
     tabou_vocation ||--o{ tabou_operation : ""
     tabou_vocation_za ||--o{ tabou_operation : ""
+    tabou_vocation_plae ||--o{ tabou_operation : ""
+    tabou_renouvellement_eco_plae ||--o{ tabou_operation : ""
+    tabou_vocation_plae ||--o{ tabou_programme : ""
+    tabou_renouvellement_eco_plae ||--o{ tabou_programme : ""
     tabou_decision ||--o{ tabou_operation : ""
     tabou_type_occupation ||--o{ tabou_operation : ""
     tabou_consommation_espace ||--o{ tabou_operation : ""

@@ -16,6 +16,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ConsommationEspaceCustomDaoImpl extends AbstractCustomDaoImpl<Conso
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<ConsommationEspaceEntity> searchConsommationEspace(Pageable pageable) {
+    public Page<ConsommationEspaceEntity> searchConsommationEspace(Boolean actifUniquement, Pageable pageable) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
@@ -37,6 +38,7 @@ public class ConsommationEspaceCustomDaoImpl extends AbstractCustomDaoImpl<Conso
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
         Root<ConsommationEspaceEntity> countRoot = countQuery.from(ConsommationEspaceEntity.class);
         countQuery.select(builder.countDistinct(countRoot));
+        applyActifPredicates(actifUniquement, builder, countQuery, countRoot);
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
         //Si aucun résultat
@@ -47,6 +49,7 @@ public class ConsommationEspaceCustomDaoImpl extends AbstractCustomDaoImpl<Conso
         //Requête de recherche
         CriteriaQuery<ConsommationEspaceEntity> searchQuery = builder.createQuery(ConsommationEspaceEntity.class);
         Root<ConsommationEspaceEntity> searchRoot = searchQuery.from(ConsommationEspaceEntity.class);
+        applyActifPredicates(actifUniquement, builder, searchQuery, searchRoot);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), searchRoot, builder));
 
@@ -55,6 +58,22 @@ public class ConsommationEspaceCustomDaoImpl extends AbstractCustomDaoImpl<Conso
         List<ConsommationEspaceEntity> entities = typedQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize()).getResultList();
         return new PageImpl<>(entities, pageable, totalCount.intValue());
 
+    }
+
+    /**
+     * Restreint la requête aux consommations d'espace actives (date_debut <= now et date_fin nulle ou future) si demandé.
+     *
+     * @param actifUniquement si true, filtre sur les dates de validité
+     * @param builder criteria builder
+     * @param query   requête à filtrer
+     * @param root    racine de la requête
+     */
+    private void applyActifPredicates(Boolean actifUniquement, CriteriaBuilder builder, CriteriaQuery<?> query, Root<ConsommationEspaceEntity> root) {
+        List<Predicate> predicates = new ArrayList<>();
+        predicateActifCriteria(actifUniquement, predicates, builder, root);
+        if (!predicates.isEmpty()) {
+            query.where(builder.and(predicates.toArray(new Predicate[0])));
+        }
     }
 
 }

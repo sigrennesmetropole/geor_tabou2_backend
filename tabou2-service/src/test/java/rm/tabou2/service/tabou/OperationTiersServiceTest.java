@@ -45,7 +45,7 @@ import rm.tabou2.storage.tabou.item.TiersAmenagementCriteria;
 
 @TestPropertySource(value = { "classpath:application.properties" })
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
-public class OperationTiersServiceTest {
+class OperationTiersServiceTest {
 
 	private static final String LIBELLE_TYPE_TIERS = "libelle";
 
@@ -82,7 +82,7 @@ public class OperationTiersServiceTest {
 	private AuthentificationHelper authentificationHelper;
 
     @BeforeEach
-    public void initTest() {
+    void initTest() {
         Mockito.when(authentificationHelper.getConnectedUsername()).thenReturn("username");
         Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);
     }
@@ -109,6 +109,7 @@ public class OperationTiersServiceTest {
 
 		TypeTiersEntity typeTiers = new TypeTiersEntity();
 		typeTiers.setLibelle(LIBELLE_TYPE_TIERS);
+		typeTiers.setCode("TYPE_TEST");
 		typeTiersDao.save(typeTiers);
 
 		OperationEntity operationEntity = new OperationEntity();
@@ -146,12 +147,13 @@ public class OperationTiersServiceTest {
         Assertions.assertEquals(1, page.getTotalElements());
         Assertions.assertEquals(NOM_TIERS, page.getContent().get(0).getTiers().getNom());
         Assertions.assertEquals(LIBELLE_TYPE_TIERS, page.getContent().get(0).getTypeTiers().getLibelle());
+        Assertions.assertEquals("TYPE_TEST", page.getContent().get(0).getTypeTiers().getCode());
 
     }
 
     @Test
     @Transactional
-    public void testSearchTiersDiffusionRestreinte() throws AppServiceException {
+    void testSearchTiersDiffusionRestreinte() throws AppServiceException {
 
         DecisionEntity decisionEntity = decisionDao.findByCode(DecisionCode.DELIBERATION_CONSEIL_M);
         VocationEntity vocationEntity = vocationDao.findByCode(VocationCode.ESPACE_VERT);

@@ -17,15 +17,20 @@ import rm.tabou2.service.common.DatabaseInitializerTest;
 import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.common.factory.LogementDataFactory;
 import rm.tabou2.service.common.factory.ProgrammeDataFactory;
+import rm.tabou2.service.constant.VocationCode;
 import rm.tabou2.service.dto.*;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.programme.ProgrammeRightsHelper;
 import rm.tabou2.service.mapper.tabou.programme.EtapeProgrammeMapper;
+import rm.tabou2.service.mapper.tabou.operation.RenouvellementEconomiquePlaeMapper;
+import rm.tabou2.service.mapper.tabou.operation.VocationPlaeMapper;
 import rm.tabou2.service.tabou.programme.ProgrammeService;
 import rm.tabou2.service.tabou.logement.TypeLogementService;
 import rm.tabou2.storage.sig.dao.ProgrammeRmDao;
 import rm.tabou2.storage.sig.entity.ProgrammeRmEntity;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
+import rm.tabou2.storage.tabou.dao.operation.RenouvellementEconomiquePlaeDao;
+import rm.tabou2.storage.tabou.dao.operation.VocationPlaeDao;
 import rm.tabou2.storage.tabou.dao.programme.*;
 import rm.tabou2.storage.tabou.dao.logement.LogementsSpecifiquesDao;
 import rm.tabou2.storage.tabou.dao.logement.TypeAccessionLogementDao;
@@ -84,6 +89,18 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
     @Autowired
     private TypeAccessionLogementDao typeAccessionLogementDao;
 
+    @Autowired
+    private VocationPlaeDao vocationPlaeDao;
+
+    @Autowired
+    private VocationPlaeMapper vocationPlaeMapper;
+
+    @Autowired
+    private RenouvellementEconomiquePlaeDao renouvellementEconomiquePlaeDao;
+
+    @Autowired
+    private RenouvellementEconomiquePlaeMapper renouvellementEconomiquePlaeMapper;
+
     @MockitoBean
     private ProgrammeRightsHelper programmeRightsHelper;
 
@@ -124,6 +141,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         Programme programme1 = new Programme();
         programme1.setNom("nom1");
         programme1.setCode("code1");
+        programme1.setVocation(programmeDataFactory.getVocation(VocationCode.ESPACE_VERT));
         programme1.setNumAds("numads1");
         programme1.setOperationId(operationEntity.getId());
         programme1.setEtape(etapeProgrammeMapper.entityToDto(etapePublic));
@@ -132,6 +150,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         Programme programme2 = new Programme();
         programme2.setNom("nom2");
         programme2.setCode("code2");
+        programme2.setVocation(programmeDataFactory.getVocation(VocationCode.ESPACE_VERT));
         programme2.setNumAds("numads2");
         programme2.setOperationId(operationEntity.getId());
         programme2.setEtape(etapeProgrammeMapper.entityToDto(etapeRestreinte));
@@ -140,6 +159,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         Programme programme3 = new Programme();
         programme3.setNom("nom3");
         programme3.setCode("code3");
+        programme3.setVocation(programmeDataFactory.getVocation(VocationCode.ESPACE_VERT));
         programme3.setNumAds("numads3");
         programme3.setOperationId(operationEntity.getId());
         programme3.setEtape(etapeProgrammeMapper.entityToDto(etapePublic));
@@ -175,7 +195,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
                 () -> programmeService.createProgramme(programme)
         );
 
-        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "operationId", "etape"));
+        testConstraintViolationException(constraintViolationException, List.of("nom", "code", "operationId", "etape", "vocation"));
 
     }
 
@@ -219,6 +239,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         programme.setNom("nom4");
         programme.setEtape(etapeProgrammeMapper.entityToDto(etapeRestreinte));
         programme.setCode("code4");
+        programme.setVocation(programmeDataFactory.getVocation(VocationCode.ESPACE_VERT));
         programme.setNumAds("numads4");
         programme.setOperationId(operationEntity.getId());
         programme.setIdEmprise(programmeRm.getId());
@@ -259,6 +280,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         Programme programme = new Programme();
         programme.setNom("progHabitat1");
         programme.setCode("codeHabitat1");
+        programme.setVocation(programmeDataFactory.getVocation(VocationCode.ESPACE_VERT));
         programme.setNumAds("numads_habitat1");
         programme.setOperationId(operationEntity.getId());
         programme.setEtape(etapeProgrammeMapper.entityToDto(etapePublic));
@@ -293,6 +315,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         Programme programme = new Programme();
         programme.setNom("progHabitat2");
         programme.setCode("codeHabitat2");
+        programme.setVocation(programmeDataFactory.getVocation(VocationCode.ESPACE_VERT));
         programme.setNumAds("numads_habitat2");
         programme.setOperationId(operationEntity.getId());
         programme.setEtape(etapeProgrammeMapper.entityToDto(etapePublic));
@@ -342,6 +365,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         Programme programme = new Programme();
         programme.setNom("progHabitat3");
         programme.setCode("codeHabitat3");
+        programme.setVocation(programmeDataFactory.getVocation(VocationCode.ESPACE_VERT));
         programme.setNumAds("numads_habitat3");
         programme.setOperationId(operationEntity.getId());
         programme.setEtape(etapeProgrammeMapper.entityToDto(etapePublic));
@@ -391,6 +415,7 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         Programme programme = new Programme();
         programme.setNom("progHabitat4");
         programme.setCode("codeHabitat4");
+        programme.setVocation(programmeDataFactory.getVocation(VocationCode.ESPACE_VERT));
         programme.setNumAds("numads_habitat4");
         programme.setOperationId(operationEntity.getId());
         programme.setEtape(etapeProgrammeMapper.entityToDto(etapePublic));
@@ -801,5 +826,157 @@ class ProgrammeServiceTest extends DatabaseInitializerTest implements ExceptionT
         Assertions.assertNotNull(result.getProgrammationHabitat().getLogementsSpecifiques());
         Assertions.assertFalse(result.getProgrammationHabitat().getLogementsSpecifiques().isEmpty(),
                 "Les logements spécifiques devraient être auto-initialisés même avec une programmation habitat sans logements");
+    }
+
+    // ===================== Vocation principale =====================
+
+    @DisplayName("testCreateProgrammeWithVocation: la vocation principale est enregistrée à la création")
+    @Test
+    void testCreateProgrammeWithVocation() throws AppServiceException {
+
+        Programme programme = programmeDataFactory.buildBaseProgramme("progVoc1", "codeVoc1");
+        programme.setVocation(programmeDataFactory.getVocation("HABITAT"));
+
+        Programme result = programmeService.createProgramme(programme);
+
+        Assertions.assertNotNull(result.getVocation());
+        Assertions.assertEquals("HABITAT", result.getVocation().getCode());
+    }
+
+    @DisplayName("testUpdateProgrammeVocation: la vocation principale est modifiable indépendamment de l'opération")
+    @Test
+    void testUpdateProgrammeVocation() throws AppServiceException {
+
+        Programme programme = programmeService.createProgramme(
+                programmeDataFactory.buildBaseProgramme("progVoc2", "codeVoc2"));
+
+        programme.setVocation(programmeDataFactory.getVocation("MIXTE"));
+        Programme updated = programmeService.updateProgramme(programme);
+
+        Assertions.assertEquals("MIXTE", updated.getVocation().getCode());
+        Assertions.assertEquals("MIXTE", programmeService.getProgrammeById(updated.getId()).getVocation().getCode());
+    }
+
+    @DisplayName("testCannotRemoveProgrammeVocation: impossible de supprimer la vocation principale d'un programme")
+    @Test
+    void testCannotRemoveProgrammeVocation() throws AppServiceException {
+
+        Programme programme = programmeService.createProgramme(
+                programmeDataFactory.buildBaseProgramme("progVoc3", "codeVoc3"));
+
+        programme.setVocation(null);
+        final Programme programmeSansVocation = programme;
+
+        Assertions.assertThrows(AppServiceException.class,
+                () -> programmeService.updateProgramme(programmeSansVocation));
+    }
+
+    @DisplayName("testUpdateExistingProgrammeWithoutVocation: un programme existant sans vocation reste modifiable")
+    @Test
+    void testUpdateExistingProgrammeWithoutVocation() throws AppServiceException {
+
+        Programme programme = programmeService.createProgramme(
+                programmeDataFactory.buildBaseProgramme("progVoc4", "codeVoc4"));
+
+        // Simule une donnée antérieure à l'évolution (vocation nulle en base)
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programme.getId());
+        programmeEntity.setVocation(null);
+        programmeDao.save(programmeEntity);
+
+        programme.setVocation(null);
+        programme.setDescription("description modifiée");
+        Programme updated = programmeService.updateProgramme(programme);
+
+        Assertions.assertNull(updated.getVocation());
+        Assertions.assertEquals("description modifiée", updated.getDescription());
+    }
+
+    // ===================== Programmation activité (suivi des ZAE) =====================
+
+    @DisplayName("testUpdateProgrammeActivite: indicateurs PLAE, suivi ZA, surfaces et suivi opérationnel sont enregistrés")
+    @Test
+    void testUpdateProgrammeActivite() throws AppServiceException {
+
+        Programme programme = programmeService.createProgramme(
+                programmeDataFactory.buildBaseProgramme("progZa1", "codeZa1"));
+
+        OffsetDateTime date = OffsetDateTime.parse("2026-03-15T00:00:00Z");
+        programme.setVocationPlae(vocationPlaeMapper.entityToDto(vocationPlaeDao.findByCode("PRODUCTIVE")));
+        programme.setRenouvellementEconomiquePlae(renouvellementEconomiquePlaeMapper.entityToDto(
+                renouvellementEconomiquePlaeDao.findByCode("EN_ETUDE")));
+        programme.setVocationZaSuivi(vocationPlaeMapper.entityToDto(vocationPlaeDao.findByCode("TERTIAIRE")));
+        programme.setRenouvellementEconomiqueZaSuivi(renouvellementEconomiquePlaeMapper.entityToDto(
+                renouvellementEconomiquePlaeDao.findByCode("OPERATIONNELLE")));
+        programme.setStatutPropriete(Programme.StatutProprieteEnum.BAC);
+        programme.setPrixVente(150000);
+        programme.setPrixRedevanceAnnuelle(12000);
+        programme.setSurfacePrevisionnelle(3);
+        programme.setSurfaceConstruite(1250.5);
+        programme.setDateOptionReservationPrevue(date);
+        programme.setDateSignatureActeCessionReelle(date);
+        programme.setDureeBailPrevue(30);
+        programme.setDureeBailReelle(25);
+
+        programmeService.updateProgramme(programme);
+        Programme updated = programmeService.getProgrammeById(programme.getId());
+
+        Assertions.assertEquals("PRODUCTIVE", updated.getVocationPlae().getCode());
+        Assertions.assertEquals("EN_ETUDE", updated.getRenouvellementEconomiquePlae().getCode());
+        Assertions.assertEquals("TERTIAIRE", updated.getVocationZaSuivi().getCode());
+        Assertions.assertEquals("OPERATIONNELLE", updated.getRenouvellementEconomiqueZaSuivi().getCode());
+        Assertions.assertEquals(Programme.StatutProprieteEnum.BAC, updated.getStatutPropriete());
+        Assertions.assertEquals(150000, updated.getPrixVente());
+        Assertions.assertEquals(12000, updated.getPrixRedevanceAnnuelle());
+        Assertions.assertEquals(3, updated.getSurfacePrevisionnelle());
+        Assertions.assertEquals(1250.5, updated.getSurfaceConstruite());
+        Assertions.assertEquals(date.toInstant(), updated.getDateOptionReservationPrevue().toInstant());
+        Assertions.assertEquals(date.toInstant(), updated.getDateSignatureActeCessionReelle().toInstant());
+        Assertions.assertNull(updated.getDateOptionCessionPrevue());
+        Assertions.assertEquals(30, updated.getDureeBailPrevue());
+        Assertions.assertEquals(25, updated.getDureeBailReelle());
+
+        updated.setVocationPlae(null);
+        updated.setRenouvellementEconomiqueZaSuivi(null);
+        updated.setStatutPropriete(null);
+        updated.setPrixVente(null);
+        Programme cleared = programmeService.updateProgramme(updated);
+
+        Assertions.assertNull(cleared.getVocationPlae());
+        Assertions.assertNull(cleared.getRenouvellementEconomiqueZaSuivi());
+        Assertions.assertNull(cleared.getStatutPropriete());
+        Assertions.assertNull(cleared.getPrixVente());
+        Assertions.assertEquals("TERTIAIRE", cleared.getVocationZaSuivi().getCode());
+    }
+
+    @DisplayName("testEntreprisesDevecoNonModifiable: les entreprises issues de DevEco ne sont pas modifiables via le programme")
+    @Test
+    void testEntreprisesDevecoNonModifiable() throws AppServiceException {
+
+        Programme programme = programmeService.createProgramme(
+                programmeDataFactory.buildBaseProgramme("progZa2", "codeZa2"));
+
+        ProgrammeEntity programmeEntity = programmeDao.findOneById(programme.getId());
+        programmeEntity.setEntreprisesDeveco("Entreprise A");
+        programmeDao.save(programmeEntity);
+
+        programme.setEntreprisesDeveco("Saisie manuelle");
+        Programme updated = programmeService.updateProgramme(programme);
+
+        Assertions.assertEquals("Entreprise A", updated.getEntreprisesDeveco());
+    }
+
+    @DisplayName("testUpdateProgrammeWithUnknownVocationPlae: une vocation PLAE inconnue est refusée")
+    @Test
+    void testUpdateProgrammeWithUnknownVocationPlae() throws AppServiceException {
+
+        Programme programme = programmeService.createProgramme(
+                programmeDataFactory.buildBaseProgramme("progZa3", "codeZa3"));
+
+        VocationPlae inconnue = new VocationPlae();
+        inconnue.setId(-1L);
+        programme.setVocationZaSuivi(inconnue);
+
+        Assertions.assertThrows(java.util.NoSuchElementException.class,
+                () -> programmeService.updateProgramme(programme));
     }
 }

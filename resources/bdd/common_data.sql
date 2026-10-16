@@ -200,6 +200,9 @@ INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Echéancier',
 
 INSERT INTO tabou_type_tiers (code, libelle) VALUES ('MAITRE_OUVRAGE', 'Maître d''ouvrage');
 INSERT INTO tabou_type_tiers (code, libelle) VALUES ('MAITRE_OEUVRE', 'Maître d''oeuvre');
+INSERT INTO tabou_type_tiers (code, libelle) VALUES ('CHARGE_OPERATION', 'Chargé d''opération');
+INSERT INTO tabou_type_tiers (code, libelle) VALUES ('OCCUPANT', 'Occupant');
+INSERT INTO tabou_type_tiers (code, libelle) VALUES ('OPERATEUR_INVESTISSEUR', 'Opérateur/Investisseur');
 
 
 -- Insertion des vocations
@@ -241,6 +244,22 @@ INSERT INTO tabou_mode_amenagement (libelle, code) VALUES ('Régie directe', 'RE
 INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Extension urbaine', 'EXTENSION');
 INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Renouvellement urbain', 'RENOUVELLEMENT');
 INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Non précisé', 'NON_PRECISE');
+
+
+-- Insertion des vocations PLAE
+
+INSERT INTO tabou_vocation_plae (libelle, code) VALUES ('Productive', 'PRODUCTIVE');
+INSERT INTO tabou_vocation_plae (libelle, code) VALUES ('Commerciale', 'COMMERCIALE');
+INSERT INTO tabou_vocation_plae (libelle, code) VALUES ('Tertiaire', 'TERTIAIRE');
+INSERT INTO tabou_vocation_plae (libelle, code) VALUES ('Mixte', 'MIXTE');
+
+
+-- Insertion des renouvellements économiques PLAE
+
+INSERT INTO tabou_renouvellement_eco_plae (libelle, code) VALUES ('En réserve', 'EN_RESERVE');
+INSERT INTO tabou_renouvellement_eco_plae (libelle, code) VALUES ('En étude', 'EN_ETUDE');
+INSERT INTO tabou_renouvellement_eco_plae (libelle, code) VALUES ('Opérationnelle', 'OPERATIONNELLE');
+INSERT INTO tabou_renouvellement_eco_plae (libelle, code) VALUES ('Terminée', 'TERMINEE');
 
 
 -- Insertion des types de financements

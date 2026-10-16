@@ -199,6 +199,9 @@ INSERT INTO tabou_type_evenement (libelle, code, systeme) VALUES ('Modification 
 
 INSERT INTO tabou_type_tiers (code, libelle) VALUES ('MAITRE_OUVRAGE', 'Maître d''ouvrage');
 INSERT INTO tabou_type_tiers (code, libelle) VALUES ('MAITRE_OEUVRE', 'Maître d''oeuvre');
+INSERT INTO tabou_type_tiers (code, libelle) VALUES ('CHARGE_OPERATION', 'Chargé d''opération');
+INSERT INTO tabou_type_tiers (code, libelle) VALUES ('OCCUPANT', 'Occupant');
+INSERT INTO tabou_type_tiers (code, libelle) VALUES ('OPERATEUR_INVESTISSEUR', 'Opérateur/Investisseur');
 
 
 -- Insertion des vocations
@@ -236,6 +239,19 @@ INSERT INTO tabou_mode_amenagement (libelle, code) VALUES ('Régie directe', 'RE
 
 -- Insertion des consommations d'expace
 
-INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Extension urbaine', 'EXTENSION');
-INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Renouvellement urbain', 'RENOUVELLEMENT');
-INSERT INTO tabou_consommation_espace (libelle, code) VALUES ('Non précisé', 'NON_PRECISE');
+INSERT INTO tabou_consommation_espace (libelle, code, date_debut) VALUES ('Extension urbaine', 'EXTENSION', CURRENT_TIMESTAMP);
+INSERT INTO tabou_consommation_espace (libelle, code, date_debut) VALUES ('Renouvellement urbain', 'RENOUVELLEMENT', CURRENT_TIMESTAMP);
+INSERT INTO tabou_consommation_espace (libelle, code, date_debut) VALUES ('Non précisé', 'NON_PRECISE', CURRENT_TIMESTAMP);
+
+
+-- Insertion des vocations et renouvellements économiques PLAE
+
+INSERT INTO tabou_vocation_plae (libelle, code, date_debut) VALUES ('Productive', 'PRODUCTIVE', CURRENT_TIMESTAMP);
+INSERT INTO tabou_vocation_plae (libelle, code, date_debut) VALUES ('Commerciale', 'COMMERCIALE', CURRENT_TIMESTAMP);
+INSERT INTO tabou_vocation_plae (libelle, code, date_debut) VALUES ('Tertiaire', 'TERTIAIRE', CURRENT_TIMESTAMP);
+INSERT INTO tabou_vocation_plae (libelle, code, date_debut) VALUES ('Mixte', 'MIXTE', CURRENT_TIMESTAMP);
+
+INSERT INTO tabou_renouvellement_eco_plae (libelle, code, date_debut) VALUES ('En réserve', 'EN_RESERVE', CURRENT_TIMESTAMP);
+INSERT INTO tabou_renouvellement_eco_plae (libelle, code, date_debut) VALUES ('En étude', 'EN_ETUDE', CURRENT_TIMESTAMP);
+INSERT INTO tabou_renouvellement_eco_plae (libelle, code, date_debut) VALUES ('Opérationnelle', 'OPERATIONNELLE', CURRENT_TIMESTAMP);
+INSERT INTO tabou_renouvellement_eco_plae (libelle, code, date_debut) VALUES ('Terminée', 'TERMINEE', CURRENT_TIMESTAMP);

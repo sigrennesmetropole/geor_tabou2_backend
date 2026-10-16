@@ -77,6 +77,10 @@ classDiagram
     OperationEntity --> NatureEntity : nature
     OperationEntity --> VocationEntity : vocation
     OperationEntity --> VocationZAEntity : vocationZa
+    OperationEntity --> VocationPlaeEntity : vocationPlae
+    OperationEntity --> RenouvellementEconomiquePlaeEntity : renouvellementEconomiquePlae
+    ProgrammeEntity --> VocationPlaeEntity : vocationPlae, vocationZaSuivi
+    ProgrammeEntity --> RenouvellementEconomiquePlaeEntity : renouvellementEconomiquePlae, renouvellementEconomiqueZaSuivi
     OperationEntity --> TypeOccupationEntity : typeOccupation
     OperationEntity --> DecisionEntity : decision
     OperationEntity --> ConsommationEspaceEntity : consommationEspace

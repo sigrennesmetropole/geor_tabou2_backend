@@ -21,9 +21,10 @@ public class EntiteReferenteApiController implements EntitesReferentesApi {
     private final EntiteReferenteService entiteReferenteService;
 
     @Override
-    public ResponseEntity<PageResult> searchEntitesReferentes(String libelle, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
+    public ResponseEntity<PageResult> searchEntitesReferentes(String libelle, Boolean actifUniquement, Integer start, Integer resultsNumber, String orderBy, Boolean asc) {
         EntiteReferenteCriteria criteria = new EntiteReferenteCriteria();
         criteria.setCode(libelle);
+        criteria.setActifUniquement(actifUniquement);
 
         Pageable pageable = PaginationUtils.buildPageable(start, resultsNumber, orderBy, asc, EntiteReferenteEntity.class);
 

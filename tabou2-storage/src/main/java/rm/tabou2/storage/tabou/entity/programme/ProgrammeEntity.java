@@ -27,6 +27,9 @@ import lombok.ToString;
 import rm.tabou2.storage.tabou.entity.common.GenericAuditableEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.ProjetUrbainEntity;
+import rm.tabou2.storage.tabou.entity.operation.RenouvellementEconomiquePlaeEntity;
+import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
+import rm.tabou2.storage.tabou.entity.operation.VocationPlaeEntity;
 import rm.tabou2.storage.tabou.entity.plh.AttributPLHEntity;
 import rm.tabou2.storage.tabou.entity.plh.TypePLHEntity;
 
@@ -166,6 +169,62 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @Column(name = "surface_shab")
     private Double surfaceSHAB;
 
+    @Basic
+    @Column(name = "entreprises_deveco")
+    private String entreprisesDeveco;
+
+    @Basic
+    @Column(name = "statut_propriete")
+    private String statutPropriete;
+
+    @Basic
+    @Column(name = "prix_vente")
+    private Integer prixVente;
+
+    @Basic
+    @Column(name = "prix_redevance_annuelle")
+    private Integer prixRedevanceAnnuelle;
+
+    @Basic
+    @Column(name = "surface_previsionnelle")
+    private Integer surfacePrevisionnelle;
+
+    @Basic
+    @Column(name = "surface_construite")
+    private Double surfaceConstruite;
+
+    @Basic
+    @Column(name = "date_option_reservation_prevue")
+    private LocalDateTime dateOptionReservationPrevue;
+
+    @Basic
+    @Column(name = "date_option_reservation_reelle")
+    private LocalDateTime dateOptionReservationReelle;
+
+    @Basic
+    @Column(name = "date_option_cession_prevue")
+    private LocalDateTime dateOptionCessionPrevue;
+
+    @Basic
+    @Column(name = "date_option_cession_reelle")
+    private LocalDateTime dateOptionCessionReelle;
+
+    @Basic
+    @Column(name = "date_signature_acte_cession_prevue")
+    private LocalDateTime dateSignatureActeCessionPrevue;
+
+    @Basic
+    @Column(name = "date_signature_acte_cession_reelle")
+    private LocalDateTime dateSignatureActeCessionReelle;
+
+    @Basic
+    @Column(name = "duree_bail_prevue")
+    private Integer dureeBailPrevue;
+
+    @Basic
+    @Column(name = "duree_bail_reelle")
+    private Integer dureeBailReelle;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_etape_programme")
     private EtapeProgrammeEntity etapeProgramme;
@@ -173,6 +232,26 @@ public class ProgrammeEntity extends GenericAuditableEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_operation")
     private OperationEntity operation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_vocation")
+    private VocationEntity vocation;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_vocation_plae")
+    private VocationPlaeEntity vocationPlae;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_renouvellement_eco_plae")
+    private RenouvellementEconomiquePlaeEntity renouvellementEconomiquePlae;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_vocation_za_suivi")
+    private VocationPlaeEntity vocationZaSuivi;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_renouvellement_eco_za_suivi")
+    private RenouvellementEconomiquePlaeEntity renouvellementEconomiqueZaSuivi;
 
     @ManyToMany(cascade = { CascadeType.DETACH, CascadeType.REFRESH })
     @JoinTable(name = "tabou_programme_type_plh", joinColumns = @JoinColumn(name = "id_programme", referencedColumnName = "id_programme"), inverseJoinColumns = @JoinColumn(name = "id_type_plh", referencedColumnName = "id_type_plh"))

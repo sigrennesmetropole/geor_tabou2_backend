@@ -119,6 +119,10 @@ public class OperationIntermediaire {
 
     private VocationZA vocationZa;
 
+    private VocationPlae vocationPlae;
+
+    private RenouvellementEconomiquePlae renouvellementEconomiquePlae;
+
     private Set<Contribution> contributions;
 
     private Set<DescriptionFoncier> descriptionsFoncier;

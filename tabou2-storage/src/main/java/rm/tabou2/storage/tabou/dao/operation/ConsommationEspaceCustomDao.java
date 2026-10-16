@@ -9,6 +9,6 @@ import rm.tabou2.storage.tabou.entity.operation.ConsommationEspaceEntity;
 public interface ConsommationEspaceCustomDao {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    Page<ConsommationEspaceEntity> searchConsommationEspace(Pageable pageable);
+    Page<ConsommationEspaceEntity> searchConsommationEspace(Boolean actifUniquement, Pageable pageable);
 
 }

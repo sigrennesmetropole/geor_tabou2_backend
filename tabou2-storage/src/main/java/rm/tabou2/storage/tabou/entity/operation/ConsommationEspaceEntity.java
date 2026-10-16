@@ -1,5 +1,7 @@
 package rm.tabou2.storage.tabou.entity.operation;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 import jakarta.persistence.Basic;
@@ -29,4 +31,12 @@ public class ConsommationEspaceEntity {
     @Basic
     @Column(name = "code")
     private String code;
+
+    @Basic
+    @Column(name = "date_debut", nullable = false)
+    private LocalDateTime dateDebut;
+
+    @Basic
+    @Column(name = "date_fin")
+    private LocalDateTime dateFin;
 }

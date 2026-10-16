@@ -235,6 +235,8 @@ tabou2:deploy-karbon:prepare:qua:
   variables:
     TRIGGERED_BY: tabou2
     PARENT_PIPELINE_ID: $CI_PIPELINE_ID
+    REGISTRY_PULL_USER: $TABOU2_REGISTRY_PULL_USER
+    REGISTRY_PULL_TOKEN: $TABOU2_REGISTRY_PULL_TOKEN
 
 tabou2:deploy-karbon:dev:
   extends: .tabou2:deploy-karbon

@@ -27,6 +27,12 @@ public class ValidProgrammeCreationValidator implements CustomConstraintValidato
             addConstraintErrorProperty(constraintValidatorContext, "L'opération associée au programme est invalide'", "operationId");
         }
 
-        return etapeValidation && operationIdValidation;
+        // vocation validation
+        boolean vocationValidation = programme.getVocation() != null && programme.getVocation().getId() != null;
+        if (!vocationValidation) {
+            addConstraintErrorProperty(constraintValidatorContext, "La vocation principale du programme est obligatoire", "vocation");
+        }
+
+        return etapeValidation && operationIdValidation && vocationValidation;
     }
 }

@@ -86,6 +86,10 @@ public class OperationServiceImpl implements OperationService {
 
     private final VocationZADao vocationZADao;
 
+    private final VocationPlaeDao vocationPlaeDao;
+
+    private final RenouvellementEconomiquePlaeDao renouvellementEconomiquePlaeDao;
+
     private final DecisionDao decisionDao;
 
     private final MaitriseOuvrageDao maitriseOuvrageDao;
@@ -370,6 +374,25 @@ public class OperationServiceImpl implements OperationService {
             operationEntity.setVocationZa(vocationZA);
         } else if (operation.getVocationZa() == null) {
             operationEntity.setVocationZa(null);
+        }
+
+        if (operation.getVocationPlae() != null && operation.getVocationPlae().getId() != null) {
+            VocationPlaeEntity vocationPlae = vocationPlaeDao.findById(operation.getVocationPlae().getId())
+                    .orElseThrow(() -> new NoSuchElementException(
+                            "Aucune vocation PLAE id = " + operation.getVocationPlae().getId() + ERROR_NON_TROUVEE));
+            operationEntity.setVocationPlae(vocationPlae);
+        } else if (operation.getVocationPlae() == null) {
+            operationEntity.setVocationPlae(null);
+        }
+
+        if (operation.getRenouvellementEconomiquePlae() != null && operation.getRenouvellementEconomiquePlae().getId() != null) {
+            RenouvellementEconomiquePlaeEntity renouvellementEconomiquePlae = renouvellementEconomiquePlaeDao
+                    .findById(operation.getRenouvellementEconomiquePlae().getId())
+                    .orElseThrow(() -> new NoSuchElementException("Aucun renouvellement économique PLAE id = "
+                            + operation.getRenouvellementEconomiquePlae().getId() + " n'a été trouvé"));
+            operationEntity.setRenouvellementEconomiquePlae(renouvellementEconomiquePlae);
+        } else if (operation.getRenouvellementEconomiquePlae() == null) {
+            operationEntity.setRenouvellementEconomiquePlae(null);
         }
 
         if (operation.getDecision() != null && operation.getDecision().getId() != null) {

@@ -8,9 +8,13 @@ import rm.tabou2.service.helper.programme.ProgrammeEmpriseHelper;
 import rm.tabou2.service.mapper.AbstractMapper;
 import rm.tabou2.service.mapper.LocaDateTimeMapper;
 import rm.tabou2.service.mapper.tabou.operation.ProjetUrbainMapper;
+import rm.tabou2.service.mapper.tabou.operation.RenouvellementEconomiquePlaeMapper;
+import rm.tabou2.service.mapper.tabou.operation.VocationMapper;
+import rm.tabou2.service.mapper.tabou.operation.VocationPlaeMapper;
 import rm.tabou2.storage.tabou.entity.programme.ProgrammeEntity;
 
-@Mapper(componentModel = "spring", uses = {EtapeProgrammeMapper.class, ProgrammeEmpriseHelper.class, LocaDateTimeMapper.class, ProgrammationMapper.class, ProjetUrbainMapper.class, ProgrammationHabitatMapper.class})
+@Mapper(componentModel = "spring", uses = {EtapeProgrammeMapper.class, ProgrammeEmpriseHelper.class, LocaDateTimeMapper.class, ProgrammationMapper.class, ProjetUrbainMapper.class, ProgrammationHabitatMapper.class, VocationMapper.class,
+        VocationPlaeMapper.class, RenouvellementEconomiquePlaeMapper.class})
 public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Programme> {
 
     @Mapping(source = "etape", target = "etapeProgramme")
@@ -21,6 +25,12 @@ public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Program
     @Mapping(source = "livraisonDate", target = "dateLivraison")
     @Mapping(target = "plhs", ignore = true)
     @Mapping(target = "programmationHabitat", ignore = true)
+    @Mapping(target = "vocation", ignore = true)
+    @Mapping(target = "vocationPlae", ignore = true)
+    @Mapping(target = "renouvellementEconomiquePlae", ignore = true)
+    @Mapping(target = "vocationZaSuivi", ignore = true)
+    @Mapping(target = "renouvellementEconomiqueZaSuivi", ignore = true)
+    @Mapping(target = "entreprisesDeveco", ignore = true)
     ProgrammeEntity dtoToEntity(Programme dto);
 
     @Mapping(source = "etapeProgramme", target = "etape")
@@ -40,6 +50,12 @@ public interface ProgrammeMapper extends AbstractMapper<ProgrammeEntity, Program
     @Mapping(target = "operation", ignore = true)
     @Mapping(target = "surfaceTotale", ignore = true)
     @Mapping(target = "programmationHabitat", ignore = true)
+    @Mapping(target = "vocation", ignore = true)
+    @Mapping(target = "vocationPlae", ignore = true)
+    @Mapping(target = "renouvellementEconomiquePlae", ignore = true)
+    @Mapping(target = "vocationZaSuivi", ignore = true)
+    @Mapping(target = "renouvellementEconomiqueZaSuivi", ignore = true)
+    @Mapping(target = "entreprisesDeveco", ignore = true)
     void dtoToEntity(Programme dto, @MappingTarget ProgrammeEntity entity);
 
 }
