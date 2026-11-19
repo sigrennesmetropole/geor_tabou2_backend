@@ -15,6 +15,7 @@ import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
+import rm.tabou2.service.helper.operation.OperationReadAccess;
 import rm.tabou2.service.mapper.tabou.operation.EvenementOperationMapper;
 import rm.tabou2.service.mapper.tabou.operation.OperationMapper;
 import rm.tabou2.service.tabou.evenement.EvenementOperationService;
@@ -41,8 +42,12 @@ public class EvenementOperationServiceImpl implements EvenementOperationService 
 
     private final AuthentificationHelper authentificationHelper;
 
+    private final OperationReadAccess operationReadAccess;
+
     @Override
     public Page<Evenement> searchEvenementsOperations(long operationId, Pageable pageable) {
+
+        operationReadAccess.checkCanRead(operationId);
 
         TypeEvenementCriteria typeEvenementCriteria = new TypeEvenementCriteria();
 

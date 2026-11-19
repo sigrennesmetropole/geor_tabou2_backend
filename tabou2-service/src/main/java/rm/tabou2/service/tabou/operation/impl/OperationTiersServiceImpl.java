@@ -18,6 +18,7 @@ import rm.tabou2.service.dto.TiersTypeTiers;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.date.DateHelper;
+import rm.tabou2.service.helper.operation.OperationReadAccess;
 import rm.tabou2.service.mapper.tabou.tiers.TiersMapper;
 import rm.tabou2.service.mapper.tabou.tiers.TypeTiersMapper;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
@@ -50,6 +51,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
 
     private final AuthentificationHelper authentificationHelper;
 
+    private final OperationReadAccess operationReadAccess;
     private final TiersMapper tiersMapper;
 
     private final TypeTiersMapper typeTiersMapper;
@@ -108,10 +110,7 @@ public class OperationTiersServiceImpl implements OperationTiersService {
         if (optional.isEmpty()) {
             throw new AppServiceException("L'operation' = " + criteria.getOperationId() + ERROR_NOT_EXIST);
         }
-        // Si diffusion restreinte et utilisateur non referent
-        if (optional.get().isDiffusionRestreinte() && !authentificationHelper.hasReferentRole()) {
-            return new PageImpl<>(new ArrayList<>(), pageable, 0); // On retourne une page vide
-        }
+        operationReadAccess.checkCanRead(criteria.getOperationId());
 
         Page<OperationTiersEntity> tiersAmenagements = operationTiersCustomDao.searchOperationTiers(criteria, pageable);
 

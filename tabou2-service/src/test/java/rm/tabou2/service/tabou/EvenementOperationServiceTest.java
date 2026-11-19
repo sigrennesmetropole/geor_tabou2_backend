@@ -23,6 +23,7 @@ import rm.tabou2.service.dto.TypeEvenement;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.helper.operation.EvenementOperationRightsHelper;
+import rm.tabou2.service.helper.operation.OperationReadAccess;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.storage.tabou.dao.evenement.TypeEvenementDao;
@@ -30,6 +31,7 @@ import rm.tabou2.storage.tabou.dao.operation.EvenementOperationDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
 import rm.tabou2.storage.tabou.entity.evenement.TypeEvenementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
+import rm.tabou2.storage.tabou.item.OperationVisibilityFilter;
 
 @TestPropertySource(value = { "classpath:application.properties" })
 @SpringBootTest(classes = StarterSpringBootTestApplication.class)
@@ -51,6 +53,9 @@ class EvenementOperationServiceTest extends DatabaseInitializerTest implements E
 	private OperationRightsHelper operationRightsHelper;
 
 	@MockitoBean
+	private OperationReadAccess operationReadAccess;
+
+	@MockitoBean
 	private EvenementOperationRightsHelper evenementOperationRightsHelper;
 	
 	@Autowired
@@ -58,6 +63,7 @@ class EvenementOperationServiceTest extends DatabaseInitializerTest implements E
 
 	@BeforeEach
 	public void initTest() {
+		Mockito.when(operationReadAccess.getVisibilityFilter()).thenReturn(OperationVisibilityFilter.global());
 		Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(OperationEntity.class))).thenReturn(true);
 		Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(OperationIntermediaire.class)))
 				.thenReturn(true);

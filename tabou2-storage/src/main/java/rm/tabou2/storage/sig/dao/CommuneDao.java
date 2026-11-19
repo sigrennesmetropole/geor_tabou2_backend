@@ -14,5 +14,7 @@ public interface CommuneDao extends CustomCrudRepository<CommuneEntity, Integer>
     @Query("SELECT c FROM CommuneEntity c WHERE UPPER(c.nom) like UPPER(:keyword)")
     List<CommuneEntity> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
+    List<CommuneEntity> findByCommuneAgglo(Short communeAgglo);
+
 
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.event.annotation.AfterTestExecution;
@@ -27,6 +28,7 @@ import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.tabou.operation.OperationTiersService;
 import rm.tabou2.storage.tabou.dao.operation.ConsommationEspaceDao;
 import rm.tabou2.storage.tabou.dao.operation.DecisionDao;
+import rm.tabou2.storage.tabou.dao.operation.EtapeOperationDao;
 import rm.tabou2.storage.tabou.dao.operation.MaitriseOuvrageDao;
 import rm.tabou2.storage.tabou.dao.operation.ModeAmenagementDao;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
@@ -35,6 +37,7 @@ import rm.tabou2.storage.tabou.dao.tiers.TiersDao;
 import rm.tabou2.storage.tabou.dao.tiers.TypeTiersDao;
 import rm.tabou2.storage.tabou.entity.operation.ConsommationEspaceEntity;
 import rm.tabou2.storage.tabou.entity.operation.DecisionEntity;
+import rm.tabou2.storage.tabou.entity.operation.EtapeOperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.MaitriseOuvrageEntity;
 import rm.tabou2.storage.tabou.entity.operation.ModeAmenagementEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
@@ -53,6 +56,9 @@ class OperationTiersServiceTest {
 
 	@Autowired
 	private OperationDao operationDao;
+
+	@Autowired
+	private EtapeOperationDao etapeOperationDao;
 
 	@Autowired
 	private OperationTiersService operationTiersService;
@@ -169,9 +175,16 @@ class OperationTiersServiceTest {
 		typeTiers.setLibelle(LIBELLE_TYPE_TIERS);
 		typeTiersDao.save(typeTiers);
 
+		EtapeOperationEntity etapeOff = new EtapeOperationEntity();
+		etapeOff.setCode("TEST_OFF");
+		etapeOff.setLibelle("Test Off");
+		etapeOff.setMode("OFF");
+		etapeOff = etapeOperationDao.save(etapeOff);
+
 		OperationEntity operationEntity = new OperationEntity();
 		operationEntity.setNom("test");
 		operationEntity.setDiffusionRestreinte(true);
+		operationEntity.setEtapeOperation(etapeOff);
 		operationEntity.setDecision(decisionEntity);
 		operationEntity.setVocation(vocationEntity);
 		operationEntity.setMaitriseOuvrage(maitriseOuvrageEntity);
@@ -198,24 +211,21 @@ class OperationTiersServiceTest {
         criteria.setOrderBy("libelle");
 
 
-        Page<AssociationTiersTypeTiers> page = null;
         try {
-            // l'utilisateur n'as pas le role referent
+            // l'utilisateur n'a pas de commune reconnue : l'opération Off lui est interdite (403)
             Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(false);
             Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
-            page = operationTiersService.searchOperationTiers(criteria, pageable);
-        } catch (AppServiceException e) {
-            throw new AppServiceException("Erreur lors de la recherche de tiers d'operations", e);
+            Assertions.assertThrows(AccessDeniedException.class,
+                    () -> operationTiersService.searchOperationTiers(criteria, pageable));
+        } finally {
+            Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);
         }
 
-
-        Assertions.assertEquals(0, page.getTotalElements());
-
-
+        Page<AssociationTiersTypeTiers> page = null;
         try {
             // Avec le role referent
             Mockito.when(authentificationHelper.hasReferentRole()).thenReturn(true);
-            Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(false);
+            Mockito.when(authentificationHelper.hasRestreintAccess()).thenReturn(true);
             page = operationTiersService.searchOperationTiers(criteria, pageable);
         } catch (Exception e) {
             e.printStackTrace();

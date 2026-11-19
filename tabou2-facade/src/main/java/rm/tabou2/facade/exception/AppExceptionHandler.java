@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartException;
 import rm.tabou2.service.exception.AppServiceException;
 import rm.tabou2.service.exception.AppServiceExceptionsStatus;
 import rm.tabou2.service.exception.AppServiceNotFoundException;
+import rm.tabou2.service.exception.GeoserverProxyException;
 
 import jakarta.validation.ConstraintViolationException;
 import java.security.InvalidParameterException;
@@ -26,6 +27,17 @@ import java.util.NoSuchElementException;
 public class AppExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AppExceptionHandler.class);
+
+    @ExceptionHandler(GeoserverProxyException.class)
+    protected ResponseEntity<Object> handleGeoserverProxyException(final GeoserverProxyException ex, final WebRequest request) {
+        if (ex.getHttpStatus() >= 500) {
+            LOGGER.error(ex.getMessage(), ex);
+        } else {
+            LOGGER.warn("Requête cartographique refusée : {}", ex.getMessage());
+        }
+        return ResponseEntity.status(ex.getHttpStatus()).header(HttpHeaders.CACHE_CONTROL, "private, no-store")
+                .body(ex.getMessage());
+    }
 
     @ExceptionHandler(rm.tabou2.service.exception.AppServiceException.class)
     protected ResponseEntity<Object> handleExceptionService(final AppServiceException ex, final WebRequest request) {

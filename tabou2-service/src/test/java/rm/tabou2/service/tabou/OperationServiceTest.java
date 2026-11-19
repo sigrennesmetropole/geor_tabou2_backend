@@ -31,6 +31,7 @@ import rm.tabou2.service.constant.ModeAmenagementCode;
 import rm.tabou2.service.constant.NatureLibelle;
 import rm.tabou2.service.constant.VocationCode;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.helper.operation.OperationReadAccess;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.mapper.tabou.operation.ConsommationEspaceMapper;
 import rm.tabou2.service.mapper.tabou.operation.DecisionMapper;
@@ -62,6 +63,7 @@ import rm.tabou2.storage.tabou.entity.operation.ModeAmenagementEntity;
 import rm.tabou2.storage.tabou.entity.operation.NatureEntity;
 import rm.tabou2.storage.tabou.entity.operation.OperationEntity;
 import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
+import rm.tabou2.storage.tabou.item.OperationVisibilityFilter;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 
@@ -135,8 +137,12 @@ class OperationServiceTest extends DatabaseInitializerTest implements ExceptionT
     @MockitoBean
     private OperationRightsHelper operationRightsHelper;
 
+    @MockitoBean
+    private OperationReadAccess operationReadAccess;
+
     @BeforeEach
     public void initTest() {
+        Mockito.when(operationReadAccess.getVisibilityFilter()).thenReturn(OperationVisibilityFilter.global());
         Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(OperationEntity.class))).thenReturn(true);
         Mockito.when(operationRightsHelper.checkCanGetOperation(Mockito.any(OperationIntermediaire.class))).thenReturn(true);
         Mockito.when(operationRightsHelper.checkCanCreateOperation(Mockito.any())).thenReturn(true);

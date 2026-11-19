@@ -43,11 +43,11 @@ VALUES
 ((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_ETUDE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_CHANTIER_PUBLIC')),
 ((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_CHANTIER_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_ETUDE_PUBLIC')),
 -- En chantier <-> Réalisé
-((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_CHANTIER_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'OPERATIONNEL_PUBLIC')),
-((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'OPERATIONNEL_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_CHANTIER_PUBLIC')),
+((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_CHANTIER_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'REALISE_PUBLIC')),
+((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'REALISE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_CHANTIER_PUBLIC')),
 -- Réalisé <-> Cloturé
-((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'OPERATIONNEL_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'CLOTURE_PUBLIC')),
-((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'CLOTURE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'OPERATIONNEL_PUBLIC')),
+((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'REALISE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'CLOTURE_PUBLIC')),
+((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'CLOTURE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'REALISE_PUBLIC')),
 -- XXX <-> Annulé (OFF)
 ((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_REFLEXION_OFF'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_OFF')),
 ((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_OFF'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_REFLEXION_OFF')),
@@ -60,8 +60,8 @@ VALUES
 ((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_ETUDE_PUBLIC')),
 ((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_CHANTIER_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_PUBLIC')),
 ((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'EN_CHANTIER_PUBLIC')),
-((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'OPERATIONNEL_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_PUBLIC')),
-((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'OPERATIONNEL_PUBLIC')),
+((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'REALISE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_PUBLIC')),
+((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'REALISE_PUBLIC')),
 ((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'CLOTURE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_PUBLIC')),
 ((SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'ANNULE_PUBLIC'), (SELECT id_etape_operation FROM tabou_etape_operation WHERE code = 'CLOTURE_PUBLIC'));
 

@@ -80,6 +80,7 @@ La base de données Tabou a vocation à héberger les données métiers du plugi
 - tabou_vocation_plae
 - tabou_vocation_za
 - v_oa_operation
+- v_oa_operation_commune
 - v_oa_secteur
 
 ### Diagramme relationnel
@@ -87,8 +88,8 @@ La base de données Tabou a vocation à héberger les données métiers du plugi
 Vue d'ensemble des relations de la base Tabou (clés étrangères). Les tables de référentiel (`tabou_type_*`, natures,
 étapes, etc.) pointent vers les entités qu'elles qualifient ; `tabou_operation` et `tabou_programme` sont les tables
 centrales. Les tables `tabou_agapeo`, `tabou_mos`, `tabou_pc_ddc`, `tabou_type_document` et `tabou_type_financement`
-n'ont pas de clé étrangère et ne figurent pas dans le diagramme ; les vues `v_oa_operation` / `v_oa_secteur` en sont
-également exclues.
+n'ont pas de clé étrangère et ne figurent pas dans le diagramme ; les vues `v_oa_operation`, `v_oa_operation_commune` et
+`v_oa_secteur` en sont également exclues.
 
 ```mermaid
 erDiagram

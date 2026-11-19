@@ -1,6 +1,5 @@
 package rm.tabou2.storage.tabou.dao.operation.impl;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +21,7 @@ import rm.tabou2.storage.tabou.entity.operation.OutilAmenagementEntity;
 import rm.tabou2.storage.tabou.entity.operation.VocationEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TiersEntity;
 import rm.tabou2.storage.tabou.entity.tiers.TypeTiersEntity;
+import rm.tabou2.storage.tabou.item.OperationVisibilityFilter;
 import rm.tabou2.storage.tabou.item.OperationsCriteria;
 
 import jakarta.persistence.EntityManager;
@@ -38,6 +38,7 @@ import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_CONSOM
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DECISION;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_DIFFUSION_RETREINTE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ETAPE_OPERATION;
+import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_ID;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_LIBELLE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_MAITRISE_OUVRAGE;
 import static rm.tabou2.storage.tabou.dao.constants.FieldsConstants.FIELD_MODE_AMENAGEMENT;
@@ -62,7 +63,8 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl<OperationEntit
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Page<OperationEntity> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable) {
+    public Page<OperationEntity> searchOperations(OperationsCriteria operationsCriteria,
+                                                  OperationVisibilityFilter visibilityFilter, Pageable pageable) {
 
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
@@ -70,7 +72,7 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl<OperationEntit
         //Requête pour compter le nombre de résultats total
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
         Root<OperationEntity> countRoot = countQuery.from(OperationEntity.class);
-        buildQuery(operationsCriteria, builder, countQuery, countRoot);
+        buildQuery(operationsCriteria, visibilityFilter, builder, countQuery, countRoot);
         countQuery.select(builder.countDistinct(countRoot));
         Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
 
@@ -82,7 +84,7 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl<OperationEntit
         //Requête de recherche
         CriteriaQuery<OperationEntity> searchQuery = builder.createQuery(OperationEntity.class);
         Root<OperationEntity> searchRoot = searchQuery.from(OperationEntity.class);
-        buildQuery(operationsCriteria, builder, searchQuery, searchRoot);
+        buildQuery(operationsCriteria, visibilityFilter, builder, searchQuery, searchRoot);
 
         searchQuery.orderBy(QueryUtils.toOrders(pageable.getSort(),searchRoot,builder));
 
@@ -92,12 +94,36 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl<OperationEntit
 
     }
 
-    private void buildQuery(OperationsCriteria operationsCriteria, CriteriaBuilder builder,
-                            CriteriaQuery<?> criteriaQuery, Root<OperationEntity> root
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public boolean isHidden(long operationId, OperationVisibilityFilter filter) {
+        if (filter.isGlobal()) {
+            return false;
+        }
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Long> existsQuery = builder.createQuery(Long.class);
+        Root<OperationEntity> existsRoot = existsQuery.from(OperationEntity.class);
+        existsQuery.select(builder.count(existsRoot)).where(builder.equal(existsRoot.get(FIELD_ID), operationId));
+        if (entityManager.createQuery(existsQuery).getSingleResult() == 0) {
+            return false;
+        }
+
+        CriteriaQuery<Long> visibleQuery = builder.createQuery(Long.class);
+        Root<OperationEntity> visibleRoot = visibleQuery.from(OperationEntity.class);
+        visibleQuery.select(builder.countDistinct(visibleRoot)).where(
+                builder.equal(visibleRoot.get(FIELD_ID), operationId),
+                filter.toPredicate(visibleRoot, visibleQuery, builder));
+        return entityManager.createQuery(visibleQuery).getSingleResult() == 0;
+    }
+
+    private void buildQuery(OperationsCriteria operationsCriteria, OperationVisibilityFilter visibilityFilter,
+                            CriteriaBuilder builder, CriteriaQuery<?> criteriaQuery, Root<OperationEntity> root
     ) {
 
+        List<Predicate> predicates = new ArrayList<>();
+
         if (operationsCriteria != null) {
-            List<Predicate> predicates = new ArrayList<>();
 
             //nom
             predicateStringCriteria(operationsCriteria.getNom(), FIELD_NOM, predicates, builder, root);
@@ -116,13 +142,15 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl<OperationEntit
             predicateStringCriteria(operationsCriteria.getNumAds(), FIELD_NUM_ADS, predicates, builder, root);
 
 
-            //diffusionRestreinte
+            //diffusionRestreinte : simple filtre client, la visibilité des opérations est portée par visibilityFilter
             if (operationsCriteria.getDiffusionRestreinte() != null) {
-
                 predicateBooleanCriteria(operationsCriteria.getDiffusionRestreinte(), FIELD_DIFFUSION_RETREINTE, predicates, builder, root);
+            }
 
-            } else {
-                predicates.add(builder.isFalse(root.get(FIELD_DIFFUSION_RETREINTE)));
+            // Secteurs : règle historique inchangée, diffusion restreinte réservée aux accès globaux
+            if (operationsCriteria.getDiffusionRestreinte() == null || !visibilityFilter.isGlobal()) {
+                predicates.add(builder.or(builder.isNull(root.get(FIELD_SECTEUR)), builder.isFalse(root.get(FIELD_SECTEUR)),
+                        builder.isFalse(root.get(FIELD_DIFFUSION_RETREINTE))));
             }
 
             //EstSecteur
@@ -147,12 +175,10 @@ public class OperationCustomDaoImpl extends AbstractCustomDaoImpl<OperationEntit
 
             }
 
-            if (CollectionUtils.isNotEmpty(predicates)) {
-                criteriaQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
-            }
-
-
         }
+
+        predicates.add(visibilityFilter.toPredicate(root, criteriaQuery, builder));
+        criteriaQuery.where(builder.and(predicates.toArray(Predicate[]::new)));
     }
 
     private void predicateElementsOperation(OperationsCriteria operationsCriteria, CriteriaBuilder builder, Root<OperationEntity> root, List<Predicate> predicates) {

@@ -6,8 +6,7 @@ package rm.tabou2.facade.spring.security;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import rm.tabou2.service.helper.TabouUserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,12 +33,22 @@ public class PreAuthenticationToken extends AbstractAuthenticationToken {
 	 * @param roles
 	 */
 	public PreAuthenticationToken(String username, Set<String> roles) {
+		this(username, roles, null);
+	}
+
+	/**
+	 * Constructeur
+	 *
+	 * @param username
+	 * @param roles
+	 * @param organisation nom de l'organisation (décodé), peut être null
+	 */
+	public PreAuthenticationToken(String username, Set<String> roles, String organisation) {
 		super(createGrantedAuthorities(roles));
 		this.principal = username;
 
 		setAuthenticated(true);
-		UserDetails details = new User(username, "", true, true, true, true, super.getAuthorities());
-		setDetails(details);
+		setDetails(new TabouUserDetails(username, super.getAuthorities(), organisation));
 
 	}
 

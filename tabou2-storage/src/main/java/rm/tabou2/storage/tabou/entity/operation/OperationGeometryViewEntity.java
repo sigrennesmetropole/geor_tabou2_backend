@@ -7,11 +7,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Immutable;
 import org.locationtech.jts.geom.Geometry;
 
+/**
+ * Vue en lecture seule des emprises d'opérations.
+ */
 @Getter
 @Setter
 @Entity
+@Immutable
 @Table(name = "v_oa_operation")
 public class OperationGeometryViewEntity {
 
@@ -21,7 +26,7 @@ public class OperationGeometryViewEntity {
 
     @Basic
     @Column(name = "id_tabou")
-    private int idTabou;
+    private Integer idTabou;
 
     @Basic
     @Column(name = "aire_geo_ha")

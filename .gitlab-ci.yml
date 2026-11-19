@@ -32,7 +32,7 @@ include:
 
 
 default:
-  image: maven:3.9.6-eclipse-temurin-17
+  image: maven:3.9.16-eclipse-temurin-17
   before_script:
     - apt update && apt install -y gettext-base
     - envsubst '${MVN_GROUP} ${MVN_RELEASE} ${MVN_SNAPSHOTS}' < pom.xml > pom.subst && mv -f pom.subst pom.xml
@@ -72,7 +72,7 @@ tabou2:build:
 # Sonar code quality analysis - note a full test coverage report through a jacoco.exec merged file in base project folder
 tabou2:sonar:
   stage: test
-  image: maven:3.9.9-eclipse-temurin-17
+  image: maven:3.9.16-eclipse-temurin-17
   dependencies:
     - tabou2:build
   needs: 

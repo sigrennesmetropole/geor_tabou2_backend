@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.14_7-jdk-jammy
+FROM eclipse-temurin:17.0.21_9-jdk-jammy
 USER root
 MAINTAINER sigsupport@rennesmetropole.fr
 ENV TZ=Europe/Paris
@@ -27,4 +27,3 @@ CMD [ "sh", "-c", "exec java --add-opens java.base/java.util=ALL-UNNAMED \
       ${ADD_JAVA_OPTS}                                   \
       -Xmx${XMX:-1G} -Xms${XMX:-1G}                      \
       -jar /opt/tabou2/service.jar" ]    
-      

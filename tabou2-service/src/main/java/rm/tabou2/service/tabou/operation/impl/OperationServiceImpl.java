@@ -116,6 +116,7 @@ public class OperationServiceImpl implements OperationService {
 
     private final OperationRightsHelper operationRightsHelper;
 
+    private final OperationReadAccess operationReadAccess;
     private final OperationValidator operationValidator;
 
     private final OperationUpdateHelper operationUpdateHelper;
@@ -473,15 +474,8 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public Page<OperationIntermediaire> searchOperations(OperationsCriteria operationsCriteria, Pageable pageable) {
-        // Si l'utilisateur n'a pas le droit de voir les opérations en diffusion
-        // restreinte, on filtre sur false
-        if (BooleanUtils.isTrue(operationsCriteria.getDiffusionRestreinte())
-                && !authentificationHelper.hasRestreintAccess()) {
-            operationsCriteria.setDiffusionRestreinte(false);
-            LOGGER.warn("Accès non autorisé à des opérations d'accès restreint");
-        }
-        return operationMapper.entitiesToDto(operationCustomDao.searchOperations(operationsCriteria, pageable),
-                pageable);
+        return operationMapper.entitiesToDto(operationCustomDao.searchOperations(operationsCriteria,
+                operationReadAccess.getVisibilityFilter(), pageable), pageable);
     }
 
     @Override
@@ -640,12 +634,7 @@ public class OperationServiceImpl implements OperationService {
 
         // On vérifie que l'opération existe et que l'utilisateur a bien les droits de
         // consultation dessus
-        OperationEntity operation = getOperationEntityById(operationId);
-
-        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operation))) {
-            throw new AccessDeniedException(
-                    "L'utilisateur n'a pas les droits de consulter l'opération id = " + operationId);
-        }
+        getOperationEntityById(operationId);
 
         try {
             // Récupération du document Dans alfresco
@@ -681,12 +670,8 @@ public class OperationServiceImpl implements OperationService {
     public DocumentContent downloadDocument(long operationId, String documentId) throws AppServiceException {
 
         // On vérifie que l'opération existe et que l'utilisateur a bien les droits de
-        // suppression dessus
-        OperationIntermediaire operation = getOperationById(operationId);
-
-        if (!operationRightsHelper.checkCanGetOperation(operation)) {
-            throw new AccessDeniedException(ERROR_DROITS_DE_RECUPERATION + operationId);
-        }
+        // consultation dessus
+        getOperationById(operationId);
 
         try {
             return alfrescoService.downloadDocument(AlfrescoTabouType.OPERATION, operationId, documentId);
@@ -739,9 +724,7 @@ public class OperationServiceImpl implements OperationService {
 
         OperationEntity operationEntity = operationDao.findOneById(operationId);
 
-        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operationEntity))) {
-            throw new AccessDeniedException(ERROR_DROITS_DE_RECUPERATION + operationId);
-        }
+        operationReadAccess.checkCanRead(operationId);
 
         AlfrescoDocumentRoot documentRoot = alfrescoService.searchDocuments(AlfrescoTabouType.OPERATION, operationId,
                 nom, libelleTypeDocument, typeMime, pageable);
@@ -781,6 +764,11 @@ public class OperationServiceImpl implements OperationService {
 
         // Récupération de l'opération
         OperationEntity operationEntity = getOperationEntityById(operationId);
+
+        // La lecture territoriale ne donne aucun droit d'écriture : règle historique conservée
+        if (!operationRightsHelper.checkCanGetOperation(operationEntity)) {
+            throw new AccessDeniedException(USER_OPERATION_NOT_ALLOWED + operationEntity.getNom());
+        }
 
         // Recuperation du lien type PLH <-> operation. S'il n'existe pas encore, on
         // rattache le type PLH a l'operation (cas de l'ajout d'un PLH a l'operation).
@@ -912,9 +900,7 @@ public class OperationServiceImpl implements OperationService {
 
         OperationEntity operationEntity = operationDao.findOneById(operationId);
 
-        if (!operationRightsHelper.checkCanGetOperation(operationMapper.entityToDto(operationEntity))) {
-            throw new AccessDeniedException(ERROR_DROITS_DE_RECUPERATION + operationId);
-        }
+        operationReadAccess.checkCanRead(operationId);
 
         return operationEntity;
     }

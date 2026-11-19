@@ -72,7 +72,8 @@ public class ProgrammePlannerHelper {
 
         //On regarde d'abord les permis modificatifs
         PermisConstruireEntity permisConstruireEntity = permis.stream()
-                .filter(p -> p.getVersionAds().toLowerCase().contains(PERMIS_MODIFICATIF))
+                .filter(p -> p.getVersionAds() != null
+                        && p.getVersionAds().toLowerCase().contains(PERMIS_MODIFICATIF))
                 .filter(p -> p.getDecision() != null && !decisionsExclues.contains(p.getDecision()))
                 .max(Comparator.comparing(PermisConstruireEntity::getAdsDate)).orElse(null);
 

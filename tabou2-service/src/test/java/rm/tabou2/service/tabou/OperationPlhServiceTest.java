@@ -25,6 +25,7 @@ import rm.tabou2.service.common.ExceptionTest;
 import rm.tabou2.service.dto.TypePLH;
 import rm.tabou2.service.dto.TypePLHBean;
 import rm.tabou2.service.exception.AppServiceException;
+import rm.tabou2.service.helper.operation.OperationReadAccess;
 import rm.tabou2.service.helper.operation.OperationRightsHelper;
 import rm.tabou2.service.tabou.operation.OperationService;
 import rm.tabou2.storage.tabou.dao.operation.OperationDao;
@@ -48,6 +49,9 @@ class OperationPLHServiceTest extends DatabaseInitializerTest implements Excepti
 
     @MockitoBean
     private OperationRightsHelper operationRightsHelper;
+
+    @MockitoBean
+    private OperationReadAccess operationReadAccess;
 
     @BeforeEach
     void initialiserTest() {

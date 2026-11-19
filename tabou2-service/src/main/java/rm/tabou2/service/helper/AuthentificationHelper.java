@@ -1,6 +1,7 @@
 package rm.tabou2.service.helper;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,19 @@ public class AuthentificationHelper {
      */
     public String getConnectedUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    /**
+     * Retourne l'organisation geOrchestra de l'utilisateur connecté (en-tête sec-orgname).
+     *
+     * @return le nom de l'organisation, ou null si inconnue
+     */
+    public String getOrganisation() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getDetails() instanceof TabouUserDetails) {
+            return ((TabouUserDetails) authentication.getDetails()).getOrganisation();
+        }
+        return null;
     }
 
     /**

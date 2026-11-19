@@ -29,6 +29,7 @@ import rm.tabou2.service.exception.AppServiceNotFoundException;
 import rm.tabou2.service.helper.AuthentificationHelper;
 import rm.tabou2.service.helper.date.DateHelper;
 import rm.tabou2.service.helper.logement.LogementSpecifiqueHelper;
+import rm.tabou2.service.helper.operation.OperationReadAccess;
 import rm.tabou2.service.helper.plh.TypePlhHelper;
 import rm.tabou2.service.helper.programme.EvenementProgrammeRigthsHelper;
 import rm.tabou2.service.helper.programme.ProgrammeFicheHelper;
@@ -107,6 +108,7 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
     private final OperationDao operationDao;
 
+    private final OperationReadAccess operationReadAccess;
     private final VocationDao vocationDao;
 
     private final VocationPlaeDao vocationPlaeDao;
@@ -361,6 +363,8 @@ public class ProgrammeServiceImpl implements ProgrammeService {
 
         OperationEntity operation = operationDao.findOneById(programmeCriteria.getOperationId());
 
+        // Programmes d'une opération : suivent la visibilité de l'opération (les secteurs restent inchangés)
+        operationReadAccess.checkCanRead(programmeCriteria.getOperationId());
         Page<ProgrammeLight> results;
 
         if (Boolean.FALSE.equals(operation.getSecteur())) {

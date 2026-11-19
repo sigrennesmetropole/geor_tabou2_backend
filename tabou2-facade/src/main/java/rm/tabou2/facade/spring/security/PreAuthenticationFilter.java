@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import rm.tabou2.service.helper.HeaderValueDecoder;
 
 /**
  * This filter is inspired from georchestra geowebcache project
@@ -28,6 +29,7 @@ public class PreAuthenticationFilter implements Filter {
 
 	public static final String SEC_USERNAME = "sec-username";
 	public static final String SEC_ROLES = "sec-roles";
+	public static final String SEC_ORGNAME = "sec-orgname";
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -67,11 +69,12 @@ public class PreAuthenticationFilter implements Filter {
 	private Authentication createAuthentication(HttpServletRequest httpServletRequest) {
 		final String username = httpServletRequest.getHeader(SEC_USERNAME);
 		final String rolesString = httpServletRequest.getHeader(SEC_ROLES);
+		final String organisation = HeaderValueDecoder.decode(httpServletRequest.getHeader(SEC_ORGNAME));
 		Set<String> roles = new LinkedHashSet<>();
 		if (rolesString != null) {
 			roles.addAll(Arrays.asList(rolesString.split(";")));
 		}
-		return new PreAuthenticationToken(username, roles);
+		return new PreAuthenticationToken(username, roles, organisation);
 	}
 
 }
